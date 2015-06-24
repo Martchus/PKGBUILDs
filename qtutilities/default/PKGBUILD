@@ -1,0 +1,27 @@
+pkgname=qtutilities
+pkgver=1.0.6
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc="Common Qt related C++ classes and routines used by my
+ applications such as dialogs, widgets and models."
+license=('GPL')
+depends=('c++utilities')
+makedepends=
+url="https://github.com/Martchus/qtutilities"
+source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/qtutilities/archive/v${pkgver}.tar.gz")
+_reponame=qtutilities
+sha256sums=('cee38afc5eb60b2da4eba64107628ed7')
+
+# head end
+
+build() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" -r -spec linux-g++
+    make
+}
+
+package() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    make install
+}
+

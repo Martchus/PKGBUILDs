@@ -1,0 +1,27 @@
+# Maintainer: Martchus <martchus@gmx.net>
+pkgname=c++utilities
+pkgver=1.0.6
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc="Common C++ classes and routines used by my applications such
+as argument parser, IO and conversion utilities."
+license=('GPL')
+depends=('qt5-base')
+makedepends=
+url="https://github.com/Martchus/cpp-utilities"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/cpp-utilities/archive/v${pkgver}.tar.gz")
+_reponame=cpp-utilities
+sha256sums=('4e94aff9225d8873f752995c1bcc5f15')
+
+# head end
+
+build() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" -r -spec linux-g++
+    make
+}
+
+package() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    make install
+}

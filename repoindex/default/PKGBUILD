@@ -1,0 +1,26 @@
+pkgname=repoindex
+pkgver=1.0.0
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc="Provides a web interface to browse Arch Linux package repositories."
+license=('GPL')
+depends=('qt5-base' 'qt5-network' 'pacman')
+makedepends=
+url="https://github.com/Martchus/repoindex"
+source=("repoindex-${pkgver}.tar.gz::https://github.com/Martchus/repoindex/archive/v${pkgver}.tar.gz")
+_reponame=repoindex
+sha256sums=('cee38afc5eb60b2da4eba64107628ed7')
+
+# head end
+
+build() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" -r -spec linux-g++
+    make
+}
+
+package() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    make install
+}
+

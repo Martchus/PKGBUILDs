@@ -1,0 +1,39 @@
+_name=tasky-server
+pkgname=mingw-w64-tasky-server
+pkgver=1.0.0
+pkgrel=1
+arch=('any')
+pkgdesc="Tasky library (mingw-w64)."
+license=('GPL')
+depends=('mingw-w64-crt' 'mingw-w64-qt5-base' 'mingw-w64-qt5-network' 'mingw-w64-libtasky')
+makedepends=('mingw-w64-gcc')
+url="https://github.com/Martchus/tasky-library"
+source=("tasky-server-${pkgver}.tar.gz::https://github.com/Martchus/tasky-server/archive/v${pkgver}.tar.gz")
+_reponame=tasky-server
+sha256sums=('4e94aff9225d8873f752995c1bcc5f15')
+options=('staticlibs' '!strip')
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+# head end
+
+build() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    # build utilities for each architecture
+    for _arch in ${_architectures}; do
+        mkdir -p build-${_arch} && pushd build-${_arch}
+        INSTALL_ROOT=$pkgdir/usr/ ${_arch}-qmake-qt5 -r ../${_name}.pro
+        make
+        popd
+    done
+}
+
+package() {
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    for _arch in ${_architectures}; do       
+        # bin stuff
+        pushd build-${_arch}
+        strip --strip-unneeded ./release/${_name}.exe
+        install -m755 -D ./release/${_name}.exe $pkgdir/usr/${_arch}/bin/${_name}.exe
+        popd  
+    done
+}

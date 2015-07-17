@@ -1,7 +1,7 @@
 _name=qtutilities
 pkgname=mingw-w64-qtutilities
 pkgver=1.0.6
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="Common Qt related C++ classes and routines used by my
  applications such as dialogs, widgets and models. (mingw-w64)."
@@ -22,7 +22,7 @@ build() {
     # build utilities for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/ ${_arch}-qmake-qt5 -r ../${_name}.pro
+        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 -r ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-dll CONFIG+=mingw-w64-noversion
         make
         popd
     done
@@ -31,18 +31,8 @@ build() {
 package() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     for _arch in ${_architectures}; do       
-        # bin stuff
         pushd build-${_arch}
-        ${_arch}-strip --strip-unneeded ./release/${_name}.dll
-        ${_arch}-strip --strip-unneeded ./release/lib${_name}.dll.a
-        install -m755 -D ./release/${_name}.dll $pkgdir/usr/${_arch}/bin/${_name}.dll
-        install -m755 -D ./release/lib${_name}.dll.a $pkgdir/usr/${_arch}/lib/lib${_name}.dll.a
-        popd          
-        # include files
-        for dir in aboutdialog enterpassworddialog settingsdialog widgets resources models
-        do
-            mkdir -p $pkgdir/usr/${_arch}/include/${_name}/$dir
-            install -m644 -D ./$dir/*.h $pkgdir/usr/${_arch}/include/${_name}/$dir
-        done    
+        make install
+        popd             
     done
 }

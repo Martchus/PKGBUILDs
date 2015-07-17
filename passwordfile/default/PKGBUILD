@@ -1,6 +1,6 @@
 pkgname=passwordfile
 pkgver=2.0.5
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL."
 license=('GPL')

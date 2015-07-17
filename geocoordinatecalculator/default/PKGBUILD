@@ -1,6 +1,6 @@
 pkgname=geocoordinatecalculator
 pkgver=1.0.0
-pkgrel=6
+pkgrel=7
 arch=('i686' 'x86_64')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more."
 license=('GPL')

@@ -1,0 +1,23 @@
+pkgname=jflap
+pkgver=7.0
+pkgrel=5
+pkgdesc="Software to learning the basic concepts of Formal Languages and Automata Theory"
+arch=('any')
+url="http://www.jflap.org/"
+license=('CCPL')
+conflicts=()
+depends=('java-environment')
+_file=${pkgname^^}.jar
+source=("http://www.cs.duke.edu/csed/jflap/jflaptmp/may15-2011/withoutSource/$_file"
+        "$pkgname.sh")
+
+package() {
+  cd $srcdir
+  mkdir -p $pkgdir/usr/share/java/$pkgname/
+  cp $_file $pkgdir/usr/share/java/$pkgname/$pkgname.jar
+  mkdir -p $pkgdir/usr/bin
+  cp $pkgname.sh $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}
+md5sums=('95d5f8f9f098331f6f61c24f7931589f'
+         'c5e9c07d641f0a28a65e575feff9ec60')

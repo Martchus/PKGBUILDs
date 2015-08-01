@@ -1,0 +1,22 @@
+# Maintainer: Martchus <martchus@gmx.net>
+pkgname=diriterator
+pkgver=1.0.3
+pkgrel=2
+pkgdesc="Runs a script for each file in a directory hierarchy using GNU parallel."
+arch=('any')
+license=('GPL')
+groups=
+provides=
+depends=("parallel")
+makedepends=
+conflicts=
+replaces=
+backup=
+install=
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
+noextract=
+md5sums=('skip')
+
+package() {
+    install -Dm755 "${srcdir}/${PROJECT_DIR_NAME:-$_reponame-$pkgver}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+}

@@ -1,0 +1,22 @@
+# Maintainer: Martchus <martchus@gmx.net>
+pkgname=toggletouch
+pkgver=1.0.0
+pkgrel=2
+pkgdesc="Enables/disables the touchpad."
+arch=('any')
+license=('GPL')
+groups=
+provides=
+depends=('xf86-input-synaptics')
+makedepends=
+conflicts=
+replaces=
+backup=
+install=
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
+noextract=
+md5sums=('skip')
+
+package() {
+    install -Dm755 "${srcdir}/${PROJECT_DIR_NAME:-$_reponame-$pkgver}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+}

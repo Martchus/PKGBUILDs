@@ -26,4 +26,10 @@ OTHER_FILES += \
     tasky-server/default/PKGBUILD \
     tasky-server/mingw-w64/PKGBUILD \
     videodownloader/default/PKGBUILD \
-    videodownloader/mingw-w64/PKGBUILD
+    videodownloader/mingw-w64/PKGBUILD \
+    blackwidowcontrol/default/PKGBUILD \
+    diriterator/default/PKGBUILD \
+    mediaplayerctl/default/PKGBUILD \
+    toggletouch/default/PKGBUILD \
+    jflap/default/PKGBUILD \
+    exorciser/default/PKGBUILD

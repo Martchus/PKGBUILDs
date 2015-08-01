@@ -1,0 +1,24 @@
+pkgname=exorciser
+pkgver=3.10
+pkgrel=1
+pkgdesc="Automatic generation and correction of structured exercises to theoretical computer science"
+arch=('any')
+url="http://www.swisseduc.ch/informatik/exorciser/index.html"
+license=('CCPL')
+conflicts=()
+depends=('java-environment')
+_file=exorciser-de-$pkgver.jar
+source=("http://www.swisseduc.ch/informatik/exorciser/classes/$_file"
+        "$pkgname.sh")
+md5sums=('d1ebc927b1a3ecf51f0f542d43dad59a'
+         '7f75e3710e52def4b40fc9afa9bc2f4d')
+
+package() {
+  cd $srcdir
+  mkdir -p $pkgdir/usr/share/java/$pkgname/
+  cp $_file $pkgdir/usr/share/java/$pkgname/$pkgname.jar
+  mkdir -p $pkgdir/usr/bin
+  cp $pkgname.sh $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}
+

@@ -1,3 +1,4 @@
+# Maintainer: Martchus <martchus@gmx.net>
 _name=passwordfile
 pkgname=mingw-w64-passwordfile
 pkgver=2.0.5

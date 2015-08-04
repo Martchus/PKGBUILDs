@@ -1,3 +1,4 @@
+# Maintainer: Martchus <martchus@gmx.net>
 _name=geocoordinatecalculator
 pkgname=mingw-w64-geocoordinatecalculator
 pkgver=1.0.0

@@ -1,3 +1,4 @@
+# Maintainer: Martchus <martchus@gmx.net>
 _name=c++utilities
 pkgname=mingw-w64-c++utilities
 pkgver=1.0.6

@@ -32,4 +32,5 @@ OTHER_FILES += \
     mediaplayerctl/default/PKGBUILD \
     toggletouch/default/PKGBUILD \
     jflap/default/PKGBUILD \
-    exorciser/default/PKGBUILD
+    exorciser/default/PKGBUILD \
+    mkvtoolnix/default/PKGBUILD

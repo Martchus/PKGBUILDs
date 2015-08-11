@@ -1,12 +1,15 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=tageditor
+# decide whether to link against the deprecated Qt WebKit module (qt5-webkit package ~40 MB) or
+# the newer, chromium-based Qt WebEngine module (qt5-webengine package ~100 MB)
+_webviewprovider=qt5-webkit
 pkgname=mingw-w64-tageditor
 pkgver=1.1.5
-pkgrel=2
+pkgrel=4
 arch=('any')
 pkgdesc="Library for reading and editing meta-data of several media formats (mingw-w64)."
 license=('GPL')
-depends=('mingw-w64-crt' 'mingw-w64-qt5-base' 'mingw-w64-qt5-script' 'mingw-w64-qt5-webkit' 'mingw-w64-qtutilities' 'mingw-w64-tagparser')
+depends=(mingw-w64-{crt,qt5-script,$_webviewprovider,qtutilities,tagparser})
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-tools')
 url="https://github.com/Martchus/tageditor"
 source=("tageditor-${pkgver}.tar.gz::https://github.com/Martchus/tageditor/archive/v${pkgver}.tar.gz")
@@ -18,10 +21,14 @@ _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cfg=(mingw-w64-{install,manualstrip-exe,noversion})
+    if [[ _webviewprovider == qt5-webkit ]]; then
+        cfg+=(forcewebkit)
+    fi
     # build utilities for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 -r ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe CONFIG+=mingw-w64-noversion
+        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro $(for val in "${cfg[@]}"; do echo -n "CONFIG+=$val "; done)
         make
         popd
     done

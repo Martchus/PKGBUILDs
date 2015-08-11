@@ -1,11 +1,11 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=repoindex
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc="Provides a web interface to browse Arch Linux package repositories."
 license=('GPL')
-depends=('qt5-base' 'qt5-network' 'pacman')
+depends=('qt5-base' 'qt5-network' 'pacman' 'c++utilities')
 makedepends=
 url="https://github.com/Martchus/repoindex"
 source=("repoindex-${pkgver}.tar.gz::https://github.com/Martchus/repoindex/archive/v${pkgver}.tar.gz")

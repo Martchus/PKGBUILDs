@@ -5,8 +5,8 @@
 # I decided to use the latest sources from Git.
 
 pkgname='mkvtoolnix-git'
-pkgver=8.2.0
-pkgrel=4
+pkgver=8434.59a1651
+pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files - includes both: wxGTK and Qt 5 GUI."
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -15,12 +15,17 @@ depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo' 'wxg
 makedepends=('boost' 'ruby')
 provides=('mkvtoolnix' 'mkvtoolnix-gtk' 'mkvtoolnix-gui')
 conflicts=('mkvtoolnix')
-source=("${pkgname}-${pkgver}::git://github.com/mbunkus/mkvtoolnix.git")
+source=("${pkgname}::git://github.com/mbunkus/mkvtoolnix.git")
 md5sums=('skip')
 install=mkvtoolnix.install
 
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}"
 
   # Disable automagic curl dep used for online update checking
   sed -i -e '/curl/d' configure.in
@@ -36,7 +41,7 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}"
   # XXX: Temporary define to build against boost 1.58
   # https://github.com/mbunkus/mkvtoolnix/issues/1172
   CXXFLAGS+=' -DBOOST_CODECVT_DO_LENGTH_CONST=const'
@@ -46,6 +51,6 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}"
   ./drake DESTDIR="${pkgdir}" install
 }

@@ -33,4 +33,5 @@ OTHER_FILES += \
     toggletouch/default/PKGBUILD \
     jflap/default/PKGBUILD \
     exorciser/default/PKGBUILD \
-    mkvtoolnix/default/PKGBUILD
+    mkvtoolnix/default/PKGBUILD \
+    isoviewer/default/PKGBUILD

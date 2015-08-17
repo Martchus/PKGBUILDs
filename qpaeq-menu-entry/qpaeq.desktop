@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Terminal=false
+Name=Equalizer
+Exec=qpaeq
+Type=Application
+Icon=qpaeq
+Categories=Utility;Audio;Video;AudioVideo;

@@ -1,0 +1,15 @@
+post_install() {
+	gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+  
+  echo "Add the following lines to /etc/pulse/default.pa or ~/.config/pulse/default.pa to enable the equalizer.
+load-module module-equalizer-sink
+load-module module-dbus-protocol"
+}
+
+post_upgrade() {
+	gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}
+
+post_remove() {
+	gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+}

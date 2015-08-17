@@ -1,0 +1,29 @@
+pkgname=isoviewer
+pkgver=1.0.7
+pkgrel=1
+epoch=1
+arch=('any')
+pkgdesc="MP4/ISO Viewer"
+license=
+depends=('java-environment')
+makedepends=
+install=${pkgname}.install
+url=
+source=("$pkgname-$pkgver.jar::https://github.com/sannies/$pkgname/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.jar"
+        "${pkgname}.sh"
+        "${pkgname}.desktop"
+        "${pkgname}.install")
+md5sums=('a80b0b052bf4db529d9342da9a950b3f'
+         '46a45db34de39faf0c96b14b7a8b3b0a'
+         '27af8fee869cccf25921bbeb14e9c17e'
+         'dddc76d48a27c97823c3f95131772a01')
+
+package() {
+    cd $srcdir
+    # start script
+    install -m755 -D "./${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+    # jar file
+    install -m644 -D "./$pkgname-$pkgver.jar" "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
+    # menu entry
+    install -m644 -D "./${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
+}

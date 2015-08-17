@@ -1,19 +1,15 @@
 # Maintainer: Martchus <martchus@gmx.net>
-
-# In contrast to the official package this one includes both GUIs - the legacy one which uses wxGTK and the new Qt 5 based.
-# Since I was not able to build the version from https://www.bunkus.org/videotools/mkvtoolnix/sources/mkvtoolnix-8.2.0.tar.xz
-# I decided to use the latest sources from Git.
-
+# In contrast to the official package includes the new Qt 5 based GUI.
 pkgname='mkvtoolnix-git'
-pkgver=8434.59a1651
+pkgver=8483.ee895f4
 pkgrel=1
-pkgdesc="Set of tools to create, edit and inspect Matroska files - includes both: wxGTK and Qt 5 GUI."
+pkgdesc="Set of tools to create, edit and inspect Matroska files - includes the new Qt 5 GUI (instread of the old wxWidegts based)."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
-depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo' 'wxgtk' 'qt5-base' 'xdg-utils' 'desktop-file-utils')
+depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo' 'qt5-base' 'xdg-utils' 'desktop-file-utils')
 makedepends=('boost' 'ruby')
-provides=('mkvtoolnix' 'mkvtoolnix-gtk' 'mkvtoolnix-gui')
+provides=('mkvtoolnix' 'mkvtoolnix-cli')
 conflicts=('mkvtoolnix')
 source=("${pkgname}::git://github.com/mbunkus/mkvtoolnix.git")
 md5sums=('skip')

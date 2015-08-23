@@ -9,8 +9,6 @@ OTHER_FILES += \
     passwordfile/mingw-w64/PKGBUILD \
     passwordmanager/default/PKGBUILD \
     passwordmanager/mingw-w64/PKGBUILD \
-    pkgbuilds.pro/default/PKGBUILD \
-    pkgbuilds.pro/mingw-w64/PKGBUILD \
     qtutilities/default/PKGBUILD \
     qtutilities/mingw-w64/PKGBUILD \
     repoindex/default/PKGBUILD \
@@ -33,5 +31,5 @@ OTHER_FILES += \
     toggletouch/default/PKGBUILD \
     jflap/default/PKGBUILD \
     exorciser/default/PKGBUILD \
-    mkvtoolnix/default/PKGBUILD \
+    mkvtoolnix/git/PKGBUILD \
     isoviewer/default/PKGBUILD

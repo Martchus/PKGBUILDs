@@ -1,14 +1,14 @@
 # Maintainer: Martchus <martchus@gmx.net>
-# In contrast to the official package includes the new Qt 5 based GUI.
+# includes the new Qt 5 based GUI
 pkgname='mkvtoolnix-git'
 pkgver=8483.ee895f4
-pkgrel=1
-pkgdesc="Set of tools to create, edit and inspect Matroska files - includes the new Qt 5 GUI (instread of the old wxWidegts based)."
+pkgrel=2
+pkgdesc="Set of tools to create, edit and inspect Matroska files - includes the new Qt 5 GUI (instead of the old wxWidegts based)."
 arch=('i686' 'x86_64')
 license=('GPL')
-url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
+url="http://www.bunkus.org/videotools/mkvtoolnix"
 depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo' 'qt5-base' 'xdg-utils' 'desktop-file-utils')
-makedepends=('boost' 'ruby')
+makedepends=('boost' 'ruby' 'git')
 provides=('mkvtoolnix' 'mkvtoolnix-cli')
 conflicts=('mkvtoolnix')
 source=("${pkgname}::git://github.com/mbunkus/mkvtoolnix.git")

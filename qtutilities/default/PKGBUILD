@@ -1,6 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=qtutilities
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Common Qt related C++ classes and routines used by my

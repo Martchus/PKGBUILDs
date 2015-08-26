@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=qtutilities
 pkgname=mingw-w64-qtutilities
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 arch=('any')
 pkgdesc="Common Qt related C++ classes and routines used by my

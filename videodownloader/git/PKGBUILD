@@ -1,5 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
-pkgname=videodownloader
+pkgname=videodownloader-git
 pkgver=1.0.7
 pkgrel=3
 arch=('i686' 'x86_64')
@@ -7,19 +7,26 @@ pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained)."
 license=('GPL')
 depends=('qtutilities' 'openssl')
 makedepends=('qt5-tools')
+provides=('videodownloader')
+conflicts=('videodownloader')
 install=${pkgname}.install
 url="https://github.com/Martchus/videodownloader"
-source=("videodownloader-${pkgver}.tar.gz::https://github.com/Martchus/videodownloader/archive/v${pkgver}.tar.gz")
+source=("${pkgname}::git://github.com/Martchus/videodownloader.git")
 _reponame=videodownloader
 sha256sums=('skip')
 
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
     make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     make install
 }

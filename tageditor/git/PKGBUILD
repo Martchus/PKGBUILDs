@@ -2,7 +2,7 @@
 # decide whether to link against the deprecated Qt WebKit module (in qt5-webkit package ~40 MB) or
 # the newer, chromium-based Qt WebEngine module (in qt5-webengine package ~100 MB)
 _webviewprovider=qt5-webkit
-pkgname=tageditor
+pkgname=tageditor-git
 pkgver=1.1.5
 pkgrel=5
 arch=('i686' 'x86_64')
@@ -10,14 +10,21 @@ pkgdesc="Library for reading and editing meta-data of several media formats."
 license=('GPL')
 depends=('qt5-script' $_webviewprovider 'qtutilities' 'tagparser')
 makedepends=('qt5-tools')
+provides=('tageditor')
+conflicts=('tageditor')
 install=${pkgname}.install
 url="https://github.com/Martchus/tageditor"
-source=("tageditor-${pkgver}.tar.gz::https://github.com/Martchus/tageditor/archive/v${pkgver}.tar.gz")
+source=("${pkgname}::git://github.com/Martchus/tageditor.git")
 _reponame=tageditor
 sha256sums=('skip')
 
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     cfg=()
     if [[ _webviewprovider == qt5-webkit ]]; then
         cfg+=(forcewebkit)
@@ -27,6 +34,6 @@ build() {
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     make install
 }

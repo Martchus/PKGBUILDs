@@ -1,5 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
-pkgname=qtutilities
+pkgname=qtutilities-git
 pkgver=2.0.0
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -8,19 +8,26 @@ pkgdesc="Common Qt related C++ classes and routines used by my
 license=('GPL')
 depends=('c++utilities' 'qt5-base')
 makedepends=
+provides=('qtutilities')
+conflicts=('qtutilities')
 url="https://github.com/Martchus/qtutilities"
-source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/qtutilities/archive/v${pkgver}.tar.gz")
+source=("${pkgname}::git://github.com/Martchus/qtutilities.git")
 _reponame=qtutilities
 sha256sums=('skip')
 
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
     make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     make install
 }
 

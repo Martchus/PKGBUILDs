@@ -2,7 +2,7 @@
 _name=passwordmanager
 pkgname=mingw-w64-passwordmanager
 pkgver=2.0.7
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (mingw-w64)."
 license=('GPL')
@@ -11,17 +11,15 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-tools')
 url="https://github.com/Martchus/passwordmanager"
 source=("passwordmanager-${pkgver}.tar.gz::https://github.com/Martchus/passwordmanager/archive/v${pkgver}.tar.gz")
 _reponame=passwordmanager
-sha256sums=('4e94aff9225d8873f752995c1bcc5f15')
+sha256sums=('skip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
-
-# head end
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     # build for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 -r ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe CONFIG+=mingw-w64-noversion
+        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe CONFIG+=mingw-w64-noversion
         make
         popd
     done

@@ -17,8 +17,6 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/arc
 noextract=
 sha256sums=('skip')
 
-# head end
-
 package() {
     _srcdir="${srcdir}/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     install -Dm755 "${_srcdir}/blackwidowcontrol.py" "${pkgdir}/usr/bin/blackwidowcontrol"

@@ -2,20 +2,27 @@ OTHER_FILES += \
     README.md \
     LICENSE \
     c++utilities/default/PKGBUILD \
+    c++utilities/git/PKGBUILD \
     c++utilities/mingw-w64/PKGBUILD \
     geocoordinatecalculator/default/PKGBUILD \
     geocoordinatecalculator/mingw-w64/PKGBUILD \
     passwordfile/default/PKGBUILD \
+    passwordfile/git/PKGBUILD \
     passwordfile/mingw-w64/PKGBUILD \
     passwordmanager/default/PKGBUILD \
+    passwordmanager/git/PKGBUILD \
     passwordmanager/mingw-w64/PKGBUILD \
     qtutilities/default/PKGBUILD \
+    qtutilities/git/PKGBUILD \
     qtutilities/mingw-w64/PKGBUILD \
     repoindex/default/PKGBUILD \
+    repoindex/git/PKGBUILD \
     repoindex/mingw-w64/PKGBUILD \
     tageditor/default/PKGBUILD \
+    tageditor/git/PKGBUILD \
     tageditor/mingw-w64/PKGBUILD \
     tagparser/default/PKGBUILD \
+    tagparser/git/PKGBUILD \
     tagparser/mingw-w64/PKGBUILD \
     tasky-client/default/PKGBUILD \
     tasky-client/mingw-w64/PKGBUILD \
@@ -24,6 +31,7 @@ OTHER_FILES += \
     tasky-server/default/PKGBUILD \
     tasky-server/mingw-w64/PKGBUILD \
     videodownloader/default/PKGBUILD \
+    videodownloader/git/PKGBUILD \
     videodownloader/mingw-w64/PKGBUILD \
     blackwidowcontrol/default/PKGBUILD \
     diriterator/default/PKGBUILD \
@@ -32,4 +40,5 @@ OTHER_FILES += \
     jflap/default/PKGBUILD \
     exorciser/default/PKGBUILD \
     mkvtoolnix/git/PKGBUILD \
-    isoviewer/default/PKGBUILD
+    isoviewer/default/PKGBUILD \
+    dbus-soundrecorder/default/PKGBUILD

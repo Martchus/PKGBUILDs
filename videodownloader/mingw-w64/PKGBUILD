@@ -2,7 +2,7 @@
 _name=videodownloader
 pkgname=mingw-w64-videodownloader
 pkgver=1.0.7
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained, mingw-w64)."
 license=('GPL')
@@ -11,17 +11,15 @@ makedepends=('mingw-w64-gcc')
 url="https://github.com/Martchus/videodownloader"
 source=("videodownloader-${pkgver}.tar.gz::https://github.com/Martchus/videodownloader/archive/v${pkgver}.tar.gz")
 _reponame=videodownloader
-md5sums=('4e94aff9225d8873f752995c1bcc5f15')
+md5sums=('skip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
-
-# head end
 
 build() {
     cd $srcdir/$_name
     # build utilities for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 -r ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe CONFIG+=mingw-w64-noversion
+        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe CONFIG+=mingw-w64-noversion
         make
         popd
     done

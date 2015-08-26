@@ -1,28 +1,26 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=passwordfile
 pkgname=mingw-w64-passwordfile
-pkgver=2.0.5
-pkgrel=2
+pkgver=3.0.0
+pkgrel=1
 arch=('any')
-pkgdesc="A library for reading and writing AES-256-CBC encrypted password files using OpenSSL (mingw-w64)."
+pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, mingw-w64)."
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities' 'mingw-w64-openssl')
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
 url="https://github.com/Martchus/passwordfile"
 source=("passwordfile-${pkgver}.tar.gz::https://github.com/Martchus/passwordfile/archive/v${pkgver}.tar.gz")
 _reponame=passwordfile
-sha256sums=('4e94aff9225d8873f752995c1bcc5f15')
+sha256sums=('skip')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
-
-# head end
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     # build for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 -r ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-dll CONFIG+=mingw-w64-noversion
+        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-dll CONFIG+=mingw-w64-noversion
         make
         popd
     done

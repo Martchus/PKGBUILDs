@@ -8,18 +8,23 @@ license=('GPL')
 depends=('qt5-base' 'qt5-network' 'pacman' 'c++utilities')
 makedepends=
 url="https://github.com/Martchus/repoindex"
-source=("repoindex-${pkgver}.tar.gz::https://github.com/Martchus/repoindex/archive/v${pkgver}.tar.gz")
+source=("${pkgname}::git://github.com/Martchus/repoindex.git")
 _reponame=repoindex
 sha256sums=('skip')
 
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" -r -spec linux-g++
     make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     make install
 }
 

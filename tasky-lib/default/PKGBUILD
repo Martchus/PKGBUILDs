@@ -9,13 +9,11 @@ makedepends=
 url="https://github.com/Martchus/tasky-library"
 source=("tasky-lib-${pkgver}.tar.gz::https://github.com/Martchus/tasky-library/archive/v${pkgver}.tar.gz")
 _reponame='tasky-library'
-sha256sums=('cee38afc5eb60b2da4eba64107628ed7')
-
-# head end
+sha256sums=('skip')
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" -r -spec linux-g++
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
     make
 }
 

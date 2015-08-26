@@ -1,5 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
-pkgname=c++utilities
+pkgname=c++utilities-git
 pkgver=2.0.0
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -8,18 +8,25 @@ as argument parser, IO and conversion utilities."
 license=('GPL')
 depends=('gcc-libs')
 makedepends=('qt5-base')
+provides=('c++utilities')
+conflicts=('c++utilities')
 url="https://github.com/Martchus/cpp-utilities"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/cpp-utilities/archive/v${pkgver}.tar.gz")
+source=("${pkgname}::git://github.com/Martchus/cpp-utilities.git")
 _reponame=cpp-utilities
 sha256sums=('skip')
 
+pkgver() {
+    cd "${srcdir}/${pkgname}"
+    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
     make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cd "${srcdir}/${pkgname}"
     make install
 }

@@ -12,7 +12,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
 url="https://github.com/Martchus/cpp-utilities"
 source=("c++utilities-${pkgver}.tar.gz::https://github.com/Martchus/cpp-utilities/archive/v${pkgver}.tar.gz")
 _reponame=cpp-utilities
-sha256sums=('skip')
+sha256sums=('13cd2a9fb394d0da7656880adb1e358fc40f1b4860f77fd64970c4d00f70b05f')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

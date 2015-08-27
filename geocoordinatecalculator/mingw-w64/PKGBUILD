@@ -11,7 +11,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
 url="https://github.com/Martchus/geocoordinatecalculator"
 source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/geocoordinatecalculator/archive/v${pkgver}.tar.gz")
 _reponame=geocoordinatecalculator
-sha256sums=('skip')
+sha256sums=('SKIP')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {

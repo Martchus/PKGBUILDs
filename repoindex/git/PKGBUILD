@@ -10,7 +10,7 @@ makedepends=
 url="https://github.com/Martchus/repoindex"
 source=("${pkgname}::git://github.com/Martchus/repoindex.git")
 _reponame=repoindex
-sha256sums=('skip')
+sha256sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/${pkgname}"

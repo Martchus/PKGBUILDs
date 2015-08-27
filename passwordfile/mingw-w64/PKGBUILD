@@ -11,7 +11,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
 url="https://github.com/Martchus/passwordfile"
 source=("passwordfile-${pkgver}.tar.gz::https://github.com/Martchus/passwordfile/archive/v${pkgver}.tar.gz")
 _reponame=passwordfile
-sha256sums=('skip')
+sha256sums=('SKIP')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

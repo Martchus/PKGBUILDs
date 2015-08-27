@@ -12,7 +12,7 @@ makedepends=('boost' 'ruby' 'git')
 provides=('mkvtoolnix' 'mkvtoolnix-cli')
 conflicts=('mkvtoolnix')
 source=("${pkgname}::git://github.com/mbunkus/mkvtoolnix.git")
-md5sums=('skip')
+md5sums=('SKIP')
 install=mkvtoolnix.install
 
 pkgver() {

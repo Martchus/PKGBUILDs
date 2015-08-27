@@ -11,7 +11,7 @@ makedepends=('mingw-w64-gcc')
 url="https://github.com/Martchus/videodownloader"
 source=("videodownloader-${pkgver}.tar.gz::https://github.com/Martchus/videodownloader/archive/v${pkgver}.tar.gz")
 _reponame=videodownloader
-md5sums=('skip')
+md5sums=('SKIP')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {

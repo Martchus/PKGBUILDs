@@ -10,7 +10,7 @@ makedepends=('mingw-w64-gcc')
 url="https://github.com/Martchus/tasky-client"
 source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/tasky-client/archive/v${pkgver}.tar.gz")
 _reponame=tasky-client
-sha256sums=('skip')
+sha256sums=('SKIP')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

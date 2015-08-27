@@ -12,7 +12,7 @@ conflicts=('videodownloader')
 url="https://github.com/Martchus/tagparser"
 source=("${pkgname}::git://github.com/Martchus/tagparser.git")
 _reponame=tagparser
-sha256sums=('skip')
+sha256sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/${pkgname}"

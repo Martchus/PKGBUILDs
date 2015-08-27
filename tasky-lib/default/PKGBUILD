@@ -9,7 +9,7 @@ makedepends=
 url="https://github.com/Martchus/tasky-library"
 source=("tasky-lib-${pkgver}.tar.gz::https://github.com/Martchus/tasky-library/archive/v${pkgver}.tar.gz")
 _reponame='tasky-library'
-sha256sums=('skip')
+sha256sums=('SKIP')
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

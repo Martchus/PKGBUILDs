@@ -16,7 +16,7 @@ install=${pkgname}.install
 url="https://github.com/Martchus/tageditor"
 source=("${pkgname}::git://github.com/Martchus/tageditor.git")
 _reponame=tageditor
-sha256sums=('skip')
+sha256sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/${pkgname}"

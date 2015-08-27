@@ -13,7 +13,7 @@ conflicts=('qtutilities')
 url="https://github.com/Martchus/qtutilities"
 source=("${pkgname}::git://github.com/Martchus/qtutilities.git")
 _reponame=qtutilities
-sha256sums=('skip')
+sha256sums=('SKIP')
 
 pkgver() {
     cd "${srcdir}/${pkgname}"

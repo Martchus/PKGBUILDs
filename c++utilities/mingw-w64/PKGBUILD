@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=c++utilities
 pkgname=mingw-w64-c++utilities
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 arch=('any')
 pkgdesc="Common C++ classes and routines used by my applications such

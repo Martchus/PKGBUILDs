@@ -1,9 +1,9 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=videodownloader-git
 pkgver=1.0.8
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
-pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained)."
+pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained, git version)."
 license=('GPL')
 depends=('qtutilities' 'openssl')
 makedepends=('qt5-tools')

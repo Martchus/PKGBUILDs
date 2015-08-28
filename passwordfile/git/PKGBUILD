@@ -1,9 +1,9 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=passwordfile-git
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
-pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL)."
+pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, git version)."
 license=('GPL')
 depends=('c++utilities' 'openssl')
 makedepends=('qt5-base')

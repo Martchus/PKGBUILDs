@@ -1,9 +1,9 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=repoindex
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
-pkgdesc="Provides a web interface to browse Arch Linux package repositories."
+pkgdesc="Provides a web interface to browse Arch Linux package repositories (git version)."
 license=('GPL')
 depends=('qt5-base' 'qt5-network' 'pacman' 'c++utilities')
 makedepends=

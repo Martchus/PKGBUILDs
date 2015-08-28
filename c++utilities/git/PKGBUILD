@@ -1,10 +1,10 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=c++utilities-git
 pkgver=2.0.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc="Common C++ classes and routines used by my applications such
-as argument parser, IO and conversion utilities."
+as argument parser, IO and conversion utilities (git version)."
 license=('GPL')
 depends=('gcc-libs')
 makedepends=('qt5-base')

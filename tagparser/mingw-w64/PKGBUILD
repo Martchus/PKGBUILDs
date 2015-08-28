@@ -2,9 +2,9 @@
 _name=tagparser
 pkgname=mingw-w64-tagparser
 pkgver=2.0.0
-pkgrel=1
+pkgrel=3
 arch=('any')
-pkgdesc="Library for reading and editing meta-data of several media formats (mingw-w64)."
+pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags (mingw-w64)."
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities')
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')

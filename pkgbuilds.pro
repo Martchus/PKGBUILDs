@@ -10,7 +10,9 @@ OTHER_FILES += \
     passwordfile/git/PKGBUILD \
     passwordfile/mingw-w64/PKGBUILD \
     passwordmanager/default/PKGBUILD \
+    passwordmanager/default/passwordmanager.install \
     passwordmanager/git/PKGBUILD \
+    passwordmanager/git/passwordmanager.install \
     passwordmanager/mingw-w64/PKGBUILD \
     qtutilities/default/PKGBUILD \
     qtutilities/git/PKGBUILD \
@@ -19,7 +21,9 @@ OTHER_FILES += \
     repoindex/git/PKGBUILD \
     repoindex/mingw-w64/PKGBUILD \
     tageditor/default/PKGBUILD \
+    tageditor/default/tageditor.install \
     tageditor/git/PKGBUILD \
+    tageditor/git/tageditor.install \
     tageditor/mingw-w64/PKGBUILD \
     tagparser/default/PKGBUILD \
     tagparser/git/PKGBUILD \
@@ -31,7 +35,9 @@ OTHER_FILES += \
     tasky-server/default/PKGBUILD \
     tasky-server/mingw-w64/PKGBUILD \
     videodownloader/default/PKGBUILD \
+    videodownloader/default/videodownloader.install \
     videodownloader/git/PKGBUILD \
+    videodownloader/git/videodownloader.install \
     videodownloader/mingw-w64/PKGBUILD \
     blackwidowcontrol/default/PKGBUILD \
     diriterator/default/PKGBUILD \
@@ -40,5 +46,7 @@ OTHER_FILES += \
     jflap/default/PKGBUILD \
     exorciser/default/PKGBUILD \
     mkvtoolnix/git/PKGBUILD \
+    mkvtoolnix/git/mkvtoolnix.install \
     isoviewer/default/PKGBUILD \
+    isoviewer/default/isoviewer.install \
     dbus-soundrecorder/default/PKGBUILD

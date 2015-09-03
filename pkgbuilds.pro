@@ -51,4 +51,5 @@ OTHER_FILES += \
     isoviewer/default/isoviewer.install \
     dbus-soundrecorder/default/PKGBUILD \
     subtitlecomposer/default/PKGBUILD \
-    subtitlecomposer/git/PKGBUILD
+    subtitlecomposer/git/PKGBUILD \
+    subtitlecomposer/git/subtitlecomposer.install

@@ -1,6 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_name=tagparser
 pkgname=tagparser-git
-pkgver=2.0.1
+pkgver=52.aa50c2d
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags."
@@ -21,7 +22,7 @@ pkgver() {
 
 build() {
     cd "${srcdir}/${pkgname}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro"
     make -j 4
 }
 

@@ -2,8 +2,9 @@
 # decide whether to link against the deprecated Qt WebKit module (in qt5-webkit package ~40 MB) or
 # the newer, chromium-based Qt WebEngine module (in qt5-webengine package ~100 MB)
 _webviewprovider=qt5-webkit
+_name=tageditor
 pkgname=tageditor-git
-pkgver=1.1.5
+pkgver=66.77a0bc2
 pkgrel=10
 arch=('i686' 'x86_64')
 pkgdesc="A tag editor with Qt GUI and command-line interface supporting MP4 (iTunes), ID3, Vorbis and Matroska (git version)."
@@ -12,7 +13,7 @@ depends=('qt5-script' $_webviewprovider 'qtutilities' 'tagparser' 'desktop-file-
 makedepends=('qt5-tools')
 provides=('tageditor')
 conflicts=('tageditor')
-install=${pkgname}.install
+install=${_name}.install
 url="https://github.com/Martchus/tageditor"
 source=("${pkgname}::git://github.com/Martchus/tageditor.git")
 _reponame=tageditor
@@ -29,7 +30,7 @@ build() {
     if [[ _webviewprovider == qt5-webkit ]]; then
         cfg+=(forcewebkit)
     fi
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" $(for val in "${cfg[@]}"; do echo -n "CONFIG+=$val "; done)
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro" $(for val in "${cfg[@]}"; do echo -n "CONFIG+=$val "; done)
     make -j 4
 }
 

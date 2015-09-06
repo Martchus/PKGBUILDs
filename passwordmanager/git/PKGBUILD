@@ -1,7 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_name=passwordmanager
 pkgname=passwordmanager-git
-pkgver=2.0.7
-pkgrel=7
+pkgver=36.90d37ae
+pkgrel=8
 arch=('i686' 'x86_64')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (git version)."
 license=('GPL')
@@ -9,7 +10,7 @@ depends=('qt5-base' 'qtutilities' 'passwordfile' 'openssl' 'libxkbcommon-x11' 'd
 makedepends=('qt5-tools')
 provides=('passwordmanager')
 conflicts=('passwordmanager')
-install=${pkgname}.install
+install=${_name}.install
 url="https://github.com/Martchus/passwordmanager"
 source=("${pkgname}::git://github.com/Martchus/passwordmanager.git")
 _reponame=passwordmanager
@@ -22,7 +23,7 @@ pkgver() {
 
 build() {
     cd "${srcdir}/${pkgname}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
+    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro"
     make -j 4
 }
 

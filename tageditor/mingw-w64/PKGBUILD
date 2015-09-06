@@ -5,7 +5,7 @@ _name=tageditor
 _webviewprovider=qt5-webkit
 pkgname=mingw-w64-tageditor
 pkgver=1.1.5
-pkgrel=8
+pkgrel=9
 arch=('any')
 pkgdesc="A tageditor with Qt GUI and command line interface supporting MP4 (iTunes), ID3, Vorbis and Matroska."
 license=('GPL')
@@ -27,7 +27,7 @@ build() {
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
         INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro $(for val in "${cfg[@]}"; do echo -n "CONFIG+=$val "; done)
-        make
+        make -j 4
         popd
     done
 }

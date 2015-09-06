@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=passwordmanager-git
 pkgver=2.0.7
-pkgrel=5
+pkgrel=7
 arch=('i686' 'x86_64')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (git version)."
 license=('GPL')
@@ -23,7 +23,7 @@ pkgver() {
 build() {
     cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
-    make
+    make -j 4
 }
 
 package() {

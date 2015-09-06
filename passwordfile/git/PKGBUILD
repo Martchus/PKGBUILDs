@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=passwordfile-git
 pkgver=3.0.0
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, git version)."
 license=('GPL')
@@ -23,7 +23,7 @@ pkgver() {
 build() {
     cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
-    make
+    make -j 4
 }
 
 package() {

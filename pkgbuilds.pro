@@ -52,4 +52,8 @@ OTHER_FILES += \
     dbus-soundrecorder/default/PKGBUILD \
     subtitlecomposer/default/PKGBUILD \
     subtitlecomposer/git/PKGBUILD \
-    subtitlecomposer/git/subtitlecomposer.install
+    subtitlecomposer/git/subtitlecomposer.install \
+    brother-mfc-j4410dw/default/PKGBUILD \
+    brother-mfc-j4410dw/default/brother-mfc-j4410dw.install \
+    brother-mfc-j4410dw/default/cupswrapper-license.txt \
+    brother-mfc-j4410dw/default/lpr-license.txt

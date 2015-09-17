@@ -56,4 +56,5 @@ OTHER_FILES += \
     brother-mfc-j4410dw/default/PKGBUILD \
     brother-mfc-j4410dw/default/brother-mfc-j4410dw.install \
     brother-mfc-j4410dw/default/cupswrapper-license.txt \
-    brother-mfc-j4410dw/default/lpr-license.txt
+    brother-mfc-j4410dw/default/lpr-license.txt \
+    python-pyusb/default/PKGBUILD

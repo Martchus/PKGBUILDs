@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=tagparser
 pkgname=tagparser-git
-pkgver=52.aa50c2d
+pkgver=59.8cc75e1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags."

@@ -19,7 +19,7 @@ _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    cfg=(mingw-w64-{install,manualstrip-exe,noversion})
+    cfg=(mingw-w64-{install,manualstrip-exe})
     if [[ _webviewprovider == qt5-webkit ]]; then
         cfg+=(forcewebkit)
     fi
@@ -27,7 +27,7 @@ build() {
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
         INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro $(for val in "${cfg[@]}"; do echo -n "CONFIG+=$val "; done)
-        make -j 4
+        make -j 1
         popd
     done
 }

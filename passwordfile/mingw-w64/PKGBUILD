@@ -2,7 +2,7 @@
 _name=passwordfile
 pkgname=mingw-w64-passwordfile
 pkgver=3.0.0
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, mingw-w64)."
 license=('GPL')
@@ -21,7 +21,7 @@ build() {
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
         INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-dll CONFIG+=mingw-w64-noversion
-        make -j 4
+        make
         popd
     done
 }

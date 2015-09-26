@@ -2,7 +2,7 @@
 _name=tagparser
 pkgname=mingw-w64-tagparser
 pkgver=2.0.2
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags (mingw-w64)."
 license=('GPL')
@@ -21,7 +21,7 @@ build() {
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
         INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-dll CONFIG+=mingw-w64-noversion
-        make -j 4
+        make
         popd
     done
 }

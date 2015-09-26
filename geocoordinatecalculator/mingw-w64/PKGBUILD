@@ -2,7 +2,7 @@
 _name=geocoordinatecalculator
 pkgname=mingw-w64-geocoordinatecalculator
 pkgver=1.0.0
-pkgrel=9
+pkgrel=10
 arch=('any')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more (mingw-w64)."
 license=('GPL')
@@ -20,7 +20,7 @@ build() {
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
         INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe CONFIG+=mingw-w64-noversion
-        make -j 4
+        make
         popd
     done
 }

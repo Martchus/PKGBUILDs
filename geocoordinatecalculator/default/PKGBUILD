@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=geocoordinatecalculator
 pkgver=1.0.0
-pkgrel=10
+pkgrel=11
 arch=('i686' 'x86_64')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more."
 license=('GPL')
@@ -15,7 +15,7 @@ sha256sums=('1036a0a1d650e2b61bf7ac499c594b2759deb4c545c05acdd82d6b2c2e8d93cb')
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
-    make -j 4
+    make
 }
 
 package() {

@@ -2,7 +2,7 @@
 _name=videodownloader
 pkgname=videodownloader-git
 pkgver=27.8960d5b
-pkgrel=4
+pkgrel=5
 arch=('i686' 'x86_64')
 pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained, git version)."
 license=('GPL')
@@ -24,7 +24,7 @@ pkgver() {
 build() {
     cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro"
-    make -j 4
+    make
 }
 
 package() {

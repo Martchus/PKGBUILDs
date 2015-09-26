@@ -2,7 +2,7 @@
 _name=c++utilities
 pkgname=c++utilities-git
 pkgver=50.4d6bf67
-pkgrel=4
+pkgrel=5
 arch=('i686' 'x86_64')
 pkgdesc="Common C++ classes and routines used by my applications such
 as argument parser, IO and conversion utilities (git version)."
@@ -24,7 +24,7 @@ pkgver() {
 build() {
     cd "${srcdir}/${pkgname}"
     INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro"
-    make -j 4
+    make
 }
 
 package() {

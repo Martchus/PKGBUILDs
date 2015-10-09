@@ -1,8 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=tagparser
 pkgname=mingw-w64-tagparser
-pkgver=2.0.2
-pkgrel=2
+pkgver=2.0.3
+pkgrel=1
 arch=('any')
 pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags (mingw-w64)."
 license=('GPL')

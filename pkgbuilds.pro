@@ -57,4 +57,5 @@ OTHER_FILES += \
     brother-mfc-j4410dw/default/brother-mfc-j4410dw.install \
     brother-mfc-j4410dw/default/cupswrapper-license.txt \
     brother-mfc-j4410dw/default/lpr-license.txt \
-    python-pyusb/default/PKGBUILD
+    python-pyusb/default/PKGBUILD \
+    ffmpeg-libfdk_aac-git/git/PKGBUILD

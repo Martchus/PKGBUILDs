@@ -4,8 +4,8 @@ _name=tageditor
 # the newer, chromium-based Qt WebEngine module (qt5-webengine package ~100 MB)
 _webviewprovider=qt5-webkit
 pkgname=mingw-w64-tageditor
-pkgver=1.1.5
-pkgrel=9
+pkgver=1.2.0
+pkgrel=1
 arch=('any')
 pkgdesc="A tageditor with Qt GUI and command line interface supporting MP4 (iTunes), ID3, Vorbis and Matroska."
 license=('GPL')

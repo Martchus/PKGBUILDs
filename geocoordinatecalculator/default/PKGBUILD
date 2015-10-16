@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 pkgname=geocoordinatecalculator
-pkgver=1.0.0
-pkgrel=11
+pkgver=1.0.1
+pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more."
 license=('GPL')
@@ -10,7 +10,7 @@ makedepends=('qt5-base')
 url="https://github.com/Martchus/geocoordinatecalculator"
 source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/geocoordinatecalculator/archive/v${pkgver}.tar.gz")
 _reponame=geocoordinatecalculator
-sha256sums=('1036a0a1d650e2b61bf7ac499c594b2759deb4c545c05acdd82d6b2c2e8d93cb')
+sha256sums=('5eeeb11027e93bf676977877013756ccb17047d539596f24d20ab8b3787c9cbf')
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

@@ -1,8 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=geocoordinatecalculator
 pkgname=mingw-w64-geocoordinatecalculator
-pkgver=1.0.0
-pkgrel=10
+pkgver=1.0.1
+pkgrel=1
 arch=('any')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more (mingw-w64)."
 license=('GPL')

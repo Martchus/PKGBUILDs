@@ -1,8 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=passwordfile
 pkgname=mingw-w64-passwordfile
-pkgver=3.0.0
-pkgrel=3
+pkgver=3.0.1
+pkgrel=1
 arch=('any')
 pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, mingw-w64)."
 license=('GPL')

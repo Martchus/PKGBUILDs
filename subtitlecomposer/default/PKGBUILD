@@ -29,6 +29,8 @@ md5sums=('9e1fef4dca5a15e5c0435f1b099d4ab4')
 build() {
     cd ${srcdir}/subtitlecomposer-${pkgver}
     cmake -DCMAKE_INSTALL_PREFIX=/usr
+    # workaround for "gst/gstconfig.h: No such file or directory"
+    export CPATH=/usr/lib64/gstreamer-1.0/include
     make
 }
 

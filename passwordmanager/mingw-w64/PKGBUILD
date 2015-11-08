@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=passwordmanager
 pkgname=mingw-w64-passwordmanager
-pkgver=2.0.8
+pkgver=2.0.9
 pkgrel=1
 arch=('any')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (mingw-w64)."

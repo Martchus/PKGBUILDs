@@ -15,7 +15,7 @@ depends=(
       'libvorbis.so' 'libvorbisenc.so' 'libvpx.so' 'libx264.so' 'libx265.so'
       'libfdk-aac'
       )
-makedepends=('hardening-wrapper' 'ladspa' 'libvdpau' 'yasm')
+makedepends=('hardening-wrapper' 'ladspa' 'libvdpau' 'yasm' 'git')
 optdepends=('ladspa: LADSPA filters')
 provides=(
       "ffmpeg=$pkgver"

@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=qtutilities
 pkgname=mingw-w64-qtutilities
-pkgver=3.0.0
+pkgver=3.0.1
 pkgrel=1
 arch=('any')
 pkgdesc="Common Qt related C++ classes and routines used by my
@@ -12,7 +12,7 @@ makedepends=('mingw-w64-gcc')
 url="https://github.com/Martchus/qtutilities"
 source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/qtutilities/archive/v${pkgver}.tar.gz")
 _reponame=qtutilities
-sha256sums=('SKIP')
+sha256sums=('01f176f139be5bc2bb136428c497a1b491611e51c480d0fb261ae0536a270236')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

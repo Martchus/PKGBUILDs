@@ -59,4 +59,6 @@ OTHER_FILES += \
     brother-mfc-j4410dw/default/lpr-license.txt \
     python-pyusb/default/PKGBUILD \
     ffmpeg-libfdk_aac-git/git/PKGBUILD \
-    bento4/default/PKGBUILD
+    bento4/default/PKGBUILD \
+    ubuntu-latex-fonts/git/PKGBUILD \
+    ubuntu-latex-fonts/git/ubuntu-latex-fonts.install

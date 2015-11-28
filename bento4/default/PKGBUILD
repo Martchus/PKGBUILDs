@@ -1,0 +1,32 @@
+# Maintainer: Martchus <youremail@domain.com>
+pkgname=bento4
+_pkgverstr=1-4-2-585
+pkgver=1.4.2.585
+pkgrel=1
+pkgdesc="Bento4 is a C++ class library and tools designed to read and write ISO-MP4 files."
+arch=('i686' 'x86_64')
+url="http://www.bento4.com/"
+license=('GPL')
+optdepends=('python')
+source=("http://zebulon.bok.net/Bento4/source/Bento4-SRC-$_pkgverstr.zip")
+md5sums=('570ed02a95db075d76c014a73f4cd47d')
+_config="Release"
+if [ $CARCH == "i686" ]; then
+    _arch="x86"
+else
+    _arch=$CARCH
+fi
+
+build() {
+    cd "Build/Targets/$_arch-unknown-linux/"
+    sed -i "6s/.*/AP4_BUILD_CONFIG = $_config/" ../../Makefiles/Bootstrap.mak
+    make sdk
+}
+
+package() {
+    cd "Build/Targets/$_arch-unknown-linux/$_config/SDK"
+    mkdir -p $pkgdir/usr/bin/
+    install -m755 -D ./bin/* $pkgdir/usr/bin/
+    mkdir -p $pkgdir/usr/include/$pkgname/
+    install -m644 -D ./include/*.h $pkgdir/usr/include/$pkgname/
+} 

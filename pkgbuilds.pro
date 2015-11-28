@@ -58,4 +58,5 @@ OTHER_FILES += \
     brother-mfc-j4410dw/default/cupswrapper-license.txt \
     brother-mfc-j4410dw/default/lpr-license.txt \
     python-pyusb/default/PKGBUILD \
-    ffmpeg-libfdk_aac-git/git/PKGBUILD
+    ffmpeg-libfdk_aac-git/git/PKGBUILD \
+    bento4/default/PKGBUILD

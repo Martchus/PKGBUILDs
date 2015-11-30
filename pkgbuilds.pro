@@ -61,4 +61,5 @@ OTHER_FILES += \
     ffmpeg-libfdk_aac-git/git/PKGBUILD \
     bento4/default/PKGBUILD \
     ubuntu-latex-fonts/git/PKGBUILD \
-    ubuntu-latex-fonts/git/ubuntu-latex-fonts.install
+    ubuntu-latex-fonts/git/ubuntu-latex-fonts.install \
+    freetype2/mingw-w64/PKGBUILD

@@ -1,4 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_reponame=dbus-soundrecorder
 pkgname=dbus-soundrecorder
 pkgver=1.1.0
 pkgrel=2
@@ -7,9 +8,8 @@ pkgdesc="Records sound from Pulse Audio using ffmpeg while watching D-Bus to det
 license=('GPL')
 depends=('c++utilities')
 makedepends=('qt5-base')
-url="https://github.com/Martchus/dbus-soundrecorder"
-source=("dbus-soundrecorder-${pkgver}.tar.gz::https://github.com/Martchus/dbus-soundrecorder/archive/v${pkgver}.tar.gz")
-_reponame=dbus-soundrecorder
+url="https://github.com/Martchus/${_reponame}"
+source=("dbus-soundrecorder-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('0af1914803cf2f1d11fdb8e46f6c896a18040f6606a08d0742356dc0c7872261')
 
 build() {

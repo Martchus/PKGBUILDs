@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=passwordfile
+_reponame=passwordfile
 pkgname=passwordfile-git
 pkgver=20.bcefbb6
 pkgrel=5
@@ -11,9 +12,8 @@ makedepends=('qt5-base' 'git')
 provides=('passwordfile')
 conflicts=('passwordfile')
 install=
-url="https://github.com/Martchus/passwordfile"
-source=("${pkgname}::git://github.com/Martchus/passwordfile.git")
-_reponame=passwordfile
+url="https://github.com/Martchus/${_reponame}"
+source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

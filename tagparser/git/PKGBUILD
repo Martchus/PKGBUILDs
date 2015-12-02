@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=tagparser
+_reponame=tagparser
 pkgname=tagparser-git
 pkgver=59.8cc75e1
 pkgrel=2
@@ -10,9 +11,8 @@ depends=('c++utilities')
 makedepends=('qt5-base' 'git')
 provides=('videodownloader')
 conflicts=('videodownloader')
-url="https://github.com/Martchus/tagparser"
-source=("${pkgname}::git://github.com/Martchus/tagparser.git")
-_reponame=tagparser
+url="https://github.com/Martchus/${_reponame}"
+source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

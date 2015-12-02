@@ -1,4 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_reponame=cpp-utilities
 pkgname=c++utilities
 pkgver=3.0.0
 pkgrel=1
@@ -8,9 +9,8 @@ as argument parser, IO and conversion utilities."
 license=('GPL')
 depends=('gcc-libs')
 makedepends=('qt5-base')
-url="https://github.com/Martchus/cpp-utilities"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/cpp-utilities/archive/v${pkgver}.tar.gz")
-_reponame=cpp-utilities
+url="https://github.com/Martchus/${_reponame}"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('6de9cb9d9d2af191be79652590d5a23dfaa886c5384c59e7227508542d764dff')
 
 build() {

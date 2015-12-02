@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=c++utilities
+_reponame=cpp-utilities
 pkgname=c++utilities-git
 pkgver=50.4d6bf67
 pkgrel=5
@@ -11,9 +12,8 @@ depends=('gcc-libs')
 makedepends=('qt5-base' 'git')
 provides=('c++utilities')
 conflicts=('c++utilities')
-url="https://github.com/Martchus/cpp-utilities"
-source=("${pkgname}::git://github.com/Martchus/cpp-utilities.git")
-_reponame=cpp-utilities
+url="https://github.com/Martchus/${_reponame}"
+source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=qtutilities
+_reponame=qtutilities
 pkgname=mingw-w64-qtutilities
 pkgver=3.0.1
 pkgrel=1
@@ -9,9 +10,8 @@ pkgdesc="Common Qt related C++ classes and routines used by my
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-qt5-base' 'mingw-w64-c++utilities')
 makedepends=('mingw-w64-gcc')
-url="https://github.com/Martchus/qtutilities"
-source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/qtutilities/archive/v${pkgver}.tar.gz")
-_reponame=qtutilities
+url="https://github.com/Martchus/${_reponame}"
+source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('01f176f139be5bc2bb136428c497a1b491611e51c480d0fb261ae0536a270236')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"

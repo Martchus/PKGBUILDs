@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=c++utilities
+_reponame=cpp-utilities
 pkgname=mingw-w64-c++utilities
 pkgver=3.0.0
 pkgrel=1
@@ -9,9 +10,8 @@ as argument parser, IO and conversion utilities (mingw-w64)."
 license=('GPL')
 depends=('mingw-w64-crt')
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
-url="https://github.com/Martchus/cpp-utilities"
-source=("c++utilities-${pkgver}.tar.gz::https://github.com/Martchus/cpp-utilities/archive/v${pkgver}.tar.gz")
-_reponame=cpp-utilities
+url="https://github.com/Martchus/${_reponame}"
+source=("c++utilities-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('41dfde4b9e86c787cc93495508d017bdf490d6e93793c756e284d52ef340207d')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"

@@ -1,4 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_reponame=geocoordinatecalculator
 pkgname=geocoordinatecalculator
 pkgver=1.0.1
 pkgrel=1
@@ -7,9 +8,8 @@ pkgdesc="Tool for basic calculations with geo coordinates such as format convers
 license=('GPL')
 depends=('c++utilities')
 makedepends=('qt5-base')
-url="https://github.com/Martchus/geocoordinatecalculator"
-source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/geocoordinatecalculator/archive/v${pkgver}.tar.gz")
-_reponame=geocoordinatecalculator
+url="https://github.com/Martchus/${_reponame}"
+source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('5eeeb11027e93bf676977877013756ccb17047d539596f24d20ab8b3787c9cbf')
 
 build() {

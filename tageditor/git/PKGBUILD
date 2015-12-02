@@ -1,8 +1,9 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_name=tageditor
+_reponame=tageditor
 # decide whether to link against the deprecated Qt WebKit module (in qt5-webkit package ~40 MB) or
 # the newer, chromium-based Qt WebEngine module (in qt5-webengine package ~100 MB)
 _webviewprovider=qt5-webkit
-_name=tageditor
 pkgname=tageditor-git
 pkgver=66.77a0bc2
 pkgrel=11
@@ -14,9 +15,9 @@ makedepends=('qt5-tools' 'git')
 provides=('tageditor')
 conflicts=('tageditor')
 install=${_name}.install
-url="https://github.com/Martchus/tageditor"
-source=("${pkgname}::git://github.com/Martchus/tageditor.git")
-_reponame=tageditor
+url="https://github.com/Martchus/${_reponame}"
+source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
+
 sha256sums=('SKIP')
 
 pkgver() {

@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=passwordmanager
+_reponame=passwordmanager
 pkgname=passwordmanager-git
 pkgver=36.90d37ae
 pkgrel=9
@@ -11,9 +12,8 @@ makedepends=('qt5-tools' 'git')
 provides=('passwordmanager')
 conflicts=('passwordmanager')
 install=${_name}.install
-url="https://github.com/Martchus/passwordmanager"
-source=("${pkgname}::git://github.com/Martchus/passwordmanager.git")
-_reponame=passwordmanager
+url="https://github.com/Martchus/${_reponame}"
+source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

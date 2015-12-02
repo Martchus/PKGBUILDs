@@ -1,4 +1,5 @@
 # Maintainer: Martchus <martchus@gmx.net>
+_reponame=passwordfile
 pkgname=passwordfile
 pkgver=3.0.1
 pkgrel=1
@@ -8,9 +9,8 @@ license=('GPL')
 depends=('c++utilities' 'openssl')
 makedepends=('qt5-base')
 install=
-url="https://github.com/Martchus/passwordfile"
-source=("passwordfile-${pkgver}.tar.gz::https://github.com/Martchus/passwordfile/archive/v${pkgver}.tar.gz")
-_reponame=passwordfile
+url="https://github.com/Martchus/${_reponame}"
+source=("passwordfile-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('959176b21b45c8435c7c87d501c263dc4d8088e861b8659294448f6c77768ebb')
 
 build() {

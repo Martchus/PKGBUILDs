@@ -1,17 +1,17 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=tagparser
+_reponame=tagparser
 pkgname=mingw-w64-tagparser
-pkgver=3.0.0
+pkgver=3.0.1
 pkgrel=1
 arch=('any')
 pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags (mingw-w64)."
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities')
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
-url="https://github.com/Martchus/tagparser"
-source=("tagparser-${pkgver}.tar.gz::https://github.com/Martchus/tagparser/archive/v${pkgver}.tar.gz")
-_reponame=tagparser
-sha256sums=('SKIP')
+url="https://github.com/Martchus/${_reponame}"
+source=("tagparser-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('4b4f029170e934976f7619da3f89ffb34ce173dd6f36f3a9afe4cb1f37802af8')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

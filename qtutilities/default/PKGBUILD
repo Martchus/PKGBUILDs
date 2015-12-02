@@ -8,8 +8,8 @@ pkgdesc="Common Qt related C++ classes and routines used by my
 license=('GPL')
 depends=('c++utilities' 'qt5-base')
 makedepends=
-url="https://github.com/Martchus/qtutilities"
-source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/qtutilities/archive/v${pkgver}.tar.gz")
+url="https://github.com/Martchus/${pkgname}"
+source=("qtutilities-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
 _reponame=qtutilities
 sha256sums=('01f176f139be5bc2bb136428c497a1b491611e51c480d0fb261ae0536a270236')
 

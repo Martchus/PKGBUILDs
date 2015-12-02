@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=geocoordinatecalculator
+_reponame=geocoordinatecalculator
 pkgname=mingw-w64-geocoordinatecalculator
 pkgver=1.0.1
 pkgrel=1
@@ -8,9 +9,8 @@ pkgdesc="Tool for basic calculations with geo coordinates such as format convers
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities')
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
-url="https://github.com/Martchus/geocoordinatecalculator"
-source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/geocoordinatecalculator/archive/v${pkgver}.tar.gz")
-_reponame=geocoordinatecalculator
+url="https://github.com/Martchus/${_reponame}"
+source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

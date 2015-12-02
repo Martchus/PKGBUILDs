@@ -1,5 +1,6 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _name=passwordfile
+_reponame=passwordfile
 pkgname=mingw-w64-passwordfile
 pkgver=3.0.1
 pkgrel=1
@@ -8,9 +9,8 @@ pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities' 'mingw-w64-openssl')
 makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
-url="https://github.com/Martchus/passwordfile"
-source=("passwordfile-${pkgver}.tar.gz::https://github.com/Martchus/passwordfile/archive/v${pkgver}.tar.gz")
-_reponame=passwordfile
+url="https://github.com/Martchus/${_reponame}"
+source=("passwordfile-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 options=('staticlibs' '!strip')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"

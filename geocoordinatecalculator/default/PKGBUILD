@@ -2,19 +2,19 @@
 _reponame=geocoordinatecalculator
 pkgname=geocoordinatecalculator
 pkgver=1.0.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more."
 license=('GPL')
 depends=('c++utilities')
-makedepends=('qt5-base')
+makedepends=('cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('5eeeb11027e93bf676977877013756ccb17047d539596f24d20ab8b3787c9cbf')
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
     make
 }
 

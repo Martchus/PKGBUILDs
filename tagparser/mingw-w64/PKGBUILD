@@ -2,17 +2,17 @@
 _name=tagparser
 _reponame=tagparser
 pkgname=mingw-w64-tagparser
-pkgver=3.0.1
+pkgver=4.0.0
 pkgrel=1
 arch=('any')
 pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags (mingw-w64)."
 license=('GPL')
-depends=('mingw-w64-crt' 'mingw-w64-c++utilities')
-makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-base')
+depends=('mingw-w64-crt' 'mingw-w64-c++utilities' 'mingw-w64-zlib')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("tagparser-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('4b4f029170e934976f7619da3f89ffb34ce173dd6f36f3a9afe4cb1f37802af8')
-options=('staticlibs' '!strip')
+options=(!buildflags staticlibs !strip !emptydirs)
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
@@ -20,7 +20,7 @@ build() {
     # build utilities for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-dll CONFIG+=mingw-w64-noversion
+        ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/${_arch}" ../
         make
         popd
     done
@@ -30,7 +30,7 @@ package() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     for _arch in ${_architectures}; do
         pushd build-${_arch}
-        make install
+        make install-mingw-w64-strip
         popd
     done
 }

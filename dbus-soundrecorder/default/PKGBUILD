@@ -2,19 +2,19 @@
 _reponame=dbus-soundrecorder
 pkgname=dbus-soundrecorder
 pkgver=1.1.0
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 pkgdesc="Records sound from Pulse Audio using ffmpeg while watching D-Bus to determine tracks and meta data."
 license=('GPL')
-depends=('c++utilities')
-makedepends=('qt5-base')
+depends=('c++utilities' 'qt5-base')
+makedepends=('cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("dbus-soundrecorder-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('0af1914803cf2f1d11fdb8e46f6c896a18040f6606a08d0742356dc0c7872261')
 
 build() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
     make
 }
 

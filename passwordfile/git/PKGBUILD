@@ -3,12 +3,12 @@ _name=passwordfile
 _reponame=passwordfile
 pkgname=passwordfile-git
 pkgver=20.bcefbb6
-pkgrel=5
+pkgrel=6
 arch=('i686' 'x86_64')
 pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, git version)."
 license=('GPL')
 depends=('c++utilities' 'openssl')
-makedepends=('qt5-base' 'git')
+makedepends=('cmake' 'git')
 provides=('passwordfile')
 conflicts=('passwordfile')
 install=
@@ -22,12 +22,12 @@ pkgver() {
 }
 
 build() {
-    cd "${srcdir}/${pkgname}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro"
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
     make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}"
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     make install
 }

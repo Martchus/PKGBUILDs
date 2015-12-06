@@ -10,7 +10,6 @@ depends=('qt5-base' 'qt5-network' 'pacman' 'c++utilities')
 makedepends=
 url="https://github.com/Martchus/${_reponame}"
 source=("repoindex-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-_reponame=repoindex
 sha256sums=('SKIP')
 
 build() {

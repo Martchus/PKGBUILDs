@@ -6,18 +6,17 @@ _reponame=tageditor
 _webviewprovider=qt5-webkit
 pkgname=tageditor-git
 pkgver=66.77a0bc2
-pkgrel=11
+pkgrel=12
 arch=('i686' 'x86_64')
 pkgdesc="A tag editor with Qt GUI and command-line interface supporting MP4 (iTunes), ID3, Vorbis and Matroska (git version)."
 license=('GPL')
 depends=('qt5-script' $_webviewprovider 'qtutilities' 'tagparser' 'desktop-file-utils' 'xdg-utils')
-makedepends=('qt5-tools' 'git')
+makedepends=('cmake' 'qt5-tools' 'git')
 provides=('tageditor')
 conflicts=('tageditor')
 install=${_name}.install
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
-
 sha256sums=('SKIP')
 
 pkgver() {
@@ -26,16 +25,12 @@ pkgver() {
 }
 
 build() {
-    cd "${srcdir}/${pkgname}"
-    cfg=()
-    if [[ _webviewprovider == qt5-webkit ]]; then
-        cfg+=(forcewebkit)
-    fi
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro" $(for val in "${cfg[@]}"; do echo -n "CONFIG+=$val "; done)
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
     make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}"
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     make install
 }

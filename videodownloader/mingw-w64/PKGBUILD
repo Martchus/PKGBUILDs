@@ -3,15 +3,16 @@ _name=videodownloader
 _reponame=videodownloader
 pkgname=mingw-w64-videodownloader
 pkgver=1.2.1
-pkgrel=1
+pkgrel=2
 arch=('any')
-pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained, mingw-w64)."
+pkgdesc="A video downloader with Qt GUI (currently only YouTube and Vimeo are maintained, git version)."
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-qtutilities' 'mingw-w64-openssl')
-makedepends=('mingw-w64-gcc' 'ffmpeg')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'ffmpeg')
 url="https://github.com/Martchus/${_reponame}"
 source=("videodownloader-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-md5sums=('fefa04939c9310474e70b509142f7d7330e1c175d3507a081c58f447a34da347')
+sha256sums=('fefa04939c9310474e70b509142f7d7330e1c175d3507a081c58f447a34da347')
+options=(!buildflags staticlibs !strip !emptydirs)
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
@@ -19,8 +20,8 @@ build() {
     # build utilities for each architecture
     for _arch in ${_architectures}; do
         mkdir -p build-${_arch} && pushd build-${_arch}
-        INSTALL_ROOT=$pkgdir/usr/${_arch} ${_arch}-qmake-qt5 ../${_name}.pro CONFIG+=mingw-w64-install CONFIG+=mingw-w64-manualstrip-exe
-        make -j 1
+        ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/${_arch}" ../
+        make
         popd
     done
 }
@@ -29,7 +30,7 @@ package() {
     cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     for _arch in ${_architectures}; do
         pushd build-${_arch}
-        make install
+        make install-mingw-w64-strip
         popd  
     done
 }

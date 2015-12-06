@@ -3,12 +3,12 @@ _name=videodownloader
 _reponame=videodownloader
 pkgname=videodownloader-git
 pkgver=27.8960d5b
-pkgrel=5
+pkgrel=6
 arch=('i686' 'x86_64')
-pkgdesc="A video downloader with Qt GUI (currently only YouTube is maintained, git version)."
+pkgdesc="A video downloader with Qt GUI (currently only YouTube and Vimeo are maintained, git version)."
 license=('GPL')
 depends=('qtutilities' 'openssl' 'desktop-file-utils' 'xdg-utils')
-makedepends=('qt5-tools' 'git')
+makedepends=('cmake' 'qt5-tools' 'git')
 provides=('videodownloader')
 conflicts=('videodownloader')
 install=${_name}.install
@@ -22,12 +22,12 @@ pkgver() {
 }
 
 build() {
-    cd "${srcdir}/${pkgname}"
-    INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$_name.pro"
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
     make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}"
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
     make install
 }

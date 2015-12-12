@@ -62,4 +62,8 @@ OTHER_FILES += \
     bento4/default/PKGBUILD \
     ubuntu-latex-fonts/git/PKGBUILD \
     ubuntu-latex-fonts/git/ubuntu-latex-fonts.install \
-    freetype2/mingw-w64/PKGBUILD
+    freetype2/mingw-w64/PKGBUILD \
+    freetype2/mingw-w64/0001-Enable-table-validation-modules.patch \
+    freetype2/mingw-w64/0002-Enable-subpixel-rendering.patch \
+    freetype2/mingw-w64/0003-Enable-subpixel-hinting.patch \
+    freetype2/mingw-w64/0004-Mask-subpixel-hinting-with-an-env-var.patch

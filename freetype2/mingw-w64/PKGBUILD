@@ -10,9 +10,9 @@ license=('GPL')
 # introduces a cycle dep to harfbuzz depending on freetype wanted by upstream
 depends=(mingw-w64-crt mingw-w64-zlib mingw-w64-harfbuzz mingw-w64-bzip2)
 makedepends=(mingw-w64-gcc mingw-w64-configure)
-provides=($pkgname-bootstrap)
-replaces=($pkgname-bootstrap)
-conflicts=($pkgname-bootstrap)
+provides=(mingw-w64-freetype $pkgname-bootstrap)
+replaces=(mingw-w64-freetype $pkgname-bootstrap)
+conflicts=(mingw-w64-freetype $pkgname-bootstrap)
 source=(http://download.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.bz2{,.sig}
         0001-Enable-table-validation-modules.patch
         0002-Enable-subpixel-rendering.patch

@@ -1,18 +1,17 @@
 # Maintainer: Martchus <martchus@gmx.net>
-pkgname=mingw-w64-freetype2
+pkgname=mingw-w64-freetype2-bootstrap
 pkgver=2.6.2
-pkgrel=2
-pkgdesc="TrueType font rendering library (mingw-w64)"
+pkgrel=1
+pkgdesc="TrueType font rendering library (mingw-w64 bootstrap)"
 arch=('any')
 url="http://www.freetype.org/"
 license=('GPL')
 # adding harfbuzz for improved OpenType features auto-hinting
 # introduces a cycle dep to harfbuzz depending on freetype wanted by upstream
-depends=(mingw-w64-crt mingw-w64-zlib mingw-w64-harfbuzz mingw-w64-bzip2)
+depends=(mingw-w64-crt mingw-w64-zlib mingw-w64-bzip2)
 makedepends=(mingw-w64-gcc mingw-w64-configure)
-provides=($pkgname-bootstrap)
-replaces=($pkgname-bootstrap)
-conflicts=($pkgname-bootstrap)
+provides=(${pkgname%-bootstrap})
+conflicts=(${pkgname%-bootstrap})
 source=(http://download.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.bz2{,.sig}
         0001-Enable-table-validation-modules.patch
         0002-Enable-subpixel-rendering.patch

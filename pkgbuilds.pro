@@ -28,12 +28,6 @@ OTHER_FILES += \
     tagparser/default/PKGBUILD \
     tagparser/git/PKGBUILD \
     tagparser/mingw-w64/PKGBUILD \
-    tasky-client/default/PKGBUILD \
-    tasky-client/mingw-w64/PKGBUILD \
-    tasky-lib/default/PKGBUILD \
-    tasky-lib/mingw-w64/PKGBUILD \
-    tasky-server/default/PKGBUILD \
-    tasky-server/mingw-w64/PKGBUILD \
     videodownloader/default/PKGBUILD \
     videodownloader/default/videodownloader.install \
     videodownloader/git/PKGBUILD \

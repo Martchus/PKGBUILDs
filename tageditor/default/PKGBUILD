@@ -1,6 +1,4 @@
 # Maintainer: Martchus <martchus@gmx.net>
-# decide whether to link against the deprecated Qt WebKit module (in qt5-webkit package ~40 MB) or
-# the newer, chromium-based Qt WebEngine module (in qt5-webengine package ~100 MB)
 _reponame=tageditor
 pkgname=tageditor
 pkgver=1.3.0
@@ -16,12 +14,12 @@ source=("tageditor-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/ar
 sha256sums=('d089b9e66616c39147b639639152c5848f59dafa2c0a9a77d0137fbed13a2af9')
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
-    make
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    make install
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make install
 }

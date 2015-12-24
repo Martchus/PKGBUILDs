@@ -20,17 +20,17 @@ source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "${srcdir}/${pkgname}"
-    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  cd "${srcdir}/${pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
-    make
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    make install
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make install
 }

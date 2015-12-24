@@ -13,12 +13,12 @@ source=("tagparser-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/ar
 sha256sums=('4b4f029170e934976f7619da3f89ffb34ce173dd6f36f3a9afe4cb1f37802af8')
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
-    make
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    make install
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make install
 }

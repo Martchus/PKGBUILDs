@@ -5,7 +5,7 @@ pkgname=tagparser-git
 pkgver=59.8cc75e1
 pkgrel=3
 arch=('i686' 'x86_64')
-pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags."
+pkgdesc="C++ library for reading and writing MP4 (iTunes), ID3, Vorbis and Matroska tags (git version)."
 license=('GPL')
 depends=('c++utilities' 'zlib')
 makedepends=('cmake' 'git')
@@ -16,17 +16,17 @@ source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "${srcdir}/${pkgname}"
-    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  cd "${srcdir}/${pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
-    make
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    make install
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make install
 }

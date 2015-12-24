@@ -2,7 +2,7 @@
 _name=passwordmanager
 _reponame=passwordmanager
 pkgname=mingw-w64-passwordmanager
-pkgver=2.0.9
+pkgver=2.0.10
 pkgrel=1
 arch=('any')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (mingw-w64)."
@@ -16,21 +16,21 @@ options=(!buildflags staticlibs !strip !emptydirs)
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    # build utilities for each architecture
-    for _arch in ${_architectures}; do
-        mkdir -p build-${_arch} && pushd build-${_arch}
-        ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/${_arch}" ../
-        make
-        popd
-    done
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  # build utilities for each architecture
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+    ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/${_arch}" ../
+    make
+    popd
+  done
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    for _arch in ${_architectures}; do
-        pushd build-${_arch}
-        make install-mingw-w64-strip
-        popd
-    done
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  for _arch in ${_architectures}; do
+    pushd build-${_arch}
+    make install-mingw-w64-strip
+    popd
+  done
 }

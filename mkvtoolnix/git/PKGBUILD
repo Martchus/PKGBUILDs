@@ -16,8 +16,8 @@ md5sums=('SKIP')
 install=mkvtoolnix.install
 
 pkgver() {
-    cd "${srcdir}/${pkgname}"
-    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  cd "${srcdir}/${pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {

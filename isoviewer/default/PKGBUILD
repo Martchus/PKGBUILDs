@@ -19,11 +19,11 @@ md5sums=('a80b0b052bf4db529d9342da9a950b3f'
          'dddc76d48a27c97823c3f95131772a01')
 
 package() {
-    cd $srcdir
-    # start script
-    install -m755 -D "./${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
-    # jar file
-    install -m644 -D "./$pkgname-$pkgver.jar" "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
-    # menu entry
-    install -m644 -D "./${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
+  cd $srcdir
+  # start script
+  install -m755 -D "./${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+  # jar file
+  install -m644 -D "./$pkgname-$pkgver.jar" "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
+  # menu entry
+  install -m644 -D "./${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
 }

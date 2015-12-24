@@ -5,8 +5,7 @@ pkgname=c++utilities-git
 pkgver=50.4d6bf67
 pkgrel=6
 arch=('i686' 'x86_64')
-pkgdesc="Common C++ classes and routines used by my applications such
-as argument parser, IO and conversion utilities (git version)."
+pkgdesc="Common C++ classes and routines used by my applications such as argument parser, IO and conversion utilities (git version)."
 license=('GPL')
 depends=('gcc-libs')
 makedepends=('cmake' 'git')
@@ -17,17 +16,17 @@ source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "${srcdir}/${pkgname}"
-    echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  cd "${srcdir}/${pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
-    make
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  make
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    make install
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make install
 }

@@ -2,8 +2,8 @@
 _name=videodownloader
 _reponame=videodownloader
 pkgname=mingw-w64-videodownloader
-pkgver=1.2.1
-pkgrel=2
+pkgver=1.2.2
+pkgrel=1
 arch=('any')
 pkgdesc="A video downloader with Qt GUI (currently only YouTube and Vimeo are maintained, git version)."
 license=('GPL')
@@ -16,21 +16,21 @@ options=(!buildflags staticlibs !strip !emptydirs)
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    # build utilities for each architecture
-    for _arch in ${_architectures}; do
-        mkdir -p build-${_arch} && pushd build-${_arch}
-        ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/${_arch}" ../
-        make
-        popd
-    done
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  # build utilities for each architecture
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+    ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/${_arch}" ../
+    make
+    popd
+  done
 }
 
 package() {
-    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-    for _arch in ${_architectures}; do
-        pushd build-${_arch}
-        make install-mingw-w64-strip
-        popd  
-    done
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  for _arch in ${_architectures}; do
+    pushd build-${_arch}
+    make install-mingw-w64-strip
+    popd
+  done
 }

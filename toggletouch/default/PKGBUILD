@@ -18,5 +18,5 @@ noextract=
 md5sums=('SKIP')
 
 package() {
-    install -Dm755 "${srcdir}/${PROJECT_DIR_NAME:-$pkgname-$pkgver}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm755 "${srcdir}/${PROJECT_DIR_NAME:-$pkgname-$pkgver}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
 }

@@ -65,4 +65,7 @@ OTHER_FILES += \
     freetype2/mingw-w64-bootstrap/0001-Enable-table-validation-modules.patch \
     freetype2/mingw-w64-bootstrap/0002-Enable-subpixel-rendering.patch \
     freetype2/mingw-w64-bootstrap/0003-Enable-subpixel-hinting.patch \
-    freetype2/mingw-w64-bootstrap/0004-Mask-subpixel-hinting-with-an-env-var.patch
+    freetype2/mingw-w64-bootstrap/0004-Mask-subpixel-hinting-with-an-env-var.patch \
+    evince/mingw-w64/PKGBUILD \
+    evince/mingw-w64/0002-missing-include.patch \
+    geany/mingw-w64/PKGBUILD

@@ -1,0 +1,76 @@
+_name=evince
+pkgname=mingw-w64-evince
+pkgver=3.18.2
+pkgrel=1
+pkgdesc="Document viewer (build with PDF support only, mingw-w64)"
+url="https://wiki.gnome.org/Apps/Evince"
+arch=('any')
+license=('GPL')
+depends=('mingw-w64-crt' 'mingw-w64-gtk3' 'mingw-w64-poppler' 'mingw-w64-libxml2')
+makedepends=('itstool' 'intltool' 'mingw-w64-gcc' 'mingw-w64-configure' 'mingw-w64-binutils')
+install=
+source=(http://ftp.gnome.org/pub/gnome/sources/${_name}/${pkgver:0:4}/${_name}-$pkgver.tar.xz
+        0002-missing-include.patch)
+sha256sums=('42ad6c7354d881a9ecab136ea84ff867acb942605bcfac48b6c12e1c2d8ecb17'
+            'd2850c4bdfa87fa56bae2674d2c798f9181bfb3f19319fbc9966672caae48237')
+options=(!buildflags staticlibs !strip !emptydirs)
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  patch -p1 -i "${srcdir}/0002-missing-include.patch"
+}
+
+build() {
+  cd "${srcdir}/${_name}-${pkgver}"
+
+  for _arch in ${_architectures}; do
+    mkdir "build-${_arch}"
+    pushd "build-${_arch}"
+    ${_arch}-configure \
+        --exec-prefix=/usr/${_arch} \
+        --sysconfdir=/etc \
+        --prefix=/usr/${_arch} \
+        --localstatedir=/var \
+        --with-platform=win32 \
+        --disable-debug \
+        --disable-maintainer-mode \
+        --disable-schemas-compile \
+        --enable-viewer \
+        --disable-previewer \
+        --disable-thumbnailer \
+        --enable-pdf \
+        --disable-ps \
+        --disable-djvu \
+        --disable-dvi \
+        --disable-xps \
+        --disable-comics \
+        --enable-t1lib \
+        --enable-tiff \
+        --disable-nautilus \
+        --disable-browser-plugin \
+        --disable-gtk-doc \
+        --disable-introspection \
+        --disable-dbus \
+        --without-keyring \
+        --without-gtk-unix-print \
+        --disable-libgnome-desktop
+    make
+    popd
+  done
+}
+
+package() {
+  cd "${srcdir}/${_name}-${pkgver}"
+  for _arch in ${_architectures}; do
+    pushd "build-${_arch}"
+    alias strip=${_arch}-strip
+    make DESTDIR="${pkgdir}" install
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/${_name}/4/backends/"*.a
+    ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/${_name}/4/backends/"*.dll
+    ${_arch}-strip --strip-all "${pkgdir}/usr/${_arch}/bin/"*.exe
+    ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
+    popd
+  done
+}

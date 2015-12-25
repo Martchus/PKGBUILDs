@@ -1,4 +1,4 @@
-# $Id: PKGBUILD 151494 2015-12-10 03:54:41Z foutrelis $
+# Maintainer: Martchus <martchus@gmx.net>
 # Contributor: Alexander Rødseth <rodseth@gmail.com>
 # Contributor: Angel Velasquez <angvp@archlinux.org> 
 # Contributor: Ionut Biru  <ibiru@archlinux.ro>
@@ -9,7 +9,7 @@ _name=geany
 pkgname=mingw-w64-geany
 pkgver=1.26
 pkgrel=1
-pkgdesc='Fast and lightweight IDE'
+pkgdesc='Fast and lightweight IDE (mingw-w64)'
 arch=('any')
 url='http://www.geany.org/'
 license=('GPL')

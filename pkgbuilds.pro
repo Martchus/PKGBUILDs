@@ -68,4 +68,8 @@ OTHER_FILES += \
     freetype2/mingw-w64-bootstrap/0004-Mask-subpixel-hinting-with-an-env-var.patch \
     evince/mingw-w64/PKGBUILD \
     evince/mingw-w64/0002-missing-include.patch \
-    geany/mingw-w64/PKGBUILD
+    geany/mingw-w64/PKGBUILD \
+    gsm/mingw-w64/PKGBUILD \
+    gsm/mingw-w64/gsm.patch \
+    gsm/mingw-w64/makefile.patch \
+    gsm/mingw-w64/win32.patch

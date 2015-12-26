@@ -72,4 +72,9 @@ OTHER_FILES += \
     gsm/mingw-w64/PKGBUILD \
     gsm/mingw-w64/gsm.patch \
     gsm/mingw-w64/makefile.patch \
-    gsm/mingw-w64/win32.patch
+    gsm/mingw-w64/win32.patch \
+    libssh/mingw-w64/PKGBUILD \
+    libssh/mingw-w64/fix_check_include_files.patch \
+    libssh/mingw-w64/mingw-as-unix.patch \
+    libssh/mingw-w64/mingw-DATADIR-conflict.patch \
+    libssh/mingw-w64/mingw-pkgconfig.patch

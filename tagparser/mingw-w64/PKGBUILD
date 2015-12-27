@@ -11,7 +11,7 @@ depends=('mingw-w64-crt' 'mingw-w64-c++utilities' 'mingw-w64-zlib')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("tagparser-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('4b4f029170e934976f7619da3f89ffb34ce173dd6f36f3a9afe4cb1f37802af8')
+sha256sums=('653c48b36c40a4d3229fda87dbacbb493f728d5dc7a2ba85864ba6a1ae7f21a2')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

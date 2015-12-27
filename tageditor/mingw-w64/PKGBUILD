@@ -7,11 +7,11 @@ pkgrel=1
 arch=('any')
 pkgdesc="A tageditor with Qt GUI and command line interface supporting MP4 (iTunes), ID3, Vorbis and Matroska (mingw-w64)."
 license=('GPL')
-depends=(mingw-w64-{crt,qt5-script,$_webviewprovider,qtutilities,tagparser})
+depends=(mingw-w64-{crt,qt5-script,qt5-webkit,qtutilities,tagparser})
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'ffmpeg')
 url="https://github.com/Martchus/${_reponame}"
 source=("tageditor-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('d089b9e66616c39147b639639152c5848f59dafa2c0a9a77d0137fbed13a2af9')
+sha256sums=('6b050fe5281b0be7dba02783e86dfb93c781c8271be949e81371113905db1312')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

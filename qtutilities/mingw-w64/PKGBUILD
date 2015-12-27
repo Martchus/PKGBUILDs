@@ -2,8 +2,8 @@
 _name=qtutilities
 _reponame=qtutilities
 pkgname=mingw-w64-qtutilities
-pkgver=3.0.1
-pkgrel=2
+pkgver=3.1.0
+pkgrel=1
 arch=('any')
 pkgdesc="Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models. (mingw-w64)."
 license=('GPL')

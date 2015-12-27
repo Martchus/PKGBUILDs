@@ -12,28 +12,28 @@ source=("http://zebulon.bok.net/Bento4/source/Bento4-SRC-$_pkgverstr.zip")
 md5sums=('2803b1c0a55c37a723ded7ff44dbfedc')
 _config="Release"
 if [ $CARCH == "i686" ]; then
-    _arch="x86"
+  _arch="x86"
 else
-    _arch=$CARCH
+  _arch=$CARCH
 fi
 
 build() {
-    cd "Build/Targets/$_arch-unknown-linux/"
-    sed -i "6s/.*/AP4_BUILD_CONFIG = $_config/" ../../Makefiles/Bootstrap.mak
-    make sdk
+  cd "Build/Targets/$_arch-unknown-linux/"
+  sed -i "6s/.*/AP4_BUILD_CONFIG = $_config/" ../../Makefiles/Bootstrap.mak
+  make sdk
 }
 
 package() {
-    cd "Build/Targets/$_arch-unknown-linux/$_config/SDK"
-    mkdir -p $pkgdir/usr/bin/
-    mkdir -p $pkgdir/usr/lib/
-    mkdir -p $pkgdir/usr/include/$pkgname/
-    pushd ./bin
-    for file in *; do
-        # prefix binaries with "bento4-" to avoid conflicts
-        install -m755 -D "./$file" "$pkgdir/usr/bin/bento4-$file"
-    done
-    popd
-    install -m644 -D ./lib/*.a $pkgdir/usr/lib/
-    install -m644 -D ./include/*.h $pkgdir/usr/include/$pkgname/
+  cd "Build/Targets/$_arch-unknown-linux/$_config/SDK"
+  mkdir -p $pkgdir/usr/bin/
+  mkdir -p $pkgdir/usr/lib/
+  mkdir -p $pkgdir/usr/include/$pkgname/
+  pushd ./bin
+  for file in *; do
+    # prefix binaries with "bento4-" to avoid conflicts
+    install -m755 -D "./$file" "$pkgdir/usr/bin/bento4-$file"
+  done
+  popd
+  install -m644 -D ./lib/*.a $pkgdir/usr/lib/
+  install -m644 -D ./include/*.h $pkgdir/usr/include/$pkgname/
 } 

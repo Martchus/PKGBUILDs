@@ -28,12 +28,6 @@ OTHER_FILES += \
     tagparser/default/PKGBUILD \
     tagparser/git/PKGBUILD \
     tagparser/mingw-w64/PKGBUILD \
-    tasky-client/default/PKGBUILD \
-    tasky-client/mingw-w64/PKGBUILD \
-    tasky-lib/default/PKGBUILD \
-    tasky-lib/mingw-w64/PKGBUILD \
-    tasky-server/default/PKGBUILD \
-    tasky-server/mingw-w64/PKGBUILD \
     videodownloader/default/PKGBUILD \
     videodownloader/default/videodownloader.install \
     videodownloader/git/PKGBUILD \
@@ -71,4 +65,16 @@ OTHER_FILES += \
     freetype2/mingw-w64-bootstrap/0001-Enable-table-validation-modules.patch \
     freetype2/mingw-w64-bootstrap/0002-Enable-subpixel-rendering.patch \
     freetype2/mingw-w64-bootstrap/0003-Enable-subpixel-hinting.patch \
-    freetype2/mingw-w64-bootstrap/0004-Mask-subpixel-hinting-with-an-env-var.patch
+    freetype2/mingw-w64-bootstrap/0004-Mask-subpixel-hinting-with-an-env-var.patch \
+    evince/mingw-w64/PKGBUILD \
+    evince/mingw-w64/0002-missing-include.patch \
+    geany/mingw-w64/PKGBUILD \
+    gsm/mingw-w64/PKGBUILD \
+    gsm/mingw-w64/gsm.patch \
+    gsm/mingw-w64/makefile.patch \
+    gsm/mingw-w64/win32.patch \
+    libssh/mingw-w64/PKGBUILD \
+    libssh/mingw-w64/fix_check_include_files.patch \
+    libssh/mingw-w64/mingw-as-unix.patch \
+    libssh/mingw-w64/mingw-DATADIR-conflict.patch \
+    libssh/mingw-w64/mingw-pkgconfig.patch

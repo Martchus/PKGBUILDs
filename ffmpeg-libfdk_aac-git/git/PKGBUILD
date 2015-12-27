@@ -7,22 +7,18 @@ pkgdesc='Complete solution to record, convert and stream audio and video (Same a
 arch=('i686' 'x86_64')
 url='http://ffmpeg.org/'
 license=('GPL3' 'custom:libfdk-aac')
-depends=(
-      'alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'gnutls' 'gsm' 'lame' 'libass'
-      'libbluray' 'libmodplug' 'libpulse' 'libsoxr' 'libssh' 'libtheora'
-      'libva' 'libvdpau' 'libwebp' 'opencore-amr' 'openjpeg' 'opus'
-      'schroedinger' 'sdl' 'speex' 'v4l-utils' 'xvidcore' 'zlib'
-      'libvorbis.so' 'libvorbisenc.so' 'libvpx.so' 'libx264.so' 'libx265.so'
-      'libfdk-aac'
-      )
+depends=('alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'gnutls' 'gsm' 'lame' 'libass'
+         'libbluray' 'libmodplug' 'libpulse' 'libsoxr' 'libssh' 'libtheora'
+         'libva' 'libvdpau' 'libwebp' 'opencore-amr' 'openjpeg' 'opus'
+         'schroedinger' 'sdl' 'speex' 'v4l-utils' 'xvidcore' 'zlib'
+         'libvorbis.so' 'libvorbisenc.so' 'libvpx.so' 'libx264.so' 'libx265.so'
+         'libfdk-aac')
 makedepends=('hardening-wrapper' 'ladspa' 'libvdpau' 'yasm' 'git')
 optdepends=('ladspa: LADSPA filters')
-provides=(
-      "ffmpeg=$pkgver"
-      'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
-      'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
-      'libswscale.so'
-)
+provides=("ffmpeg=$pkgver"
+          'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
+          'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
+          'libswscale.so')
 conflicts=("$_name")
 source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
 md5sums=('SKIP')

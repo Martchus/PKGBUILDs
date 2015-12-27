@@ -11,6 +11,8 @@ depends=('java-environment')
 _file=${pkgname^^}.jar
 source=("http://www.cs.duke.edu/csed/jflap/jflaptmp/may15-2011/withoutSource/$_file"
         "$pkgname.sh")
+md5sums=('95d5f8f9f098331f6f61c24f7931589f'
+         'c5e9c07d641f0a28a65e575feff9ec60')
 
 package() {
   cd $srcdir
@@ -20,5 +22,3 @@ package() {
   cp $pkgname.sh $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
 }
-md5sums=('95d5f8f9f098331f6f61c24f7931589f'
-         'c5e9c07d641f0a28a65e575feff9ec60')

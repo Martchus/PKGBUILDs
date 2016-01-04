@@ -52,7 +52,6 @@ OTHER_FILES += \
     brother-mfc-j4410dw/default/cupswrapper-license.txt \
     brother-mfc-j4410dw/default/lpr-license.txt \
     python-pyusb/default/PKGBUILD \
-    ffmpeg-libfdk_aac-git/git/PKGBUILD \
     bento4/default/PKGBUILD \
     ubuntu-latex-fonts/git/PKGBUILD \
     ubuntu-latex-fonts/git/ubuntu-latex-fonts.install \
@@ -77,4 +76,12 @@ OTHER_FILES += \
     libssh/mingw-w64/fix_check_include_files.patch \
     libssh/mingw-w64/mingw-as-unix.patch \
     libssh/mingw-w64/mingw-DATADIR-conflict.patch \
-    libssh/mingw-w64/mingw-pkgconfig.patch
+    libssh/mingw-w64/mingw-pkgconfig.patch \
+    filezilla/mingw-w64-svn/PKGBUILD \
+    libfilezilla/mingw-w64-svn/PKGBUILD \
+    ffmpeg/libfdk_aac-git/PKGBUILD \
+    ffmpeg/mingw-w64/PKGBUILD \
+    x264/mingw-w64/PKGBUILD \
+    x265/mingw-w64/PKGBUILD \
+    x265/mingw-w64/mingw.patch \
+    wxwidgets/mingw-w64/PKGBUILD

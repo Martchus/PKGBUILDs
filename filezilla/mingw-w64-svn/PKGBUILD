@@ -1,13 +1,13 @@
 _name=filezilla
 pkgname=mingw-w64-filezilla-svn
-pkgver=r7228
+pkgver=r7235
 pkgrel=1
 pkgdesc="Fast and reliable FTP, FTPS and SFTP client (mingw-w64, svn version)"
 arch=('any')
-url="http://filezilla-project.org/"
+url="https://filezilla-project.org/"
 license=('GPL')
-depends=('mingw-w64-crt' 'mingw-w64-hicolor-icon-theme' 'mingw-w64-libpng' 'mingw-w64-dbus' 'mingw-w64-libidn' 'mingw-w64-sqlite' 'mingw-w64-gnutls' 'mingw-w64-libfilezilla-svn')
-makedepends=('mingw-w64-gcc' 'mingw-w64-configure' 'mingw-w64-wxmsw' 'wxgtk' 'subversion')
+depends=('mingw-w64-crt' 'mingw-w64-libidn' 'mingw-w64-sqlite' 'mingw-w64-gnutls' 'mingw-w64-wxmsw' 'mingw-w64-libfilezilla-svn')
+makedepends=('mingw-w64-gcc' 'mingw-w64-configure' 'wxgtk' 'subversion')
 install=
 source=("${_name}::svn+https://svn.filezilla-project.org/svn/FileZilla3/trunk")
 md5sums=('SKIP')
@@ -32,7 +32,8 @@ build() {
     ${_arch}-configure \
       --disable-manualupdatecheck \
       --disable-autoupdatecheck \
-      --with-pugixml=builtin
+      --with-pugixml=builtin \
+      --with-wx-config="${_arch}-wx-config --static=no"
     make
   done
 }

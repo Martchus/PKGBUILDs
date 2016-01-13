@@ -1,0 +1,51 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+_name=filezilla
+pkgname=filezilla-svn
+pkgver=r7253
+pkgrel=1
+pkgdesc="Fast and reliable FTP, FTPS and SFTP client (svn version)"
+arch=('i686' 'x86_64')
+url="https://filezilla-project.org/"
+license=('GPL')
+depends=('dbus' 'xdg-utils' 'wxgtk' 'libidn' 'hicolor-icon-theme' 'sqlite' 'gnutls' 'libfilezilla')
+makedepends=('subversion')
+checkdepends=('cppunit')
+provides=(${pkgname%-svn})
+conflicts=(${pkgname%-svn})
+install=filezilla.install
+source=("${_name}::svn+https://svn.filezilla-project.org/svn/FileZilla3/trunk")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_name}"
+  local ver="$(svnversion)"
+  printf "r%s" "${ver//[[:alpha:]]}"
+}
+
+prepare() {
+  cd "${srcdir}/${_name}"
+  autoreconf -i
+}
+
+build() {
+  cd "${srcdir}/${_name}"
+  ./configure \
+    --prefix=/usr \
+    --disable-manualupdatecheck \
+    --disable-autoupdatecheck \
+    --with-pugixml=builtin \
+    --disable-static \
+    --with-wx-config="wx-config --static=no"
+  make
+}
+
+check() {
+  cd "${_name}"
+  LANG=en_US.UTF-8 make check
+}
+
+package() {
+  cd "${srcdir}/${_name}"
+  make DESTDIR="${pkgdir}" install
+}

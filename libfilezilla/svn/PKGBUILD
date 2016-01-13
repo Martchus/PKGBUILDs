@@ -1,0 +1,47 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+_name=libfilezilla
+pkgname=libfilezilla-svn
+pkgver=r7253
+pkgrel=1
+pkgdesc="Library used by FileZilla (svn version)"
+arch=('i686' 'x86_64')
+url="https://filezilla-project.org/"
+license=('GPL')
+depends=('gcc-libs')
+makedepends=('subversion')
+checkdepends=('cppunit')
+provides=(${pkgname%-svn})
+conflicts=(${pkgname%-svn})
+install=
+source=("${_name}::svn+https://svn.filezilla-project.org/svn/libfilezilla/trunk")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_name}"
+  local ver="$(svnversion)"
+  printf "r%s" "${ver//[[:alpha:]]}"
+}
+
+prepare() {
+  cd "${srcdir}/${_name}"
+  autoreconf -i
+}
+
+build() {
+  cd "${srcdir}/${_name}"
+  ./configure \
+    --prefix=/usr \
+    --disable-static
+  make
+}
+
+check() {
+  cd "${srcdir}/${_name}"
+  LANG=en_US.UTF-8 make check
+}
+
+package() {
+  cd "${srcdir}/${_name}"
+  make DESTDIR="${pkgdir}" install
+}

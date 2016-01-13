@@ -1,6 +1,8 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
 _name=filezilla
 pkgname=mingw-w64-filezilla-svn
-pkgver=r7235
+pkgver=r7253
 pkgrel=1
 pkgdesc="Fast and reliable FTP, FTPS and SFTP client (mingw-w64, svn version)"
 arch=('any')
@@ -8,6 +10,8 @@ url="https://filezilla-project.org/"
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-libidn' 'mingw-w64-sqlite' 'mingw-w64-gnutls' 'mingw-w64-wxmsw' 'mingw-w64-libfilezilla-svn')
 makedepends=('mingw-w64-gcc' 'mingw-w64-configure' 'wxgtk' 'subversion')
+provides=(${pkgname%-svn})
+conflicts=(${pkgname%-svn})
 install=
 source=("${_name}::svn+https://svn.filezilla-project.org/svn/FileZilla3/trunk")
 md5sums=('SKIP')

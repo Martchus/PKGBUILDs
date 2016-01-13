@@ -77,11 +77,30 @@ OTHER_FILES += \
     libssh/mingw-w64/mingw-as-unix.patch \
     libssh/mingw-w64/mingw-DATADIR-conflict.patch \
     libssh/mingw-w64/mingw-pkgconfig.patch \
+    filezilla/svn/PKGBUILD \
+    filezilla/svn/filezilla.install \
     filezilla/mingw-w64-svn/PKGBUILD \
+    libfilezilla/svn/PKGBUILD \
     libfilezilla/mingw-w64-svn/PKGBUILD \
     ffmpeg/libfdk_aac-git/PKGBUILD \
     ffmpeg/mingw-w64/PKGBUILD \
     x264/mingw-w64/PKGBUILD \
     x265/mingw-w64/PKGBUILD \
     x265/mingw-w64/mingw.patch \
-    wxwidgets/mingw-w64/PKGBUILD
+    wxwidgets/mingw-w64/PKGBUILD \
+    qt5-webchannel/mingw-w64/PKGBUILD \
+    qt5-webengine/mingw-w64/PKGBUILD \
+    qt5-webengine/mingw-w64/0044-qt-5.4.0-win32-g++-enable-qtwebengine-build.patch \
+    qt5-webengine/mingw-w64-git/PKGBUILD \
+    qt5-webengine/mingw-w64-git/0044-qt-5.4.0-win32-g++-enable-qtwebengine-build.patch \
+    qt5-webview/default/PKGBUILD \
+    qt5-webview/git/PKGBUILD \
+    qt5-webview/mingw-w64-git/PKGBUILD \
+    ghostscript/mingw-w64/PKGBUILD \
+    ghostscript/mingw-w64/add_gserrors_h.diff \
+    ghostscript/mingw-w64/bug_696246.diff \
+    ghostscript/mingw-w64/ghostscript-sys-zlib.patch \
+    ghostscript/mingw-w64/libspectre.patch \
+    ghostscript/mingw-w64/mingw-build.patch \
+    lcms2/mingw-w64/PKGBUILD \
+    lcms2/mingw-w64/0002-need-jconfig-before-jmoreconfig.mingw

@@ -1,17 +1,17 @@
 pkgname=mingw-w64-wxmsw
 epoch=1
 pkgver=3.0.2
-pkgrel=1.1
+pkgrel=2
 pkgdesc="Win32 implementation of wxWidgets API for GUI (mingw-w64)"
-arch=('i686' 'x86_64') # contains binaries executed on the host
+arch=('any')
 url="http://wxwidgets.org"
 license=("custom:wxWindows")
-depends=(mingw-w64-crt mingw-w64-libpng mingw-w64-libjpeg-turbo mingw-w64-libtiff)
-makedepends=(mingw-w64-gcc)
+depends=('mingw-w64-crt' 'mingw-w64-libpng' 'mingw-w64-libjpeg-turbo' 'mingw-w64-libtiff')
+makedepends=('mingw-w64-gcc')
 options=(staticlibs !strip !buildflags)
-conflicts=(mingw-w64-wxmsw2.9 mingw-w64-wxmsw-static)
-provides=(mingw-w64-wxmsw2.9 mingw-w64-wxmsw-static)
-replaces=(mingw-w64-wxmsw2.9)
+conflicts=('mingw-w64-wxmsw2.9' 'mingw-w64-wxmsw-static')
+provides=('mingw-w64-wxmsw2.9' 'mingw-w64-wxmsw-static')
+replaces=('mingw-w64-wxmsw2.9')
 source=("http://downloads.sourceforge.net/wxwindows/wxWidgets-${pkgver}.tar.bz2")
 sha1sums=('6461eab4428c0a8b9e41781b8787510484dea800')
 

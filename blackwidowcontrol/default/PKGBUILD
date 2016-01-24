@@ -2,7 +2,7 @@
 pkgname=blackwidowcontrol
 pkgver=1.0.0
 pkgrel=3
-pkgdesc="Python script to enable macro keys of BlackWidow keyboard under GNU/Linux"
+pkgdesc="Python script to enable macro keys of the Razer BlackWidow keyboard under GNU/Linux"
 arch=('any')
 license=('GPL')
 groups=

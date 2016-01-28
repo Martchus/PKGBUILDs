@@ -43,6 +43,8 @@ OTHER_FILES += \
     mkvtoolnix/git/mkvtoolnix.install \
     isoviewer/default/PKGBUILD \
     isoviewer/default/isoviewer.install \
+    isoviewer/default/isoviewer.desktop \
+    isoviewer/default/isoviewer.sh \
     dbus-soundrecorder/default/PKGBUILD \
     subtitlecomposer/default/PKGBUILD \
     subtitlecomposer/git/PKGBUILD \

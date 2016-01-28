@@ -1,7 +1,7 @@
 _name=evince
 pkgname=mingw-w64-evince
 pkgver=3.18.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Document viewer (build with PDF support only, mingw-w64)"
 url="https://wiki.gnome.org/Apps/Evince"
 arch=('any')

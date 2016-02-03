@@ -1,22 +1,24 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
 pkgname=isoviewer
-pkgver=1.0.7
+pkgver=1.11
 pkgrel=1
 epoch=1
 arch=('any')
-pkgdesc="MP4/ISO Viewer"
-license=
+pkgdesc="GUI application to have closer look ISO 14496-12 and other MP4 files."
+url="https://github.com/sannies/$pkgname"
+license=('Apache')
 depends=('java-environment')
 makedepends=
 install=${pkgname}.install
-url=
-source=("$pkgname-$pkgver.jar::https://github.com/sannies/$pkgname/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.jar"
+source=("$pkgname-$pkgver.jar::https://github.com/sannies/$pkgname/releases/download/$pkgname-$pkgver/$pkgname-$pkgver-SNAPSHOT.jar"
         "${pkgname}.sh"
         "${pkgname}.desktop"
         "${pkgname}.install")
-md5sums=('a80b0b052bf4db529d9342da9a950b3f'
+md5sums=('1acb73c35d689a7c8ce43f5c977a9c1c'
          '46a45db34de39faf0c96b14b7a8b3b0a'
          '27af8fee869cccf25921bbeb14e9c17e'
-         'dddc76d48a27c97823c3f95131772a01')
+         'd02e1f3a7dc68114156695e1601975c0')
 
 package() {
   cd $srcdir

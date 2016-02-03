@@ -1,0 +1,33 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+_qt_module=qtwebview
+pkgname=qt5-webview
+pkgver=5.5.1
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc='Provides a way to display web content in an application by using native APIs'
+depends=('qt5-quick1' 'qt5-quickcontrols' 'qt5-webengine')
+makedepends=('git')
+provides=(${pkgname%-git})
+conflicts=(${pkgname%-git})
+license=('custom' 'FDL' 'GPL3' 'LGPL')
+url="http://qt-project.org"
+_pkgfqn="${_qt_module}-opensource-src-${pkgver}"
+groups=('qt5')
+source=(${_qt_module}::git://code.qt.io/qt/${_qt_module}.git#tag=v$pkgver)
+md5sums=('SKIP')
+
+prepare() {
+  cd "${srcdir}/${_qt_module}"
+}
+
+build() {
+  cd "${srcdir}/${_qt_module}"
+  qmake-qt5 ${_qt_module}.pro -recursive
+  make
+}
+
+package() {
+  cd "${srcdir}/${_qt_module}"
+  make INSTALL_ROOT="${pkgdir}" install
+}

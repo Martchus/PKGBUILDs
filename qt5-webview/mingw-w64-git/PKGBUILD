@@ -1,0 +1,56 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# DOES NOT WORK YET
+
+_qt_module=qtwebview
+pkgname=mingw-w64-qt5-webview-git
+pkgver=107.ea82d77
+pkgrel=1
+arch=('any')
+pkgdesc='Provides a way to display web content in an application by using native APIs (mingw-w64, git version)'
+depends=('mingw-w64-qt5-declarative' 'mingw-w64-qt5-quickcontrols' 'mingw-w64-qtwebengine')
+makedepends=('mingw-w64-gcc' 'git')
+provides=(${pkgname%-git})
+conflicts=(${pkgname%-git})
+options=('!strip' '!buildflags' 'staticlibs')
+license=('custom' 'FDL' 'GPL3' 'LGPL')
+url="http://qt-project.org"
+_pkgfqn="${_qt_module}-opensource-src-${pkgver}"
+groups=(mingw-w64-qt mingw-w64-qt5)
+source=(${_qt_module}::git://code.qt.io/qt/${_qt_module}.git#branch=dev)
+md5sums=('SKIP')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+pkgver() {
+  cd "${srcdir}/${pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/${_qt_module}"
+}
+
+build() {
+  cd "${srcdir}/${_qt_module}"
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+    ${_arch}-qmake-qt5 ../${_qt_module}.pro -recursive
+    make
+    popd
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "${srcdir}/${_qt_module}/build-${_arch}"
+    make INSTALL_ROOT="${pkgdir}" install
+
+    # The .dll's are installed in both bindir and libdir
+    # One copy of the .dll's is sufficient
+    rm -f "${pkgdir}/usr/${_arch}/lib/"*.dll
+    find "${pkgdir}/usr/${_arch}" -name "*.exe" -o -name "*.bat" -o -name "*.def" -o -name "*.exp" -o -name '*.prl' | xargs -rtl1 rm
+    find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" -name "*.a" -o -name "*.dll" | xargs -rtl1 ${_arch}-strip -g
+  done
+}

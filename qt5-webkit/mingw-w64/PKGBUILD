@@ -24,31 +24,50 @@ depends=('mingw-w64-qt5-base'
 makedepends=('mingw-w64-gcc' 'python' 'gperf' 'ruby' 'mingw-w64-pkg-config')
 options=('!strip' '!buildflags' 'staticlibs')
 license=("custom, FDL, GPL3, LGPL")
-url="http://qt-project.org"
+url="https://www.qt.io/"
 _pkgfqn="${_qt_module}-opensource-src-${pkgver}"
 groups=(mingw-w64-qt mingw-w64-qt5)
-source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
-        'qt5-qtwebkit-enable-pkgconfig-support-for-win32-target.patch'
-        'qtwebkit-dont-use-bundled-angle-libraries.patch'
-        'qt5-qtwebkit-dont-depend-on-icu.patch'
-        'revert-qt4-unicode-removal.patch'
-        'qt5-qtwebkit-workaround-build-breakage-after-svn-commit-136242.patch'
-        'qtwebkit-opensource-src-5.0.1-debuginfo.patch'
-        'webkit-commit-151422.patch'
-        'qt5-qtwebkit-fix-compatibility-with-latest-angle.patch')
+source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
+        qt5-angleproject-dont-use-winflex.patch
+        qt5-qtwebkit-angle-build-fix.patch
+        qt5-qtwebkit-commit-5742b32.patch
+        qt5-qtwebkit-commit-b8c97e702.patch
+        qt5-qtwebkit-disable-3d-graphics-support.patch
+        qt5-qtwebkit-dont-depend-on-icu.patch
+        qt5-qtwebkit-enable-pkgconfig-support-for-win32-target.patch
+        qt5-qtwebkit-fix-compatibility-with-latest-angle.patch
+        qt5-qtwebkit-use-correct-icu-libs.patch
+        qt5-qtwebkit-use-linux-shell.patch
+        qt5-qtwebkit-workaround-build-breakage-after-svn-commit-136242.patch
+        qtwebkit-dont-use-bundled-angle-libraries.patch
+        qtwebkit-opensource-src-5.0.1-debuginfo.patch
+        revert-qt4-unicode-removal.patch
+        webkit-commit-142567.patch
+        webkit-commit-151422.patch)
 md5sums=('681328edb539b8fa3a273b38c90b3e31'
+         '445ada3000f0cc1279204b7a3efc3b4c'
+         'bc1943fb276964f710b4e9f5f08bb2ec'
+         '645c05f212fcd9f310798f7eacd9abd4'
+         '87458f3ebb61bf598e4fce10ab1ccbb7'
+         'b227653519ee0ea5d388bd58a21b6d66'
+         'ce7d257e2b5b94fe3affd98f52d99d09'
          'ac574de962545d6a9e975b4db63c3e09'
+         '7038206bfef2aea594f10af3bda90220'
+         '228f28df2b10e417a325176f7878ebe1'
+         '680fe925113911f6b6c36946d7294cbd'
+         '18b21fd8e9517f48db7748544d2aa92f'
          'f452210683386f9c28f04d7dea0ecfc7'
-         '069f86d834bcecb7fe0937b7539d28af'
-         '4e374836f26853b4d82be0e87aa584a5'
-         '8b60ddebf01ee04a0e1180e98cdd3d52'
          '6aba6468efafb64943887079e258b799'
-         'c36fe581e0f3b61cef19415782b257ca'
-         '2ef87f4b6588e92a925f42c3b9595379')
+         '4e374836f26853b4d82be0e87aa584a5'
+         'eaac9af299b50c2f03f4c322123e6e62'
+         'c36fe581e0f3b61cef19415782b257ca')
+
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
+
+  # note: all patches are from http://pkgs.fedoraproject.org/git/rpms/mingw-qt5-qtwebkit.git
 
   # The ICU libraries used for cross-compilation are named exactly the same as their native Linux counterpart
   #patch -p0 -b -i ../qt5-qtwebkit-use-correct-icu-libs.patch
@@ -93,6 +112,9 @@ prepare() {
   # Fix compatibility issue when using the latest ANGLE
   patch -p1 -b -i ../qt5-qtwebkit-fix-compatibility-with-latest-angle.patch
 
+  # Use linux shell commands instead of windows cmd commands
+  patch -p1 -b -i ../qt5-qtwebkit-use-linux-shell.patch
+
   # Make sure the bundled copy of the ANGLE libraries isn't used
   rm -rf Source/ThirdParty/ANGLE
 }
@@ -101,6 +123,10 @@ build() {
   unset PKG_CONFIG_PATH
   cd "${srcdir}/${_pkgfqn}"
   for _arch in ${_architectures}; do
+    # Since Source/ThirdParty/ANGLE has been removed include path for
+    # system library must be set
+    export CPATH=/usr/$_arch/include
+
     mkdir -p build-${_arch} && pushd build-${_arch}
     ${_arch}-qmake-qt5 QMAKE_CXXFLAGS+=-Wno-c++0x-compat ../WebKit.pro
     make

@@ -11,9 +11,9 @@ makedepends=(mingw-w64-gcc)
 options=(!strip !buildflags staticlibs)
 groups=(mingw-w64-qt mingw-w64-qt5)
 license=("custom, FDL, GPL3, LGPL")
-url="http://qt-project.org"
+url="https://www.qt.io/"
 _pkgfqn="${_qt_module}-opensource-src-${pkgver}"
-source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
+source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         "qt5-qtmultimedia-mingw-w64-vsnprintf-workaround.patch"
         "qtmultimedia-dont-use-case-sensitive-headers.patch")
 md5sums=('244baff13a02ebc697e5b5e2290088d0'

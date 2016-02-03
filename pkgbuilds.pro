@@ -189,13 +189,21 @@ OTHER_FILES += \
     qt5-tools/mingw-w64/PKGBUILD \
     qt5-translations/mingw-w64/PKGBUILD \
     qt5-webkit/mingw-w64/PKGBUILD \
+    qt5-webkit/mingw-w64/qt5-angleproject-dont-use-winflex.patch \
+    qt5-webkit/mingw-w64/qt5-qtwebkit-angle-build-fix.patch \
+    qt5-webkit/mingw-w64/qt5-qtwebkit-commit-5742b32.patch \
+    qt5-webkit/mingw-w64/qt5-qtwebkit-commit-b8c97e702.patch \
+    qt5-webkit/mingw-w64/qt5-qtwebkit-disable-3d-graphics-support.patch \
     qt5-webkit/mingw-w64/qt5-qtwebkit-dont-depend-on-icu.patch \
     qt5-webkit/mingw-w64/qt5-qtwebkit-enable-pkgconfig-support-for-win32-target.patch \
     qt5-webkit/mingw-w64/qt5-qtwebkit-fix-compatibility-with-latest-angle.patch \
+    qt5-webkit/mingw-w64/qt5-qtwebkit-use-correct-icu-libs.patch \
+    qt5-webkit/mingw-w64/qt5-qtwebkit-use-linux-shell.patch \
     qt5-webkit/mingw-w64/qt5-qtwebkit-workaround-build-breakage-after-svn-commit-136242.patch \
     qt5-webkit/mingw-w64/qtwebkit-dont-use-bundled-angle-libraries.patch \
     qt5-webkit/mingw-w64/qtwebkit-opensource-src-5.0.1-debuginfo.patch \
     qt5-webkit/mingw-w64/revert-qt4-unicode-removal.patch \
+    qt5-webkit/mingw-w64/webkit-commit-142567.patch \
     qt5-webkit/mingw-w64/webkit-commit-151422.patch \
     qt5-websockets/mingw-w64/PKGBUILD \
     qt5-winextras/mingw-w64/PKGBUILD \

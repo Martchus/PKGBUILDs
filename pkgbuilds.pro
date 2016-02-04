@@ -118,6 +118,7 @@ OTHER_FILES += \
     qt5-base/mingw-w64/qt5-workaround-pkgconfig-install-issue.patch \
     qt5-base/mingw-w64/use-external-angle-library.patch \
     qt5-base/mingw-w64-opengl/PKGBUILD \
+    qt5-base/mingw-w64-opengl/a91c40868bbdc1b2d2dd3b5f8b47aae9e8589a81.diff \
     qt5-base/mingw-w64-opengl/add-angle-support.patch \
     qt5-base/mingw-w64-opengl/angle-fix.patch \
     qt5-base/mingw-w64-opengl/fix-opengl-to-many-sections.patch \
@@ -129,6 +130,7 @@ OTHER_FILES += \
     qt5-base/mingw-w64-opengl/qt5-dont-add-resource-files-to-qmake-libs.patch \
     qt5-base/mingw-w64-opengl/qt5-dont-build-host-libs-static.patch \
     qt5-base/mingw-w64-opengl/qt5-enable-rpath-for-host-tools.patch \
+    qt5-base/mingw-w64-opengl/qt5-fix-QSemaphore-problem.patch \
     qt5-base/mingw-w64-opengl/qt5-fix-static-dbus-detection.patch \
     qt5-base/mingw-w64-opengl/qt5-fix-static-harfbuzz-detection.patch \
     qt5-base/mingw-w64-opengl/qt5-merge-static-and-shared-library-trees.patch \

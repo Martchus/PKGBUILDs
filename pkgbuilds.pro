@@ -47,6 +47,7 @@ OTHER_FILES += \
     isoviewer/default/isoviewer.sh \
     dbus-soundrecorder/default/PKGBUILD \
     subtitlecomposer/default/PKGBUILD \
+    subtitlecomposer/default/subtitlecomposer.install \
     subtitlecomposer/git/PKGBUILD \
     subtitlecomposer/git/subtitlecomposer.install \
     brother-mfc-j4410dw/default/PKGBUILD \

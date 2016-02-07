@@ -1,25 +1,52 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _reponame=repoindex
-pkgname=repoindex
-pkgver=1.0.0
+pkgname=('repoindex' 'repoindex-web')
+pkgver=0.0.2
 pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc="Provides a web interface to browse Arch Linux package repositories."
 license=('GPL')
-depends=('qt5-base' 'qt5-network' 'pacman' 'c++utilities')
-makedepends=
+depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
+makedepends=('cmake')
+backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
+options=(emptydirs)
 source=("repoindex-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  INSTALL_ROOT=$pkgdir/usr/ qmake-qt5 "$pkgname.pro" -r -spec linux-g++
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
   make
 }
 
-package() {
+package_repoindex() {
+  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides server binary)."
+  optdepends=('repoindex-web: Web UI')
+
+  # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make install
+  make install-binary install-service install-config
+
+  # make directories for cache and data
+  mkdir -p "$pkgdir/var/cache/$_reponame"
+  chown http:http "$pkgdir/var/cache/$_reponame"
+  mkdir -p "$pkgdir/var/lib/$_reponame"
+  chown http:http "$pkgdir/var/lib/$_reponame"
+  mkdir -p "$pkgdir/etc"
+  cp "$pkgdir/usr/share/$_reponame/skel/repoindex.conf.js" "$pkgdir/etc/repoindex.conf"
 }
 
+package_repoindex-web() {
+  arch=('any')
+  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides assets for web interface)."
+  depends=('repoindex')
+  backup=()
+
+  # must call cmake again to adjust install prefix
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+
+  # install files
+  make install-web
+}

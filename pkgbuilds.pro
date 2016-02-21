@@ -227,9 +227,7 @@ OTHER_FILES += \
     ghostscript/mingw-w64/mingw-build.patch \
     lcms2/mingw-w64/PKGBUILD \
     lcms2/mingw-w64/0002-need-jconfig-before-jmoreconfig.mingw \
-    angleproject/mingw-w64/0000-build-fix.patch \
     angleproject/mingw-w64/PKGBUILD \
-    angleproject/mingw-w64/angleproject-export-shader-symbols.patch \
     angleproject/mingw-w64/angleproject-include-import-library-and-use-def-file.patch \
     angleproject/mingw-w64/d3d10_1.h \
     angleproject/mingw-w64/d3d11.h \
@@ -238,8 +236,6 @@ OTHER_FILES += \
     angleproject/mingw-w64/dcompanimation.h \
     angleproject/mingw-w64/dcomptypes.h \
     angleproject/mingw-w64/dxgi1_2.h \
-    angleproject/mingw-w64/libEGL_mingw32.def \
-    angleproject/mingw-w64/libGLESv2_mingw32.def \
     angleproject/mingw-w64/sdkddkver.h \
     angleproject/mingw-w64/versionhelpers.h
 

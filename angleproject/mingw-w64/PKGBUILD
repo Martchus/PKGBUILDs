@@ -15,11 +15,7 @@ depends=('mingw-w64-crt')
 makedepends=('mingw-w64-gcc' 'git' 'gyp-git' 'python')
 options=('!strip' '!buildflags' 'staticlibs')
 source=('angleproject::git+https://chromium.googlesource.com/angle/angle#commit=7a533f7'
-        0000-build-fix.patch
-        angleproject-export-shader-symbols.patch
         angleproject-include-import-library-and-use-def-file.patch
-        libEGL_mingw32.def
-        libGLESv2_mingw32.def
         d3d11sdklayers.h
         versionhelpers.h
         d3d10_1.h
@@ -29,11 +25,7 @@ source=('angleproject::git+https://chromium.googlesource.com/angle/angle#commit=
         dcomp{,types}.h
         dcompanimation.h)
 md5sums=('SKIP'
-         '3caf19560f2b8cac70f4a27b23093775'
-         '70615a5e327a53fd60cc4dec916842c0'
-         '2ca332d9c13bae82300d417595e1d48d'
-         '232a2f50c3b55247f95fecfab1bec60e'
-         'f5519fd7fc7f654c0805fbd802a5722d'
+         '966e40c3ffc2070ce413a7fda9b6aedc'
          '02bef8272f7df5b8e7fc4bee89cf3c52'
          '3cff6bdf031418eb81caa831f24b118a'
          'b620d8418c7b5115621cfb89b8d3dc2b'
@@ -54,10 +46,6 @@ _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 prepare() {
   cd "${srcdir}/angleproject"
 
-  # install additional .def files
-  cp ../libGLESv2_mingw32.def src/libGLESv2/
-  cp ../libEGL_mingw32.def src/libEGL/
-
   # provide recent versions of some mingw-w64 header files
   mkdir sysinclude
   cp ../{d3d11sdklayers,dxgi1_2,versionhelpers,d3d10_1,sdkddkver,d3d11,dcomp,dcomptypes,dcompanimation}.h sysinclude/
@@ -66,16 +54,8 @@ prepare() {
   # remove .git directory to prevent: No rule to make target '../build-i686-w64-mingw32/.git/index', needed by 'out/Debug/obj/gen/angle/id/commit.h'.
   rm -r .git
 
-  # patches from Fedora
-  patch -p1 -i "${srcdir}/0000-build-fix.patch"
-
   # make sure an import library is created and the correct .def file is used during the build
   patch -p1 -i "${srcdir}/angleproject-include-import-library-and-use-def-file.patch"
-
-  # WebKit depends on symbols which are used in the static library called translator_hlsl
-  # This static library is linked into the libGLESv2 shared library
-  # To allow building WebKit export the required symbols in the libGLESv2 shared library
-  patch -p1 -i "${srcdir}/angleproject-export-shader-symbols.patch"
 
   # executing .bat scripts on Linux is a no-go so make this a no-op
   echo "" > src/copy_compiler_dll.bat
@@ -85,8 +65,8 @@ prepare() {
 build() {
   cd "${srcdir}/angleproject"
 
-  export CFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4"
-  export CXXFLAGS="$CFLAGS -std=c++11 -msse2 -DUNICODE -D_UNICODE -g -I${srcdir}/angleproject/sysinclude -I${srcdir}/angleproject/src -I${srcdir}/angleproject/include"
+  # set build flags, make sure all header files are found
+  export CXXFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -std=c++11 -msse2 -DUNICODE -D_UNICODE -g -I${srcdir}/angleproject/sysinclude -I${srcdir}/angleproject/src -I${srcdir}/angleproject/include"
   unset LDFLAGS
 
   for _arch in ${_architectures}; do
@@ -103,32 +83,15 @@ build() {
 
     gyp -D OS=win -D TARGET=$target --format make -D MSVS_VERSION="" --depth . -I ../build/common.gypi ../src/angle.gyp
 
-    # forcing non-concurrent build seems to be required
+    # forcing non-concurrent build to prevent:
+    # i686-w64-mingw32-g++ -shared   -Wl,-soname=libGLESv2.so -o out/Debug/obj.target/../src/libGLESv2.so -Wl,--whole-archive out/Debug/obj.target/libGLESv2/../src/libGLESv2/entry_points_egl.o out/Debug/obj.target/libGLESv2/../src/libGLESv2/entry_points_egl_ext.o out/Debug/obj.target/libGLESv2/../src/libGLESv2/entry_points_gles_2_0.o out/Debug/obj.target/libGLESv2/../src/libGLESv2/entry_points_gles_2_0_ext.o out/Debug/obj.target/libGLESv2/../src/libGLESv2/entry_points_gles_3_0.o out/Debug/obj.target/libGLESv2/../src/libGLESv2/global_state.o out/Debug/obj.target/libGLESv2/../src/libGLESv2/libGLESv2.o out/Debug/obj.target/../src/libANGLE.a out/Debug/obj.target/../src/libangle_common.a out/Debug/obj.target/../src/libtranslator_static.a out/Debug/obj.target/../src/libtranslator_lib.a out/Debug/obj.target/../src/libpreprocessor.a -Wl,--no-whole-archive
+    # out/Debug/obj.target/../src/libtranslator_static.a: member out/Debug/obj.target/../src/../obj.target/src/compiler/translator/ShaderLang.o in archive is not an object
+    # collect2: error: ld returned 1 exit status
     make -j1 V=1
 
-    # also build static libraries (which are needed by the static Qt build)
-    # (had to adjust the selection from Fedora, I hope I picked the right objects here)
-    ${AR} rcs libGLESv2.a out/Debug/obj.target/src/common/*.o \
-        out/Debug/obj.target/src/compiler/translator/*.o \
-        out/Debug/obj.target/src/compiler/translator/depgraph/*.o \
-        out/Debug/obj.target/src/compiler/translator/timing/*.o \
-        out/Debug/obj.target/src/compiler/preprocessor/*.o \
-        out/Debug/obj.target/src/third_party/compiler/*.o \
-        out/Debug/obj.target/src/third_party/murmurhash/*.o \
-        out/Debug/obj.target/src/third_party/systeminfo/*.o \
-        out/Debug/obj.target/src/libGLESv2/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/d3d/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d9/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d11/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/d3d/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d9/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d11/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/gl/*.o \
-        out/Debug/obj.target/src/libANGLE/renderer/gl/wgl/*.o
-
-    ${AR} rcs libEGL.a out/Debug/obj.target/src/common/*.o \
-        out/Debug/obj.target/src/libEGL/*.o
+    # static libs must be built separately
+    gyp -D OS=win -D TARGET=$target --format make -D MSVS_VERSION="" --depth . -I ../build/common.gypi ../src/angle.gyp -D angle_gl_library_type=static_library
+    make -j1 V=1
 
     popd
   done
@@ -140,13 +103,11 @@ package() {
     mkdir -p "${pkgdir}/usr/${_arch}/"{bin,lib,include}
     install out/Debug/src/libGLESv2.so "${pkgdir}/usr/${_arch}/bin/libGLESv2.dll"
     install out/Debug/src/libEGL.so "${pkgdir}/usr/${_arch}/bin/libEGL.dll"
-    install libGLESv2.a "${pkgdir}/usr/${_arch}/lib/"
-    install libEGL.a "${pkgdir}/usr/${_arch}/lib/"
-    install libGLESv2.dll.a "${pkgdir}/usr/${_arch}/lib/"
-    install libEGL.dll.a "${pkgdir}/usr/${_arch}/lib/"
+    install libGLESv2.dll.a libEGL.dll.a out/Debug/src/lib*.a "${pkgdir}/usr/${_arch}/lib/"
     cp -Rv ../include/* "${pkgdir}/usr/${_arch}/include/"
 
     ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
-    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.dll.a
+    # static libs seem to be thin archives which mustn't be stripped
   done
 }

@@ -1,0 +1,152 @@
+# Maintainer: Martchus <martchus@gmx.net>
+# Contributor: ant32 <antreimer@gmail.com>
+# Contributor: Filip Brcic <brcha@gna.org>
+# Contributor: xantares
+# Contributor: jellysheep <max DOT mail AT dameweb DOT de>
+
+pkgname=mingw-w64-angleproject
+pkgver=2.1.r5571.7a533f7
+pkgrel=1
+pkgdesc='Angle project (mingw-w64)'
+arch=('any')
+url='https://chromium.googlesource.com/angle/angle/+/master/README.md'
+license=('BSD')
+depends=('mingw-w64-crt')
+makedepends=('mingw-w64-gcc' 'git' 'gyp-git' 'python')
+options=('!strip' '!buildflags' 'staticlibs')
+source=('angleproject::git+https://chromium.googlesource.com/angle/angle#commit=7a533f7'
+        0000-build-fix.patch
+        angleproject-export-shader-symbols.patch
+        angleproject-include-import-library-and-use-def-file.patch
+        libEGL_mingw32.def
+        libGLESv2_mingw32.def
+        d3d11sdklayers.h
+        versionhelpers.h
+        d3d10_1.h
+        dxgi1_2.h
+        sdkddkver.h
+        d3d11.h
+        dcomp{,types}.h
+        dcompanimation.h)
+md5sums=('SKIP'
+         '3caf19560f2b8cac70f4a27b23093775'
+         '70615a5e327a53fd60cc4dec916842c0'
+         '2ca332d9c13bae82300d417595e1d48d'
+         '232a2f50c3b55247f95fecfab1bec60e'
+         'f5519fd7fc7f654c0805fbd802a5722d'
+         '02bef8272f7df5b8e7fc4bee89cf3c52'
+         '3cff6bdf031418eb81caa831f24b118a'
+         'b620d8418c7b5115621cfb89b8d3dc2b'
+         'f3b66ecb8cb5af6cb71a71de9234d26f'
+         '454393b36ee27e127dfa5fbf5d0adb0e'
+         'f376a93018814607ed6d52489177e952'
+         '9510881e40ee68377c07b144f1137398'
+         '66bb469db698d338d2ab614d08f88344'
+         '1bea7a037831f6762fc41b944fd97cf2')
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+#pkgver() {
+#  cd "$srcdir/angleproject"
+#  grep -E "^#define ANGLE_M..OR_VERSION [0-9]+$" src/common/version.h | sed 's/#define ANGLE_M..OR_VERSION //' | tr '\n' '.'
+#  printf "r%s.%s\n" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+#}
+
+prepare() {
+  cd "${srcdir}/angleproject"
+
+  # install additional .def files
+  cp ../libGLESv2_mingw32.def src/libGLESv2/
+  cp ../libEGL_mingw32.def src/libEGL/
+
+  # provide recent versions of some mingw-w64 header files
+  mkdir sysinclude
+  cp ../{d3d11sdklayers,dxgi1_2,versionhelpers,d3d10_1,sdkddkver,d3d11,dcomp,dcomptypes,dcompanimation}.h sysinclude/
+  cp sysinclude/{versionhelpers,VersionHelpers}.h
+
+  # remove .git directory to prevent: No rule to make target '../build-i686-w64-mingw32/.git/index', needed by 'out/Debug/obj/gen/angle/id/commit.h'.
+  rm -r .git
+
+  # patches from Fedora
+  patch -p1 -i "${srcdir}/0000-build-fix.patch"
+
+  # make sure an import library is created and the correct .def file is used during the build
+  patch -p1 -i "${srcdir}/angleproject-include-import-library-and-use-def-file.patch"
+
+  # WebKit depends on symbols which are used in the static library called translator_hlsl
+  # This static library is linked into the libGLESv2 shared library
+  # To allow building WebKit export the required symbols in the libGLESv2 shared library
+  patch -p1 -i "${srcdir}/angleproject-export-shader-symbols.patch"
+
+  # executing .bat scripts on Linux is a no-go so make this a no-op
+  echo "" > src/copy_compiler_dll.bat
+  chmod +x src/copy_compiler_dll.bat
+}
+
+build() {
+  cd "${srcdir}/angleproject"
+
+  export CFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4"
+  export CXXFLAGS="$CFLAGS -std=c++11 -msse2 -DUNICODE -D_UNICODE -g -I${srcdir}/angleproject/sysinclude -I${srcdir}/angleproject/src -I${srcdir}/angleproject/include"
+  unset LDFLAGS
+
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+
+    export CXX="${_arch}-g++"
+    export AR="${_arch}-ar"
+
+    if [[ ${_arch} == i686-w64-mingw32 ]]; then
+      target="win32"
+    else
+      target="win64"
+    fi
+
+    gyp -D OS=win -D TARGET=$target --format make -D MSVS_VERSION="" --depth . -I ../build/common.gypi ../src/angle.gyp
+
+    # forcing non-concurrent build seems to be required
+    make -j1 V=1
+
+    # also build static libraries (which are needed by the static Qt build)
+    # (had to adjust the selection from Fedora, I hope I picked the right objects here)
+    ${AR} rcs libGLESv2.a out/Debug/obj.target/src/common/*.o \
+        out/Debug/obj.target/src/compiler/translator/*.o \
+        out/Debug/obj.target/src/compiler/translator/depgraph/*.o \
+        out/Debug/obj.target/src/compiler/translator/timing/*.o \
+        out/Debug/obj.target/src/compiler/preprocessor/*.o \
+        out/Debug/obj.target/src/third_party/compiler/*.o \
+        out/Debug/obj.target/src/third_party/murmurhash/*.o \
+        out/Debug/obj.target/src/third_party/systeminfo/*.o \
+        out/Debug/obj.target/src/libGLESv2/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/d3d/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d9/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d11/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/d3d/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d9/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/d3d/d3d11/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/gl/*.o \
+        out/Debug/obj.target/src/libANGLE/renderer/gl/wgl/*.o
+
+    ${AR} rcs libEGL.a out/Debug/obj.target/src/common/*.o \
+        out/Debug/obj.target/src/libEGL/*.o
+
+    popd
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "${srcdir}/angleproject/build-${_arch}"
+    mkdir -p "${pkgdir}/usr/${_arch}/"{bin,lib,include}
+    install out/Debug/src/libGLESv2.so "${pkgdir}/usr/${_arch}/bin/libGLESv2.dll"
+    install out/Debug/src/libEGL.so "${pkgdir}/usr/${_arch}/bin/libEGL.dll"
+    install libGLESv2.a "${pkgdir}/usr/${_arch}/lib/"
+    install libEGL.a "${pkgdir}/usr/${_arch}/lib/"
+    install libGLESv2.dll.a "${pkgdir}/usr/${_arch}/lib/"
+    install libEGL.dll.a "${pkgdir}/usr/${_arch}/lib/"
+    cp -Rv ../include/* "${pkgdir}/usr/${_arch}/include/"
+
+    ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
+  done
+}

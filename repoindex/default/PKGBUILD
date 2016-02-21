@@ -1,7 +1,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _reponame=repoindex
 pkgname=('repoindex' 'repoindex-web')
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Provides a web interface to browse Arch Linux package repositories."

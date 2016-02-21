@@ -8,6 +8,7 @@ pkgdesc="Provides a web interface to browse Arch Linux package repositories (git
 license=('GPL')
 depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
 makedepends=('cmake' 'git')
+backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
 source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")

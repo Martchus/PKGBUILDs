@@ -1,12 +1,12 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _reponame=repoindex
 pkgname=('repoindex' 'repoindex-web')
-pkgver=0.0.2
-pkgrel=2
+pkgver=0.1.1
+pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Provides a web interface to browse Arch Linux package repositories."
 license=('GPL')
-depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
+depends=('qt5-base' 'qt5-websockets' 'karchive' 'c++utilities')
 makedepends=('cmake')
 backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
@@ -31,8 +31,8 @@ package_repoindex() {
   # make directories for cache and data
   mkdir -p "$pkgdir/var/cache/$_reponame"
   chown http:http "$pkgdir/var/cache/$_reponame"
-  mkdir -p "$pkgdir/var/lib/$_reponame"
-  chown http:http "$pkgdir/var/lib/$_reponame"
+  mkdir -p "$pkgdir/var/lib/$_reponame/sync"
+  chown http:http "$pkgdir/var/lib/$_reponame/"{,sync}
   mkdir -p "$pkgdir/etc"
   cp "$pkgdir/usr/share/$_reponame/skel/repoindex.conf.js" "$pkgdir/etc/repoindex.conf"
 }

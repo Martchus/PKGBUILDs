@@ -226,4 +226,7 @@ OTHER_FILES += \
     ghostscript/mingw-w64/libspectre.patch \
     ghostscript/mingw-w64/mingw-build.patch \
     lcms2/mingw-w64/PKGBUILD \
-    lcms2/mingw-w64/0002-need-jconfig-before-jmoreconfig.mingw
+    lcms2/mingw-w64/0002-need-jconfig-before-jmoreconfig.mingw \
+    angleproject/mingw-w64/PKGBUILD \
+    angleproject/mingw-w64/angleproject-include-import-library-and-use-def-file.patch
+

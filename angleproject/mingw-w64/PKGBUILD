@@ -15,26 +15,11 @@ depends=('mingw-w64-crt')
 makedepends=('mingw-w64-gcc' 'git' 'gyp-git' 'python')
 options=('!strip' '!buildflags' 'staticlibs')
 source=('angleproject::git+https://chromium.googlesource.com/angle/angle#commit=7a533f7'
-        angleproject-include-import-library-and-use-def-file.patch
-        d3d11sdklayers.h
-        versionhelpers.h
-        d3d10_1.h
-        dxgi1_2.h
-        sdkddkver.h
-        d3d11.h
-        dcomp{,types}.h
-        dcompanimation.h)
+        'additional-mingw-header::git+https://github.com/Martchus/additional-mingw-header.git#commit=7a8f394'
+        'angleproject-include-import-library-and-use-def-file.patch')
 md5sums=('SKIP'
-         '966e40c3ffc2070ce413a7fda9b6aedc'
-         '02bef8272f7df5b8e7fc4bee89cf3c52'
-         '3cff6bdf031418eb81caa831f24b118a'
-         'b620d8418c7b5115621cfb89b8d3dc2b'
-         'f3b66ecb8cb5af6cb71a71de9234d26f'
-         '454393b36ee27e127dfa5fbf5d0adb0e'
-         'f376a93018814607ed6d52489177e952'
-         '9510881e40ee68377c07b144f1137398'
-         '66bb469db698d338d2ab614d08f88344'
-         '1bea7a037831f6762fc41b944fd97cf2')
+         'SKIP'
+         '966e40c3ffc2070ce413a7fda9b6aedc')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 #pkgver() {
@@ -48,7 +33,7 @@ prepare() {
 
   # provide recent versions of some mingw-w64 header files
   mkdir sysinclude
-  cp ../{d3d11sdklayers,dxgi1_2,versionhelpers,d3d10_1,sdkddkver,d3d11,dcomp,dcomptypes,dcompanimation}.h sysinclude/
+  cp ../additional-mingw-header/{d3d11sdklayers,dxgi1_2,versionhelpers,d3d10_1,sdkddkver,d3d11,dcomp,dcomptypes,dcompanimation}.h sysinclude/
   cp sysinclude/{versionhelpers,VersionHelpers}.h
 
   # remove .git directory to prevent: No rule to make target '../build-i686-w64-mingw32/.git/index', needed by 'out/Debug/obj/gen/angle/id/commit.h'.

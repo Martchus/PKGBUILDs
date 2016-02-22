@@ -228,14 +228,5 @@ OTHER_FILES += \
     lcms2/mingw-w64/PKGBUILD \
     lcms2/mingw-w64/0002-need-jconfig-before-jmoreconfig.mingw \
     angleproject/mingw-w64/PKGBUILD \
-    angleproject/mingw-w64/angleproject-include-import-library-and-use-def-file.patch \
-    angleproject/mingw-w64/d3d10_1.h \
-    angleproject/mingw-w64/d3d11.h \
-    angleproject/mingw-w64/angleproject/mingw-w64/d3d11sdklayers.h \
-    angleproject/mingw-w64/dcomp.h \
-    angleproject/mingw-w64/dcompanimation.h \
-    angleproject/mingw-w64/dcomptypes.h \
-    angleproject/mingw-w64/dxgi1_2.h \
-    angleproject/mingw-w64/sdkddkver.h \
-    angleproject/mingw-w64/versionhelpers.h
+    angleproject/mingw-w64/angleproject-include-import-library-and-use-def-file.patch
 

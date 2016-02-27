@@ -6,7 +6,7 @@
 
 pkgname=mingw-w64-angleproject
 pkgver=2.1.r5571.7a533f7
-pkgrel=1
+pkgrel=2
 pkgdesc='Angle project (mingw-w64)'
 arch=('any')
 url='https://chromium.googlesource.com/angle/angle/+/master/README.md'

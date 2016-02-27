@@ -1,17 +1,17 @@
 # Maintainer: Martchus <martchus@gmx.net>
 _reponame=repoindex
 pkgname=(repoindex{,-header,-web,-gui})
-pkgver=0.0.1
+pkgver=0.2.1
 pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc="Provides a web interface to browse Arch Linux package repositories (git version)."
+pkgdesc="Repository browser for Arch Linux (git version)."
 license=('GPL')
 depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
 makedepends=('cmake' 'git' 'yuicompressor')
 backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
-source=("${pkgname}::git://github.com/Martchus/${_reponame}.git")
+source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -20,20 +20,20 @@ pkgver() {
 }
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
   make
 }
 
 package_repoindex() {
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides server binary)."
+  pkgdesc="Repository browser for Arch Linux (provides server binary, git version)."
   depends=('qt5-base' 'qt5-websockets' 'karchive' 'c++utilities')
   optdepends=('repoindex-header: header files')
   optdepends=('repoindex-web: file for web UI')
   optdepends=('repoindex-gui: application showing the web UI')
 
   # install files
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   make install-binary install-service install-config
 
   # make directories for cache and data
@@ -47,12 +47,12 @@ package_repoindex() {
 
 package_repoindex-header() {
   arch=('any')
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides header files)."
+  pkgdesc="Repository browser for Arch Linux (provides header files, git version)"
   depends=('repoindex')
   backup=()
 
   # must call cmake again to adjust install prefix
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
 
   # install files
@@ -61,12 +61,12 @@ package_repoindex-header() {
 
 package_repoindex-web() {
   arch=('any')
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides assets for web interface)."
+  pkgdesc="Repository browser for Arch Linux (provides assets for web interface, git version)"
   depends=('repoindex')
   backup=()
 
   # must call cmake again to adjust install prefix
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
 
   # install files
@@ -74,14 +74,13 @@ package_repoindex-web() {
 }
 
 package_repoindex-gui() {
-  arch=('any')
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides an application showing the web UI)."
+  pkgdesc="Repository browser for Arch Linux (provides an desktop app showing the web UI, git version)"
   depends=('repoindex-web' 'qt5-webengine')
   install=${_reponame}.install
   backup=()
 
   # must call cmake again to adjust install prefix
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
 
   # install files

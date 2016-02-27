@@ -4,7 +4,7 @@ pkgname=(repoindex{,-header,-web,-gui})
 pkgver=0.2.1
 pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc="Provides a web interface to browse Arch Linux package repositories."
+pkgdesc="Repository browser for Arch Linux"
 license=('GPL')
 depends=('qt5-websockets' 'qt5-webengine' 'karchive' 'c++utilities' 'qtutilities')
 makedepends=('cmake' 'yuicompressor')
@@ -21,7 +21,7 @@ build() {
 }
 
 package_repoindex() {
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides server binary)."
+  pkgdesc="Repository browser for Arch Linux (provides server binary)."
   depends=('qt5-base' 'qt5-websockets' 'karchive' 'c++utilities')
   optdepends=('repoindex-header: header files')
   optdepends=('repoindex-web: file for web UI')
@@ -41,8 +41,7 @@ package_repoindex() {
 }
 
 package_repoindex-header() {
-  arch=('any')
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides header files)."
+  pkgdesc="Repository browser for Arch Linux (provides header files)"
   depends=('repoindex')
   backup=()
 
@@ -56,7 +55,7 @@ package_repoindex-header() {
 
 package_repoindex-web() {
   arch=('any')
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides assets for web interface)."
+  pkgdesc="Repository browser for Arch Linux (provides assets for web interface)"
   depends=('repoindex')
   backup=()
 
@@ -70,7 +69,7 @@ package_repoindex-web() {
 
 package_repoindex-gui() {
   arch=('any')
-  pkgdesc="Provides a web interface to browse Arch Linux package repositories (provides an application showing the web UI)."
+  pkgdesc="Repository browser for Arch Linux (provides an desktop app showing the web UI)"
   depends=('repoindex-web' 'qt5-webengine')
   install=${_reponame}.install
   backup=()

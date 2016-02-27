@@ -18,7 +18,9 @@ OTHER_FILES += \
     qtutilities/git/PKGBUILD \
     qtutilities/mingw-w64/PKGBUILD \
     repoindex/default/PKGBUILD \
+    repoindex/default/repoindex.install \
     repoindex/git/PKGBUILD \
+    repoindex/git/repoindex.install \
     repoindex/mingw-w64/PKGBUILD \
     tageditor/default/PKGBUILD \
     tageditor/default/tageditor.install \

@@ -7,7 +7,7 @@
 pkgname=mingw-w64-angleproject
 pkgver=2.1.r5571.7a533f7
 pkgrel=2
-pkgdesc='Angle project (mingw-w64)'
+pkgdesc='ANGLE project (mingw-w64)'
 arch=('any')
 url='https://chromium.googlesource.com/angle/angle/+/master/README.md'
 license=('BSD')
@@ -37,7 +37,7 @@ prepare() {
   cp sysinclude/{versionhelpers,VersionHelpers}.h
 
   # remove .git directory to prevent: No rule to make target '../build-i686-w64-mingw32/.git/index', needed by 'out/Debug/obj/gen/angle/id/commit.h'.
-  rm -r .git
+  rm -fr .git
 
   # make sure an import library is created and the correct .def file is used during the build
   patch -p1 -i "${srcdir}/angleproject-include-import-library-and-use-def-file.patch"

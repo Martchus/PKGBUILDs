@@ -19,7 +19,7 @@ source=('angleproject::git+https://chromium.googlesource.com/angle/angle#commit=
         'angleproject-include-import-library-and-use-def-file.patch')
 sha256sums=('SKIP'
             'SKIP'
-            '985a17541f2a4df6243cf817fd607f74619f995ff42f307ff95d6500f7f8fb64')
+            '22efbf1af26e017b4f0ee1a9429c532e0d75dc92b076fc2d0879d263f7d58a25')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 #pkgver() {

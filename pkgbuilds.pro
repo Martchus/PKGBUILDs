@@ -231,5 +231,7 @@ OTHER_FILES += \
     lcms2/mingw-w64/0002-need-jconfig-before-jmoreconfig.mingw \
     angleproject/mingw-w64/PKGBUILD \
     angleproject/mingw-w64/angleproject-include-import-library-and-use-def-file.patch \
+    angleproject/mingw-w64/libEGL_mingw32.def \
+    angleproject/mingw-w64/libGLESv2_mingw32.def \
     sqlite/mingw-w64/PKGBUILD
 

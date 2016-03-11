@@ -1,10 +1,10 @@
 pkgname=mingw-w64-ffmpeg
-pkgver=2.8.6
+pkgver=3.0
 pkgrel=1.1
 epoch=1
 pkgdesc="Complete solution to record, convert and stream audio and video (mingw-w64)"
 arch=('any')
-url="http://ffmpeg.org/"
+url="https://ffmpeg.org/"
 license=('GPL3')
 depends=(
 'mingw-w64-crt' 'mingw-w64-bzip2' 'mingw-w64-fontconfig' 'mingw-w64-fribidi' 'mingw-w64-gnutls'
@@ -17,7 +17,7 @@ options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'yasm')
 source=(http://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.bz2{,.asc})
 validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8')
-sha256sums=('40611e329bc354592c6f8f1deb033c31b91f80e91f5707ca4f9afceca78d8e62'
+sha256sums=('f19ff77a2f7f736a41dd1499eef4784bf3cb7461f07c13a268164823590113c0'
             'SKIP')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -26,47 +26,47 @@ build() {
     mkdir -p "${srcdir}"/build-${_arch} && cd "${srcdir}"/build-${_arch}
 
     "${srcdir}"/ffmpeg-${pkgver}/configure \
-      --prefix="/usr/${_arch}" \
-      --enable-cross-compile \
-      --cross-prefix="${_arch}-" \
-      --target-os=mingw32 \
-      --arch=${_arch%%-*} \
-      --disable-debug \
-      --enable-static \
-      --disable-stripping \
-      --enable-avisynth \
-      --enable-avresample \
-      --enable-fontconfig \
-      --enable-gnutls \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libbluray \
-      --enable-libdcadec \
-      --enable-libfreetype \
-      --enable-libfribidi \
-      --enable-libgsm \
-      --enable-libmodplug \
-      --enable-libmp3lame \
-      --enable-libopencore_amrnb \
-      --enable-libopencore_amrwb \
-      --enable-libopenjpeg \
-      --enable-libopus \
-      --enable-libschroedinger \
-      --enable-libsoxr \
-      --enable-libspeex \
-      --enable-libssh \
-      --enable-libtheora \
-      --enable-libvidstab \
-      --enable-libvorbis \
-      --enable-libvpx \
-      --enable-libwebp \
-      --enable-libx264 \
-      --enable-libx265 \
-      --enable-libxvid \
-      --enable-zlib \
-      --enable-shared \
-      --enable-version3 \
-      --disable-doc
+        --prefix="/usr/${_arch}" \
+        --enable-cross-compile \
+        --cross-prefix="${_arch}-" \
+        --target-os=mingw32 \
+        --arch=${_arch%%-*} \
+        --disable-debug \
+        --enable-static \
+        --disable-stripping \
+        --enable-avisynth \
+        --enable-avresample \
+        --enable-fontconfig \
+        --enable-gnutls \
+        --enable-gpl \
+        --enable-libass \
+        --enable-libbluray \
+        --enable-libdcadec \
+        --enable-libfreetype \
+        --enable-libfribidi \
+        --enable-libgsm \
+        --enable-libmodplug \
+        --enable-libmp3lame \
+        --enable-libopencore_amrnb \
+        --enable-libopencore_amrwb \
+        --enable-libopenjpeg \
+        --enable-libopus \
+        --enable-libschroedinger \
+        --enable-libsoxr \
+        --enable-libspeex \
+        --enable-libssh \
+        --enable-libtheora \
+        --enable-libvidstab \
+        --enable-libvorbis \
+        --enable-libvpx \
+        --enable-libwebp \
+        --enable-libx264 \
+        --enable-libx265 \
+        --enable-libxvid \
+        --enable-zlib \
+        --enable-shared \
+        --enable-version3 \
+        --disable-doc
 
     make
   done

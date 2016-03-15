@@ -232,5 +232,6 @@ OTHER_FILES += \
     angleproject/mingw-w64/entry_points_shader.cpp \
     angleproject/mingw-w64/gendef-32/libEGL.def \
     angleproject/mingw-w64/gendef-32/libGLESv2.def \
-    sqlite/mingw-w64/PKGBUILD
+    sqlite/mingw-w64/PKGBUILD \
+    mpv/mingw-w64/PKGBUILD
 

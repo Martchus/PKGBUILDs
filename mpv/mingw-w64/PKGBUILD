@@ -1,0 +1,73 @@
+_name=mpv
+pkgname=mingw-w64-mpv
+pkgver=0.16.0
+pkgrel=1
+epoch=1
+pkgdesc="Video player based on MPlayer/mplayer2 (mingw-w64)"
+arch=('any')
+url="https://mpv.io"
+license=('GPL3')
+depends=(
+  'mingw-w64-crt' 'mingw-w64-lcms2' 'mingw-w64-enca' 'mingw-w64-libjpeg-turbo'
+  'mingw-w64-ffmpeg' 'mingw-w64-libass' 'mingw-w64-angleproject'
+  'mingw-w64-lua' 'mingw-w64-zlib'
+)
+options=(!strip !buildflags staticlibs)
+makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'python')
+source=("$_name-$pkgver.tar.gz::https://github.com/mpv-player/$_name/archive/v$pkgver.tar.gz")
+sha256sums=('fc3619de0ede16fbb023ac72589090e8e77fd9d9e03a81adc728105d50ef38ba')
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd "$srcdir/${_name}-${pkgver}"
+
+  ./bootstrap.py
+}
+
+build() {
+  cd "$srcdir/${_name}-${pkgver}"
+
+  mingw_c_flags="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4"
+  export LDFLAGS=""
+  export CFLAGS="$mingw_c_flags $CFLAGS"
+  export CXXFLAGS="$mingw_c_flags $CXXFLAGS"
+  export DEST_OS=win32
+
+  for _arch in ${_architectures}; do    
+    export TARGET=$_arch
+    
+    # build static libmpv
+    ./waf configure \
+      --prefix=/usr/$_arch \
+      --confdir=../etc/mpv \
+      --enable-libmpv-static
+    ./waf build
+
+    # build shared libmpv    
+    ./waf configure \
+      --prefix=/usr/$_arch \
+      --confdir=../etc/mpv \
+      --enable-libmpv-shared
+    ./waf build
+    
+    # I don't know how to do an out-of-source tree build with waf
+    # since waf creates a dir called build I use this workaround
+    mv build build-${_arch}
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "$srcdir/${_name}-${pkgver}/build-${_arch}"
+
+    mkdir -p "$pkgdir/usr/$_arch/"{bin,lib/pkgconfig/mpv,include/mpv}
+    cp *.exe *.dll "$pkgdir/usr/$_arch/bin/"
+    cp *.a "$pkgdir/usr/$_arch/lib/"
+    cp libmpv/*.pc "$pkgdir/usr/$_arch/lib/pkgconfig/mpv/"
+    cp ../libmpv/*.h ../libmpv/*.hpp "$pkgdir/usr/$_arch/include/mpv/"
+    ${_arch}-strip --strip-all "${pkgdir}/usr/${_arch}/bin/"*.exe
+    ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
+    
+  done
+}

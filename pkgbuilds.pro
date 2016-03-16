@@ -233,5 +233,9 @@ OTHER_FILES += \
     angleproject/mingw-w64/gendef-32/libEGL.def \
     angleproject/mingw-w64/gendef-32/libGLESv2.def \
     sqlite/mingw-w64/PKGBUILD \
-    mpv/mingw-w64/PKGBUILD
-
+    mpv/mingw-w64/PKGBUILD \
+    dcadec/mingw-w64/PKGBUILD \
+    libsoxr/mingw-w64/PKGBUILD \
+    libsoxr/mingw-w64/tests_executable_suffix.patch \
+    vid.stab/mingw-w64/PKGBUILD \
+    xvidcore/mingw-w64/PKGBUILD

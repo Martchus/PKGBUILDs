@@ -4,7 +4,7 @@
 
 _qt_module=qtwebengine
 pkgname=mingw-w64-qt5-webengine
-pkgver=5.5.1
+pkgver=5.6.0
 pkgrel=1
 arch=('any')
 pkgdesc='Provides support for web applications using the Chromium browser project (mingw-w64)'
@@ -17,7 +17,7 @@ _pkgfqn="${_qt_module}-opensource-src-${pkgver}"
 groups=(mingw-w64-qt mingw-w64-qt5)
 source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         '0044-qt-5.4.0-win32-g++-enable-qtwebengine-build.patch')
-md5sums=('2a548bde706e8639cdec2cbe31d85545'
+md5sums=('a8be84d642a78724d84b27c20adee14c'
          '27e0f474f66f05f3911c71621b24636d')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

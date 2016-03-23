@@ -4,8 +4,8 @@
 # Contributor: jellysheep <max.mail@dameweb.de>
 
 pkgname=mingw-w64-qt5-base-opengl
-pkgver=5.5.1
-pkgrel=2
+pkgver=5.6.0
+pkgrel=1
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
 arch=(i686 x86_64)
 url="https://www.qt.io/"
@@ -56,7 +56,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         "qt5-disable-angle-opengl-testcode.patch"
         "qt5-fix-QSemaphore-problem.patch"
         "a91c40868bbdc1b2d2dd3b5f8b47aae9e8589a81.diff")
-md5sums=('687e2b122fa2c3390b5e20a166d38038'
+md5sums=('d6b6cfd333c22829c6c85fc52ceed019'
          'f51eb2b176b10af943831d33925c1251'
          'bab00ccc19d888997f323c80354a7c3f'
          'ec25d1ff4033383cd5d2414d8189c228'
@@ -168,7 +168,7 @@ prepare() {
   # Build host libs with system zlib. This patch cannot be upstreamed as-is
   # due to the other host-libs patches.
   patch -p1 -i ../qt5-use-system-zlib-in-host-libs.patch
-  
+
   # Workaround a compatibility issue because we are using an older version of ANGLE in Fedora
   # Upgrading the mingw-angleproject package isn't possible for now because mingw-qt5-qtwebkit doesn't support the latest ANGLE yet..
   #
@@ -248,7 +248,7 @@ build() {
       -sysconfdir /usr/${_arch}/etc \
       -translationdir /usr/${_arch}/share/qt/translations \
       -device-option CROSS_COMPILE=${_arch}-"
-    
+
     # fix include directory of dbus
     qt_configure_args+=" $(${_arch}-pkg-config --cflags-only-I dbus-1 --cflags)"
 
@@ -353,7 +353,7 @@ package() {
     if ! isStatic; then
       strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"{,DBus}.so.${pkgver}
     fi
-    
+
     # keeping prl files for base build since qbs seems to need them.
     if isStatic; then
       rm -f "${pkgdir}/usr/${_arch}/lib"{,/qt/plugins/*}/*.prl

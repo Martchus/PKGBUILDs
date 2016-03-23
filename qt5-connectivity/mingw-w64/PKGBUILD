@@ -1,25 +1,23 @@
 # Maintainer: Martchus <martchus@gmx.net>
-# Contributor: ant32 <antreimer@gmail.com>
 
-_qt_module=qtxmlpatterns
-pkgname="mingw-w64-qt5-xmlpatterns"
+_qt_module=connectivity
+pkgname="mingw-w64-qt5-connectivity"
 pkgver=5.6.0
 pkgrel=1
 arch=('any')
-pkgdesc="Support for XPath, XQuery, XSLT and XML schema validation (mingw-w64)"
+pkgdesc="Provides access to Bluetooth hardware (mingw-w64)"
 depends=('mingw-w64-qt5-base')
-makedepends=('mingw-w64-gcc')
+makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-declarative')
 options=('!strip' '!buildflags' 'staticlibs')
 license=('GPL3' 'LGPL')
 url="https://www.qt.io/"
 _pkgfqn="${_qt_module}-opensource-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz")
-md5sums=('b511b49ab76a1da11b25802861d5688c')
+md5sums=('38589e8f50dbf835db4fdb5da32a7114')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
-build()
-{
+build() {
   cd "${srcdir}/${_pkgfqn}"
 
   for _arch in ${_architectures}; do

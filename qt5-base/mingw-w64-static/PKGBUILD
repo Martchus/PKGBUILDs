@@ -324,8 +324,9 @@ package() {
     # remove doc
     rm -rf "${pkgdir}/usr/${_arch}/share/doc"
 
-    # And finaly, strip the binaries
+    # strip the binaries
     if ! isStatic; then
+      strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"[!.pl]
       strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"{,DBus}.so.${pkgver}
     fi
 

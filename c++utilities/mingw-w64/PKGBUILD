@@ -1,9 +1,13 @@
 # Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _name=c++utilities
 _reponame=cpp-utilities
 pkgname=mingw-w64-c++utilities
-pkgver=3.2.0
-pkgrel=1
+pkgver=3.2.1
+pkgrel=0.1
 arch=('any')
 pkgdesc="Common C++ classes and routines used by my applications such as argument parser, IO and conversion utilities (mingw-w64)."
 license=('GPL')

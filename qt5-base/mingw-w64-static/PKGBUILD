@@ -3,6 +3,9 @@
 # Contributor: Filip Brcic <brcha@gna.org>
 # Contributor: jellysheep <max.mail@dameweb.de>
 
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 pkgname=mingw-w64-qt5-base-static
 pkgver=5.6.0
 pkgrel=1
@@ -52,7 +55,8 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         "fix-opengl-to-many-sections.patch"
         "fix-static-psql-mysql.patch"
         "qt5-fix-QSemaphore-problem.patch"
-        "qtbase-1-fixes.patch")
+        "qtbase-1-fixes.patch"
+        "qt5-fix-implib-ext.patch")
 md5sums=('d6b6cfd333c22829c6c85fc52ceed019'
          'bab00ccc19d888997f323c80354a7c3f'
          '9916ded318f21afbe8388f0b9822062b'
@@ -70,7 +74,8 @@ md5sums=('d6b6cfd333c22829c6c85fc52ceed019'
          '612a4dfb9f1a3898a1920c28bb999159'
          'd0eb81aef1a21c65813fe4ddabbc4206'
          '87cbd116c75ced1b075bf266f2455d50'
-         '62d2977e57fccf1f16d7ea6bf06d3279')
+         '62d2977e57fccf1f16d7ea6bf06d3279'
+         'e1cafa2bc3d11496a5617ddb78283038')
 _architectures="x86_64-w64-mingw32 i686-w64-mingw32"
 
 # Helper functions for the split builds
@@ -155,6 +160,9 @@ prepare() {
   # Build host libs with system zlib. This patch cannot be upstreamed as-is
   # due to the other host-libs patches.
   patch -p1 -i ../qt5-use-system-zlib-in-host-libs.patch
+
+  # Fix qmake to append .dll.a extension to import libs
+  patch -p1 -i ../qt5-fix-implib-ext.patch
 
   patch configure ../qt5-fix-QSemaphore-problem.patch
 
@@ -326,7 +334,7 @@ package() {
 
     # strip the binaries
     if ! isStatic; then
-      strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"[!.pl]
+      strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"*[!.pl]
       strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"{,DBus}.so.${pkgver}
     fi
 

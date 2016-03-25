@@ -1,5 +1,6 @@
 # Contributor: napa3um <napa3um@gmail.com>
 # Contributor: Filip Brcic <brcha@gna.org>
+
 pkgname=mingw-w64-sqlite
 _amalgamationver=3110100
 pkgver=3.11.1
@@ -43,4 +44,3 @@ package() {
     popd
   done
 }
-

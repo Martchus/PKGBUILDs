@@ -1,5 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _qt_module=qtcanvas3d
 pkgname="mingw-w64-qt5-canvas3d"
 pkgver=5.6.0
@@ -36,14 +39,12 @@ package() {
   for _arch in ${_architectures}; do
     pushd build-${_arch}
 
-    make INSTALL_ROOT="${pkgdir}" install
-
-    # The .dll's are installed in both bindir and libdir
-    # One copy of the .dll's is sufficient
-    rm -f "${pkgdir}/usr/${_arch}/lib/"*.dll
+    # install manually to get the import lib, too
+    install -Dm755 qml/QtCanvas3D/*.dll -t "${pkgdir}/usr/${_arch}/bin"
+    install -Dm644 qml/QtCanvas3D/*.dll.a -t "${pkgdir}/usr/${_arch}/lib"
 
     ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
-    ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/"*.dll.a
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.dll.a
 
     popd
   done

@@ -1,7 +1,11 @@
 # Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _reponame=geocoordinatecalculator
 pkgname=geocoordinatecalculator
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more."

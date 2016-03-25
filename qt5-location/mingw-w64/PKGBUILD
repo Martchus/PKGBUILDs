@@ -1,6 +1,9 @@
 # Maintainer: Martchus <martchus@gmx.net>
 # Contributor: ant32 <antreimer@gmail.com>
 
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _qt_module=qtlocation
 pkgname=mingw-w64-qt5-location
 pkgver=5.6.0

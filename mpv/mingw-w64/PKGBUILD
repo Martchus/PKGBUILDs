@@ -1,3 +1,6 @@
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _name=mpv
 pkgname=mingw-w64-mpv
 pkgver=0.16.0
@@ -33,9 +36,9 @@ build() {
   export CXXFLAGS="$mingw_c_flags $CXXFLAGS"
   export DEST_OS=win32
 
-  for _arch in ${_architectures}; do    
+  for _arch in ${_architectures}; do
     export TARGET=$_arch
-    
+
     # build static libmpv
     ./waf configure \
       --prefix=/usr/$_arch \
@@ -43,13 +46,13 @@ build() {
       --enable-libmpv-static
     ./waf build
 
-    # build shared libmpv    
+    # build shared libmpv
     ./waf configure \
       --prefix=/usr/$_arch \
       --confdir=../etc/mpv \
       --enable-libmpv-shared
     ./waf build
-    
+
     # I don't know how to do an out-of-source tree build with waf
     # since waf creates a dir called build I use this workaround
     mv build build-${_arch}
@@ -68,6 +71,6 @@ package() {
     ${_arch}-strip --strip-all "${pkgdir}/usr/${_arch}/bin/"*.exe
     ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
     ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
-    
+
   done
 }

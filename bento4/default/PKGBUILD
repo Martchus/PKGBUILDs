@@ -1,4 +1,8 @@
 # Maintainer: Martchus <youremail@domain.com>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 pkgname=bento4
 pkgver=1.4.3.607
 _pkgverstr=1.4.3-607
@@ -46,4 +50,4 @@ package() {
   install -m644 -D ./include/*.h "$pkgdir/usr/include/$pkgname/"
   cd "$pkgdir/usr/lib/"
   ln -s libAP4.so.$pkgver libAP4.so
-} 
+}

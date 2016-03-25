@@ -1,8 +1,12 @@
 # Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _reponame=videodownloader
 pkgname=videodownloader
-pkgver=1.3.0
-pkgrel=1
+pkgver=1.3.1
+pkgrel=0.1
 arch=('i686' 'x86_64')
 pkgdesc="A video downloader with Qt GUI (currently only YouTube and Vimeo are maintained)."
 license=('GPL')

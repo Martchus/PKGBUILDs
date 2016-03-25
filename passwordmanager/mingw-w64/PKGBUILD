@@ -1,9 +1,13 @@
 # Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _name=passwordmanager
 _reponame=passwordmanager
 pkgname=mingw-w64-passwordmanager
-pkgver=2.1.0
-pkgrel=1
+pkgver=2.1.1
+pkgrel=0.1
 arch=('any')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (mingw-w64)."
 license=('GPL')

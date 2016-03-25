@@ -1,5 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _name=filezilla
 pkgname=filezilla-svn
 pkgver=r7253

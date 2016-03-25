@@ -2,6 +2,9 @@
 # Contributor: ant32 <antreimer@gmail.com>
 # Contributor: Filip Brcic <brcha@gna.org>
 
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
 _qt_module=qttools
 pkgname="mingw-w64-qt5-tools"
 pkgver=5.6.0
@@ -30,9 +33,9 @@ build()
 
     # Something is messed up with Qt5Bootstrap
     make qmake_all
-
     find ./src -type f -exec sed -i "s|-L/usr/${_arch}/lib -lQt5Bootstrap|/usr/lib/libstdc++.so.6 -L/usr/${_arch}/lib -lQt5Bootstrap|g" {} \;
     find ./src -type f -exec sed -i "s|-L/usr/${_arch}/lib -lQt5QmlDevTools|/usr/lib/libstdc++.so.6 -L/usr/${_arch}/lib -lQt5QmlDevTools|g" {} \;
+
     make
 
     popd

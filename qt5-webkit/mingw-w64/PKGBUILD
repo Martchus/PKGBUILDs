@@ -59,7 +59,7 @@ prepare() {
   # note: all patches are from http://pkgs.fedoraproject.org/git/rpms/mingw-qt5-qtwebkit.git
 
   # The ICU libraries used for cross-compilation are named exactly the same as their native Linux counterpart
-  patch -p0 -b -i ../qt5-qtwebkit-use-correct-icu-libs.patch
+  patch -p1 -b -i ../qt5-qtwebkit-use-correct-icu-libs.patch
 
   # By default the build system assumes that pkg-config isn't used for the win32 target
   # However, we're using it in the Fedora MinGW toolchain so make sure it is used automatically
@@ -110,15 +110,17 @@ build() {
   cd "${srcdir}/${_pkgfqn}"
   for _arch in ${_architectures}; do
     # Generate headers
-    ${_arch}-syncqt.pl-qt5 -version 5.6.0 Source/sync.profile
+    ${_arch}-syncqt.pl-qt5 ./Source -version ${pkgver}
+
+    mkdir -p build-${_arch} && pushd build-${_arch}
 
     # Since Source/ThirdParty/ANGLE has been removed ensure files
-    # from system ANGLE can be included
+    # from system ANGLE can be included (patches from Fedora don't help
+    # here because Fedora uses other paths)
     export CPATH="$CPATH:/usr/$_arch/include:/usr/$_arch/include/GLSLANG"
 
     # SH_GLSL_OUTPUT has been renamed to SH_GLSL_COMPATIBILITY_OUTPUT
     # in the latest ANGLE version so I just add a definition for backward compatibility
-    mkdir -p build-${_arch} && pushd build-${_arch}
     ${_arch}-qmake-qt5 \
       QMAKE_CXXFLAGS+=-Wno-c++0x-compat \
       DEFINES+=SH_GLSL_OUTPUT=SH_GLSL_COMPATIBILITY_OUTPUT \

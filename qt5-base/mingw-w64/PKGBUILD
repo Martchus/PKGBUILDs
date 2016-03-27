@@ -75,7 +75,7 @@ md5sums=('d6b6cfd333c22829c6c85fc52ceed019'
          'd0eb81aef1a21c65813fe4ddabbc4206'
          '87cbd116c75ced1b075bf266f2455d50'
          '62d2977e57fccf1f16d7ea6bf06d3279'
-         'e1cafa2bc3d11496a5617ddb78283038')
+         '207420d43e997d1d41ef9684ef7fb715')
 _architectures="x86_64-w64-mingw32 i686-w64-mingw32"
 
 # Helper functions for the split builds

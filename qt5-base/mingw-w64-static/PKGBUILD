@@ -9,7 +9,7 @@
 pkgname=mingw-w64-qt5-base-static
 pkgver=5.6.0
 pkgrel=1
-pkgdesc="A cross-platform application and UI framework (mingw-w64, OpenGL)"
+pkgdesc="A cross-platform application and UI framework (mingw-w64, static)"
 arch=(i686 x86_64)
 url="https://www.qt.io/"
 license=("custom, FDL, GPL3, LGPL")
@@ -49,7 +49,6 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         "qt5-dont-add-resource-files-to-qmake-libs.patch"
         "qt5-prevent-debug-library-names-in-pkgconfig-files.patch"
         "qt5-fix-static-dbus-detection.patch"
-        "qt5-fix-static-harfbuzz-detection.patch"
         "qt5-use-win32-g++-mkspecs-profile.patch"
         "qt5-use-system-zlib-in-host-libs.patch"
         "fix-opengl-to-many-sections.patch"
@@ -68,7 +67,6 @@ md5sums=('d6b6cfd333c22829c6c85fc52ceed019'
          '99bb9f51ec684803768f36e407baf486'
          '6a6bc88f35ac8080869de39bc128ce5b'
          '40de3aaf7d713034e06f4eece665b1ba'
-         '4149c27286f110e37893d1764d4c8a68'
          'd0c7198115ff028188ed1759b70fd981'
          'a265dea62755caf38187114143999224'
          '612a4dfb9f1a3898a1920c28bb999159'

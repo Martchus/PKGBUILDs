@@ -5,11 +5,13 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
+# See the comment below for additional dependencies/functionality.
+
 _qt_module=qtwebkit
 pkgname=mingw-w64-qt5-webkit
 pkgver=5.6.0
 pkgrel=2
-arch=(any)
+arch=('any')
 pkgdesc="Classes for a WebKit2 based implementation and a new QML API (mingw-w64)"
 depends=('mingw-w64-qt5-declarative'
          'mingw-w64-qt5-sensors'
@@ -24,6 +26,10 @@ depends=('mingw-w64-qt5-declarative'
          'mingw-w64-icu'
          'mingw-w64-sqlite'
          'mingw-w64-libwebp')
+# these dependencies will enable further functionality
+#depends+=('mingw-w64-webchannel')
+#depends+=('mingw-w64-gst-plugins-base')
+#optdepends+=('mingw-w64-gst-plugins-good: Webm codec support')
 makedepends=('mingw-w64-gcc' 'python' 'gperf' 'ruby' 'mingw-w64-pkg-config')
 options=('!strip' '!buildflags' 'staticlibs')
 license=("custom, FDL, GPL3, LGPL")

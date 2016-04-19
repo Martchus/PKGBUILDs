@@ -7,7 +7,7 @@ _name=c++utilities
 _reponame=cpp-utilities
 pkgname=c++utilities-git
 pkgver=50.4d6bf67
-pkgrel=6
+pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Common C++ classes and routines used by my applications such as argument parser, IO and conversion utilities (git version)."
 license=('GPL')
@@ -26,11 +26,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
   make
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make install
+  make DESTDIR="${pkgdir}" install
 }

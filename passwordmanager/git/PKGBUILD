@@ -7,7 +7,7 @@ _name=passwordmanager
 _reponame=passwordmanager
 pkgname=passwordmanager-git
 pkgver=36.90d37ae
-pkgrel=10
+pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (git version)."
 license=('GPL')
@@ -27,11 +27,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" -DQUICK_GUI="no"
   make
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make install
+  make DESTDIR="${pkgdir}" install
 }

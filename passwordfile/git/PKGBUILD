@@ -7,7 +7,7 @@ _name=passwordfile
 _reponame=passwordfile
 pkgname=passwordfile-git
 pkgver=20.bcefbb6
-pkgrel=6
+pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="C++ library to read/write passwords from/to encrypted files (using AES-256-CBC via OpenSSL, git version)."
 license=('GPL')
@@ -27,11 +27,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
   make
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make install
+  make DESTDIR="${pkgdir}" install
 }

@@ -10,7 +10,7 @@ _reponame=tageditor
 _webviewprovider=qt5-webkit
 pkgname=tageditor-git
 pkgver=66.77a0bc2
-pkgrel=12
+pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska (git version)."
 license=('GPL')
@@ -30,11 +30,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
   make
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make install
+  make DESTDIR="${pkgdir}" install
 }

@@ -11,7 +11,7 @@ arch=('i686' 'x86_64')
 pkgdesc="Repository browser for Arch Linux (git version)."
 license=('GPL')
 depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
-makedepends=('cmake' 'git' 'yuicompressor')
+makedepends=('cmake' 'git' 'yuicompressor' 'qtutilities')
 backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
@@ -25,7 +25,7 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
   make
 }
 
@@ -38,7 +38,7 @@ package_repoindex() {
 
   # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make install-binary install-service install-config
+  make DESTDIR="${pkgdir}" install-binary install-service install-config
 
   # make directories for cache and data
   mkdir -p "$pkgdir/var/cache/$_reponame"
@@ -57,10 +57,10 @@ package_repoindex-header() {
 
   # must call cmake again to adjust install prefix
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make install-header
+  make DESTDIR="${pkgdir}" install-header
 }
 
 package_repoindex-web() {
@@ -71,10 +71,10 @@ package_repoindex-web() {
 
   # must call cmake again to adjust install prefix
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make install-web
+  make DESTDIR="${pkgdir}" install-web
 }
 
 package_repoindex-gui() {
@@ -85,8 +85,8 @@ package_repoindex-gui() {
 
   # must call cmake again to adjust install prefix
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make install-binary-gui install-desktop
+  make DESTDIR="${pkgdir}" install-binary-gui install-desktop
 }

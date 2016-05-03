@@ -5,13 +5,13 @@
 
 _reponame=repoindex
 pkgname=(repoindex{,-header,-web,-gui})
-pkgver=0.2.2
-pkgrel=1
+pkgver=0.2.3
+pkgrel=0.1
 arch=('i686' 'x86_64')
 pkgdesc="Repository browser for Arch Linux"
 license=('GPL')
 depends=('qt5-websockets' 'qt5-webengine' 'karchive' 'c++utilities' 'qtutilities')
-makedepends=('cmake' 'yuicompressor')
+makedepends=('cmake' 'yuicompressor' 'qtutilities')
 backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
@@ -20,7 +20,7 @@ sha256sums=('SKIP')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
   make
 }
 
@@ -33,7 +33,7 @@ package_repoindex() {
 
   # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make install-binary install-service install-config
+  make DESTDIR="${pkgdir}" install-binary install-service install-config
 
   # make directories for cache and data
   mkdir -p "$pkgdir/var/cache/$_reponame"
@@ -51,10 +51,10 @@ package_repoindex-header() {
 
   # must call cmake again to adjust install prefix
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make install-header
+  make DESTDIR="${pkgdir}" install-header
 }
 
 package_repoindex-web() {
@@ -65,10 +65,10 @@ package_repoindex-web() {
 
   # must call cmake again to adjust install prefix
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make install-web
+  make DESTDIR="${pkgdir}" install-web
 }
 
 package_repoindex-gui() {
@@ -80,8 +80,8 @@ package_repoindex-gui() {
 
   # must call cmake again to adjust install prefix
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make install-binary-gui install-desktop
+  make DESTDIR="${pkgdir}" install-binary-gui install-desktop
 }

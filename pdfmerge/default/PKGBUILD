@@ -5,8 +5,9 @@
 
 pkgname=pdfmerge
 pkgver=1.0.0
-pkgrel=1
-pkgdesc="Wrapper script for Ghostscript to merge multiple docs/images in one PDF files."
+pkgrel=2
+pkgdesc="Wrapper script for Ghostscript to merge multiple docs/images in one PDF files conveniently."
+url="https://github.com/Martchus/PKGBUILDs/tree/master/${pkgname}"
 arch=('any')
 license=('GPL')
 groups=()

@@ -6,7 +6,7 @@
 
 pkgname='mkvtoolnix-git'
 pkgver=8483.ee895f4
-pkgrel=2
+pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files - includes the new Qt 5 GUI (instead of the old wxWidegts based)."
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -17,7 +17,6 @@ provides=('mkvtoolnix' 'mkvtoolnix-cli' 'mkvtoolnix-gui')
 conflicts=('mkvtoolnix')
 source=("${pkgname}::git://github.com/mbunkus/mkvtoolnix.git")
 md5sums=('SKIP')
-install=mkvtoolnix.install
 
 pkgver() {
   cd "${srcdir}/${pkgname}"

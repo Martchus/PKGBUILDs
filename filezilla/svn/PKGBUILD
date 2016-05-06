@@ -16,7 +16,6 @@ makedepends=('subversion')
 checkdepends=('cppunit')
 provides=(${pkgname%-svn})
 conflicts=(${pkgname%-svn})
-install=filezilla.install
 source=("${_name}::svn+https://svn.filezilla-project.org/svn/FileZilla3/trunk")
 md5sums=('SKIP')
 

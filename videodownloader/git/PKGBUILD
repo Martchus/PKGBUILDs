@@ -15,7 +15,6 @@ depends=('qtutilities' 'openssl' 'desktop-file-utils' 'xdg-utils')
 makedepends=('cmake' 'qt5-tools' 'git')
 provides=('videodownloader')
 conflicts=('videodownloader')
-install=${_name}.install
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')

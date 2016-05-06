@@ -15,7 +15,6 @@ depends=('qt5-base' 'qtutilities' 'passwordfile' 'openssl' 'libxkbcommon-x11' 'd
 makedepends=('cmake' 'qt5-tools' 'git')
 provides=('passwordmanager')
 conflicts=('passwordmanager')
-install=${_name}.install
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')

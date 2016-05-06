@@ -1,11 +1,15 @@
 # Maintainer: Mladen Milinkovic <maxrd2@smoothware.net>
 # Contributor: Martchus <martchus@gmx.net>
 
-# You can install/update Subtitle Composer from repository if you add following to /etc/pacman.conf
+# You can install/update Subtitle Composer from repository
+# if you add following to /etc/pacman.conf (x86_64 only)
 # [subtitlecomposer]
 # # Subtitle Composer
 # SigLevel = PackageRequired
 # Server = http://smoothware.net/$repo/$arch
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of (another) binary repository (i686 and x86_64).
 
 _name=subtitlecomposer
 pkgname=${_name}-git
@@ -22,7 +26,6 @@ makedepends=('extra-cmake-modules' 'git')
 makedepends+=('xine-lib')
 makedepends+=('mpv')
 conflicts=(${_name})
-install=${_name}.install
 optdepends=('mpv: for MPV backend'
             'mplayer: for MPlayer backend'
             'xine-lib: for Xine backend'

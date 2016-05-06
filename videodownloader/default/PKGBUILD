@@ -12,7 +12,6 @@ pkgdesc="A video downloader with Qt GUI (currently only YouTube and Vimeo are ma
 license=('GPL')
 depends=('qtutilities' 'openssl' 'desktop-file-utils' 'xdg-utils')
 makedepends=('cmake' 'qt5-tools')
-install=${pkgname}.install
 url="https://github.com/Martchus/${_reponame}"
 source=("videodownloader-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('122a64f4d08caa2e1cca1dd279d4db85023d46ee9f12b041b341b8d7c33dea9d')

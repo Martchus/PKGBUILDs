@@ -23,7 +23,6 @@ depends=('qtutilities' 'tagparser' 'desktop-file-utils' 'xdg-utils')
 [[ $_js_provider == script ]] && depends+=('qt5-script')
 [[ $_js_provider == qml ]] && depends+=('qt5-declarative')
 makedepends=('cmake' 'qt5-tools')
-install=${pkgname}.install
 url="https://github.com/Martchus/${_reponame}"
 source=("tageditor-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('37281b85c633b2f91310c0747f6ae69a108961ee5de1fa5ad3ba27a1707359aa')

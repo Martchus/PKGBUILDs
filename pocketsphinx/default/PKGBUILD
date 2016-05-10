@@ -1,5 +1,6 @@
 # Maintainer: Marco Pompili <marcs DOT pompili AT gmail DOT com>
 # Contributor: Ben Duffield <bavardage AT archlinux.us>
+# Contributor: Martchus <martchus@gmx.net>
 
 pkgname=pocketsphinx
 pkgver=5prealpha

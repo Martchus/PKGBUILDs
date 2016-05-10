@@ -9,7 +9,7 @@ pkgdesc='Lightweight speech recognition engine, specifically tuned for handheld 
 arch=('i686' 'x86_64')
 url='http://cmusphinx.sourceforge.net'
 license=('BSD')
-makedepends=('swig' 'python2' 'python' 'automake-1.13')
+makedepends=('swig' 'python2' 'python')
 depends=('sphinxbase=5prealpha' 'gstreamer0.10-base' 'gst-plugins-base-libs')
 source=("http://downloads.sourceforge.net/cmusphinx/$pkgname-$pkgver.tar.gz"
         "https://raw.githubusercontent.com/cmusphinx/pocketsphinx/master/LICENSE")
@@ -20,11 +20,20 @@ options=('!libtool')
 prepare() {
   cp -R "$pkgname-$pkgver" "$pkgname-$pkgver-py2"
   cp -R "$pkgname-$pkgver" "$pkgname-$pkgver-py3"
+
+  msg2 "Reconfiguring project for current Automake"
+  cd "$pkgname-$pkgver-py3"
+  export PYTHON=/usr/bin/python
+  autoreconf -ivf > /dev/null
+  cd "../$pkgname-$pkgver-py2"
+	export PYTHON=/usr/bin/python2
+  autoreconf -ivf > /dev/null
 }
 
 build() {
 
   msg2 "Building python3 environment"
+  export PYTHON=/usr/bin/python
   cd "$pkgname-$pkgver-py3"
   ./configure --prefix=/usr
   make

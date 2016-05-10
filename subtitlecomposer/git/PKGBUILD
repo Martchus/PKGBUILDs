@@ -13,7 +13,7 @@
 
 _name=subtitlecomposer
 pkgname=${_name}-git
-pkgver=v0.6.3
+pkgver=0.6.4
 pkgrel=1
 pkgdesc="A KDE subtitle editor (git version)"
 arch=('i686' 'x86_64')
@@ -21,24 +21,28 @@ url="https://github.com/maxrd2/${_name}"
 license=('GPL')
 depends=('kcoreaddons' 'sonnet' 'kcodecs' 'kross' 'kxmlgui' 'ki18n' 'gstreamer')
 makedepends=('extra-cmake-modules' 'git')
+
 # Comment/uncomment the following dependencies to disable/enable
-# building of plugins for MPV and Xine player backends.
+# building the plugins for MPV and Xine player backends and pocketsphinx
 makedepends+=('xine-lib')
 makedepends+=('mpv')
-conflicts=(${_name})
-optdepends=('mpv: for MPV backend'
-            'mplayer: for MPlayer backend'
-            'xine-lib: for Xine backend'
-            'ruby: for scripting'
-            'python: for scripting')
+makedepends+=('pocketsphinx')
+
+# For consistency, also enable/disable the corresponding optdepends
+optdepends=('mplayer: MPlayer backend'
+            'mpv: MPV backend'
+            'xine-lib: Xine backend'
+            'pocketsphinx: speech recognition'
+            'ruby: scripting'
+            'python: scripting')
+
 source=("git+https://github.com/maxrd2/${_name}.git")
 #source=("git+https://github.com/Martchus/${_name}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  export APP_VER=${pkgver}
-  cd ${srcdir}/${_name}
-  git describe --always | sed 's|-|.|g' | sed -e 's/^v//g'
+  cd "${srcdir}/${_name}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {

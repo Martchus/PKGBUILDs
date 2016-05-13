@@ -17,7 +17,7 @@ isOpenGL() {
 
 pkgname=mingw-w64-qt5-base-static
 pkgver=5.6.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A cross-platform application and UI framework (mingw-w64, static)"
 ! isStatic && arch=('i686' 'x86_64')
 isStatic && arch=('any') # the static variant doesn't contain any executables which need to be executed on the host
@@ -267,7 +267,7 @@ build() {
       # libraries which various compiled tools (like moc) use. As the libQt5Bootstrap*
       # libraries aren't installed at this point yet, we have to workaround this
       ../${_pkgfqn}/configure -shared $qt_configure_args $qt_configure_args_mysql
-      LD_LIBRARY_PATH=`pwd`/lib make
+      LD_LIBRARY_PATH="$PWD/lib" make
     fi
 
     popd
@@ -337,9 +337,9 @@ package() {
     fi
 
     # keeping prl files for base build since qbs seems to need them.
-    if isStatic; then
-      rm -f "${pkgdir}/usr/${_arch}/lib"{,/qt/plugins/*}/*.prl
-    fi
+    isStatic && rm -f "${pkgdir}/usr/${_arch}/lib"{,/qt/plugins/*}/*.prl
+
+    # remove binaries, strip libs
     find "${pkgdir}/usr/${_arch}" -name "*.exe" -o -name "*.bat" -o -name "*.def" -o -name "*.exp" | xargs -rtl1 rm
     find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
     find "${pkgdir}/usr/${_arch}" -name "*.a" -o -name "*.dll" | xargs -rtl1 ${_arch}-strip -g

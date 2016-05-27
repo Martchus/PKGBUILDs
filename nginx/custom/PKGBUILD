@@ -42,16 +42,12 @@ _accesskey_dirname="ngx_accesskey"
 
 pkgname=nginx-custom
 pkgver=1.10.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Lightweight HTTP server and IMAP/POP3 proxy server (with standard, additional and 3rd party modules)"
 arch=('i686' 'x86_64')
 
 depends=('pcre' 'zlib' 'openssl' 'pam' 'geoip' 'geoip-database' 'gd' 'libxslt')
-makedepends=(
-  'libxslt'
-  'gd'
-  'git'
-)
+makedepends=('libxslt' 'gd' 'git' 'hardening-wrapper')
 
 url="https://nginx.org"
 license=('custom')
@@ -151,6 +147,9 @@ build() {
     --with-pcre-jit \
     --with-file-aio \
     --with-mail \
+    --with-mail_ssl_module \
+    --with-stream \
+    --with-stream_ssl_module \
     --with-threads \
     --add-module=../${_naxsi_dirname}/naxsi_src/ \
     --with-imap \
@@ -187,7 +186,6 @@ build() {
     --add-module=../${_accesskey_dirname} \
     --add-module=../${_rtmp_dirname} \
     --add-module=../${_davext_dirname}
-
   make
 }
 

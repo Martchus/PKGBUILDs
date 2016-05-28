@@ -4,7 +4,7 @@
 
 pkgname=sphinxbase
 pkgver=5prealpha
-pkgrel=4
+pkgrel=5
 pkgdesc='Common library for sphinx speech recognition.'
 url='http://cmusphinx.sourceforge.net/'
 arch=('i686' 'x86_64')
@@ -19,6 +19,8 @@ options=('!libtool')
 
 prepare() {
   cd "$pkgname-$pkgver"
+
+  patch -p1 < ../../timing-fix.patch
 
   msg2 "Reconfiguring project for Automake v1.15"
   autoreconf -ivf > /dev/null

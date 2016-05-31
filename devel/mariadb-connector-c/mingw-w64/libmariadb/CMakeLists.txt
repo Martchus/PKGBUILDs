@@ -356,7 +356,7 @@ SET(LIBMARIADB_SOURCES ${LIBMARIADB_SOURCES} ${ZLIB_SOURCES})
 ENDIF()
 
 IF(WIN32)
-  SET_VERSION_INFO("TARGET:libmariadb"
+  SET_VERSION_INFO("TARGET:mariadb"
                    "FILE_TYPE:VFT_DLL"
                    "SOURCE_FILE:libmariadb/libmariadb.c"
                    "ORIGINAL_FILE_NAME:libmariadb.dll"
@@ -384,7 +384,7 @@ ENDIF()
 ADD_LIBRARY(mariadbclient STATIC ${mariadbclient_RC} $<TARGET_OBJECTS:mariadb_obj> ${EMPTY_FILE} ${EXPORT_LINK})
 TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
 
-ADD_LIBRARY(mariadb SHARED ${libmariadb_RC} $<TARGET_OBJECTS:mariadb_obj> ${EMPTY_FILE} ${EXPORT_LINK})
+ADD_LIBRARY(mariadb SHARED ${libmariadb_RC} ${LIBMARIADB_SOURCES} ${EMPTY_FILE})
 TARGET_LINK_LIBRARIES(mariadb ${SYSTEM_LIBS})
 IF(UNIX)
   SET_TARGET_PROPERTIES(mariadb PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")

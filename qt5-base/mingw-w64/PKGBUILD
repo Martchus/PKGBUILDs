@@ -17,7 +17,7 @@ isOpenGL() {
 
 pkgname=mingw-w64-qt5-base
 pkgver=5.6.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
 ! isStatic && arch=('i686' 'x86_64')
 isStatic && arch=('any') # the static variant doesn't contain any executables which need to be executed on the host
@@ -83,7 +83,7 @@ md5sums=('d6b6cfd333c22829c6c85fc52ceed019'
          '87cbd116c75ced1b075bf266f2455d50'
          '62d2977e57fccf1f16d7ea6bf06d3279'
          '83139869355c2d46921adb25e47cf0fa')
-_architectures="x86_64-w64-mingw32 i686-w64-mingw32"
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 isStatic && depends+=("mingw-w64-qt5-base")
 ! isOpenGL && depends+=("mingw-w64-angleproject")

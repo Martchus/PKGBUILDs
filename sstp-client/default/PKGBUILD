@@ -12,7 +12,7 @@ license=('GPL2')
 conflicts=('sstp-client-svn-stable')
 provides=('sstp-client')
 depends=('libevent')
-makedepends=('gcc' 'ppp>=2.4.6' 'libevent')
+makedepends=('ppp>=2.4.6')
 optdepends=('ppp>=2.4.6' 'openssl')
 install=${pkgname}.install
 

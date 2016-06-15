@@ -116,10 +116,6 @@ build() {
   unset PKG_CONFIG_PATH
   cd "${srcdir}/${_pkgfqn}"
   for _arch in ${_architectures}; do
-    # Generate headers
-    # seems like this has been fixed
-    #${_arch}-syncqt.pl-qt5 ./Source -version ${pkgver}
-
     mkdir -p build-${_arch} && pushd build-${_arch}
 
     # Since Source/ThirdParty/ANGLE has been removed ensure files
@@ -129,9 +125,13 @@ build() {
 
     # SH_GLSL_OUTPUT has been renamed to SH_GLSL_COMPATIBILITY_OUTPUT
     # in the latest ANGLE version so I just add a definition for backward compatibility
+
+    # intrin.h needs to be included otherwise declaration of _mm_mfence is missing
+
     ${_arch}-qmake-qt5 \
-      QMAKE_CXXFLAGS+=-Wno-c++0x-compat \
-      DEFINES+=SH_GLSL_OUTPUT=SH_GLSL_COMPATIBILITY_OUTPUT \
+      "QMAKE_CXXFLAGS+=-Wno-c++0x-compat" \
+      "QMAKE_CXXFLAGS+='-include /usr/i686-w64-mingw32/include/intrin.h'" \
+      "DEFINES+=SH_GLSL_OUTPUT=SH_GLSL_COMPATIBILITY_OUTPUT" \
       ../WebKit.pro
     make
     popd

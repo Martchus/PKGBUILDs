@@ -9,7 +9,7 @@
 
 _qt_module=qtwebkit
 pkgname=mingw-w64-qt5-webkit
-pkgver=5.6.1
+pkgver=5.7.0
 pkgrel=1
 arch=('any')
 pkgdesc="Classes for a WebKit2 based implementation and a new QML API (mingw-w64)"
@@ -46,7 +46,7 @@ source=("https://download.qt.io/community_releases/${pkgver:0:3}/${pkgver}/${_pk
         qtwebkit-opensource-src-5.0.1-debuginfo.patch
         revert-qt4-unicode-removal.patch
         webkit-commit-151422.patch)
-md5sums=('9ea7cb557375ba2fc7c62742c522d093'
+md5sums=('9379b8829639645c184fa63532035098'
          '37dd6b694e1e178aa8b1815f7fe3537d'
          'ac574de962545d6a9e975b4db63c3e09'
          '4ad37c7d4dda8e77bb0a25c671f79adc'

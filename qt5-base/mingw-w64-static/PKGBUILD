@@ -15,7 +15,7 @@ isOpenGL() {
   [ $pkgname = "mingw-w64-qt5-base-opengl" ]
 }
 
-pkgname=mingw-w64-qt5-static
+pkgname=mingw-w64-qt5-base-static
 pkgver=5.7.0
 pkgrel=1
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"

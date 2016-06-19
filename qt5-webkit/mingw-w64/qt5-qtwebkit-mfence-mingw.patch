@@ -1,0 +1,11 @@
+--- Source/WTF/wtf/Atomics.h.orig	2016-06-19 14:44:16.829726076 +0200
++++ Source/WTF/wtf/Atomics.h	2016-06-19 14:49:05.596958910 +0200
+@@ -68,6 +68,8 @@
+ #elif !COMPILER(GCC)
+ extern "C" void _ReadWriteBarrier(void);
+ #pragma intrinsic(_ReadWriteBarrier)
++#else
++#include <intrin.h>
+ #endif
+ #include <windows.h>
+ #elif OS(QNX)

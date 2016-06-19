@@ -45,7 +45,8 @@ source=("https://download.qt.io/community_releases/${pkgver:0:3}/${pkgver}/${_pk
         qtwebkit-dont-use-bundled-angle-libraries.patch
         qtwebkit-opensource-src-5.0.1-debuginfo.patch
         revert-qt4-unicode-removal.patch
-        webkit-commit-151422.patch)
+        webkit-commit-151422.patch
+        qt5-qtwebkit-mfence-mingw.patch)
 md5sums=('9379b8829639645c184fa63532035098'
          '37dd6b694e1e178aa8b1815f7fe3537d'
          'ac574de962545d6a9e975b4db63c3e09'
@@ -55,7 +56,8 @@ md5sums=('9379b8829639645c184fa63532035098'
          'f452210683386f9c28f04d7dea0ecfc7'
          '6aba6468efafb64943887079e258b799'
          '4e374836f26853b4d82be0e87aa584a5'
-         'c36fe581e0f3b61cef19415782b257ca')
+         'c36fe581e0f3b61cef19415782b257ca'
+         '81901e7f7653dd4e71206bc107cc7eb9')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -108,6 +110,9 @@ prepare() {
   # Fix compatibility issue when using the latest ANGLE
   patch -p1 -b -i ../qt5-qtwebkit-fix-compatibility-with-latest-angle.patch
 
+  # intrin.h needs to be included otherwise declaration of _mm_mfence is missing
+  patch -p0 -b -i ../qt5-qtwebkit-mfence-mingw.patch
+
   # Make sure the bundled copy of the ANGLE libraries isn't used
   rm -rf Source/ThirdParty/ANGLE
 }
@@ -125,12 +130,8 @@ build() {
 
     # SH_GLSL_OUTPUT has been renamed to SH_GLSL_COMPATIBILITY_OUTPUT
     # in the latest ANGLE version so I just add a definition for backward compatibility
-
-    # intrin.h needs to be included otherwise declaration of _mm_mfence is missing
-
     ${_arch}-qmake-qt5 \
       "QMAKE_CXXFLAGS+=-Wno-c++0x-compat" \
-      "QMAKE_CXXFLAGS+='-include /usr/i686-w64-mingw32/include/intrin.h'" \
       "DEFINES+=SH_GLSL_OUTPUT=SH_GLSL_COMPATIBILITY_OUTPUT" \
       ../WebKit.pro
     make

@@ -17,7 +17,7 @@ isOpenGL() {
 
 pkgname=mingw-w64-qt5-base-opengl
 pkgver=5.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"
 ! isStatic && arch=('i686' 'x86_64')
 isStatic && arch=('any') # the static variant doesn't contain any executables which need to be executed on the host
@@ -63,7 +63,8 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         "fix-opengl-to-many-sections.patch"
         "fix-static-psql-mysql.patch"
         "qtbase-1-fixes.patch"
-        "qt5-fix-implib-ext.patch")
+        "qt5-fix-implib-ext.patch"
+        "qt5-disable-default-lib-include-detection.patch")
 md5sums=('184f9460b40752d71b15b827260580c2'
          'bab00ccc19d888997f323c80354a7c3f'
          'f7e1487de6e85116d9c6bde2eac4fb73'
@@ -80,7 +81,8 @@ md5sums=('184f9460b40752d71b15b827260580c2'
          '612a4dfb9f1a3898a1920c28bb999159'
          'd0eb81aef1a21c65813fe4ddabbc4206'
          '42c4968a0bd29856b683ad1b5d2b2a75'
-         '83139869355c2d46921adb25e47cf0fa')
+         '83139869355c2d46921adb25e47cf0fa'
+         'b9565219e9252a17fc1b8fb9ee30662c')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 isStatic && depends+=("mingw-w64-qt5-base")
@@ -156,6 +158,10 @@ prepare() {
   # Build host libs with system zlib. This patch cannot be upstreamed as-is
   # due to the other host-libs patches.
   patch -p0 -i ../qt5-use-system-zlib-in-host-libs.patch
+
+  # Determine the compiler's default include and lib directories at qmake time
+  # see https://codereview.qt-project.org/#/c/157817
+  patch -p1 -i ../qt5-disable-default-lib-include-detection.patch
 
   # Fix qmake to append .dll.a extension to import libs
   patch -p1 -i ../qt5-fix-implib-ext.patch

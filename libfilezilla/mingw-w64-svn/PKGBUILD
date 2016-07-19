@@ -7,7 +7,7 @@ _name=libfilezilla
 pkgname=mingw-w64-libfilezilla-svn
 pkgver=r7253
 pkgrel=1
-pkgdesc="Library used by FileZilla (mingw-w64, svn version)"
+pkgdesc="Library used by FileZilla (mingw-w64)"
 arch=('any')
 url="https://filezilla-project.org/"
 license=('GPL')
@@ -34,6 +34,7 @@ prepare() {
 }
 
 build() {
+  export CXXFLAGS='-O0'
   for _arch in ${_architectures}; do
     mkdir -p "${srcdir}/${_name}/build-${_arch}" && cd "${srcdir}/${_name}/build-${_arch}"
     ${_arch}-configure

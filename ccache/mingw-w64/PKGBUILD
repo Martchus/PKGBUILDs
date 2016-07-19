@@ -1,0 +1,26 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=mingw-w64-ccache
+pkgver=1
+pkgrel=1
+pkgdesc='A compiler cache (symlinks for mingw-w64-gcc)'
+arch=('any')
+url="http://ccache.samba.org/"
+license=('GPL3')
+depends=('ccache')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+package() {
+  mkdir -p "${pkgdir}/usr/lib/ccache/bin"
+  for _arch in $_architectures; do
+    ln -sf /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/${_arch}-cc"
+    ln -sf /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/${_arch}-gcc"
+    ln -sf /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/${_arch}-g++"
+    ln -sf /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/${_arch}-cpp"
+    ln -sf /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/${_arch}-c++"
+  done
+}

@@ -1,0 +1,10 @@
+--- src/3rdparty/harfbuzz_dependency.pri.orig	2016-08-12 22:07:40.467953900 +0200
++++ src/3rdparty/harfbuzz_dependency.pri	2016-08-12 22:08:06.583981900 +0200
+@@ -2,5 +2,6 @@
+     INCLUDEPATH += $$PWD/harfbuzz-ng/include
+     LIBS_PRIVATE += -L$$QT_BUILD_TREE/lib -lqtharfbuzzng$$qtPlatformTargetSuffix()
+ } else:contains(QT_CONFIG, system-harfbuzz) {
+-    LIBS_PRIVATE += -lharfbuzz
++    CONFIG += link_pkgconfig
++    PKGCONFIG += harfbuzz
+ }

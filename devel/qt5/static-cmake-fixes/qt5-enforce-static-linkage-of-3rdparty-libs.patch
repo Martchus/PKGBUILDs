@@ -1,0 +1,34 @@
+--- src/3rdparty/harfbuzz_dependency.pri.orig	2016-08-12 22:07:40.467953900 +0200
++++ src/3rdparty/harfbuzz_dependency.pri	2016-08-12 22:08:06.583981900 +0200
+@@ -2,5 +2,6 @@
+     INCLUDEPATH += $$PWD/harfbuzz-ng/include
+     LIBS_PRIVATE += -L$$QT_BUILD_TREE/lib -lqtharfbuzzng$$qtPlatformTargetSuffix()
+ } else:contains(QT_CONFIG, system-harfbuzz) {
+-    LIBS_PRIVATE += -lharfbuzz
++    CONFIG += link_pkgconfig
++    PKGCONFIG += harfbuzz
+ }
+--- src/3rdparty/pcre_dependency.pri.orig	2016-08-12 21:50:39.136999600 +0200
++++ src/3rdparty/pcre_dependency.pri	2016-08-12 21:50:39.136802400 +0200
+@@ -3,5 +3,6 @@
+     INCLUDEPATH += $$PWD/pcre
+     LIBS_PRIVATE += -L$$QT_BUILD_TREE/lib -lqtpcre$$qtPlatformTargetSuffix()
+ } else {
+-    LIBS_PRIVATE += -lpcre16
++    contains(QT_CONFIG, static): LIBS_PRIVATE += -Bstatic -lpcre16 -Wl,-Bdynamic
++    else: LIBS_PRIVATE += -lpcre16
+ }
+--- src/3rdparty/zlib_dependency.pri.orig	2016-08-12 21:50:39.137774400 +0200
++++ src/3rdparty/zlib_dependency.pri	2016-08-12 21:50:39.137577500 +0200
+@@ -1,7 +1,9 @@
+ # zlib dependency satisfied by bundled 3rd party zlib or system zlib
+ contains(QT_CONFIG, system-zlib) {
+-    if(unix|mingw):LIBS_PRIVATE += -lz
+-    else {
++    unix|mingw {
++        contains(QT_CONFIG, static): LIBS_PRIVATE += -Bstatic -lz -Wl,-Bdynamic
++        else: LIBS_PRIVATE += -lz
++    } else {
+         isEmpty(ZLIB_LIBS): LIBS += zdll.lib
+         else: LIBS += $$ZLIB_LIBS
+     }

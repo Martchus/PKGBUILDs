@@ -1,0 +1,15 @@
+--- qmake/generators/makefile.cpp	2015-08-26 14:29:10.131124600 +0100
++++ qmake/generators/makefile.cpp	2015-08-26 15:06:33.375635900 +0100
+@@ -1006,6 +1006,13 @@
+         for (ProStringList::Iterator it = libs.begin(); it != libs.end(); ++it)
+             t << qv(project->values((*it).toKey()));
+         t << endl;
++        t << "QMAKE_PRL_LIBS_FOR_CMAKE = ";
++        QString sep;
++        for (ProStringList::Iterator it = libs.begin(); it != libs.end(); ++it) {
++            t << sep << project->values((*it).toKey()).join(';').replace('\\', "\\\\");
++            sep = ';';
++        }
++        t << endl;
+     }
+ }

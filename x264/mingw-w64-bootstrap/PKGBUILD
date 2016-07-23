@@ -1,5 +1,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 # Contributor: Karl-Felix Glatzer <karl.glatzer@gmx.de>
+
+# This version includes the programs in contrast to the version found in the AUR.
+
 pkgname=mingw-w64-x264-bootstrap
 pkgver=148.20160103
 pkgrel=1

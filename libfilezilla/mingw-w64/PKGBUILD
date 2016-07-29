@@ -5,7 +5,7 @@
 
 _name=libfilezilla
 pkgname=mingw-w64-libfilezilla
-pkgver=0.5.3
+pkgver=0.6.1
 pkgrel=1
 pkgdesc="Library used by FileZilla (mingw-w64)"
 arch=('any')
@@ -15,16 +15,13 @@ depends=('mingw-w64-crt')
 makedepends=('mingw-w64-configure')
 options=(staticlibs !strip !buildflags)
 install=
-source=("http://downloads.sourceforge.net/project/filezilla/libfilezilla/${pkgver}/${_name}-${pkgver}.tar.bz2"
-        'extern_template_instantiation.patch')
-md5sums=('6192fd89318c1107b5b8095fd43dc3a5'
-         '06871d88895b83d56069be8f5952fdf4')
+source=("http://downloads.sourceforge.net/project/filezilla/libfilezilla/${pkgver}/${_name}-${pkgver}.tar.bz2")
+md5sums=('3d4728ce8949490b09198443e955c8b6')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd "${srcdir}/${_name}-${pkgver}"
-  patch -p0 -i ../extern_template_instantiation.patch
   autoreconf -i
 }
 
@@ -32,7 +29,9 @@ build() {
   export CXXFLAGS='-O0'
   for _arch in ${_architectures}; do
     mkdir -p "${srcdir}/${_name}-${pkgver}/build-${_arch}" && cd "${srcdir}/${_name}-${pkgver}/build-${_arch}"
-    ${_arch}-configure
+    ${_arch}-configure --disable-shared
+    # shared build doesn't work because 'fz::simple_event<fz::timer_event_type, unsigned long long>::type()'
+    # is not exportet correctly
     make
   done
 }
@@ -42,6 +41,6 @@ package() {
     cd "${srcdir}/${_name}-${pkgver}/build-${_arch}"
     make DESTDIR="${pkgdir}" install
     ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
-    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    #${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
   done
 }

@@ -18,7 +18,7 @@ sha1sums=('6461eab4428c0a8b9e41781b8787510484dea800')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
-  # monolithic shared builds
+  # shared builds
   for _arch in ${_architectures}; do
     unset LDFLAGS
     mkdir -p "${srcdir}/${pkgname}-${pkgver}-build-shared-${_arch}"
@@ -32,7 +32,7 @@ build() {
       --disable-mslu \
       --enable-unicode \
       --enable-shared \
-      --enable-monolithic \
+      #--enable-monolithic \
       --enable-stl \
       --with-regex=builtin \
       --disable-precomp-headers \

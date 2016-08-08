@@ -5,7 +5,7 @@
 pkgname=pocketsphinx
 pkgver=5prealpha
 pkgrel=5
-pkgdesc='Lightweight speech recognition engine, specifically tuned for handheld and mobile devices, though it works equally well on the desktop.'
+pkgdesc='Lightweight speech recognition engine'
 arch=('i686' 'x86_64')
 url='http://cmusphinx.sourceforge.net'
 license=('BSD')
@@ -24,19 +24,16 @@ prepare() {
   autoreconf -ivf > /dev/null
 
   cd ..
-
   cp -R "$pkgname-$pkgver" "$pkgname-$pkgver-py2"
   cp -R "$pkgname-$pkgver" "$pkgname-$pkgver-py3"
 }
 
 build() {
-
   msg2 "Building python3 environment"
   export PYTHON=/usr/bin/python
   cd "$pkgname-$pkgver-py3"
   ./configure --prefix=/usr
   make
-
 
   msg2 "Building python2 environment"
   cd "../$pkgname-$pkgver-py2"

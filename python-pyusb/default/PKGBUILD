@@ -6,7 +6,7 @@
 pkgname=python-pyusb
 pkgver=1.0.0
 pkgrel=1
-pkgdesc="A pure Python module which provides USB access"
+pkgdesc='A pure Python module which provides USB access'
 arch=('any')
 url="https://github.com/walac/pyusb"
 license=('custom')

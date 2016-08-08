@@ -6,7 +6,7 @@
 pkgname="brother-mfc-j4410dw"
 pkgver="3.0.1"
 pkgrel=1
-pkgdesc="LPR and CUPS driver for the Brother MFC-J4410DW"
+pkgdesc='LPR and CUPS driver for the Brother MFC-J4410DW'
 arch=('i686' 'x86_64')
 url="http://solutions.brother.com/linux/en_us/"
 license=('custom:brother commercial license')

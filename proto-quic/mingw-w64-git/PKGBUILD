@@ -1,0 +1,65 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=mingw-w64-proto-quic-git
+pkgver=r5992.802abe0
+pkgrel=1
+pkgdesc='Standalone library for QUIC (mingw-w64)'
+arch=('any')
+url="https://github.com/google/${pkgname#mingw-w64-}"
+license=('BSD')
+depends=('mingw-w64-crt')
+makedepends=('mingw-w64-gcc' 'git' 'gyp-git' 'python')
+options=('!strip' '!buildflags' 'staticlibs')
+source=("proto-quic::git+https://github.com/google/${pkgname#mingw-w64-}")
+sha256sums=('SKIP')
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+pkgver() {
+  cd "$srcdir/${pkgname#mingw-w64-}"
+  printf "r%s.%s\n" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/${pkgname#mingw-w64-}"
+}
+
+build() {
+  cd "${srcdir}/${pkgname#mingw-w64-}"
+
+  # set build flags, make sure all header files are found
+  export CXXFLAGS="-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -std=c++11 -msse2 -DUNICODE -D_UNICODE -DANGLE_WINDOWS_XP_SUPPORT -g -I${srcdir}/angleproject/sysinclude -I${srcdir}/angleproject/src -I${srcdir}/angleproject/include"
+  unset LDFLAGS
+
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+
+    export CXX="${_arch}-g++"
+    export AR="${_arch}-ar"
+
+    if [[ ${_arch} == i686-w64-mingw32 ]]; then
+      target='win32'
+    else
+      target='win64'
+    fi
+
+    gyp -D use_ozone=0 -D OS=win -D TARGET=$target --format make -D MSVS_VERSION='' --depth . -I ../build/common.gypi ../src/base.gyp
+    make V=1
+
+    popd
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "${srcdir}/${pkgname#mingw-w64-}/build-${_arch}"
+    mkdir -p "${pkgdir}/usr/${_arch}/"{bin,lib,include}
+
+    cp -Rv ../include/* "${pkgdir}/usr/${_arch}/include/"
+
+    ${_arch}-strip --strip-unneeded "${pkgdir}/usr/${_arch}/bin/"*.dll
+    ${_arch}-strip -g "${pkgdir}/usr/${_arch}/lib/"*.a
+  done
+}

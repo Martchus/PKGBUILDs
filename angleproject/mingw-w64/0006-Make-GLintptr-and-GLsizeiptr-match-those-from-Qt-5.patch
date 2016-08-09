@@ -1,7 +1,18 @@
-diff -Naur angleproject.orig/include/KHR/khrplatform.h angleproject/include/KHR/khrplatform.h
---- angleproject.orig/include/KHR/khrplatform.h	2016-10-26 16:15:14.000000000 -0500
-+++ angleproject/include/KHR/khrplatform.h	2016-11-02 17:02:26.685185043 -0500
-@@ -228,17 +228,22 @@
+From b8ed09b39d8ce1d846a48bafc15490277bbedb2f Mon Sep 17 00:00:00 2001
+From: Jose Santiago <jsantiago@haivision.com>
+Date: Thu, 3 Nov 2016 09:38:19 -0500
+Subject: [PATCH 6/8] Make GLintptr and GLsizeiptr match those from Qt 5
+
+Fix compiling mingw-w64-qt5-base-dynamic and mingw-w64-qt5-webkit
+---
+ include/KHR/khrplatform.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/include/KHR/khrplatform.h b/include/KHR/khrplatform.h
+index 9017b61..d31a9f9 100755
+--- a/include/KHR/khrplatform.h
++++ b/include/KHR/khrplatform.h
+@@ -228,17 +228,22 @@ typedef unsigned short int     khronos_uint16_t;
   * to be the only LLP64 architecture in current use.
   */
  #ifdef _WIN64
@@ -28,3 +39,6 @@ diff -Naur angleproject.orig/include/KHR/khrplatform.h angleproject/include/KHR/
  #if KHRONOS_SUPPORT_FLOAT
  /*
   * Float type
+-- 
+2.10.2
+

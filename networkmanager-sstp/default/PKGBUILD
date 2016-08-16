@@ -13,7 +13,7 @@ optdepends=('ppp>=2.4.6')
 options=()
 makedepends=('git' 'intltool' 'ppp>=2.4.6' 'gawk' 'python')
 provides=('networkmanager-sstp')
-source=("git://github.com/enaess/network-manager-sstp.git#branch=release-1.2")
+source=("git://github.com/enaess/network-manager-sstp.git#branch=release-$pkgver")
 sha512sums=('SKIP')
 
 build() {

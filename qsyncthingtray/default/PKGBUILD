@@ -1,0 +1,39 @@
+# Maintainer: MrSerenity
+# Contributor: xduugu
+# Contributor: Martchus <martchus@gmx.net>
+
+_reponame=QSyncthingTray
+pkgname=qsyncthingtray
+pkgver=0.5.1r2
+pkgrel=1
+pkgdesc='Traybar Application for Syncthing written in C++'
+arch=('i686' 'x86_64')
+url="https://github.com/sieren/$_reponame"
+license=('LGPL2.1')
+depends=('qt5-location' 'qt5-webengine')
+makedepends=('cmake')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/sieren/$_reponame/archive/$pkgver.tar.gz"
+        "$pkgname.desktop")
+md5sums=('c152a69f836ddf67459a044cca0610ea'
+         '730d2ae862656d39f7b1980f20d8d8bf')
+
+build() {
+  cd "$srcdir/$_reponame-$pkgver"
+
+  # setting QTDIR is mandatory
+  QTDIR='/usr/lib/qt' cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -DQST_BUILD_WEBKIT=1
+  make
+}
+
+package() {
+  cd "$srcdir/$_reponame-$pkgver"
+
+  #make DESTDIR="${pkgdir}" install
+  # No install target provided!
+  install -Dm755 "$_reponame" "$pkgdir/usr/bin/$_reponame"
+  install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 "resources/images/Icon1024.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
+}

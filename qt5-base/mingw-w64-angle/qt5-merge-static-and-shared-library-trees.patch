@@ -21,15 +21,16 @@
 
 --- mkspecs/features/default_post.prf.orig      2012-09-05 23:28:56.827501401 +0200
 +++ mkspecs/features/default_post.prf   2012-09-05 23:29:31.617923080 +0200
-@@ -47,3 +50,10 @@
+@@ -47,3 +50,11 @@
 
  QMAKE_INCDIR += $$QMAKE_INCDIR_POST
  QMAKE_LIBDIR += $$QMAKE_LIBDIR_POST
 +
 +win32:contains(CONFIG, static) {
 +    DEFINES += QT_STATIC QT_DESIGNER_STATIC
++    DEFINES -= QT_SHARED
 +    contains(QT_CONFIG, angle): DEFINES += QT_OPENGL_ES_2_ANGLE_STATIC
-+    QMAKE_LFLAGS += -static
++    QMAKE_LFLAGS += -static -static-libstdc++ -static-libgcc
 +    QMAKE_EXT_PRL=-static.prl # prevents qmake from finding the prl file for shared libs
 +}
 --- configure.orig	2012-12-10 23:51:02.920255366 +0100

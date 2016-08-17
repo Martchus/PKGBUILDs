@@ -135,17 +135,19 @@ contains(CONFIG, plugin) {
     CMAKE_PLUGIN_NAME = $$PLUGIN_CLASS_NAME
 
     win32 {
-        isEmpty(CMAKE_STATIC_TYPE) {
+        mingw {
             CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/$${TARGET}.dll
             CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/$${TARGET}d.dll
-        } else:mingw {
-            CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/lib$${TARGET}.a
-            CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/lib$${TARGET}d.a
+            CMAKE_PLUGIN_LOCATION_RELEASE_STATIC = $$PLUGIN_TYPE/lib$${TARGET}.a
+            CMAKE_PLUGIN_LOCATION_DEBUG_STATIC = $$PLUGIN_TYPE/lib$${TARGET}d.a
         } else {                         # MSVC static
             CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/$${TARGET}.lib
             CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/$${TARGET}d.lib
+            CMAKE_PLUGIN_LOCATION_RELEASE_STATIC = $$PLUGIN_TYPE/$${TARGET}.lib
+            CMAKE_PLUGIN_LOCATION_DEBUG_STATIC = $$PLUGIN_TYPE/$${TARGET}d.lib
         }
     } else {
+        # this branch is broken by the patch, only apply when building for Windows
         mac {
             isEmpty(CMAKE_STATIC_TYPE): CMAKE_PlUGIN_EXT = .dylib
             else: CMAKE_PlUGIN_EXT = .a
@@ -161,7 +163,8 @@ contains(CONFIG, plugin) {
         }
     }
     cmake_target_file.input = $$PWD/data/cmake/Qt5PluginTarget.cmake.in
-    cmake_target_file.output = $$CMAKE_OUT_DIR/Qt5$${CMAKE_MODULE_NAME}/Qt5$${CMAKE_MODULE_NAME}_$${PLUGIN_CLASS_NAME}.cmake
+    isEmpty(CMAKE_STATIC_TYPE): cmake_target_file.output = $$CMAKE_OUT_DIR/Qt5$${CMAKE_MODULE_NAME}/Qt5$${CMAKE_MODULE_NAME}_$${PLUGIN_CLASS_NAME}.cmake
+    else: cmake_target_file.output = $$CMAKE_OUT_DIR/Qt5$${CMAKE_MODULE_NAME}/StaticQt5$${CMAKE_MODULE_NAME}_$${PLUGIN_CLASS_NAME}.cmake
 
     !build_pass:QMAKE_SUBSTITUTES += \
       cmake_target_file
@@ -180,6 +183,8 @@ mod_deps =
 lib_deps =
 aux_mod_deps =
 aux_lib_deps =
+aux_compile_defs_static = QT_STATIC QT_DESIGNER_STATIC
+contains(QT_CONFIG, angle): aux_compile_defs += QT_OPENGL_ES_2_ANGLE_STATIC
 # Until CMake 3.0 is the minimum requirement of Qt 5, we need to filter
 # out header-only modules from dependencies.  CMake 3.0 provides INTERFACE
 # libraries which are equivalent to header-only modules.
@@ -197,10 +202,13 @@ CMAKE_MODULE_DEPS = $$join(mod_deps, ";")
 CMAKE_QT5_MODULE_DEPS = $$join(lib_deps, ";")
 CMAKE_INTERFACE_MODULE_DEPS = $$join(aux_mod_deps, ";")
 CMAKE_INTERFACE_QT5_MODULE_DEPS = $$join(aux_lib_deps, ";")
+CMAKE_INTERFACE_COMPILE_DEFINITIONS_STATIC = $$join(aux_compile_defs_static, ";")
+
 
 CMAKE_QT_STEM = Qt$$QT_MAJOR_VERSION$${CMAKE_MODULE_NAME}$${QT_LIBINFIX}
 
 mac {
+    # this branch is broken by the patch, only apply when building for Windows
     !isEmpty(CMAKE_STATIC_TYPE) {
         CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.a
         CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a
@@ -228,7 +236,7 @@ mac {
         CMAKE_WINMAIN_FILE_LOCATION_DEBUG = libqt5main$${QT_LIBINFIX}.a
         CMAKE_WINMAIN_FILE_LOCATION_RELEASE = libqt5main$${QT_LIBINFIX}.a
 
-        isEmpty(QMAKE_EXTENSION_IMPORTLIB): QMAKE_EXTENSION_IMPORTLIB = a
+        isEmpty(QMAKE_EXTENSION_IMPORTLIB): QMAKE_EXTENSION_IMPORTLIB = dll.a
         CMAKE_IMPLIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}d.$${QMAKE_EXTENSION_IMPORTLIB}
         CMAKE_IMPLIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.$${QMAKE_EXTENSION_IMPORTLIB}
         CMAKE_PRL_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.prl
@@ -254,6 +262,7 @@ mac {
         CMAKE_PRL_FILE_LOCATION_RELEASE_STATIC = $${CMAKE_QT_STEM}-static.prl
     }
 } else {
+    # this branch is broken by the patch, only apply when building for Windows
     !isEmpty(CMAKE_STATIC_TYPE) {
         CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.a
         CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a

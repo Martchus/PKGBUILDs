@@ -12,10 +12,6 @@
 # For QWebViewPlugin, add mingw-w64-qt5-webkit to dependencies
 # For QAxWidgetPlugin, add mingw-w64-qt5-activeqt to dependencies
 
-# To use the static variant with qmake set the following variables
-# in addition to the variables mentioned in mingw-w64-qt5-base:
-#  DEFINES+=QT_DESIGNER_STATIC
-
 _qt_module=qttools
 pkgname="mingw-w64-qt5-tools"
 pkgver=5.7.0
@@ -79,13 +75,15 @@ package() {
       pushd build-${_arch}-${_config##*=}
 
       make INSTALL_ROOT="$pkgdir" install
-      # The .dll's are installed in both bindir and libdir, one copy of the .dll's is sufficient
-      find "${pkgdir}/usr/${_arch}/lib" -name "*.dll" -exec rm {} \;
+      find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
       # Applications might be useful as well; keeping them will not hurt anybody I suppose
-      find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
+      [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \
+        find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec rm {} \; || \
+        find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
       find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
       find "${pkgdir}/usr/${_arch}" -name "*.a" -exec ${_arch}-strip -g {} \;
-      find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
+      [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \
+        find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
       find "${pkgdir}/usr/${_arch}/lib/" -iname "*.so.$pkgver" -exec strip --strip-unneeded {} \;
 
       # Create symlinks for tools
@@ -105,7 +103,7 @@ package() {
   # Make sure the executables don't conflict with their mingw-qt4 counterpart
   for _arch in ${_architectures}; do
     for exe_file in "${pkgdir}/usr/${_arch}/bin/"*.exe; do
-      mv "${exe_file}" "${exe_file%.exe}-qt5.exe"
+      [[ -f $exe_file ]] && mv "${exe_file}" "${exe_file%.exe}-qt5.exe"
     done
   done
 }

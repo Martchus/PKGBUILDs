@@ -1,5 +1,5 @@
---- mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in.orig	2016-08-08 21:40:29.128136100 +0200
-+++ mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in	2016-08-09 01:09:41.545265900 +0200
+--- mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in.orig	2016-08-14 20:44:32.515151700 +0200
++++ mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in	2016-08-18 23:22:00.447257800 +0200
 @@ -59,19 +59,30 @@
      set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} APPEND PROPERTY IMPORTED_CONFIGURATIONS ${Configuration})
  
@@ -91,11 +91,25 @@
  !!IF !equals(TEMPLATE, aux)
  !!IF !isEmpty(CMAKE_BUILD_IS_FRAMEWORK)
      set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY FRAMEWORK 1)
-@@ -243,64 +288,120 @@
-     set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY
-       INTERFACE_COMPILE_DEFINITIONS $${MODULE_DEFINE})
+@@ -240,67 +285,132 @@
  
-+    file(GLOB pluginTargetsMaybe \"${CMAKE_CURRENT_LIST_DIR}/Qt5$${CMAKE_MODULE_NAME}_*.cmake\")
+     set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY
+       INTERFACE_INCLUDE_DIRECTORIES ${_Qt5$${CMAKE_MODULE_NAME}_OWN_INCLUDE_DIRS})
+-    set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY
+-      INTERFACE_COMPILE_DEFINITIONS $${MODULE_DEFINE})
++    set(interface_compile_definitions $${MODULE_DEFINE})
++    if(USE_STATIC_QT_BUILD)
++        set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY
++            INTERFACE_COMPILE_DEFINITIONS $${CMAKE_INTERFACE_COMPILE_DEFINITIONS_STATIC} $${MODULE_DEFINE})
++    else()
++        set_property(TARGET Qt5::$${CMAKE_MODULE_NAME} PROPERTY
++            INTERFACE_COMPILE_DEFINITIONS $${MODULE_DEFINE})
++    endif()
++    if(USE_STATIC_QT_BUILD)
++        file(GLOB pluginTargetsMaybe \"${CMAKE_CURRENT_LIST_DIR}/StaticQt5$${CMAKE_MODULE_NAME}_*.cmake\")
++    else()
++        file(GLOB pluginTargetsMaybe \"${CMAKE_CURRENT_LIST_DIR}/Qt5$${CMAKE_MODULE_NAME}_*.cmake\")
++    endif()
 +    unset(pluginTargets)
 +    if (pluginTargetsMaybe)
 +        foreach(pluginTarget ${pluginTargetsMaybe})
@@ -123,8 +137,8 @@
 +            get_filename_component(_plugindir ${PLUGIN_LOCATION} PATH)
 +            get_filename_component(_plugindirname ${_plugindir} NAME)
 +            get_filename_component(_pluginname ${PLUGIN_LOCATION} NAME)
-+            string(REGEX REPLACE \"^lib(.*)\\\\.a\" \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/share/qt5/plugins/${_plugindirname}/\\\\1-static.prl\" plugin_prl_file_location ${_pluginname})
-+            macro_process_plugin_prl_file(${plugin_prl_file_location} ${Configuration} \"share/qt5/plugins\" ${PLUGIN_LOCATION} )
++            string(REGEX REPLACE \"^lib(.*)\\\\.a\" \"${_qt5$${CMAKE_MODULE_NAME}_install_prefix}/lib/qt/plugins/${_plugindirname}/\\\\1-static.prl\" plugin_prl_file_location ${_pluginname})
++            macro_process_plugin_prl_file(${plugin_prl_file_location} ${Configuration} \"lib/qt/plugins\" ${PLUGIN_LOCATION})
 +        endif()
 +
 +    endmacro()
@@ -134,7 +148,7 @@
 +            include(${pluginTarget})
 +        endforeach()
 +    endif()
-+
+ 
  !!IF !equals(TEMPLATE, aux)
  !!IF !isEmpty(CMAKE_RELEASE_TYPE)
 -!!IF !isEmpty(CMAKE_STATIC_WINDOWS_BUILD)
@@ -234,7 +248,7 @@
  !!ELSE
          \"$${CMAKE_LIB_FILE_LOCATION_RELEASE}\"
  !!ENDIF
-@@ -311,8 +412,12 @@
+@@ -311,8 +421,12 @@
          \"$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\" )
  !!ENDIF
          _populate_$${CMAKE_MODULE_NAME}_target_properties(RELEASE \"$${CMAKE_LIB_FILE_LOCATION_RELEASE}\" \"$${CMAKE_IMPLIB_FILE_LOCATION_RELEASE}\" )
@@ -248,7 +262,7 @@
  !!ENDIF // CMAKE_RELEASE_TYPE
  !!ENDIF // CMAKE_FIND_OTHER_LIBRARY_BUILD
  
-@@ -323,28 +428,6 @@
+@@ -323,28 +437,6 @@
      )
  !!ENDIF // TEMPLATE != aux
  
@@ -277,9 +291,87 @@
  
  !!IF !isEmpty(CMAKE_MODULE_EXTRAS)
      include(\"${CMAKE_CURRENT_LIST_DIR}/Qt5$${CMAKE_MODULE_NAME}ConfigExtras.cmake\")
---- mkspecs/features/create_cmake.prf.orig	2016-08-08 21:40:29.127094800 +0200
-+++ mkspecs/features/create_cmake.prf	2016-08-08 21:40:29.126828300 +0200
-@@ -228,33 +228,30 @@
+--- mkspecs/features/data/cmake/Qt5PluginTarget.cmake.in.orig	2016-06-10 08:48:56.000000000 +0200
++++ mkspecs/features/data/cmake/Qt5PluginTarget.cmake.in	2016-08-18 23:22:41.994211700 +0200
+@@ -2,10 +2,18 @@
+ add_library(Qt5::$$CMAKE_PLUGIN_NAME MODULE IMPORTED)
+ 
+ !!IF !isEmpty(CMAKE_RELEASE_TYPE)
++!!IF !isEmpty(CMAKE_STATIC_TYPE)
++_populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME RELEASE \"$${CMAKE_PLUGIN_LOCATION_RELEASE_STATIC}\")
++!!ELSE
+ _populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME RELEASE \"$${CMAKE_PLUGIN_LOCATION_RELEASE}\")
+ !!ENDIF
++!!ENDIF
+ !!IF !isEmpty(CMAKE_DEBUG_TYPE)
++!!IF !isEmpty(CMAKE_STATIC_TYPE)
++_populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME DEBUG \"$${CMAKE_PLUGIN_LOCATION_DEBUG_STATIC}\")
++!!ELSE
+ _populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME DEBUG \"$${CMAKE_PLUGIN_LOCATION_DEBUG}\")
+ !!ENDIF
++!!ENDIF
+ 
+ list(APPEND Qt5$${CMAKE_MODULE_NAME}_PLUGINS Qt5::$$CMAKE_PLUGIN_NAME)
+--- mkspecs/features/create_cmake.prf.orig	2016-08-14 20:44:32.513342200 +0200
++++ mkspecs/features/create_cmake.prf	2016-08-18 22:47:39.606635000 +0200
+@@ -135,17 +135,19 @@
+     CMAKE_PLUGIN_NAME = $$PLUGIN_CLASS_NAME
+ 
+     win32 {
+-        isEmpty(CMAKE_STATIC_TYPE) {
++        mingw {
+             CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/$${TARGET}.dll
+             CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/$${TARGET}d.dll
+-        } else:mingw {
+-            CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/lib$${TARGET}.a
+-            CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/lib$${TARGET}d.a
++            CMAKE_PLUGIN_LOCATION_RELEASE_STATIC = $$PLUGIN_TYPE/lib$${TARGET}.a
++            CMAKE_PLUGIN_LOCATION_DEBUG_STATIC = $$PLUGIN_TYPE/lib$${TARGET}d.a
+         } else {                         # MSVC static
+             CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/$${TARGET}.lib
+             CMAKE_PLUGIN_LOCATION_DEBUG = $$PLUGIN_TYPE/$${TARGET}d.lib
++            CMAKE_PLUGIN_LOCATION_RELEASE_STATIC = $$PLUGIN_TYPE/$${TARGET}.lib
++            CMAKE_PLUGIN_LOCATION_DEBUG_STATIC = $$PLUGIN_TYPE/$${TARGET}d.lib
+         }
+     } else {
++        # this branch is broken by the patch, only apply when building for Windows
+         mac {
+             isEmpty(CMAKE_STATIC_TYPE): CMAKE_PlUGIN_EXT = .dylib
+             else: CMAKE_PlUGIN_EXT = .a
+@@ -161,7 +163,8 @@
+         }
+     }
+     cmake_target_file.input = $$PWD/data/cmake/Qt5PluginTarget.cmake.in
+-    cmake_target_file.output = $$CMAKE_OUT_DIR/Qt5$${CMAKE_MODULE_NAME}/Qt5$${CMAKE_MODULE_NAME}_$${PLUGIN_CLASS_NAME}.cmake
++    isEmpty(CMAKE_STATIC_TYPE): cmake_target_file.output = $$CMAKE_OUT_DIR/Qt5$${CMAKE_MODULE_NAME}/Qt5$${CMAKE_MODULE_NAME}_$${PLUGIN_CLASS_NAME}.cmake
++    else: cmake_target_file.output = $$CMAKE_OUT_DIR/Qt5$${CMAKE_MODULE_NAME}/StaticQt5$${CMAKE_MODULE_NAME}_$${PLUGIN_CLASS_NAME}.cmake
+ 
+     !build_pass:QMAKE_SUBSTITUTES += \
+       cmake_target_file
+@@ -180,6 +183,8 @@
+ lib_deps =
+ aux_mod_deps =
+ aux_lib_deps =
++aux_compile_defs_static = QT_STATIC QT_DESIGNER_STATIC
++contains(QT_CONFIG, angle): aux_compile_defs += QT_OPENGL_ES_2_ANGLE_STATIC
+ # Until CMake 3.0 is the minimum requirement of Qt 5, we need to filter
+ # out header-only modules from dependencies.  CMake 3.0 provides INTERFACE
+ # libraries which are equivalent to header-only modules.
+@@ -197,10 +202,13 @@
+ CMAKE_QT5_MODULE_DEPS = $$join(lib_deps, ";")
+ CMAKE_INTERFACE_MODULE_DEPS = $$join(aux_mod_deps, ";")
+ CMAKE_INTERFACE_QT5_MODULE_DEPS = $$join(aux_lib_deps, ";")
++CMAKE_INTERFACE_COMPILE_DEFINITIONS_STATIC = $$join(aux_compile_defs_static, ";")
++
+ 
+ CMAKE_QT_STEM = Qt$$QT_MAJOR_VERSION$${CMAKE_MODULE_NAME}$${QT_LIBINFIX}
+ 
+ mac {
++    # this branch is broken by the patch, only apply when building for Windows
+     !isEmpty(CMAKE_STATIC_TYPE) {
+         CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}_debug.a
+         CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a
+@@ -228,35 +236,33 @@
          CMAKE_WINMAIN_FILE_LOCATION_DEBUG = libqt5main$${QT_LIBINFIX}.a
          CMAKE_WINMAIN_FILE_LOCATION_RELEASE = libqt5main$${QT_LIBINFIX}.a
  
@@ -287,7 +379,7 @@
 -            CMAKE_STATIC_WINDOWS_BUILD = "true"
 -            CMAKE_IMPLIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}d.a
 -            CMAKE_IMPLIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a
-+        isEmpty(QMAKE_EXTENSION_IMPORTLIB): QMAKE_EXTENSION_IMPORTLIB = a
++        isEmpty(QMAKE_EXTENSION_IMPORTLIB): QMAKE_EXTENSION_IMPORTLIB = dll.a
 +        CMAKE_IMPLIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}d.$${QMAKE_EXTENSION_IMPORTLIB}
 +        CMAKE_IMPLIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.$${QMAKE_EXTENSION_IMPORTLIB}
 +        CMAKE_PRL_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.prl
@@ -313,24 +405,28 @@
 -            CMAKE_STATIC_WINDOWS_BUILD = "true"
 -            CMAKE_IMPLIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.lib
 -            CMAKE_IMPLIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.lib
-+        CMAKE_IMPLIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.lib
-+        CMAKE_IMPLIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.lib
-+        CMAKE_PRL_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.prl
-+        CMAKE_PRL_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.prl
- 
+-
 -            CMAKE_PRL_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.prl
 -            CMAKE_PRL_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.prl
 -        } else {
 -            CMAKE_IMPLIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.lib
 -            CMAKE_IMPLIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.lib
 -        }
++        CMAKE_IMPLIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.lib
++        CMAKE_IMPLIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.lib
++        CMAKE_PRL_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}d.prl
++        CMAKE_PRL_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.prl
++
 +        CMAKE_IMPLIB_FILE_LOCATION_DEBUG_STATIC = $${CMAKE_QT_STEM}d.lib
 +        CMAKE_IMPLIB_FILE_LOCATION_RELEASE_STATIC = $${CMAKE_QT_STEM}.lib
 +        CMAKE_PRL_FILE_LOCATION_DEBUG_STATIC = $${CMAKE_QT_STEM}d-static.prl
 +        CMAKE_PRL_FILE_LOCATION_RELEASE_STATIC = $${CMAKE_QT_STEM}-static.prl
      }
  } else {
++    # this branch is broken by the patch, only apply when building for Windows
      !isEmpty(CMAKE_STATIC_TYPE) {
+         CMAKE_LIB_FILE_LOCATION_DEBUG = lib$${CMAKE_QT_STEM}.a
+         CMAKE_LIB_FILE_LOCATION_RELEASE = lib$${CMAKE_QT_STEM}.a
 --- qmake/generators/makefile.cpp	2015-08-26 14:29:10.131124600 +0100
 +++ qmake/generators/makefile.cpp	2015-08-26 15:06:33.375635900 +0100
 @@ -1006,6 +1006,13 @@

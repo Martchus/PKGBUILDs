@@ -5,7 +5,10 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-# See the comment below for additional dependencies/functionality.
+# See the comments to enable further dependencies/functionality.
+
+# Includes dynamic and static versions; if only one version is requried, just
+# set $NO_STATIC_LIBS or $NO_SHARED_LIBS.
 
 _qt_module=qtwebkit
 pkgname=mingw-w64-qt5-webkit
@@ -59,7 +62,13 @@ md5sums=('9379b8829639645c184fa63532035098'
          'c36fe581e0f3b61cef19415782b257ca'
          '81901e7f7653dd4e71206bc107cc7eb9')
 
-_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+[[ $NO_STATIC_LIBS ]] || \
+  makedepends+=('mingw-w64-qt5-base-static') \
+  optdepends+=('mingw-w64-qt5-base-static: use of static libraries') \
+  _configurations+=('CONFIG+=static')
+[[ $NO_SHARED_LIBS ]] || \
+  _configurations+=('CONFIG+=shared')
 
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
@@ -118,37 +127,47 @@ prepare() {
 }
 
 build() {
-  unset PKG_CONFIG_PATH
   cd "${srcdir}/${_pkgfqn}"
+  unset PKG_CONFIG_PATH
   for _arch in ${_architectures}; do
-    mkdir -p build-${_arch} && pushd build-${_arch}
+    for _config in "${_configurations[@]}"; do
+      msg2 "Building ${_config##*=} version for ${_arch}"
+      mkdir -p build-${_arch}-${_config##*=} && pushd build-${_arch}-${_config##*=}
+      # Since Source/ThirdParty/ANGLE has been removed ensure files
+      # from system ANGLE can be included (patches from Fedora don't help
+      # here because Fedora uses other paths)
+      export CPATH="$CPATH:/usr/$_arch/include:/usr/$_arch/include/GLSLANG"
 
-    # Since Source/ThirdParty/ANGLE has been removed ensure files
-    # from system ANGLE can be included (patches from Fedora don't help
-    # here because Fedora uses other paths)
-    export CPATH="$CPATH:/usr/$_arch/include:/usr/$_arch/include/GLSLANG"
-
-    # SH_GLSL_OUTPUT has been renamed to SH_GLSL_COMPATIBILITY_OUTPUT
-    # in the latest ANGLE version so I just add a definition for backward compatibility
-    ${_arch}-qmake-qt5 \
-      "QMAKE_CXXFLAGS+=-Wno-c++0x-compat" \
-      "DEFINES+=SH_GLSL_OUTPUT=SH_GLSL_COMPATIBILITY_OUTPUT" \
-      ../WebKit.pro
-    make
-    popd
+      # SH_GLSL_OUTPUT has been renamed to SH_GLSL_COMPATIBILITY_OUTPUT
+      # in the latest ANGLE version so I just add a definition for backward compatibility
+      ${_arch}-qmake-qt5 \
+        "QMAKE_CXXFLAGS+=-Wno-c++0x-compat" \
+        "DEFINES+=SH_GLSL_OUTPUT=SH_GLSL_COMPATIBILITY_OUTPUT" \
+        ../WebKit.pro
+      make
+      popd
+    done
   done
 }
 
 package() {
-  for _arch in ${_architectures}; do
-    cd "${srcdir}/${_pkgfqn}/build-${_arch}"
-    make INSTALL_ROOT="${pkgdir}" install
+  cd "${srcdir}/${_pkgfqn}"
 
-    # The .dll's are installed in both bindir and libdir
-    # One copy of the .dll's is sufficient
-    rm -f "${pkgdir}/usr/${_arch}/lib/"*.dll
-    find "${pkgdir}/usr/${_arch}" -name "*.exe" -o -name "*.bat" -o -name "*.def" -o -name "*.exp" -o -name '*.prl' | xargs -rtl1 rm
-    find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
-    find "${pkgdir}/usr/${_arch}" -name "*.a" -o -name "*.dll" | xargs -rtl1 ${_arch}-strip -g
+  for _arch in ${_architectures}; do
+    for _config in "${_configurations[@]}"; do
+      pushd build-${_arch}-${_config##*=}
+
+      make INSTALL_ROOT="$pkgdir" install
+      find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
+      [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \
+        find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec rm {} \; || \
+        find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
+      find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
+      find "${pkgdir}/usr/${_arch}" -name "*.a" -exec ${_arch}-strip -g {} \;
+      [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \
+        find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
+      find "${pkgdir}/usr/${_arch}/lib/" -iname "*.so.$pkgver" -exec strip --strip-unneeded {} \;
+      popd
+    done
   done
 }

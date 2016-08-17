@@ -1,5 +1,5 @@
---- mkspecs/features/spec_pre.prf.orig	2016-08-12 21:50:39.048053400 +0200
-+++ mkspecs/features/spec_pre.prf	2016-08-12 21:50:39.047826200 +0200
+--- mkspecs/features/spec_pre.prf.orig	2016-08-14 20:44:32.515796400 +0200
++++ mkspecs/features/spec_pre.prf	2016-08-14 20:44:32.515434700 +0200
 @@ -14,9 +14,9 @@
  QMAKE_EXT_H_MOC         = .cpp
  QMAKE_EXT_JS            = .js

@@ -1,5 +1,6 @@
 f=qt5-allow-usage-of-static-qt-with-cmake.patch
 diff -Naur mkspecs/features/data/cmake/Qt5BasicConfig.cmake.in{.orig,} > $f
+diff -Naur mkspecs/features/data/cmake/Qt5PluginTarget.cmake.in{.orig,} >> $f
 diff -Naur mkspecs/features/create_cmake.prf{.orig,} >> $f
 cat qt5-generate-libs-in-prl-for-cmake.patch >> $f
 

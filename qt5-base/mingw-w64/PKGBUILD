@@ -13,14 +13,28 @@
 
 # By default CMake and qmake will link against the dynamic libary.
 
-# To use the static variant with CMake set the following variable before calling find_package:
+# To use the static variant with CMake set the following variable before calling find_package for finding a Qt module:
 #  set(USE_STATIC_QT_BUILD ON)
-# FIXME: Whether the static variant actually works with CMake has not been tested yet.
+# To use a static plugin, add the corresponding imported target, eg.
+#  target_link_libraries(target ... Qt5::QWindowsIntegrationPlugin)
+# Automatically importing static plugins is currently not possible, though. Hence it is required to use Q_IMPORT_PLUGIN, eg.
+#  #include<QtPlugin>
+#  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 
 # To use the static variant with qmake set the following variables (either inside the *.pro file or as qmake argument):
 #  CONFIG+=static
-#  QMAKE_EXT_PRL=-static.prl
-# Setting QMAKE_EXT_PRL is a workaround to prevent qmake from using the *.prl files from the dynamic build.
+
+# Further Qt modules (those not found in the base repository and hence not included in this package) include by default
+# static and dynamic libraries; if only one version is requried, just
+# set $NO_STATIC_LIBS or $NO_SHARED_LIBS.
+
+# By default, executables will not be removed because I find them useful when testing. To remove executables
+# set $NO_EXECUTABLES or $NO_STATIC_EXECUTABLES to remove statically linked executables only.
+# However, if Qt modules containing tools are built as static and as dynamic library only the dynamically linked
+# tools will be present in the package.
+
+# Qt packages can be built in the following order (for example):
+#  qt5-base qt5-declarative qt5-tools qt5-xmlpatterns qt5-script qt5-location qt5-multimedia qt5-sensors qt5-webchannel qt5-3d qt5-imageformats qt5-quickcontrols qt5-quickcontrols2 qt5-translations qt5-svg qt5-websockets qt5-winextras qt5-serialport qt5-canvas3d qt5-connectivity qt5-charts qt5-gamepad qt5-scxml qt5-datavis3s qt5-virtualkeyboard qt5-activeqt qt5-webkit
 
 # Helper functions for the split builds
 isStatic() {
@@ -82,7 +96,7 @@ md5sums=('184f9460b40752d71b15b827260580c2'
          'bab00ccc19d888997f323c80354a7c3f'
          'f7e1487de6e85116d9c6bde2eac4fb73'
          'bc99c4cc6998295d76f37ed681c20d47'
-         'cb6354a788754ac9c84fedfbda34e3b6'
+         '370218fd439f25ab3f35bd1f14652988'
          '4fe6523dd1c34398df3aa5a8763530cc'
          'f32a768e1acb9785c79c8e93aa266db2'
          '3bd322551924543553a2bf81b4419a09'
@@ -98,7 +112,7 @@ md5sums=('184f9460b40752d71b15b827260580c2'
          '83139869355c2d46921adb25e47cf0fa'
          'b9565219e9252a17fc1b8fb9ee30662c'
          '20de722808e8a3fb684b0212bef8de46'
-         '5978bff7f1f915bb96ccc1d25c915f69'
+         '1dc792faa7761d8d7d2f17170da04d6b'
          '41ec67d9e5e70e0d6d93b42aebd0e12a'
          '61c0f9d0095c5a6dec8d14e9ec35a608'
          'bba65d27704cf36e148d8f18ad02ad15')
@@ -352,13 +366,16 @@ package() {
       # Keep a couple pri files not found in base
       mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules/qt_plugin_"*.pri "${pkgdir}/usr/${_arch}"
 
-      # Move pri files back
-      mkdir -p "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
-      mv "${pkgdir}/usr/${_arch}/"*.pri "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
+      # remove CMake which are also in base
+      find "${pkgdir}/usr/${_arch}/lib/cmake" -not -name "Static*.cmake" -exec rm {} \;
 
       # Delete duplicate files that are in the base package
       rm -fR "${pkgdir}/usr/${_arch}/"{include,share}
-      rm -fR "${pkgdir}/usr/${_arch}/lib/"{qt/bin,qt/mkspecs,cmake}
+      rm -fR "${pkgdir}/usr/${_arch}/lib/"{qt/bin,qt/mkspecs}
+
+      # Move pri files back
+      mkdir -p "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
+      mv "${pkgdir}/usr/${_arch}/"*.pri "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
 
     else # Shared release
       # The .dll's are installed in both bindir and libdir, one copy of the .dll's is sufficient
@@ -386,11 +403,11 @@ package() {
       strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"{,DBus}.so.${pkgver}
     fi
 
-    # Applications might be useful as well; keeping them will not hurt anybody I suppose
-    if ! isStatic; then
-      find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
-    else
+    # Applications might be useful as well; keeping them by default will not hurt anybody I suppose
+    if isStatic || [[ $NO_EXECUTABLES ]]; then
       find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec rm {} \;
+    else
+      find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
     fi
     # No use for these files though
     find "${pkgdir}/usr/${_arch}" \( -name "*.bat" -o -name "*.def" -o -name "*.exp" \) -exec rm {} \;

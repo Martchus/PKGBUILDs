@@ -84,7 +84,7 @@ source=("nginx.sh"
     "${_rtmp_dirname}.zip::https://github.com/arut/nginx-rtmp-module/archive/${_rtmp_ver}.zip"
     "${_davext_dirname}.tar.gz::https://github.com/arut/nginx-dav-ext-module/archive/${_davext_ver}.tar.gz"
     "${_naxsi_dirname}.tar.gz::https://github.com/nbs-system/naxsi/archive/${_naxsi_ver}.tar.gz"
-    "${_accesskey_dirname}.tar.gz::https://ostube.googlecode.com/files/Nginx-accesskey-${_accesskey_ver}.tar.gz"
+    "${_accesskey_dirname}.tar.gz::https://github.com/Martchus/nginx-accesskey/archive/v${_accesskey_ver}.tar.gz"
 )
 
 md5sums=('088292d9caf6059ef328aa7dda332e44'
@@ -105,7 +105,7 @@ md5sums=('088292d9caf6059ef328aa7dda332e44'
          'a81e63cd4cf28eaf0c87d27c44e4c44a'
          '2cb502dbda335be4ebd5fed0b3182bae'
          '1bc31058991268e4cfdb44e9b6d8b3b3'
-         '8862455846c4ce803ca15300ee08e19a')
+         '9d5dc36ffe87cee59dfa8d4931fb528e')
 
 build() {
   local _src_dir="${srcdir}/${_pkgname}-${pkgver}"

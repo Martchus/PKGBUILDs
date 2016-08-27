@@ -68,7 +68,7 @@ isNoOpenGL() {
   [[ $pkgname = 'mingw-w64-qt5-base-noopengl' ]] || [[ $pkgname = 'mingw-w64-qt5-base-noopengl-static' ]]
 }
 
-pkgname=mingw-w64-qt5-base-static
+pkgname=mingw-w64-qt5-base-dynamic
 pkgver=5.7.0
 pkgrel=5
 pkgdesc="A cross-platform application and UI framework (mingw-w64)"

@@ -3,34 +3,26 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_reponame=passwordfile
-pkgname=passwordfile
-pkgver=3.1.2
+_name=tagparser
+_reponame=tagparser
+pkgname=$_name-doc
+pkgver=6.0.0
 pkgrel=1
-arch=('i686' 'x86_64')
-pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
+arch=('any')
+pkgdesc='C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska tags (API documentation)'
 license=('GPL')
-depends=('c++utilities' 'openssl')
-makedepends=('cmake')
-checkdepends=('cppunit')
-optdepends=("$pkgname-doc: API documentation")
-install=
+makedepends=('cmake' 'doxygen' 'dia' 'graphviz' 'c++utilities')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('be8a4516787200fca740365a090cc2767ee50753152e0f0d59b631da60d490ee')
+sha256sums=('0d4bb99ec71a2d11bb9b9ae766e082d0092f82b7d2c7b4d6d760eca9386afbb4')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
-  make
-}
-
-check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make check
+  make ${_name}_apidoc
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="${pkgdir}" install-api-doc
 }

@@ -6,8 +6,8 @@
 pkgname=mediaplayerctl
 pkgver=1.0.1
 pkgrel=1
-pkgdesc="Bash script to control media player applications using qdbus."
-arch=(any)
+pkgdesc='Bash script to control media player applications using qdbus.'
+arch=('any')
 license=('GPL')
 groups=
 provides=
@@ -17,7 +17,7 @@ conflicts=
 replaces=
 backup=
 install=
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
+source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
 noextract=
 sha256sums=('SKIP')
 

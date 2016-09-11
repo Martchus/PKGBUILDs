@@ -6,7 +6,7 @@
 pkgname=diriterator
 pkgver=1.0.3
 pkgrel=2
-pkgdesc="Runs a script for each file in a directory hierarchy using GNU parallel."
+pkgdesc='Runs a script for each file in a directory hierarchy using GNU parallel.'
 arch=('any')
 license=('GPL')
 groups=
@@ -17,7 +17,7 @@ conflicts=
 replaces=
 backup=
 install=
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
+source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
 noextract=
 md5sums=('SKIP')
 

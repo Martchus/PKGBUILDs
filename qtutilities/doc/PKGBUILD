@@ -3,34 +3,26 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_reponame=passwordfile
-pkgname=passwordfile
-pkgver=3.1.2
+_name=qtutilities
+_reponame=$_name
+pkgname=$_name-doc
+pkgver=5.0.0
 pkgrel=1
-arch=('i686' 'x86_64')
-pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
+arch=('any')
+pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (API documentation)'
 license=('GPL')
-depends=('c++utilities' 'openssl')
-makedepends=('cmake')
-checkdepends=('cppunit')
-optdepends=("$pkgname-doc: API documentation")
-install=
+makedepends=('cmake' 'doxygen' 'dia' 'graphviz' 'c++utilities' 'qt5-base')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('be8a4516787200fca740365a090cc2767ee50753152e0f0d59b631da60d490ee')
+sha256sums=('3f8a6ea49b889febbb012674c773140793ad974731616b7142917ff53ed29cc0')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
-  make
-}
-
-check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make check
+  make ${_name}_apidoc
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="${pkgdir}" install-api-doc
 }

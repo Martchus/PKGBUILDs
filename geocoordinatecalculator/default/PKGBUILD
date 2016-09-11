@@ -5,16 +5,16 @@
 
 _reponame=geocoordinatecalculator
 pkgname=geocoordinatecalculator
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc="Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more"
+pkgdesc='Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more'
 license=('GPL')
 depends=('c++utilities')
 makedepends=('cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("geocoordinatecalculator-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('a0f6bc2b5217a24fc60aad44d093b0373f5b690a12665ac31db27f5b3a00345a')
+sha256sums=('190a95d7f0a86bc51b89a6cb3f42e9c77f0b2a60283491917f212bf2e919c93c')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

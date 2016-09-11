@@ -3,18 +3,18 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_name=qtutilities
 _reponame=qtutilities
 pkgname=qtutilities-git
+_name=${pkgname%-git}
 pkgver=35.721e79d
-pkgrel=6
+pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc="Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models"
+pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
 license=('GPL')
 depends=('c++utilities' 'qt5-base')
 makedepends=('cmake' 'git')
-provides=('qtutilities')
-conflicts=('qtutilities')
+provides=("${_name}")
+conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')

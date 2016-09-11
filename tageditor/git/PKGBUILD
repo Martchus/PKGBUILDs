@@ -3,19 +3,19 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-# set the web view provider: either webkit, webengine or none
+# set the web view provider: either webkit, webengine, auto or none
 _webview_provider=webkit
 
-# set the JavaScript provider: either script, qml or none
+# set the JavaScript provider: either script, qml, auto or none
 _js_provider=qml
 
-_name=tageditor
 _reponame=tageditor
 pkgname=tageditor-git
+_name=${pkgname%-git}
 pkgver=66.77a0bc2
 pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc="A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska"
+pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska'
 license=('GPL')
 depends=('qtutilities' 'tagparser' 'desktop-file-utils' 'xdg-utils')
 [[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && depends+=('qt5-base')
@@ -24,8 +24,8 @@ depends=('qtutilities' 'tagparser' 'desktop-file-utils' 'xdg-utils')
 [[ $_js_provider == script ]] && depends+=('qt5-script')
 [[ $_js_provider == qml ]] && depends+=('qt5-declarative')
 makedepends=('cmake' 'qt5-tools' 'git')
-provides=('tageditor')
-conflicts=('tageditor')
+provides=("${_name}")
+conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')

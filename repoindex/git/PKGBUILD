@@ -5,14 +5,17 @@
 
 _reponame=repoindex
 pkgname=(repoindex{,-header,-web,-gui})
+_name=${pkgname%-git}
 pkgver=0.2.1
 pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc="Repository browser for Arch Linux"
+pkgdesc='Repository browser for Arch Linux'
 license=('GPL')
 depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
 makedepends=('cmake' 'git' 'yuicompressor' 'qtutilities')
 backup=("etc/${_reponame}.conf")
+provides=("${_name}")
+conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
 source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")

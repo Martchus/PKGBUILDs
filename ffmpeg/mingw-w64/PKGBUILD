@@ -1,16 +1,18 @@
 # Maintainer: Karl-Felix Glatzer <karl.glatzer@gmx.de>
 # Contributor: Martchus <martchus@gmx.net>
 
-# This version includes the programs in contrast to the version found in the AUR.
+# This version includes the programs and supports libfdk-aac in contrast to the
+# version found in the AUR.
 
+_name=ffmpeg
 pkgname=mingw-w64-ffmpeg
-pkgver=3.1.2
-pkgrel=1.1
+pkgver=3.1.3
+pkgrel=1
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (mingw-w64)'
 arch=('any')
 url='https://ffmpeg.org/'
-license=('GPL3')
+license=('GPL3' 'custom:libfdk-aac')
 depends=('mingw-w64-crt' 'mingw-w64-bzip2' 'mingw-w64-fontconfig' 'mingw-w64-fribidi' 'mingw-w64-gmp' 'mingw-w64-gnutls'
          'mingw-w64-gsm' 'mingw-w64-lame' 'mingw-w64-libass' 'mingw-w64-dcadec' 'mingw-w64-libbluray' 'mingw-w64-libmodplug'
          'mingw-w64-libsoxr' 'mingw-w64-libtheora' 'mingw-w64-vid.stab' 'mingw-w64-libwebp' 'mingw-w64-libvorbis'
@@ -19,17 +21,23 @@ depends=('mingw-w64-crt' 'mingw-w64-bzip2' 'mingw-w64-fontconfig' 'mingw-w64-fri
          'mingw-w64-zlib' 'mingw-w64-x265')
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'yasm')
-source=(http://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.bz2{,.asc})
-validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8')
-sha256sums=('62eb8d810b93c1ffc23739c0824a91eabfe5e7be81fab34ce740736a110b70f7'
-            'SKIP')
+source=(https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.bz2{,.asc}
+        https://trac.ffmpeg.org/raw-attachment/ticket/5694/ffmpeg_opj2.patch)
+validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8') # ffmpeg-devel
+sha256sums=('58bc89c65dd114d874efbf76f76368d03b5e407f0a3f42d5b40801c280968a38'
+            'SKIP'
+            '336f14fa497598fbd437fc780305fa7c576fd6cd44aaef77b0b4f61448f55fb8')
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+prepare() {
+  cd ${_name}-${pkgver}
+  patch -Np1 -i "$srcdir/ffmpeg_opj2.patch"
+}
 
 build() {
   for _arch in ${_architectures}; do
     mkdir -p "${srcdir}"/build-${_arch} && cd "${srcdir}"/build-${_arch}
-
-    "${srcdir}"/ffmpeg-${pkgver}/configure \
+    "${srcdir}"/${_name}-${pkgver}/configure \
         --prefix="/usr/${_arch}" \
         --enable-cross-compile \
         --cross-prefix="${_arch}-" \

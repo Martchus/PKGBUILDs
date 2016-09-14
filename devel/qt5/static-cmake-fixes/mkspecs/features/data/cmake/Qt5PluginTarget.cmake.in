@@ -1,19 +1,22 @@
-
-add_library(Qt5::$$CMAKE_PLUGIN_NAME MODULE IMPORTED)
+# Some Qt modules also load plugin target in extra config, so check
+# whether the target already exists
+if(NOT TARGET Qt5::$$CMAKE_PLUGIN_NAME)
+    add_library(Qt5::$$CMAKE_PLUGIN_NAME MODULE IMPORTED)
 
 !!IF !isEmpty(CMAKE_RELEASE_TYPE)
 !!IF !isEmpty(CMAKE_STATIC_TYPE)
-_populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME RELEASE \"$${CMAKE_PLUGIN_LOCATION_RELEASE_STATIC}\")
-!!ELSE
-_populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME RELEASE \"$${CMAKE_PLUGIN_LOCATION_RELEASE}\")
+    _populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME RELEASE \"$${CMAKE_PLUGIN_LOCATION_RELEASE_STATIC}\")
+    !!ELSE
+    _populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME RELEASE \"$${CMAKE_PLUGIN_LOCATION_RELEASE}\")
 !!ENDIF
 !!ENDIF
 !!IF !isEmpty(CMAKE_DEBUG_TYPE)
 !!IF !isEmpty(CMAKE_STATIC_TYPE)
-_populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME DEBUG \"$${CMAKE_PLUGIN_LOCATION_DEBUG_STATIC}\")
+    _populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME DEBUG \"$${CMAKE_PLUGIN_LOCATION_DEBUG_STATIC}\")
 !!ELSE
-_populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME DEBUG \"$${CMAKE_PLUGIN_LOCATION_DEBUG}\")
+    _populate_$${CMAKE_MODULE_NAME}_plugin_properties($$CMAKE_PLUGIN_NAME DEBUG \"$${CMAKE_PLUGIN_LOCATION_DEBUG}\")
 !!ENDIF
 !!ENDIF
 
-list(APPEND Qt5$${CMAKE_MODULE_NAME}_PLUGINS Qt5::$$CMAKE_PLUGIN_NAME)
+    list(APPEND Qt5$${CMAKE_MODULE_NAME}_PLUGINS Qt5::$$CMAKE_PLUGIN_NAME)
+endif()

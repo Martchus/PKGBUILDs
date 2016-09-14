@@ -1,5 +1,5 @@
---- src/3rdparty/harfbuzz_dependency.pri.orig	2016-08-14 20:44:32.519965300 +0200
-+++ src/3rdparty/harfbuzz_dependency.pri	2016-08-14 20:44:32.519700600 +0200
+--- src/3rdparty/harfbuzz_dependency.pri.orig	2016-08-14 20:44:32.000000000 +0200
++++ src/3rdparty/harfbuzz_dependency.pri	2016-08-14 20:44:32.000000000 +0200
 @@ -2,5 +2,6 @@
      INCLUDEPATH += $$PWD/harfbuzz-ng/include
      LIBS_PRIVATE += -L$$QT_BUILD_TREE/lib -lqtharfbuzzng$$qtPlatformTargetSuffix()
@@ -8,8 +8,8 @@
 +    CONFIG += link_pkgconfig
 +    PKGCONFIG += harfbuzz
  }
---- src/3rdparty/pcre_dependency.pri.orig	2016-08-14 20:44:32.521037500 +0200
-+++ src/3rdparty/pcre_dependency.pri	2016-08-14 20:44:32.520762700 +0200
+--- src/3rdparty/pcre_dependency.pri.orig	2016-08-14 20:44:32.000000000 +0200
++++ src/3rdparty/pcre_dependency.pri	2016-08-14 20:44:32.000000000 +0200
 @@ -3,5 +3,6 @@
      INCLUDEPATH += $$PWD/pcre
      LIBS_PRIVATE += -L$$QT_BUILD_TREE/lib -lqtpcre$$qtPlatformTargetSuffix()
@@ -18,8 +18,8 @@
 +    contains(QT_CONFIG, static): LIBS_PRIVATE += -Bstatic -lpcre16 -Wl,-Bdynamic
 +    else: LIBS_PRIVATE += -lpcre16
  }
---- src/3rdparty/zlib_dependency.pri.orig	2016-08-14 20:44:32.522086000 +0200
-+++ src/3rdparty/zlib_dependency.pri	2016-08-14 20:44:32.521824500 +0200
+--- src/3rdparty/zlib_dependency.pri.orig	2016-08-14 20:44:32.000000000 +0200
++++ src/3rdparty/zlib_dependency.pri	2016-08-14 20:44:32.000000000 +0200
 @@ -1,7 +1,9 @@
  # zlib dependency satisfied by bundled 3rd party zlib or system zlib
  contains(QT_CONFIG, system-zlib) {

@@ -5,7 +5,7 @@
 
 _name=filezilla
 pkgname=mingw-w64-filezilla
-pkgver=3.20.0
+pkgver=3.21.0
 pkgrel=1
 pkgdesc="Fast and reliable FTP, FTPS and SFTP client (mingw-w64)"
 arch=('any')
@@ -16,7 +16,7 @@ makedepends=('mingw-w64-configure' 'wxgtk')
 options=(staticlibs !strip !buildflags)
 install=
 source=("http://downloads.sourceforge.net/project/filezilla/FileZilla_Client/${pkgver}/FileZilla_${pkgver}_src.tar.bz2")
-md5sums=('91c548a361e188bf21984246b5eba482')
+md5sums=('5b76b43fa061fea69fc039976d4bab3c')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

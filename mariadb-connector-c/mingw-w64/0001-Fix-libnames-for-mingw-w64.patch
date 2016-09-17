@@ -1,114 +1,17 @@
---- libmariadb/CMakeLists.txt.orig	2016-04-12 12:34:11.000000000 +0200
-+++ libmariadb/CMakeLists.txt	2016-05-31 22:48:06.757700300 +0200
-@@ -1,7 +1,7 @@
--INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include 
-+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include
-                     ${ZLIB_INC}
-                     ${CMAKE_SOURCE_DIR}/libmariadb)
--					
-+
- ADD_DEFINITIONS(-D ENABLED_LOCAL_INFILE)
- ADD_DEFINITIONS(-D HAVE_COMPRESS)
- ADD_DEFINITIONS(-D LIBMARIADB)
-@@ -239,15 +239,15 @@
- 
- FILE(WRITE ${EXPORT_FILE} ${EXPORT_CONTENT})
- 
--SET(LIBMARIADB_SOURCES 
--array.c 
-+SET(LIBMARIADB_SOURCES
-+array.c
- ma_dyncol.c
--bchange.c 
--bmove.c 
--bmove_upp.c 
-+bchange.c
-+bmove.c
-+bmove_upp.c
- my_charset.c
- hash.c
--violite.c 
-+violite.c
- net.c
- charset.c
- ma_time.c
-@@ -257,27 +257,27 @@
- my_vsnprintf.c
- errors.c
- getopt1.c
--getopt.c 
-+getopt.c
- int2str.c
- is_prefix.c
- libmariadb.c
- list.c
- llstr.c
--longlong2str.c 
--mf_dirname.c 
--mf_fn_ext.c 
-+longlong2str.c
-+mf_dirname.c
-+mf_fn_ext.c
- mf_format.c
--mf_loadpath.c 
--mf_pack.c 
-+mf_loadpath.c
-+mf_pack.c
- mf_path.c
- mf_unixpath.c
- mf_wcomp.c
--mulalloc.c 
-+mulalloc.c
- my_alloc.c
- my_compress.c
- my_context.c
- my_div.c
--my_error.c 
-+my_error.c
- my_fopen.c
- my_fstream.c
- my_getwd.c
-@@ -288,7 +288,7 @@
- my_net.c
- my_once.c
- my_open.c
--my_port.c 
-+my_port.c
- my_pthread.c
- my_read.c
- my_realloc.c
-@@ -298,10 +298,10 @@
- my_thr_init.c
- my_write.c
- mysql_async.c
--password.c 
-+password.c
- str2int.c
- strcend.c
--strcont.c 
-+strcont.c
- strend.c
- strfill.c
- string.c
-@@ -310,7 +310,7 @@
- strmov.c
- strnmov.c
- strtoll.c
--strtoull.c 
-+strtoull.c
- strxmov.c
- strxnmov.c
- thr_mutex.c
-@@ -335,7 +335,7 @@
-   LINK_LIBRARIES(${ZLIB_LIBRARY})
- ELSE()
-   SET(ZLIB_SOURCES
--    ../zlib/adler32.c 
-+    ../zlib/adler32.c
-     ../zlib/compress.c
-     ../zlib/crc32.c
-     ../zlib/deflate.c
-@@ -356,7 +356,7 @@
+From 9af2954796a6f705b0a4f5ce415ce7bdfa3ab5ce Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 17 Sep 2016 16:41:12 +0200
+Subject: [PATCH 1/3] Fix libnames for mingw-w64
+
+---
+ libmariadb/CMakeLists.txt | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
+
+diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
+index f07dc02..ea58fd4 100644
+--- a/libmariadb/CMakeLists.txt
++++ b/libmariadb/CMakeLists.txt
+@@ -362,7 +362,7 @@ SET(LIBMARIADB_SOURCES ${LIBMARIADB_SOURCES} ${ZLIB_SOURCES})
  ENDIF()
  
  IF(WIN32)
@@ -117,16 +20,7 @@
                     "FILE_TYPE:VFT_DLL"
                     "SOURCE_FILE:libmariadb/libmariadb.c"
                     "ORIGINAL_FILE_NAME:libmariadb.dll"
-@@ -368,7 +368,7 @@
-                    "FILE_DESCRIPTION:Static lib for client/server communication")
- ENDIF()
- 
--# CREATE OBJECT LIBRARY 
-+# CREATE OBJECT LIBRARY
- ADD_LIBRARY(mariadb_obj OBJECT ${LIBMARIADB_SOURCES})
- IF(UNIX)
-   SET_TARGET_PROPERTIES(mariadb_obj PROPERTIES COMPILE_FLAGS "${CMAKE_SHARED_LIBRARY_C_FLAGS}")
-@@ -384,23 +384,24 @@
+@@ -390,23 +390,24 @@ ENDIF()
  ADD_LIBRARY(mariadbclient STATIC ${mariadbclient_RC} $<TARGET_OBJECTS:mariadb_obj> ${EMPTY_FILE} ${EXPORT_LINK})
  TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
  
@@ -159,7 +53,7 @@
     ${CPACK_PACKAGE_VERSION_MAJOR}
     SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR})
  
-@@ -413,24 +414,24 @@
+@@ -419,20 +420,20 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/symlink.cmake)
  # There are still several projects which don't make use
  # of the config program. To make sure these programs can
  # use mariadb client library we provide libmysql symlinks
@@ -190,8 +84,6 @@
  
  INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
          DESTINATION ${INCLUDE_INSTALL_DIR}/${SUFFIX_INSTALL_DIR})
--INSTALL(FILES 
-+INSTALL(FILES
-    ${CMAKE_BINARY_DIR}/include/my_config.h
-    ${CMAKE_BINARY_DIR}/include/mysql_version.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/${SUFFIX_INSTALL_DIR})
+-- 
+2.9.3
+

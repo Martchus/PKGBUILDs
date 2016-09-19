@@ -1,0 +1,25 @@
+From 747482bfb5c4878e019982c7165627979de9b63d Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sun, 25 Sep 2016 22:21:54 +0200
+Subject: [PATCH 10/10] Include intrin.h for declaration of _mm_mfence
+
+---
+ Source/WTF/wtf/Atomics.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Source/WTF/wtf/Atomics.h b/Source/WTF/wtf/Atomics.h
+index 8f950c7..142c0db 100644
+--- a/Source/WTF/wtf/Atomics.h
++++ b/Source/WTF/wtf/Atomics.h
+@@ -68,6 +68,8 @@
+ #elif !COMPILER(GCC)
+ extern "C" void _ReadWriteBarrier(void);
+ #pragma intrinsic(_ReadWriteBarrier)
++#else
++#include <intrin.h>
+ #endif
+ #include <windows.h>
+ #elif OS(QNX)
+-- 
+2.10.0
+

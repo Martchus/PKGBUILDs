@@ -4,6 +4,8 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
+# All patches are managed at https://github.com/Martchus/mariadb-connector-c
+
 pkgname=mingw-w64-mariadb-connector-c
 pkgver=2.3.1
 pkgrel=1

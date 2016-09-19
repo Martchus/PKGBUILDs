@@ -1,4 +1,7 @@
 #!/usr/bin/bash
+
+# Syncs the different variants of mingw-w64-qt5-base
+
 set -e # abort on first error
 master="$1"
 

@@ -6,6 +6,8 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
+# All patches are managed at https://github.com/Martchus/qtbase
+
 # There are different variants of the package which can be selected by simply adjusting pkgname:
 # - mingw-w64-qt5-base or mingw-w64-qt5-base-opengl: using native OpenGL
 # - mingw-w64-qt5-base-angle: using ANGLE rather than native OpenGL
@@ -70,8 +72,8 @@ isNoOpenGL() {
 
 pkgname=mingw-w64-qt5-base-dynamic
 pkgver=5.7.0
-pkgrel=8
-pkgdesc="A cross-platform application and UI framework (mingw-w64)"
+pkgrel=9
+pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 # The static variant doesn't contain any executables which need to be executed on the build machine
 isStatic && arch=('any') || arch=('i686' 'x86_64')
 url='https://www.qt.io/'
@@ -86,53 +88,82 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector
 options=(!strip !buildflags staticlibs !emptydirs)
 _pkgfqn="qtbase-opensource-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
-        "qt5-add-angle-and-dynamic-support.patch"
-        "qt5-use-external-angle-library.patch"
-        "qt5-workaround-pkgconfig-install-issue.patch"
-        "qt5-merge-static-and-shared-library-trees.patch"
-        "qt5-fix-linking-against-static-pcre.patch"
-        "qt5-rename-qtmain-to-qt5main.patch"
-        "qt5-dont-build-host-libs-static.patch"
-        "qt5-enable-rpath-for-host-tools.patch"
-        "qt5-dont-add-resource-files-to-qmake-libs.patch"
-        "qt5-prevent-debug-library-names-in-pkgconfig-files.patch"
-        "qt5-fix-linking-against-static-dbus.patch"
-        "qt5-use-win32-g++-mkspecs-profile.patch"
-        "qt5-use-system-zlib-in-host-libs.patch"
-        "qt5-fix-opengl-to-many-sections.patch"
-        "qt5-fix-static-psql-mysql.patch"
-        "qt5-fixes-from-mxe.patch"
-        "qt5-fix-implib-ext.patch"
-        "qt5-disable-default-lib-include-detection.patch"
-        "qt5-win32-static-cmake-link-ws2_32-and--static.patch"
-        "qt5-allow-usage-of-static-qt-with-cmake.patch"
-        "qt5-customize-extensions-for-static-build.patch"
-        "qt5-use-correct-pkg-config-static-flags.patch"
-        "qt5-use-pkgconfig-for-harfbuzz.patch")
+        '0001-Fix-qwindows-plugin-linking-with-system-freetype.patch'
+        '0002-Fix-oci-config-test-on-windows.patch'
+        '0003-Don-t-set-QT_NO_SYSTEMSEMAPHORE-for-Windows.patch'
+        '0004-Fix-building-mysql-driver-under-mingw.patch'
+        '0005-Support-ANGLE-switches-via-configure-shell-script.patch'
+        '0006-Use-external-ANGLE-library.patch'
+        '0007-Fix-too-many-sections-assemler-error-in-OpenGL-facto.patch'
+        '0008-Make-sure-.pc-files-are-installed-correctly.patch'
+        '0009-Don-t-add-resource-files-to-LIBS-parameter.patch'
+        '0010-Prevent-debug-library-names-in-pkg-config-files.patch'
+        '0011-Fix-linking-against-static-D-Bus.patch'
+        '0012-Adjust-win32-g-mkspecs-profile.patch'
+        '0013-Fix-linking-against-external-harfbuzz.patch'
+        '0014-Fix-linking-against-static-pcre.patch'
+        '0015-Rename-qtmain-to-qt5main.patch'
+        '0016-Build-dynamic-host-libraries.patch'
+        '0017-Enable-rpath-for-build-tools.patch'
+        '0018-Use-system-zlib-for-build-tools.patch'
+        '0019-Disable-determing-default-include-and-lib-dirs-at-qm.patch'
+        '0020-Use-.dll.a-as-import-lib-extension.patch'
+        '0021-Merge-shared-and-static-library-trees.patch'
+        '0022-Allow-usage-of-static-version-with-CMake.patch'
+        '0023-Use-correct-pkg-config-static-flag.patch'
+        '0024-Use-shared-static-version-of-MariaDB.patch'
+        '0025-Use-shared-static-version-of-PostgreSQL.patch'
+        '0001-Fix-qwindows-plugin-linking-with-system-freetype.patch'
+        '0002-Fix-oci-config-test-on-windows.patch'
+        '0003-Don-t-set-QT_NO_SYSTEMSEMAPHORE-for-Windows.patch'
+        '0004-Fix-building-mysql-driver-under-mingw.patch'
+        '0005-Support-ANGLE-switches-via-configure-shell-script.patch'
+        '0006-Use-external-ANGLE-library.patch'
+        '0007-Fix-too-many-sections-assemler-error-in-OpenGL-facto.patch'
+        '0008-Make-sure-.pc-files-are-installed-correctly.patch'
+        '0009-Don-t-add-resource-files-to-LIBS-parameter.patch'
+        '0010-Prevent-debug-library-names-in-pkg-config-files.patch'
+        '0011-Fix-linking-against-static-D-Bus.patch'
+        '0012-Adjust-win32-g-mkspecs-profile.patch'
+        '0013-Fix-linking-against-external-harfbuzz.patch'
+        '0014-Fix-linking-against-static-pcre.patch'
+        '0015-Rename-qtmain-to-qt5main.patch'
+        '0016-Build-dynamic-host-libraries.patch'
+        '0017-Enable-rpath-for-build-tools.patch'
+        '0018-Use-system-zlib-for-build-tools.patch'
+        '0019-Disable-determing-default-include-and-lib-dirs-at-qm.patch'
+        '0020-Use-.dll.a-as-import-lib-extension.patch'
+        '0021-Merge-shared-and-static-library-trees.patch'
+        '0022-Allow-usage-of-static-version-with-CMake.patch'
+        '0023-Use-correct-pkg-config-static-flag.patch'
+        '0024-Use-shared-static-version-of-MariaDB.patch'
+        '0025-Use-shared-static-version-of-PostgreSQL.patch')
 md5sums=('184f9460b40752d71b15b827260580c2'
-         '55a11d8ea5db9ca0cced06b06655b417'
-         '1f7aea5e8bed840b3efc9172081ddb45'
-         'bc99c4cc6998295d76f37ed681c20d47'
-         'e2ffff39673b37c4d9974e92fcf7213c'
-         '4fe6523dd1c34398df3aa5a8763530cc'
-         'f32a768e1acb9785c79c8e93aa266db2'
-         '3bd322551924543553a2bf81b4419a09'
-         '30fa9ddf8d842b1392e8d63868940657'
-         '99bb9f51ec684803768f36e407baf486'
-         '6a6bc88f35ac8080869de39bc128ce5b'
-         '261d9071a6af3f1d5c3f955da3781573'
-         '0524dc5427a6c5338ebd45ab08c6ce80'
-         'c15d9f480d0248648fa52aeacb46e3c7'
-         '612a4dfb9f1a3898a1920c28bb999159'
-         'd0eb81aef1a21c65813fe4ddabbc4206'
-         '1e8c03872062fe8499ed7786475ed4e0'
-         '83139869355c2d46921adb25e47cf0fa'
-         'b9565219e9252a17fc1b8fb9ee30662c'
-         '20de722808e8a3fb684b0212bef8de46'
-         'a60bd6bb231acfe9132f391a26b37e71'
-         '41ec67d9e5e70e0d6d93b42aebd0e12a'
-         '61c0f9d0095c5a6dec8d14e9ec35a608'
-         '16a7d505b503bb1087fc00fad819f64b')
+         '33265bd7f02edd1cf9936905d2b001ca'
+         '98fc92f7b8e0217e8edefd0523775d74'
+         '11f2b3c0bf1f72afa61ae0cd54b65c0e'
+         'c2cb2c4f3bc3a2ea2c6513df8c9d52bf'
+         'ca2e27f04361eeb8ded70e05b5bd02eb'
+         '1decbe9a193b4dbe3801d85a599be063'
+         '01e145741a55d0aaa2dc42be3bab4fe3'
+         'f366fa5b0123d52eb81e7ceba0cfeb11'
+         '24acff08d3dc2f524e8c4c33aed252a8'
+         'e35b4934ab481aad783c9157f13d8fbb'
+         '2fb6e002ccb220cfa4f274a29576538a'
+         '525d25d00f605eb67ccfd6685fa7d5ba'
+         '1b138641d2c92b3bf5ae69ac0659123b'
+         'f4c9f39bc5e63cf3bf204134c2c96f8b'
+         '78b317f8abd9386727d7e04b64ed6f6e'
+         'ddc088d9ca03de7320080b2c1e1be4ee'
+         '4f29a4b85991a2b225a99293e6eeacd2'
+         '35ec07a8885d51284e57348d25b73fd0'
+         'aa764684a7e2b2fe1910498630dc6d54'
+         '78b49a891a584b79255a4ed133027e47'
+         'd095c18893cd85ede36a1e726f6ce1d9'
+         'd7821120f2eb32ef2145ba214b3c7619'
+         '14f9d30bb511e47d00d22524fd95106d'
+         '70dfa19f826b35b81de422e4352df334'
+         'e1273238d227039d49bd00173b9ffb3d')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 #_architectures='x86_64-w64-mingw32 i686-w64-mingw32'
@@ -175,98 +206,10 @@ patch() {
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
 
-  # Include fixes from MXE
-  patch -p1 -b -i ../qt5-fixes-from-mxe.patch
-
-  if isANGLE; then
-    # Add support for configure options '-opengl angle' and '-opengl dynamic'
-    # to the configure shell script
-    patch -p0 -i ../qt5-add-angle-and-dynamic-support.patch
-    # Make sure our external Angle package is used instead of the bundled one
-    patch -p1 -i ../qt5-use-external-angle-library.patch
-  fi
-
-  # Prevent too many sections / File too big assembler error
-  # (On x86_64 qopenglversionfunctionsfactory.o exceeds limit of 32768 sections
-  #  otherwise.)
-  patch -p0 -i ../qt5-fix-opengl-to-many-sections.patch
-
-  # Make sure the .pc files of the Qt5 modules are installed correctly
-  patch -p0 -i ../qt5-workaround-pkgconfig-install-issue.patch
-
-  # Prevents resource files from being added to the LIBS parameter
-  # This solves an issue where the generated pkg-config files contained
-  # invalid Libs.private references like .obj/debug/Qt5Cored_resource_res.o
-  patch -p1 -i ../qt5-dont-add-resource-files-to-qmake-libs.patch
-
-  # qmake generates the pkgconfig .pc files two times, once for the
-  # release build and once for the debug build (which we're not actually
-  # building in this package). For both generations the exact same
-  # pkgconfig file name is used. This causes references to the debug
-  # build ending up in the .pc files which are unwanted
-  # Prevent this from happening by giving the pkgconfig .pc
-  # files for the debug build an unique file name
-  patch -p1 -i ../qt5-prevent-debug-library-names-in-pkgconfig-files.patch
-
-  # Fix linking against static DBus
-  patch -p0 -i ../qt5-fix-linking-against-static-dbus.patch
-
-  # Patch the win32-g++ mkspecs profile to match our environment
-  patch -p0 -i ../qt5-use-win32-g++-mkspecs-profile.patch
-
-  # Use pkgconfig for harfbzz dependency
-  # (must be applied after qt5-use-win32-g++-mkspecs-profile.patch)
-  patch -p0 -i ../qt5-use-pkgconfig-for-harfbuzz.patch
-
-  # The bundled pcre is built as static library by default
-  # As we're not using the bundled copy but our own copy
-  # we need to do some fiddling to fix compilation issues
-  # when trying to build static qmake projects
-  patch -p1 -i ../qt5-fix-linking-against-static-pcre.patch
-
-  # Make sure the qtmain (static) library doesn't conflict with the one
-  # provided by the mingw-qt (qt4) package. The mkspecs profile is already
-  # updated by patch100 to reflect this change
-  # https://bugzilla.redhat.com/show_bug.cgi?id=1092465
-  patch -p1 -i ../qt5-rename-qtmain-to-qt5main.patch
-
-  # Upstream always wants the host libraries to be static instead of
-  # shared libraries. This causes issues and is against the Fedora
-  # packaging guidelines so disable this 'feature'
-  patch -p0 -i ../qt5-dont-build-host-libs-static.patch
-
-  # Build host tools with rpath enabled
-  # We have to use rpath here as the library which the
-  # various tools depend on (libQt5Bootstrap.so) resides
-  # in the folder /usr/${_arch}/lib
-  # We can't use the regular lib dir for this as we
-  # want to avoid conflicts with the native qt5 packages
-  patch -p1 -i ../qt5-enable-rpath-for-host-tools.patch
-
-  # Build host libs with system zlib. This patch cannot be upstreamed as-is
-  # due to the other host-libs patches.
-  patch -p0 -i ../qt5-use-system-zlib-in-host-libs.patch
-
-  # Determine the compiler's default include and lib directories at qmake time
-  # see https://codereview.qt-project.org/#/c/157817
-  patch -p1 -i ../qt5-disable-default-lib-include-detection.patch
-
-  # Fix qmake to append .dll.a extension to import libs
-  patch -p1 -i ../qt5-fix-implib-ext.patch
-
-  # Allow use of static version via CMake
-  patch -p0 -i ../qt5-win32-static-cmake-link-ws2_32-and--static.patch
-  patch -p0 -i ../qt5-allow-usage-of-static-qt-with-cmake.patch
-
-  # Allow installation of static Qt in the same prefix as the shared version
-  patch -p0 -i ../qt5-merge-static-and-shared-library-trees.patch
-  isStatic && patch -p0 -i ../qt5-customize-extensions-for-static-build.patch
-
-  # Use correct pkg-config --static flag
-  isStatic && patch -p1 -i ../qt5-use-correct-pkg-config-static-flags.patch
-
-  # Fix detection of static mariadb client
-  isStatic && patch -p0 -i ../qt5-fix-static-psql-mysql.patch
+  # Apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    patch -p1 -i "$patch"
+  done
 
   # Make sure the Qt5 build system uses our external ANGLE library
   rm -rf src/3rdparty/angle include/QtANGLE/{EGL,GLES2,GLES3,KHR}

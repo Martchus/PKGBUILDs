@@ -28,7 +28,6 @@ _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  export CXXFLAGS='-O0'
   export PREVENT_FORCING_SHARED_LIBS=ON
   for _arch in ${_architectures}; do
     for _config in "${_configurations[@]}"; do

@@ -5,7 +5,7 @@
 
 _reponame=repoindex
 pkgname=(repoindex{,-header,-web,-gui})
-pkgver=0.2.4
+pkgver=0.2.5
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Repository browser for Arch Linux'

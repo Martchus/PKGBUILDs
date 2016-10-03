@@ -14,7 +14,7 @@ depends=('c++utilities' 'qt5-base')
 makedepends=('cmake')
 optdepends=("$pkgname-doc: API documentation")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('3f8a6ea49b889febbb012674c773140793ad974731616b7142917ff53ed29cc0')
 
 build() {

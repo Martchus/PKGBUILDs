@@ -13,7 +13,7 @@ pkgdesc='C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, 
 license=('GPL')
 makedepends=('cmake' 'doxygen' 'dia' 'graphviz' 'c++utilities')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('0d4bb99ec71a2d11bb9b9ae766e082d0092f82b7d2c7b4d6d760eca9386afbb4')
 
 build() {

@@ -14,7 +14,7 @@ depends=('c++utilities' 'zlib')
 makedepends=('cmake')
 optdepends=("$pkgname-doc: API documentation")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('0d4bb99ec71a2d11bb9b9ae766e082d0092f82b7d2c7b4d6d760eca9386afbb4')
 
 build() {

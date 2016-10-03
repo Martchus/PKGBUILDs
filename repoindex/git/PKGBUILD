@@ -41,7 +41,7 @@ package_repoindex() {
 
   # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make DESTDIR="${pkgdir}" install-binary install-service install-config
+  make DESTDIR="${pkgdir}" install-binary install-service install-config install-bash-completion
 
   # make directories for cache and data
   mkdir -p "$pkgdir/var/cache/$_reponame"

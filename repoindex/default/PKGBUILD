@@ -5,7 +5,7 @@
 
 _reponame=repoindex
 pkgname=(repoindex{,-header,-web,-gui})
-pkgver=0.2.5
+pkgver=0.2.6
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Repository browser for Arch Linux'
@@ -15,7 +15,7 @@ makedepends=('cmake' 'yuicompressor' 'qtutilities')
 backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
-source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
 
 build() {
@@ -36,7 +36,7 @@ package_repoindex() {
 
   # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install-binary install-service install-config
+  make DESTDIR="${pkgdir}" install-binary install-service install-config install-bash-completion
   rm "$pkgdir/usr/bin/repoindex-gui"
 
   # make directories for cache and data

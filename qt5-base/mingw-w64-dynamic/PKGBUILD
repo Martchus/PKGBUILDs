@@ -82,8 +82,7 @@ depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-s
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
          'mingw-w64-pcre')
 groups=('mingw-w64-qt' 'mingw-w64-qt5')
-optdepends=('mingw-w64-postgresql: PostgreSQL support' 'mingw-w64-mariadb-connector-c: MySQL support'
-            'qtchooser')
+optdepends=('mingw-w64-postgresql: PostgreSQL support' 'mingw-w64-mariadb-connector-c: MySQL support')
 makedepends=('mingw-w64-gcc' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c' 'mingw-w64-pkg-config')
 options=(!strip !buildflags staticlibs !emptydirs)
 _pkgfqn="qtbase-opensource-src-${pkgver}"
@@ -232,11 +231,8 @@ build() {
     # Phonon is disabled for now because we lack the directx headers
     # FIXME: check whether this is still the case
 
-    # The odd paths for the -hostbindir argument are on purpose
-    # The qtchooser tool assumes that the tools 'qmake', 'moc' and others
-    # are all available in the same folder with these exact file names
     # To prevent conflicts with the mingw-w64-qt4 package we have
-    # to put these tools in a dedicated folder
+    # to put tools in a dedicated folder
 
     # The last device option allows using ccache though the use of
     # pre-compile header
@@ -373,12 +369,6 @@ package() {
     else # Shared release
       # The .dll's are installed in both bindir and libdir, one copy of the .dll's is sufficient
       find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
-
-      # Add qtchooser support
-      [[ ${_arch} == i686-w64-mingw32 ]] && mingwn='mingw32' || mingwn='mingw64'
-      mkdir -p "${pkgdir}/etc/xdg/qtchooser"
-      echo "/usr/${_arch}/lib/qt/bin" > "${pkgdir}/etc/xdg/qtchooser/$mingwn-qt5.conf"
-      echo "/usr/${_arch}/lib" >> "${pkgdir}/etc/xdg/qtchooser/$mingwn-qt5.conf"
 
       # Create symlinks for tools
       mkdir -p "${pkgdir}/usr/bin"

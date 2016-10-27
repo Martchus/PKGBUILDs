@@ -6,7 +6,7 @@
 
 _name=ffmpeg
 pkgname=mingw-w64-ffmpeg
-pkgver=3.1.4
+pkgver=3.1.5
 pkgrel=1
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (mingw-w64)'
@@ -21,18 +21,11 @@ depends=('mingw-w64-crt' 'mingw-w64-bzip2' 'mingw-w64-fontconfig' 'mingw-w64-fri
          'mingw-w64-zlib' 'mingw-w64-x265')
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'yasm')
-source=(https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz{,.asc}
-        https://trac.ffmpeg.org/raw-attachment/ticket/5694/ffmpeg_opj2.patch)
+source=(https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz{,.asc})
 validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8') # ffmpeg-devel
-sha256sums=('f8575c071e2a64437aeb70c8c030b385cddbe0b5cde20c9b18a6def840128822'
-            'SKIP'
-            '336f14fa497598fbd437fc780305fa7c576fd6cd44aaef77b0b4f61448f55fb8')
+sha256sums=('49cc3105f7891c5637f8fabb1b75ebb19c9b5123b311a3ccc6182aa35d58b89a'
+            'SKIP')
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
-
-prepare() {
-  cd ${_name}-${pkgver}
-  patch -Np1 -i "$srcdir/ffmpeg_opj2.patch"
-}
 
 build() {
   for _arch in ${_architectures}; do

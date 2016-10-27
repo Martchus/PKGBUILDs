@@ -24,10 +24,15 @@
 
 # By default CMake and qmake will link against the dynamic Qt libraries.
 
-# To use the static Qt libraries with CMake set the following variable before calling find_package for finding a Qt module:
-#  set(USE_STATIC_QT_BUILD ON)
+# To use the static Qt libraries with CMake prefix the Qt module with Static:
+#  eg. find_package(Qt5Core) becomes find_package(StaticQt5Core)
+# To use a static module, add the corresponding imported target, eg.
+#  target_link_libraries(target ... Qt5::static::Core)
+# This approach allows installing dynamic and static Qt in the same prefix and using
+# both variants in the same CMake project.
+
 # To use a static plugin, add the corresponding imported target, eg.
-#  target_link_libraries(target ... Qt5::QWindowsIntegrationPlugin)
+#  target_link_libraries(target ... Qt5::static::QWindowsIntegrationPlugin)
 # Automatically importing static plugins is currently not possible, though. Hence it is required to use Q_IMPORT_PLUGIN, eg.
 #  #include<QtPlugin>
 #  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
@@ -36,12 +41,13 @@
 #  CONFIG+=static
 
 # Further Qt modules (those not found in the base repository and hence not included in this package) include by default
-# static and dynamic libraries; if only one version is requried, just set $NO_STATIC_LIBS or $NO_SHARED_LIBS.
+# static and dynamic libraries; if only one version is requried, just set $NO_STATIC_LIBS or $NO_SHARED_LIBS when building
+# the package.
 
 # By default, executables will not be removed because I find them useful when testing. To remove executables
-# set $NO_EXECUTABLES (or $NO_STATIC_EXECUTABLES to remove statically linked executables only).
-# However, if Qt modules containing tools are built as static and as dynamic library only the dynamically linked
-# tools will be present in the package.
+# set $NO_EXECUTABLES (or $NO_STATIC_EXECUTABLES to remove statically linked executables only) when building the package.
+# If Qt modules containing tools are built as static and as dynamic library only the dynamically linked tools will be present
+# in the package.
 
 # Qt packages can be built in the following order (for example):
 #  qt5-base qt5-base-static qt5-declarative qt5-tools qt5-xmlpatterns qt5-script qt5-location qt5-multimedia qt5-sensors qt5-webchannel qt5-3d qt5-imageformats qt5-quickcontrols qt5-quickcontrols2 qt5-translations qt5-svg qt5-websockets qt5-winextras qt5-serialport qt5-canvas3d qt5-connectivity qt5-charts qt5-gamepad qt5-scxml qt5-datavis3s qt5-virtualkeyboard qt5-activeqt qt5-webkit
@@ -138,31 +144,56 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         '0024-Use-shared-static-version-of-MariaDB.patch'
         '0025-Use-shared-static-version-of-PostgreSQL.patch')
 md5sums=('184f9460b40752d71b15b827260580c2'
-         '33265bd7f02edd1cf9936905d2b001ca'
-         '98fc92f7b8e0217e8edefd0523775d74'
-         '11f2b3c0bf1f72afa61ae0cd54b65c0e'
-         'c2cb2c4f3bc3a2ea2c6513df8c9d52bf'
-         'ca2e27f04361eeb8ded70e05b5bd02eb'
-         '1decbe9a193b4dbe3801d85a599be063'
-         '01e145741a55d0aaa2dc42be3bab4fe3'
-         'f366fa5b0123d52eb81e7ceba0cfeb11'
-         '24acff08d3dc2f524e8c4c33aed252a8'
-         'e35b4934ab481aad783c9157f13d8fbb'
-         '2fb6e002ccb220cfa4f274a29576538a'
-         '525d25d00f605eb67ccfd6685fa7d5ba'
-         '1b138641d2c92b3bf5ae69ac0659123b'
-         'f4c9f39bc5e63cf3bf204134c2c96f8b'
-         '78b317f8abd9386727d7e04b64ed6f6e'
-         'ddc088d9ca03de7320080b2c1e1be4ee'
-         '4f29a4b85991a2b225a99293e6eeacd2'
-         '35ec07a8885d51284e57348d25b73fd0'
-         'aa764684a7e2b2fe1910498630dc6d54'
-         '78b49a891a584b79255a4ed133027e47'
-         'd095c18893cd85ede36a1e726f6ce1d9'
-         'd7821120f2eb32ef2145ba214b3c7619'
-         '14f9d30bb511e47d00d22524fd95106d'
-         '70dfa19f826b35b81de422e4352df334'
-         'e1273238d227039d49bd00173b9ffb3d')
+         'b8a6e20f50f55d8b3bca086c3e5e7d3e'
+         '543165bf85f22304fb53fbf824c3cc0a'
+         '64e34f4240f952316ab44e08e61e8864'
+         'af148b12f24121ac162eb8eb9bc682f0'
+         '377dbf2e3a2e9c7af0acba1cf3491efa'
+         '83c845f88038ae08719024a7bb6784c2'
+         '1e5f6c0ccafef813e42ad42dc68f4e82'
+         'df7c829842324478521890589bbe4f4f'
+         'cd334aa150e9f5a1edca36e7cc1e27ac'
+         'da489185f3981aa293bd6728cc6cdb65'
+         '0f5f6a6ea75f92a80c3921901e8e85c2'
+         '875f4c01d6b38b20b24c9143699a7610'
+         'c75403b9584edcf090ed3c78f95cca43'
+         'b6e8cfe3f286293fca1637cf84ae25b5'
+         'ee057cc23b76cbb2afef546ec0e134d6'
+         'af7ec298cc61a33d3f94063ef3c005bd'
+         '46527f0d4191410a23db3b1282475af6'
+         'ce02ce4daa0cdf64bcb23f0738626890'
+         '743257054d8481c34d392753c337662e'
+         '4e9ffe1265b6c426466e7e43c7593f59'
+         'c0295489d0c88baab425cec1967a7ce6'
+         'f1825e4c826642b7694b28ec8a849567'
+         '598ea5adfac3377f9ff191abb97cd5b0'
+         'dcd3379a381aa8aeefccd99a3c3658b4'
+         'a5d59627a473d8d40e5db2bf8d162f24'
+         'b8a6e20f50f55d8b3bca086c3e5e7d3e'
+         '543165bf85f22304fb53fbf824c3cc0a'
+         '64e34f4240f952316ab44e08e61e8864'
+         'af148b12f24121ac162eb8eb9bc682f0'
+         '377dbf2e3a2e9c7af0acba1cf3491efa'
+         '83c845f88038ae08719024a7bb6784c2'
+         '1e5f6c0ccafef813e42ad42dc68f4e82'
+         'df7c829842324478521890589bbe4f4f'
+         'cd334aa150e9f5a1edca36e7cc1e27ac'
+         'da489185f3981aa293bd6728cc6cdb65'
+         '0f5f6a6ea75f92a80c3921901e8e85c2'
+         '875f4c01d6b38b20b24c9143699a7610'
+         'c75403b9584edcf090ed3c78f95cca43'
+         'b6e8cfe3f286293fca1637cf84ae25b5'
+         'ee057cc23b76cbb2afef546ec0e134d6'
+         'af7ec298cc61a33d3f94063ef3c005bd'
+         '46527f0d4191410a23db3b1282475af6'
+         'ce02ce4daa0cdf64bcb23f0738626890'
+         '743257054d8481c34d392753c337662e'
+         '4e9ffe1265b6c426466e7e43c7593f59'
+         'c0295489d0c88baab425cec1967a7ce6'
+         'f1825e4c826642b7694b28ec8a849567'
+         '598ea5adfac3377f9ff191abb97cd5b0'
+         'dcd3379a381aa8aeefccd99a3c3658b4'
+         'a5d59627a473d8d40e5db2bf8d162f24')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 #_architectures='x86_64-w64-mingw32 i686-w64-mingw32'
@@ -343,20 +374,28 @@ package() {
       # shared release for Qt5Bootstrap library and tools (qmake, uic, ...)
 
       # Drop Qt5Bootstrap and libraries which are only provided as static lib
-      # and are hence already present in static form in the shared version
+      # and are hence already present in shared build (such as Qt5OpenGLExtensions)
       rm -f "${pkgdir}/usr/${_arch}/lib/"{lib,}qt5main* \
         "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5OpenGLExtensions* \
         "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5PlatformSupport* \
         "${pkgdir}/usr/${_arch}/lib/"libQt5Bootstrap*
+
+      # Also ensure config files don't conflict with shared version
+      pushd "${pkgdir}/usr/${_arch}/lib/cmake"
+      for cmake_dir in $(find . ! -path . -type d ! -name 'Static*'); do
+        mkdir -p "./Static${cmake_dir:2}";
+        mv "${cmake_dir}/"* "./Static${cmake_dir:2}";
+        rm -r "${cmake_dir}"
+      done
+      rm -r "./StaticQt5OpenGLExtensions"
+      popd
+      rm "${pkgdir}/usr/${_arch}/lib/pkgconfig/StaticQt5OpenGLExtensions.pc"
 
       # Keep various Qt 5 plugins to be used in static builds
       pushd "${pkgdir}/usr/${_arch}/lib/" && ln -s "./qt/plugins/"*/*.a . && popd
 
       # Keep a couple pri files not found in base
       mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules/qt_plugin_"*.pri "${pkgdir}/usr/${_arch}"
-
-      # remove CMake which are also in base
-      find "${pkgdir}/usr/${_arch}/lib/cmake" -not -name "Static*.cmake" -exec rm {} \;
 
       # Delete duplicate files that are in the base package
       rm -fR "${pkgdir}/usr/${_arch}/"{include,share}
@@ -369,6 +408,9 @@ package() {
     else # Shared release
       # The .dll's are installed in both bindir and libdir, one copy of the .dll's is sufficient
       find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
+
+      # The Qt5OpenGLExtensions module is only available as static library and hence part of the
+      # shared build
 
       # Create symlinks for tools
       mkdir -p "${pkgdir}/usr/bin"

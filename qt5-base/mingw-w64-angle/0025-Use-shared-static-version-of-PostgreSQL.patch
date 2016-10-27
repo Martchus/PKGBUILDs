@@ -1,4 +1,4 @@
-From 279a94850d4ca480a9d24f596f59e1696ea8b769 Mon Sep 17 00:00:00 2001
+From 5ae3a0b5e162d00a52fad34142f4c93512f8c2e5 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:58:25 +0200
 Subject: [PATCH 25/25] Use shared/static version of PostgreSQL
@@ -21,5 +21,5 @@ index d0f3761..58f1638 100644
 +    LIBS *= -lpq
 +}
 -- 
-2.10.0
+2.10.1
 

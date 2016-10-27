@@ -21,5 +21,5 @@ index 43b55f0..de2c3ec 100755
      if compileTest unix/ipc_posix "ipc_posix" ; then
          QCONFIG_FLAGS="$QCONFIG_FLAGS QT_POSIX_IPC"
 -- 
-2.10.0
+2.10.1
 

@@ -32,5 +32,5 @@ index 7443368..2932f05 100644
 +    else: LIBS_PRIVATE += $$system($$PKG_CONFIG --libs harfbuzz)
  }
 -- 
-2.10.0
+2.10.1
 

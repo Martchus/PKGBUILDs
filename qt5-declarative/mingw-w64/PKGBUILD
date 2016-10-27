@@ -25,10 +25,12 @@ url="https://www.qt.io/"
 _pkgfqn="${_qt_module}-opensource-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Build-QML-dev-tools-as-shared-library.patch'
-        '0002-Fix-i686-segfaults-with-GCC-6.patch')
+        '0002-Fix-i686-segfaults-with-GCC-6.patch'
+        '0003-Ensure-static-plugins-are-exported.patch')
 md5sums=('0d9e461aa54dba4793253fa2eb501f9b'
-         'ca13a72363e8ff6a4a46766edd58cdb5'
-         '021ab74da41419c945cb6a06508d9871')
+         '1d70fdbe290a1c0d2562cd975224c219'
+         'a11b3a584566e144a821c66f8ec53e26'
+         '8d6740a6fad763f2c42c9c56022f8567')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 [[ $NO_STATIC_LIBS ]] || \

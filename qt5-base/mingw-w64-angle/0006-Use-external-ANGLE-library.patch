@@ -94,5 +94,5 @@ index 71347dc..921c4d8 100644
          SUBDIRS += src_3rdparty_freetype
          src_platformsupport.depends += src_3rdparty_freetype
 -- 
-2.10.0
+2.10.1
 

@@ -76,5 +76,5 @@ index 543e905..456f21c 100644
                  + project->first("QMAKE_EXTENSION_SHLIB"));
          project->values("TARGET").first() = project->first("QMAKE_PREFIX_SHLIB") + project->first("TARGET");
 -- 
-2.10.0
+2.10.1
 

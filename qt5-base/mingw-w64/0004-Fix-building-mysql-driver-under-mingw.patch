@@ -21,5 +21,5 @@ index 3cfb614..8b7063f 100644
          !contains(LIBS, .*mysqlclient.*):!contains(LIBS, .*mysqld.*) {
              use_libmysqlclient_r:LIBS += -lmysqlclient_r
 -- 
-2.10.0
+2.10.1
 

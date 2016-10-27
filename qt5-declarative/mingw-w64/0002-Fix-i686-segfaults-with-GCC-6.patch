@@ -1,7 +1,7 @@
 From cbfa366cae825ec25d1ce5799d64cfa6b79b1ac2 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 21:25:03 +0200
-Subject: [PATCH 2/2] Fix i686 segfaults with GCC 6
+Subject: [PATCH 2/3] Fix i686 segfaults with GCC 6
 
 - Fedora patch
 - See: https://bugreports.qt.io/browse/QTBUG-52057
@@ -23,5 +23,5 @@ index f4862a1..651afa6 100644
  
  QMAKE_DOCS = $$PWD/doc/qtqml.qdocconf
 -- 
-2.10.0
+2.10.1
 

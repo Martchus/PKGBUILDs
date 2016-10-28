@@ -6,7 +6,7 @@
 _name=qtutilities
 _reponame=$_name
 pkgname=$_name-doc
-pkgver=5.0.0
+pkgver=5.1.0
 pkgrel=1
 arch=('any')
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (API documentation)'
@@ -14,7 +14,7 @@ license=('GPL')
 makedepends=('cmake' 'doxygen' 'dia' 'graphviz' 'c++utilities' 'qt5-base')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('3f8a6ea49b889febbb012674c773140793ad974731616b7142917ff53ed29cc0')
+sha256sums=('d4690094f4f2dd942e3e623cac210d8e9676e9d8a73a5115f42aa66b87bcd4c5')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

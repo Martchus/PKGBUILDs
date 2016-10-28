@@ -1,0 +1,27 @@
+From 18ff68e7b0151cc10af68ebc144c407078681455 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Fri, 28 Oct 2016 23:52:45 +0200
+Subject: [PATCH] Link explicitely against msvcr90 to prevent linker error
+
+Fix undefined reference to `_imp___lock_file' and `_imp___unlock_file'
+when building libgtk-3-0.dll with mingw-w64
+---
+ gtk/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gtk/Makefile.am b/gtk/Makefile.am
+index 3b76b82..4ccb973 100644
+--- a/gtk/Makefile.am
++++ b/gtk/Makefile.am
+@@ -1411,7 +1411,7 @@ libgtk_3_la_LIBADD = $(libadd)
+ libgtk_3_la_DEPENDENCIES = $(deps)
+ 
+ if USE_WIN32
+-libgtk_3_la_LIBADD += -lole32 -lgdi32 -lcomdlg32 -lwinspool -lcomctl32
++libgtk_3_la_LIBADD += -lole32 -lgdi32 -lcomdlg32 -lwinspool -lcomctl32 -lmsvcr90
+ libgtk_3_la_LDFLAGS += -Wl,-luuid $(gtk_win32_res_ldflag)
+ libgtk_3_la_DEPENDENCIES += $(gtk_win32_res)
+ endif
+-- 
+2.10.1
+

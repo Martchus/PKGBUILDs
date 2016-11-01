@@ -12,11 +12,11 @@ url='https://bitbucket.org/multicoreware/x265'
 license=('GPL')
 depends=('mingw-w64-crt')
 options=(!strip !buildflags staticlibs)
-makedepends=('mingw-w64-gcc' 'yasm' 'mingw-w64-cmake' 'mingw-w64-pkg-config')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake')
 source=("https://bitbucket.org/multicoreware/x265/downloads/x265_${pkgver}.tar.gz"
         mingw.patch)
-md5sums=('a4f16c0f054f002d6d8c9c6f7fb03026'
-         'd1f6263ad2f345673a8b0ece73f68338')
+sha256sums=('88fcb9af4ba52c0757ac9c0d8cd5ec79951a22905ae886897e06954353d6a643'
+            '90b8e81cd5228d2b147fbd6c000921d5b7593819e378d0e73c11c8de390796bc')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
@@ -28,7 +28,7 @@ build() {
   for _arch in ${_architectures}; do
     mkdir -p "${srcdir}"/build-${_arch} && cd "${srcdir}"/build-${_arch}
     unset LDFLAGS CPPFLAGS
-    ${_arch}-cmake -G "Unix Makefiles" \
+    ${_arch}-cmake \
        -DENABLE_SHARED='TRUE' \
        -DENABLE_CLI='TRUE' \
        -DWINXP_SUPPORT:BOOL='TRUE' \

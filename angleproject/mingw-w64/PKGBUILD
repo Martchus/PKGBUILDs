@@ -9,7 +9,7 @@
 
 pkgname=mingw-w64-angleproject
 pkgver=2.1.r5707.5858f7e
-pkgrel=1
+pkgrel=2
 pkgdesc='ANGLE project (mingw-w64)'
 arch=('any')
 url='https://chromium.googlesource.com/angle/angle/+/master/README.md'
@@ -23,14 +23,16 @@ source=('angleproject::git+https://chromium.googlesource.com/angle/angle#commit=
         'libEGL_mingw32.def'
         'libGLESv2_mingw32.def'
         'entry_points_shader.cpp'
-        'provide_mbstowcs_s_for_xp.patch')
+        'provide_mbstowcs_s_for_xp.patch'
+        'fix-compatibility-with-qtopengl-and-qtwebkit.patch')
 sha256sums=('SKIP'
             'SKIP'
             '895c62846e6784dcc33171523a452cb474010d3fc9e7c351c27b8add4e9930ab'
             'fb04f30b904760d32c4c0b733d0a0b44359855db1fde9e7f5ca7d0b8b1be3e56'
             '3186d913a5fb483d2ae568068453e494d52df8f3f23f09d16afbbf916a63e4a4'
             'ad347c9732f8897497aa51b8969a0e01cd8cd4ebb9a0e873a2ff47c210f1d46c'
-            '57b16254c23dbd312dbbe0495a177690809b916c2f3d8b3bbf2dd405274d518c')
+            '57b16254c23dbd312dbbe0495a177690809b916c2f3d8b3bbf2dd405274d518c'
+            '5e4ca559a0d9efb00cbe097c8ae0102bb3132a78e68d590a5826ff86f2a6ccf2')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 #pkgver() {
@@ -64,6 +66,10 @@ prepare() {
 
   # provide own implementation of mbstowcs_s for Windows XP support
   patch -p1 -i "${srcdir}/provide_mbstowcs_s_for_xp.patch"
+
+  # Fixes definition of GLsizeiptr and GLintptr to match that used by
+  # qopenglext.h in qt5-base. Fixes build of qt5-base-dynamic and qt5-webkit.
+  patch -p1 -i "${srcdir}/fix-compatibility-with-qtopengl-and-qtwebkit.patch"
 
   # executing .bat scripts on Linux is a no-go so make this a no-op
   echo "" > src/copy_compiler_dll.bat

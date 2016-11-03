@@ -1,0 +1,30 @@
+diff -Naur angleproject.orig/include/KHR/khrplatform.h angleproject/include/KHR/khrplatform.h
+--- angleproject.orig/include/KHR/khrplatform.h	2016-10-26 16:15:14.000000000 -0500
++++ angleproject/include/KHR/khrplatform.h	2016-11-02 17:02:26.685185043 -0500
+@@ -228,17 +228,22 @@
+  * to be the only LLP64 architecture in current use.
+  */
+ #ifdef _WIN64
+-typedef signed   long long int khronos_intptr_t;
++//typedef signed   long long int khronos_intptr_t;
+ typedef unsigned long long int khronos_uintptr_t;
+-typedef signed   long long int khronos_ssize_t;
++//typedef signed   long long int khronos_ssize_t;
+ typedef unsigned long long int khronos_usize_t;
+ #else
+-typedef signed   long  int     khronos_intptr_t;
++//typedef signed   long  int     khronos_intptr_t;
+ typedef unsigned long  int     khronos_uintptr_t;
+-typedef signed   long  int     khronos_ssize_t;
++//typedef signed   long  int     khronos_ssize_t;
+ typedef unsigned long  int     khronos_usize_t;
+ #endif
+ 
++// Make this compatible with QTOpenGL and QtWebkit.
++// It seems that ptrdiff_t is the right size on WIN32 and WIN64.
++typedef ptrdiff_t khronos_intptr_t;
++typedef ptrdiff_t khronos_ssize_t;
++
+ #if KHRONOS_SUPPORT_FLOAT
+ /*
+  * Float type

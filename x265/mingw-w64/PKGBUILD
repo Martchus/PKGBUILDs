@@ -4,7 +4,7 @@
 # in contrast to the version found in the AUR.
 
 pkgname=mingw-w64-x265
-pkgver=2.0
+pkgver=2.1
 pkgrel=1
 pkgdesc='Open Source H265/HEVC video encoder (mingw-w64)'
 arch=('any')

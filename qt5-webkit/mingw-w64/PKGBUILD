@@ -32,7 +32,7 @@ depends=('mingw-w64-qt5-declarative'
          'mingw-w64-icu'
          'mingw-w64-sqlite'
          'mingw-w64-libwebp')
-# these dependencies will enable further functionality
+# These dependencies will enable further functionality
 #depends+=('mingw-w64-webchannel')
 #depends+=('mingw-w64-gst-plugins-base')
 #optdepends+=('mingw-w64-gst-plugins-good: Webm codec support')
@@ -52,18 +52,20 @@ source=("https://download.qt.io/community_releases/${pkgver:0:3}/${pkgver}/${_pk
 	 '0007-Build-with-smaller-debug-info.patch'
 	 '0008-Fix-build-failure-due-to-building-without-ICU.patch'
 	 '0009-Establish-compatibility-with-latest-ANGLE.patch'
-	 '0010-Include-intrin.h-for-declaration-of-_mm_mfence.patch')
+	 '0010-Include-intrin.h-for-declaration-of-_mm_mfence.patch'
+	 '0011-Link-against-ANGLE-even-if-Qt-is-configured-for-dyna.patch')
 md5sums=('9379b8829639645c184fa63532035098'
-	 '1dc972b810d5b0db2a06ae4fb9a04949'
-	 '202eb07eec8f378d90b9c9d1c330223e'
-	 'cfa65552c15c768e4f44a78e8eaf7bd6'
-	 '464e463e5c88329809b2615c3170cce0'
-	 '306c56d68a2f17a9208d7423c2e02b7f'
-	 'a90c6a7b0b1cbf592ed6af969577fffc'
-	 '385b803e7a28751a75b914187533bb95'
-	 '00c239de9f06098d1410c8a9f57d01c6'
-	 '29576167338936839f4b2f0f44318f1d'
-	 '710d0631597b3fbb77246376f74fb2f9')
+         'f6ddbf0e11d0eee39b50229a8afbd880'
+         '9305257168e259e7f94cd58393b9680c'
+         '41db74a7707fdd0aa9b7a61cf2bd2d96'
+         'ca2377c17a1f70ba89c8ae76ebf78627'
+         '4427d61a4703048b11119f36d58738a8'
+         'd6aeffcfc72397d85191bc19f464eb28'
+         'cab7dbd33ff8a89b794275187e9e3ada'
+         'f68edefadc250765c8f2b28b9e400e77'
+         '6216d2024eb88b5780d7a50793dfa996'
+         '5165c996fa761a5dc6de69e27246865c'
+         '09f63193a742155fa6747f1978d2a3a6')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

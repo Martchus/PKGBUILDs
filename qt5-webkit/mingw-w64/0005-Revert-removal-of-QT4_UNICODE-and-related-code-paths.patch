@@ -1,7 +1,7 @@
-From ec4b0f51cdb558dcde0125efb89925fd72f13868 Mon Sep 17 00:00:00 2001
+From c3df414bd2bb18c21d8ff8ab1109d7a6463bf14f Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:03:05 +0200
-Subject: [PATCH 05/10] Revert removal of QT4_UNICODE and related code paths
+Subject: [PATCH 05/11] Revert removal of QT4_UNICODE and related code paths
 
 ---
  Source/WTF/WTF.pro                                 |   1 +
@@ -428,7 +428,7 @@ index 0000000..a2d1ad4
 +
 +#endif // WTF_UNICODE_QT4_H
 diff --git a/Source/WebCore/Target.pri b/Source/WebCore/Target.pri
-index 26837c7..b859699 100644
+index e525aa1..5d64b46 100644
 --- a/Source/WebCore/Target.pri
 +++ b/Source/WebCore/Target.pri
 @@ -2358,6 +2358,7 @@ HEADERS += \
@@ -763,5 +763,5 @@ index 0000000..f28f0bb
 +
 +#endif // TextCodecICU_h
 -- 
-2.10.0
+2.10.2
 

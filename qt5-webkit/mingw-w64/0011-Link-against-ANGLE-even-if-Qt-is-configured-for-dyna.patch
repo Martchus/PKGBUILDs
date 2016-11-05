@@ -1,0 +1,26 @@
+From 8a3eff09ffc9f1c29abed87a36afffdf9d483345 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 5 Nov 2016 12:46:27 +0100
+Subject: [PATCH 11/11] Link against ANGLE even if Qt is configured for dynamic
+ OpenGL
+
+---
+ Source/WebCore/WebCore.pri | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WebCore/WebCore.pri b/Source/WebCore/WebCore.pri
+index ddad897..998a914 100644
+--- a/Source/WebCore/WebCore.pri
++++ b/Source/WebCore/WebCore.pri
+@@ -216,7 +216,7 @@ use?(3D_GRAPHICS) {
+     win32: {
+         mingw: {
+             # Make sure OpenGL libs are after the webcore lib so MinGW can resolve symbols
+-            contains(QT_CONFIG, opengles2) {
++            contains(QT_CONFIG, opengles2)|contains(QT_CONFIG, dynamicgl) {
+                 CONFIG(debug, debug|release):contains(QT_CONFIG, angle) {
+                     LIBS += $$QMAKE_LIBS_OPENGL_ES2_DEBUG
+                 } else {
+-- 
+2.10.2
+

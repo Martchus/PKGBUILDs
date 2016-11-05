@@ -1,7 +1,7 @@
-From 747482bfb5c4878e019982c7165627979de9b63d Mon Sep 17 00:00:00 2001
+From bfcd0b75a13d6ff4b277382ab4264919b27a08e5 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:21:54 +0200
-Subject: [PATCH 10/10] Include intrin.h for declaration of _mm_mfence
+Subject: [PATCH 10/11] Include intrin.h for declaration of _mm_mfence
 
 ---
  Source/WTF/wtf/Atomics.h | 2 ++
@@ -21,5 +21,5 @@ index 8f950c7..142c0db 100644
  #include <windows.h>
  #elif OS(QNX)
 -- 
-2.10.0
+2.10.2
 

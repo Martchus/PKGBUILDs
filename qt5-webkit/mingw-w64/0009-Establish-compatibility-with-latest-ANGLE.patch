@@ -1,7 +1,7 @@
-From 7a3dd9192f8b86e9704226cb1cee509b5403788b Mon Sep 17 00:00:00 2001
+From ec2f7c510e98db427adef02879330a06daa7f3f7 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:19:57 +0200
-Subject: [PATCH 09/10] Establish compatibility with latest ANGLE
+Subject: [PATCH 09/11] Establish compatibility with latest ANGLE
 
 ---
  .../platform/graphics/ANGLEWebKitBridge.cpp        | 126 ++++-----------------
@@ -237,5 +237,5 @@ index 29a13c8..9069957 100644
      if (m_requiresBuiltInFunctionEmulation)
          extraCompileOptions |= SH_EMULATE_BUILT_IN_FUNCTIONS;
 -- 
-2.10.0
+2.10.2
 

@@ -1,7 +1,7 @@
-From 91ce805e848a10da974749969785b12e7ca9599f Mon Sep 17 00:00:00 2001
+From 0babda7ee8ffc48773162224eed9e2d0aa83b9ea Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 21:59:39 +0200
-Subject: [PATCH 04/10] Don't require qt5-base to be built with ICU support
+Subject: [PATCH 04/11] Don't require qt5-base to be built with ICU support
 
 ---
  Source/WTF/wtf/Platform.h                          |   4 +
@@ -269,5 +269,5 @@ index b5fb2ae..7da388a 100644
          addReasonForSkippingBuild("Build not supported on BB10.")
      }
 -- 
-2.10.0
+2.10.2
 

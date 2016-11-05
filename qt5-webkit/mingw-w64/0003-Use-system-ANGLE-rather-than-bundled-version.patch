@@ -1,76 +1,15 @@
-From 1c26334f02f106babba2f0659f676d6c3af2dded Mon Sep 17 00:00:00 2001
+From b22f0368b4d4d167fcc342bffb602c9c41578233 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
-Date: Sun, 25 Sep 2016 21:57:57 +0200
-Subject: [PATCH 03/10] Use system ANGLE rather than bundled version
+Date: Sat, 5 Nov 2016 12:14:01 +0100
+Subject: [PATCH 03/11] Use system ANGLE rather than bundled version
 
 ---
- Source/WebCore/Target.pri                       | 2 +-
- Source/WebCore/WebCore.pri                      | 1 +
- Source/WebKit/WebKit1.pro                       | 5 ++++-
- Source/WebKit2/Target.pri                       | 5 ++++-
  Source/api.pri                                  | 1 -
  Tools/qmake/mkspecs/features/webkit_modules.prf | 2 +-
  Tools/qmake/mkspecs/modules/angle.prf           | 3 ---
  WebKit.pro                                      | 6 ------
- 8 files changed, 11 insertions(+), 14 deletions(-)
+ 4 files changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/Source/WebCore/Target.pri b/Source/WebCore/Target.pri
-index e525aa1..26837c7 100644
---- a/Source/WebCore/Target.pri
-+++ b/Source/WebCore/Target.pri
-@@ -4194,7 +4194,7 @@ use?(3D_GRAPHICS) {
-         platform/graphics/texmap/coordinated/CoordinatedTile.cpp \
-         platform/graphics/texmap/coordinated/UpdateAtlas.cpp
- 
--    INCLUDEPATH += $$PWD/platform/graphics/gpu
-+    INCLUDEPATH += $$PWD/platform/graphics/gpu /usr/i686-w64-mingw32/sys-root/mingw/include/GLSLANG
- 
-     contains(QT_CONFIG, opengl) {
-         contains(QT_CONFIG, opengles2) {
-diff --git a/Source/WebCore/WebCore.pri b/Source/WebCore/WebCore.pri
-index 37cde57..022f8da 100644
---- a/Source/WebCore/WebCore.pri
-+++ b/Source/WebCore/WebCore.pri
-@@ -214,6 +214,7 @@ use?(3D_GRAPHICS) {
-                 CONFIG(debug, debug|release):contains(QT_CONFIG, angle) {
-                     LIBS += $$QMAKE_LIBS_OPENGL_ES2_DEBUG
-                 } else {
-+                    INCLUDEPATH += /usr/i686-w64-mingw32/sys-root/mingw/include/GLSLANG
-                     LIBS += $$QMAKE_LIBS_OPENGL_ES2
-                 }
-             } else {
-diff --git a/Source/WebKit/WebKit1.pro b/Source/WebKit/WebKit1.pro
-index 6dbb907..6f18db2 100644
---- a/Source/WebKit/WebKit1.pro
-+++ b/Source/WebKit/WebKit1.pro
-@@ -96,7 +96,10 @@ HEADERS += \
- INCLUDEPATH += \
-     $$PWD/qt/WebCoreSupport
- 
--use?(3D_GRAPHICS): WEBKIT += angle
-+use?(3D_GRAPHICS) {
-+    WEBKIT += angle
-+    INCLUDEPATH += /usr/i686-w64-mingw32/sys-root/mingw/include/GLSLANG
-+}
- 
- have?(qtpositioning):enable?(GEOLOCATION) {
-      HEADERS += \
-diff --git a/Source/WebKit2/Target.pri b/Source/WebKit2/Target.pri
-index a9179d9..ac020a4 100644
---- a/Source/WebKit2/Target.pri
-+++ b/Source/WebKit2/Target.pri
-@@ -949,7 +949,10 @@ enable?(TOUCH_EVENTS) {
- 
- have?(qtpositioning):enable?(GEOLOCATION): QT += positioning
- 
--use?(3D_GRAPHICS): WEBKIT += angle
-+use?(3D_GRAPHICS) {
-+    WEBKIT += angle
-+    INCLUDEPATH += /usr/i686-w64-mingw32/sys-root/mingw/include/GLSLANG
-+}
- 
- use?(PLUGIN_BACKEND_XLIB) {
-     DEFINES += XP_UNIX
 diff --git a/Source/api.pri b/Source/api.pri
 index de04652..f972f67 100644
 --- a/Source/api.pri
@@ -125,5 +64,5 @@ index 11b59e5..e9709a2 100644
      leveldb.file = Source/ThirdParty/leveldb/leveldb.pro
      leveldb.makefile = Makefile.leveldb
 -- 
-2.10.0
+2.10.2
 

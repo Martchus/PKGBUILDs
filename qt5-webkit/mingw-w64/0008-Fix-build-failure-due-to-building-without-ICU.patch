@@ -1,7 +1,7 @@
-From 1786c0bded47db3c7729a12df53d9134eddf5e83 Mon Sep 17 00:00:00 2001
+From ec65846e33b689741f896b63884b0f9eed0d413d Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:17:41 +0200
-Subject: [PATCH 08/10] Fix build failure due to building without ICU
+Subject: [PATCH 08/11] Fix build failure due to building without ICU
 
 Revert commit 151422
 ---
@@ -58,5 +58,5 @@ index cc7607f..eef4363 100644
  
  RenderText::RenderText(Node* node, PassRefPtr<StringImpl> str)
 -- 
-2.10.0
+2.10.2
 

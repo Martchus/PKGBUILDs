@@ -16,7 +16,7 @@
 _qt_module=qtwebkit
 pkgname=mingw-w64-qt5-webkit
 pkgver=5.7.0
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc="Classes for a WebKit2 based implementation and a new QML API (mingw-w64)"
 depends=('mingw-w64-qt5-declarative'
@@ -66,6 +66,10 @@ md5sums=('9379b8829639645c184fa63532035098'
 	 '710d0631597b3fbb77246376f74fb2f9')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+# Disable building static version: building static Qt WebKit is not supported since Qt 4.7
+NO_STATIC_LIBS=true
+
 [[ $NO_STATIC_LIBS ]] || \
   makedepends+=('mingw-w64-qt5-base-static') \
   optdepends+=('mingw-w64-qt5-base-static: use of static libraries') \

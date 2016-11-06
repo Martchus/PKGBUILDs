@@ -6,7 +6,7 @@
 _reponame=dbus-soundrecorder
 pkgname=dbus-soundrecorder
 pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc='Records sound from Pulse Audio using ffmpeg while watching D-Bus to determine tracks and meta data'
 license=('GPL')

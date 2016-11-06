@@ -1,4 +1,4 @@
-From 69a3150b2a84984cc37e59e253c17fe88f5fa51e Mon Sep 17 00:00:00 2001
+From c49745c7dd018086e2566fed2a7a393fe21460d6 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:56:55 +0200
 Subject: [PATCH 24/25] Use shared/static version of MariaDB
@@ -21,5 +21,5 @@ index 06d1880..5dadbfb 100644
 +    LIBS += -lmariadbclient
 +}
 -- 
-2.10.1
+2.10.2
 

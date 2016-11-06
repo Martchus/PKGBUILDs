@@ -17,5 +17,5 @@ index 3ffda1d..39b6f3759 100644
 -LIBS += -lclntsh
 +!win32:LIBS += -lclntsh
 -- 
-2.10.1
+2.10.2
 

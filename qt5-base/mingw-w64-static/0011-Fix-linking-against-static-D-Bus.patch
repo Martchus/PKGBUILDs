@@ -39,5 +39,5 @@ index fbeea61..8e73e9e 100644
  #  include <dbus/dbus.h>
  #else
 -- 
-2.10.1
+2.10.2
 

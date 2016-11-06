@@ -1,4 +1,4 @@
-From dd59260d2a1644664c1e1c7cb74abe5574b4989b Mon Sep 17 00:00:00 2001
+From aeec21b7d2c0185499531c55282d8738c19770f2 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:50:21 +0200
 Subject: [PATCH 23/25] Use correct pkg-config --static flag
@@ -24,5 +24,5 @@ index b4c75c6..eea15f0 100755
  if [ -z "$PKG_CONFIG" ]; then
      PKG_CONFIG=`"$WHICH" pkg-config 2>/dev/null`
 -- 
-2.10.1
+2.10.2
 

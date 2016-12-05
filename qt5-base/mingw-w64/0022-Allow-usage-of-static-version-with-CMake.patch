@@ -1,7 +1,7 @@
 From baadc36def778c99b33f68d2c840c176bb873d66 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:32:00 +0200
-Subject: [PATCH 22/25] Allow usage of static version with CMake
+Subject: [PATCH 22/26] Allow usage of static version with CMake
 
 - Fix plugin detection and various details
 - Allow selecting between dynamic and static Qt versions

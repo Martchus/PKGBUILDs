@@ -78,7 +78,7 @@ isNoOpenGL() {
 
 pkgname=mingw-w64-qt5-base
 pkgver=5.7.0
-pkgrel=9
+pkgrel=10
 pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 # The static variant doesn't contain any executables which need to be executed on the build machine
 isStatic && arch=('any') || arch=('i686' 'x86_64')
@@ -142,7 +142,8 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         '0022-Allow-usage-of-static-version-with-CMake.patch'
         '0023-Use-correct-pkg-config-static-flag.patch'
         '0024-Use-shared-static-version-of-MariaDB.patch'
-        '0025-Use-shared-static-version-of-PostgreSQL.patch')
+        '0025-Use-shared-static-version-of-PostgreSQL.patch'
+        '0026-Fix-qt5_wrap_ui-macro.patch')
 md5sums=('184f9460b40752d71b15b827260580c2'
          'bd3a336834d1dc22bacf38688b30fab0'
          '390cd5b394fe2a84054c4c34f9f016d6'
@@ -193,7 +194,8 @@ md5sums=('184f9460b40752d71b15b827260580c2'
          'c646461b4341ed83b1a83426fc627a70'
          '0e4e4f1d9a16eb6038709d82cf31227d'
          '88b8eb6d0b7cec85cfbc54f2d6716f2d'
-         '179ae7c4217e062df0d8bd5171792e11')
+         '179ae7c4217e062df0d8bd5171792e11'
+         '645037becd8fdd266ac8e7cacdde85ab')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 #_architectures='x86_64-w64-mingw32 i686-w64-mingw32'

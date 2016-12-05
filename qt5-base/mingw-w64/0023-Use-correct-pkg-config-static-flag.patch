@@ -1,7 +1,7 @@
 From aeec21b7d2c0185499531c55282d8738c19770f2 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:50:21 +0200
-Subject: [PATCH 23/25] Use correct pkg-config --static flag
+Subject: [PATCH 23/26] Use correct pkg-config --static flag
 
 ---
  configure | 5 +++++

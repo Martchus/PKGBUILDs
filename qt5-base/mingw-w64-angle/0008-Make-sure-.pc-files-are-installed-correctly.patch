@@ -1,7 +1,7 @@
 From 2f08b378abc94becbecfdf3833084320cbb6a936 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 13:54:12 +0200
-Subject: [PATCH 08/25] Make sure *.pc files are installed correctly
+Subject: [PATCH 08/26] Make sure *.pc files are installed correctly
 
 ---
  qmake/generators/makefile.cpp          | 8 ++++++--

@@ -1,7 +1,7 @@
 From 96cc0debf89c8c17413cc0d28a57f962ce20653e Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:58:25 +0200
-Subject: [PATCH 25/25] Use shared/static version of PostgreSQL
+Subject: [PATCH 25/26] Use shared/static version of PostgreSQL
 
 ---
  config.tests/unix/psql/psql.pro | 6 +++++-

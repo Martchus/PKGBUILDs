@@ -1,7 +1,7 @@
 From f46f51482f05364b021d24352f7618f26d2d3794 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:07:02 +0200
-Subject: [PATCH 11/25] Fix linking against static D-Bus
+Subject: [PATCH 11/26] Fix linking against static D-Bus
 
 ---
  config.tests/unix/dbus/dbus.cpp | 4 ++++

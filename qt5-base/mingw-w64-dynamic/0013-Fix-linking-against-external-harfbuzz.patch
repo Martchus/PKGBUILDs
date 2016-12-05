@@ -1,7 +1,7 @@
 From 3bbcdf8e7657d5112e3d35e372786949424b5a37 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:22:56 +0200
-Subject: [PATCH 13/25] Fix linking against external harfbuzz
+Subject: [PATCH 13/26] Fix linking against external harfbuzz
 
 ---
  config.tests/unix/harfbuzz/harfbuzz.pro | 3 ++-

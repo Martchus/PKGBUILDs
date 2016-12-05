@@ -1,7 +1,7 @@
 From c92196a9e56f233e4db9256496361a98764d6bcf Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:15:08 +0200
-Subject: [PATCH 12/25] Adjust win32-g++ mkspecs profile
+Subject: [PATCH 12/26] Adjust win32-g++ mkspecs profile
 
 - Use default compile flags for mingw-w64 packages
   under Arch Linux

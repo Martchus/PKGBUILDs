@@ -1,7 +1,7 @@
 From 3c7458eaa2d7fb3bb9ca379eec96418e1c6ba482 Mon Sep 17 00:00:00 2001
 From: Mark Brand <mabrand@mabrand.nl>
 Date: Mon, 8 Dec 2014 14:15:12 +0100
-Subject: [PATCH 02/25] Fix oci config test on windows
+Subject: [PATCH 02/26] Fix oci config test on windows
 
 ---
  config.tests/unix/oci/oci.pro | 2 +-

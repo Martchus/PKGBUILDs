@@ -1,7 +1,7 @@
 From 61bdeeb1fd3b4eabc204fd65dd9049ddaeb5583f Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:27:28 +0200
-Subject: [PATCH 16/25] Build dynamic host libraries
+Subject: [PATCH 16/26] Build dynamic host libraries
 
 For better accordance with Arch Linux packaging
 standards

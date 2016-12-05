@@ -1,7 +1,7 @@
 From ce1268a5bce5652761fc2a54e4e361bc003befec Mon Sep 17 00:00:00 2001
 From: Mark Brand <mabrand@mabrand.nl>
 Date: Thu, 6 Aug 2015 23:35:08 +0200
-Subject: [PATCH 01/25] Fix qwindows plugin linking with system-freetype
+Subject: [PATCH 01/26] Fix qwindows plugin linking with system-freetype
 
 ---
  src/3rdparty/freetype_dependency.pri | 1 +

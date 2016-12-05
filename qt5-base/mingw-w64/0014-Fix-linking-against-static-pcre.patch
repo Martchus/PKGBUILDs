@@ -1,7 +1,7 @@
 From 41f31abf629018e7e937aca6edbec022a01a1522 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:24:01 +0200
-Subject: [PATCH 14/25] Fix linking against static pcre
+Subject: [PATCH 14/26] Fix linking against static pcre
 
 ---
  src/corelib/tools/qregularexpression.cpp | 4 ++++

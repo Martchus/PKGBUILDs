@@ -1,7 +1,7 @@
 From f30b82c0605e3a2c1dfe8f0ac7da11182ebcd19f Mon Sep 17 00:00:00 2001
 From: Mark Brand <mabrand@mabrand.nl>
 Date: Tue, 6 Oct 2015 09:53:20 +0200
-Subject: [PATCH 04/25] Fix building mysql driver under mingw
+Subject: [PATCH 04/26] Fix building mysql driver under mingw
 
 ---
  src/sql/drivers/mysql/qsql_mysql.pri | 2 +-

@@ -1,7 +1,7 @@
 From e0f3940f8a6df9e347a29d37671fa1bae7d84735 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:26:18 +0200
-Subject: [PATCH 20/25] Use *.dll.a as import lib extension
+Subject: [PATCH 20/26] Use *.dll.a as import lib extension
 
 ---
  mkspecs/features/create_cmake.prf      |  5 +++--

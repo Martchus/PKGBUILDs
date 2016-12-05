@@ -1,7 +1,7 @@
 From 9aec74947e4726660486236f083ca485f05625c7 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:45:08 +0200
-Subject: [PATCH 21/25] Merge shared and static library trees
+Subject: [PATCH 21/26] Merge shared and static library trees
 
 Allow installation of shared and static build in the same prefix
 ---

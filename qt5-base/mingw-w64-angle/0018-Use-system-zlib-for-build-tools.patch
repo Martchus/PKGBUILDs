@@ -1,7 +1,7 @@
 From 2e7791965e771e6d4a544a6b81e86cba8ad6b181 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:04:42 +0200
-Subject: [PATCH 18/25] Use system zlib for build tools
+Subject: [PATCH 18/26] Use system zlib for build tools
 
 ---
  src/tools/bootstrap/bootstrap.pro | 2 +-

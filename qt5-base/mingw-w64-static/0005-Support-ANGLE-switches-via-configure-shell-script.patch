@@ -1,7 +1,7 @@
 From 443ebf3f1644a5111fae06cfa248c641d96e1ffb Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 13:36:53 +0200
-Subject: [PATCH 05/25] Support ANGLE switches via configure shell script
+Subject: [PATCH 05/26] Support ANGLE switches via configure shell script
 
 Required when cross-compiling with mingw-w64 because in
 this case executing configure.bat is not appropriate

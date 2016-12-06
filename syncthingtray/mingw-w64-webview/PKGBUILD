@@ -6,31 +6,31 @@
 # set the web view provider: either webkit, webengine, auto or none
 _webview_provider=webkit
 
-# set the JavaScript provider: either script, qml, auto or none
-_js_provider=script
-
-_reponame=tageditor
-pkgname=mingw-w64-tageditor-webview
-provides=('mingw-w64-tageditor')
-conflicts=('mingw-w64-tageditor')
+_reponame=syncthingtray
+pkgname=mingw-w64-syncthingtray-webview
+provides=('mingw-w64-syncthingtray')
+conflicts=('mingw-w64-syncthingtray')
 _name=${pkgname#mingw-w64-}
-pkgver=2.1.0
+pkgver=0.1.0
 pkgrel=1
 arch=('any')
-pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska'
+pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=('GPL')
-depends=(mingw-w64-{crt,qtutilities,tagparser})
-[[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && depends+=('mingw-w64-qt5-base')
+depends=('mingw-w64-crt' 'mingw-w64-qt5-svg' 'mingw-w64-qtutilities' 'mingw-w64-openssl')
+[[ $_webview_provider == none ]] && depends+=('mingw-w64-qt5-base')
 [[ $_webview_provider == webkit ]] && depends+=('mingw-w64-qt5-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('mingw-w64-qt5-webengine')
-[[ $_js_provider == script ]] && depends+=('mingw-w64-qt5-script')
-[[ $_js_provider == qml ]] && depends+=('mingw-w64-qt5-declarative')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'ffmpeg')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('cc443c1e62e28553b4877f676c4a511da9d6c556e1b26dda52bc7c8aaee7c3f3')
+sha256sums=('cb84b0fb15afc4da9431d7bd837a3ac9e0b5f679753777de102abcd6ef5a11a1')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+[[ $NO_STATIC_LIBS ]] ||
+  makedepends+=('mingw-w64-qt5-base-static') \
+  optdepends+=('mingw-w64-qt5-base-static: use of static library')
+  _configurations='-DENABLE_STATIC_LIBS:BOOL=ON'
+[[ $NO_SHARED_LIBS ]] && _configurations+=' -DDISABLE_SHARED_LIBS:BOOL=ON'
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
@@ -40,7 +40,7 @@ build() {
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
       -DWEBVIEW_PROVIDER="${_webview_provider}" \
-      -DJS_PROVIDER="${_js_provider}" \
+      ${_configurations} \
       ../
     make
     popd

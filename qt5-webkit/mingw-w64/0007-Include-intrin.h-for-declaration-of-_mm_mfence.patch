@@ -1,7 +1,7 @@
-From bfcd0b75a13d6ff4b277382ab4264919b27a08e5 Mon Sep 17 00:00:00 2001
+From 24eda987a27f9b8b66acacce9a31cfc34b480154 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:21:54 +0200
-Subject: [PATCH 10/11] Include intrin.h for declaration of _mm_mfence
+Subject: [PATCH 7/9] Include intrin.h for declaration of _mm_mfence
 
 ---
  Source/WTF/wtf/Atomics.h | 2 ++

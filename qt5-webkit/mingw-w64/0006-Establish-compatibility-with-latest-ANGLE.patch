@@ -1,13 +1,16 @@
-From ec2f7c510e98db427adef02879330a06daa7f3f7 Mon Sep 17 00:00:00 2001
+From 967f96d827bc9af129fd1431b97de0dc9a076bef Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:19:57 +0200
-Subject: [PATCH 09/11] Establish compatibility with latest ANGLE
+Subject: [PATCH 6/9] Establish compatibility with latest ANGLE
 
 ---
  .../platform/graphics/ANGLEWebKitBridge.cpp        | 126 ++++-----------------
- .../WebCore/platform/graphics/ANGLEWebKitBridge.h  |  15 +--
- .../graphics/opengl/Extensions3DOpenGLCommon.cpp   |   2 +-
- 3 files changed, 28 insertions(+), 115 deletions(-)
+ .../WebCore/platform/graphics/ANGLEWebKitBridge.h  |  17 +--
+ .../graphics/cairo/GraphicsContext3DCairo.cpp      |   2 +-
+ .../platform/graphics/efl/GraphicsContext3DEfl.cpp |   2 +-
+ .../graphics/opengl/Extensions3DOpenGLCommon.cpp   |   4 +-
+ .../platform/graphics/qt/GraphicsContext3DQt.cpp   |   2 +-
+ 6 files changed, 33 insertions(+), 120 deletions(-)
 
 diff --git a/Source/WebCore/platform/graphics/ANGLEWebKitBridge.cpp b/Source/WebCore/platform/graphics/ANGLEWebKitBridge.cpp
 index 9876c9f..84d3a2f 100644
@@ -180,7 +183,7 @@ index 9876c9f..84d3a2f 100644
  
      return true;
 diff --git a/Source/WebCore/platform/graphics/ANGLEWebKitBridge.h b/Source/WebCore/platform/graphics/ANGLEWebKitBridge.h
-index 83c2e00..9540cc0 100644
+index 83c2e00..825c2d0 100644
 --- a/Source/WebCore/platform/graphics/ANGLEWebKitBridge.h
 +++ b/Source/WebCore/platform/graphics/ANGLEWebKitBridge.h
 @@ -35,13 +35,14 @@
@@ -200,7 +203,7 @@ index 83c2e00..9540cc0 100644
  };
  
  enum ANGLEShaderSymbolType {
-@@ -53,17 +54,17 @@ struct ANGLEShaderSymbol {
+@@ -53,24 +54,24 @@ struct ANGLEShaderSymbol {
      ANGLEShaderSymbolType symbolType;
      String name;
      String mappedName;
@@ -223,11 +226,45 @@ index 83c2e00..9540cc0 100644
      }
  };
  
+ class ANGLEWebKitBridge {
+ public:
+ 
+-    ANGLEWebKitBridge(ShShaderOutput = SH_GLSL_OUTPUT, ShShaderSpec = SH_WEBGL_SPEC);
++    ANGLEWebKitBridge(ShShaderOutput = SH_GLSL_COMPATIBILITY_OUTPUT, ShShaderSpec = SH_WEBGL_SPEC);
+     ~ANGLEWebKitBridge();
+     
+     ShBuiltInResources getResources() { return m_resources; }
+diff --git a/Source/WebCore/platform/graphics/cairo/GraphicsContext3DCairo.cpp b/Source/WebCore/platform/graphics/cairo/GraphicsContext3DCairo.cpp
+index d31adf3..3b99ad9 100644
+--- a/Source/WebCore/platform/graphics/cairo/GraphicsContext3DCairo.cpp
++++ b/Source/WebCore/platform/graphics/cairo/GraphicsContext3DCairo.cpp
+@@ -80,7 +80,7 @@ PassRefPtr<GraphicsContext3D> GraphicsContext3D::create(GraphicsContext3D::Attri
+ GraphicsContext3D::GraphicsContext3D(GraphicsContext3D::Attributes attributes, HostWindow*, GraphicsContext3D::RenderStyle renderStyle)
+     : m_currentWidth(0)
+     , m_currentHeight(0)
+-    , m_compiler(isGLES2Compliant() ? SH_ESSL_OUTPUT : SH_GLSL_OUTPUT)
++    , m_compiler(isGLES2Compliant() ? SH_ESSL_OUTPUT : SH_GLSL_COMPATIBILITY_OUTPUT)
+     , m_attrs(attributes)
+     , m_texture(0)
+     , m_fbo(0)
+diff --git a/Source/WebCore/platform/graphics/efl/GraphicsContext3DEfl.cpp b/Source/WebCore/platform/graphics/efl/GraphicsContext3DEfl.cpp
+index ea25e43..a28c55f 100644
+--- a/Source/WebCore/platform/graphics/efl/GraphicsContext3DEfl.cpp
++++ b/Source/WebCore/platform/graphics/efl/GraphicsContext3DEfl.cpp
+@@ -41,7 +41,7 @@ PassRefPtr<GraphicsContext3D> GraphicsContext3D::create(GraphicsContext3D::Attri
+ GraphicsContext3D::GraphicsContext3D(GraphicsContext3D::Attributes attrs, HostWindow* hostWindow, GraphicsContext3D::RenderStyle renderStyle)
+     : m_currentWidth(0)
+     , m_currentHeight(0)
+-    , m_compiler(isGLES2Compliant() ? SH_ESSL_OUTPUT : SH_GLSL_OUTPUT)
++    , m_compiler(isGLES2Compliant() ? SH_ESSL_OUTPUT : SH_GLSL_COMPATIBILITY_OUTPUT)
+     , m_attrs(attrs)
+     , m_renderStyle(renderStyle)
+     , m_texture(0)
 diff --git a/Source/WebCore/platform/graphics/opengl/Extensions3DOpenGLCommon.cpp b/Source/WebCore/platform/graphics/opengl/Extensions3DOpenGLCommon.cpp
-index 29a13c8..9069957 100644
+index 29a13c8..11f88f1 100644
 --- a/Source/WebCore/platform/graphics/opengl/Extensions3DOpenGLCommon.cpp
 +++ b/Source/WebCore/platform/graphics/opengl/Extensions3DOpenGLCommon.cpp
-@@ -172,7 +172,7 @@ String Extensions3DOpenGLCommon::getTranslatedShaderSourceANGLE(Platform3DObject
+@@ -172,10 +172,10 @@ String Extensions3DOpenGLCommon::getTranslatedShaderSourceANGLE(Platform3DObject
  
      String translatedShaderSource;
      String shaderInfoLog;
@@ -235,7 +272,24 @@ index 29a13c8..9069957 100644
 +    int extraCompileOptions = SH_CLAMP_INDIRECT_ARRAY_BOUNDS;
  
      if (m_requiresBuiltInFunctionEmulation)
-         extraCompileOptions |= SH_EMULATE_BUILT_IN_FUNCTIONS;
+-        extraCompileOptions |= SH_EMULATE_BUILT_IN_FUNCTIONS;
++        extraCompileOptions |= SH_EMULATE_ABS_INT_FUNCTION;
+ 
+     Vector<ANGLEShaderSymbol> symbols;
+     bool isValid = compiler.compileShaderSource(entry.source.utf8().data(), shaderType, translatedShaderSource, shaderInfoLog, symbols, extraCompileOptions);
+diff --git a/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp b/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp
+index 43b546d..73b61e2 100644
+--- a/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp
++++ b/Source/WebCore/platform/graphics/qt/GraphicsContext3DQt.cpp
+@@ -428,7 +428,7 @@ GraphicsContext3D::GraphicsContext3D(GraphicsContext3D::Attributes attrs, HostWi
+     , m_multisampleColorBuffer(0)
+     , m_functions(0)
+     , m_private(adoptPtr(new GraphicsContext3DPrivate(this, hostWindow, renderStyle)))
+-    , m_compiler(isGLES2Compliant() ? SH_ESSL_OUTPUT : SH_GLSL_OUTPUT)
++    , m_compiler(isGLES2Compliant() ? SH_ESSL_OUTPUT : SH_GLSL_COMPATIBILITY_OUTPUT)
+ {
+     if (!m_private->m_surface || !m_private->m_platformContext) {
+         LOG_ERROR("GraphicsContext3D: GL context creation failed.");
 -- 
 2.10.2
 

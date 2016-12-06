@@ -1,7 +1,7 @@
-From abf76e8a2f6174832420bbbd981947c928a67e13 Mon Sep 17 00:00:00 2001
+From 516214945fcf3aa7a04845eafa5f9fa9531024b3 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:08:26 +0200
-Subject: [PATCH 06/11] Prevent symbols not being exported in Qt5WebKit.dll
+Subject: [PATCH 4/9] Prevent symbols not being exported in Qt5WebKit.dll
 
 WebKit svn commit 136242 implemented a split into QtWebKit and QtWebKitWidgets.
 Due to this change a static library named WebKit1.a is created first.

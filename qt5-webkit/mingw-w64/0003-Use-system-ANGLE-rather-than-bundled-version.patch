@@ -1,7 +1,7 @@
 From b22f0368b4d4d167fcc342bffb602c9c41578233 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 5 Nov 2016 12:14:01 +0100
-Subject: [PATCH 03/11] Use system ANGLE rather than bundled version
+Subject: [PATCH 3/9] Use system ANGLE rather than bundled version
 
 ---
  Source/api.pri                                  | 1 -

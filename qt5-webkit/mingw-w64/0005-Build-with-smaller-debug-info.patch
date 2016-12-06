@@ -1,7 +1,7 @@
-From 421b2295a77918f111814e34ca54ba983dd1a87d Mon Sep 17 00:00:00 2001
+From 24d4206f6cd79ae3f6ed70897fbf327aed0730bb Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:13:44 +0200
-Subject: [PATCH 07/11] Build with smaller debug info
+Subject: [PATCH 5/9] Build with smaller debug info
 
 Avoid exceeding 4 GB size limit
 ---

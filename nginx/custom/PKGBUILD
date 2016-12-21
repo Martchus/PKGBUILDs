@@ -41,15 +41,15 @@ _accesskey_ver="2.0.3"
 _accesskey_dirname="ngx_accesskey"
 
 pkgname=nginx-custom
-pkgver=1.10.1
-pkgrel=2
-pkgdesc="Lightweight HTTP server and IMAP/POP3 proxy server (with standard, additional and 3rd party modules)"
+pkgver=1.10.2
+pkgrel=1
+pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server (with standard, additional and 3rd party modules)'
 arch=('i686' 'x86_64')
 
 depends=('pcre' 'zlib' 'openssl' 'pam' 'geoip' 'geoip-database' 'gd' 'libxslt')
 makedepends=('libxslt' 'gd' 'git' 'hardening-wrapper')
 
-url="https://nginx.org"
+url='https://nginx.org'
 license=('custom')
 conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel' 'nginx-custom-dev' 'nginx-full')
 provides=('nginx')
@@ -67,31 +67,32 @@ _user=http
 _group=http
 
 source=("nginx.sh"
-    "nginx.conf"
-    "nginx.logrotate"
-    "nginx.service"
-    "http://nginx.org/download/nginx-$pkgver.tar.gz"
-    "${_fancyindex_dirname}.tar.gz::https://github.com/aperezdc/ngx-fancyindex/archive/${_fancyindex_ver}.tar.gz"
-    "${_cachepurge_dirname}.tar.gz::http://labs.frickle.com/files/ngx_cache_purge-${_cachepurge_ver}.tar.gz"
-    "${_slowfscache_dirname}.tar.gz::http://labs.frickle.com/files/ngx_slowfs_cache-${_slowfscache_ver}.tar.gz"
-    "${_uploadprogress_dirname}.source::https://github.com/masterzen/nginx-upload-progress-module/tarball/${_uploadprogress_ver}"
-    "${_headersmore_dirname}.source::https://github.com/agentzh/headers-more-nginx-module/tarball/${_headersmore_ver}"
-    "${_echo_dirname}.source::https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
-    "${_upstreamfair_dirname}.source::https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
-    "${_authpam_dirname}.tar.gz::https://github.com/stogh/ngx_http_auth_pam_module/archive/v${_authpam_ver}.tar.gz"
-    "${_pagespeed_dirname}.zip::https://github.com/pagespeed/ngx_pagespeed/archive/v${_pagespeed_ver}-beta.zip"
-    "psol.tar.gz::https://dl.google.com/dl/page-speed/psol/${_pagespeed_ver}.tar.gz"
-    "${_rtmp_dirname}.zip::https://github.com/arut/nginx-rtmp-module/archive/${_rtmp_ver}.zip"
-    "${_davext_dirname}.tar.gz::https://github.com/arut/nginx-dav-ext-module/archive/${_davext_ver}.tar.gz"
-    "${_naxsi_dirname}.tar.gz::https://github.com/nbs-system/naxsi/archive/${_naxsi_ver}.tar.gz"
-    "${_accesskey_dirname}.tar.gz::https://github.com/Martchus/nginx-accesskey/archive/v${_accesskey_ver}.tar.gz"
+        "nginx.conf"
+        "nginx.logrotate"
+        "nginx.service"
+        "https://nginx.org/download/nginx-$pkgver.tar.gz"{,.asc}
+        "${_fancyindex_dirname}.tar.gz::https://github.com/aperezdc/ngx-fancyindex/archive/${_fancyindex_ver}.tar.gz"
+        "${_cachepurge_dirname}.tar.gz::http://labs.frickle.com/files/ngx_cache_purge-${_cachepurge_ver}.tar.gz"
+        "${_slowfscache_dirname}.tar.gz::http://labs.frickle.com/files/ngx_slowfs_cache-${_slowfscache_ver}.tar.gz"
+        "${_uploadprogress_dirname}.source::https://github.com/masterzen/nginx-upload-progress-module/tarball/${_uploadprogress_ver}"
+        "${_headersmore_dirname}.source::https://github.com/agentzh/headers-more-nginx-module/tarball/${_headersmore_ver}"
+        "${_echo_dirname}.source::https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
+        "${_upstreamfair_dirname}.source::https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
+        "${_authpam_dirname}.tar.gz::https://github.com/stogh/ngx_http_auth_pam_module/archive/v${_authpam_ver}.tar.gz"
+        "${_pagespeed_dirname}.zip::https://github.com/pagespeed/ngx_pagespeed/archive/v${_pagespeed_ver}-beta.zip"
+        "psol.tar.gz::https://dl.google.com/dl/page-speed/psol/${_pagespeed_ver}.tar.gz"
+        "${_rtmp_dirname}.zip::https://github.com/arut/nginx-rtmp-module/archive/${_rtmp_ver}.zip"
+        "${_davext_dirname}.tar.gz::https://github.com/arut/nginx-dav-ext-module/archive/${_davext_ver}.tar.gz"
+        "${_naxsi_dirname}.tar.gz::https://github.com/nbs-system/naxsi/archive/${_naxsi_ver}.tar.gz"
+        "${_accesskey_dirname}.tar.gz::https://github.com/Martchus/nginx-accesskey/archive/v${_accesskey_ver}.tar.gz"
 )
-
-md5sums=('088292d9caf6059ef328aa7dda332e44'
+validpgpkeys=('B0F4253373F8F6F510D42178520A9993A1C052F8') # Maxim Dounin <mdounin@mdounin.ru>
+md5sums=('d56559ed5e8cc0b1c7adbe33f2300c4c'
          '845cab784b50f1666bbf89d7435ac7af'
-         '79031b58828462dec53a9faed9ddb36a'
+         'b50a547d387c4af8e9b89a5e79d22fed'
          '6696dc228a567506bca3096b5197c9db'
-         'c184c873d2798c5ba92be95ed1209c02'
+         'e8f5f4beed041e63eb97f9f4f55f3085'
+         'SKIP'
          '76ac525432d459a4615a3a8638195ba9'
          '3d4ec04bbc16c3b555fa20392c1119d1'
          '68a1af12d5c1218fb2b3e05ed7ff6f0c'
@@ -172,6 +173,7 @@ build() {
     --with-http_mp4_module \
     --with-http_random_index_module \
     --with-http_secure_link_module \
+    --with-http_slice_module \
     --with-http_perl_module \
     --with-http_degradation_module \
     --with-http_geoip_module \

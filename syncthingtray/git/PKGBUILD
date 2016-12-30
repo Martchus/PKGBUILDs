@@ -35,7 +35,8 @@ build() {
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="/usr" \
-    -DWEBVIEW_PROVIDER="${_webview_provider}"
+    -DWEBVIEW_PROVIDER="${_webview_provider}" \
+    -DSYSTEMD_SUPPORT=ON
   make
 }
 

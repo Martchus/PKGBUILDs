@@ -6,9 +6,9 @@
 pkgname=mingw-w64-freetype2
 pkgver=2.7.1
 pkgrel=1
-pkgdesc="TrueType font rendering library (mingw-w64)"
+pkgdesc='TrueType font rendering library (mingw-w64)'
 arch=('any')
-url="http://www.freetype.org/"
+url='http://www.freetype.org/'
 license=('GPL')
 depends=(mingw-w64-crt mingw-w64-zlib mingw-w64-bzip2)
 makedepends=(mingw-w64-gcc mingw-w64-configure)

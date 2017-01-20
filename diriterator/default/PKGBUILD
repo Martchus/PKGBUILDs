@@ -4,22 +4,20 @@
 # you also find the URL of a binary repository.
 
 pkgname=diriterator
-pkgver=1.0.3
-pkgrel=2
+pkgver=1.0.4
+pkgrel=1
 pkgdesc='Runs a script for each file in a directory hierarchy using GNU parallel.'
 arch=('any')
 license=('GPL')
-groups=
-provides=
+groups=()
+provides=()
 depends=('parallel')
-makedepends=
-conflicts=
-replaces=
-backup=
+makedepends=()
+conflicts=()
+replaces=()
 install=
 source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
-noextract=
-md5sums=('SKIP')
+sha256sums=('95edb6da1226e69d643d9be46cdc6d33d1c721e40de15ea5faade22faf3c8ec9')
 
 package() {
   install -Dm755 "${srcdir}/${PROJECT_DIR_NAME:-$pkgname-$pkgver}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"

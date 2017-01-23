@@ -3,7 +3,7 @@
 # Syncs the different variants of mingw-w64-qt5-base
 
 set -e # abort on first error
-master="$1"
+master="${1:-mingw-w64}"
 
 if [[ ! $master ]]; then
   # no default here to prevent unintented use

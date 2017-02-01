@@ -7,9 +7,9 @@
 _webview_provider=webkit
 
 _reponame=syncthingtray
-pkgname=syncthingtray
+pkgname=syncthingtray-git
 _name=${pkgname%-git}
-pkgver=0.0.1
+pkgver=0.4.1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Tray application for Syncthing'

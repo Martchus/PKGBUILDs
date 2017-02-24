@@ -1,0 +1,25 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+pkgname=('git-codereview')
+# same as go version?
+pkgver=1.8
+pkgrel=1
+arch=('x86_64' 'i686')
+url='http://golang.org/'
+license=('BSD')
+makedepends=('git' 'go')
+options=('!strip' 'staticlibs')
+source=()
+md5sums=()
+
+build() {
+  export GOROOT=/usr/lib/go
+  go get golang.org/x/review/git-codereview
+  go build golang.org/x/review/git-codereview
+}
+
+package() {
+  install -Dm755 "${srcdir}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+}
+
+# vim:set ts=2 sw=2 et:

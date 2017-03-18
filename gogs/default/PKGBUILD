@@ -1,0 +1,84 @@
+# Maintainer: Thomas Fanninger <thomas@fanninger.at>
+# Contributor: Thomas Laroche <tho.laroche@gmail.com>
+# Contributor: Martchus <martchus@gmx.net>>
+
+pkgname=gogs
+_pkgname=${pkgname}
+pkgver=0.10.18
+pkgrel=1
+epoch=1
+pkgdesc='Self Hosted Git Service written in Go'
+arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+url='http://gogs.io/'
+license=('MIT')
+provides=('gogs')
+depends=('git>=1.7.1')
+optdepends=('sqlite: SQLite support'
+            'mariadb: MariaDB support'
+            'postgresql: PostgreSQL support'
+            'redis: Redis support'
+            'memcached: MemCached support'
+            'openssh: GIT over SSH support')
+makedepends=('go>=1.3' 'glide>=0.10')
+conflicts=('gogs-bin' 'gogs-git' 'gogs-git-dev')
+options=('!strip' '!emptydirs')
+backup=('etc/gogs/app.ini')
+install=gogs.install
+_gourl=github.com/gogits/$_pkgname
+source=("$_pkgname-$pkgver::https://${_gourl}/archive/v${pkgver}.tar.gz"
+        '0001-Adjust-config-for-Arch-Linux-package.patch'
+        '0002-Adjust-service-file-for-Arch-Linux-package.patch')
+sha512sums=('aedf45900c85d260466e3db906e0320454c0a987198dc3101400d0d73d11b074d19594d655af8ac848ac14d27fa2a9adbfe09b6f055b28d72bb6d3e2f88b4cec'
+            'd15c2c0faac4fc378c1c041ca3e4662909ce083d0eae519e7ddfce567ce8329283ef9eff0c4a55a4e9e25df594d020938d3fff9bcc13abcf9d2762ffa2893c9e'
+            '6bbfc939959b56a64da6783922bec3239a010d77f26bad18415ce17db7095e9d3ef59d5e2ff1fb70e31f1f42464e39e2aa52193ba1f534613d3ebad578bfb914')
+_goroot='/usr/lib/go'
+
+prepare() {
+  export GOROOT="$_goroot"
+
+  msg2 'Prepare GO build enviroment'
+  rm -rf build
+  mkdir -p build/go
+  cd build/go
+
+  for f in "$GOROOT/"*; do
+    ln -s "$f"
+  done
+
+  rm pkg && mkdir pkg && cd pkg
+
+  for f in "$GOROOT/pkg/"*; do
+    ln -s "$f"
+  done
+
+  export GOROOT="$srcdir/build/go"
+  export GOPATH="$srcdir/build"
+
+  mkdir -p "$GOPATH/src/github.com/gogits"
+  mv "$srcdir/$_pkgname-${pkgver}" "$GOPATH/src/${_gourl}"
+
+  msg2 'Patch config and service file'
+  cd "$GOPATH/src/${_gourl}"
+  patch -Np1 -i "$srcdir/0001-Adjust-config-for-Arch-Linux-package.patch"
+  patch -Np1 -i "$srcdir/0002-Adjust-service-file-for-Arch-Linux-package.patch"
+}
+
+build() {
+  cd "$GOPATH/src/${_gourl}"
+
+  go fix
+  go build -x -tags='sqlite pam cert'
+}
+
+package() {
+  install -Dm0755 "$srcdir/build/src/${_gourl}/$_pkgname" "$pkgdir/usr/bin/$_pkgname"
+
+  mkdir -p "$pkgdir/usr/share/${_pkgname}"
+  cp -r "$srcdir/build/src/${_gourl}/conf" "$pkgdir/usr/share/${_pkgname}"
+  cp -r "$srcdir/build/src/${_gourl}/public" "$pkgdir/usr/share/${_pkgname}"
+  cp -r "$srcdir/build/src/${_gourl}/templates" "$pkgdir/usr/share/${_pkgname}"
+
+  install -Dm0644 "$pkgdir/usr/share/$_pkgname/conf/app.ini" "$pkgdir/etc/$_pkgname/app.ini"
+  install -Dm0644 "$srcdir/build/src/${_gourl}/scripts/systemd/gogs.service" "$pkgdir/usr/lib/systemd/system/gogs.service"
+  install -Dm0644 "$srcdir/build/src/${_gourl}/LICENSE" "$pkgdir/usr/share/licenses/$_pkgname"
+}

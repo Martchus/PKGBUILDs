@@ -11,7 +11,7 @@ pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
 license=('GPL')
-depends=('c++utilities' 'qt5-base')
+depends=('c++utilities-git' 'qt5-base')
 makedepends=('cmake' 'git' 'qt5-tools')
 provides=("${_name}")
 conflicts=("${_name}")
@@ -20,7 +20,7 @@ source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/${pkgname}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 

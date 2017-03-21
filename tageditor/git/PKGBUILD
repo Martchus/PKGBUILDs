@@ -17,7 +17,7 @@ pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska'
 license=('GPL')
-depends=('qtutilities' 'tagparser' 'desktop-file-utils' 'xdg-utils')
+depends=('qtutilities-git' 'tagparser-git' 'desktop-file-utils' 'xdg-utils')
 [[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && depends+=('qt5-base')
 [[ $_webview_provider == webkit ]] && depends+=('qt5-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('qt5-webengine')
@@ -31,7 +31,7 @@ source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/${pkgname}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 

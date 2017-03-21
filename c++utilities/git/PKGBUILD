@@ -21,7 +21,7 @@ source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/${pkgname}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
@@ -32,7 +32,7 @@ build() {
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   make check
 }
 

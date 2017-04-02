@@ -6,7 +6,7 @@
 _reponame=passwordmanager
 pkgname=passwordmanager-git
 _name=${pkgname%-git}
-pkgver=36.90d37ae
+pkgver=91.1193b9acec
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
@@ -16,7 +16,7 @@ makedepends=('cmake' 'qt5-tools' 'git')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

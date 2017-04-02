@@ -6,7 +6,7 @@
 _reponame=qtutilities
 pkgname=qtutilities-git
 _name=${pkgname%-git}
-pkgver=35.721e79d
+pkgver=163.6078f1221a
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
@@ -16,7 +16,7 @@ makedepends=('cmake' 'git' 'qt5-tools')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

@@ -12,7 +12,7 @@ _js_provider=qml
 _reponame=tageditor
 pkgname=tageditor-git
 _name=${pkgname%-git}
-pkgver=66.77a0bc2
+pkgver=289.900eb45ef8
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska'
@@ -27,7 +27,7 @@ makedepends=('cmake' 'qt5-tools' 'git')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

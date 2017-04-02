@@ -6,7 +6,7 @@
 _reponame=tagparser
 pkgname=tagparser-git
 _name=${pkgname%-git}
-pkgver=59.8cc75e1
+pkgver=220.4a37d9b58f
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska tags'
@@ -16,7 +16,7 @@ makedepends=('cmake' 'git')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

@@ -6,18 +6,19 @@
 _reponame=passwordfile
 pkgname=passwordfile-git
 _name=${pkgname%-git}
-pkgver=20.bcefbb6
+pkgver=45.2b28fbcc66
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
 license=('GPL')
 depends=('c++utilities' 'openssl')
 makedepends=('cmake' 'git')
+checkdepends=('cppunit')
 provides=("${_name}")
 conflicts=("${_name}")
 install=
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::git://github.com/Martchus/${_reponame}.git")
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

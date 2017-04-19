@@ -5,7 +5,7 @@
 
 _name=libfilezilla
 pkgname=mingw-w64-libfilezilla
-pkgver=0.6.1
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="Library used by FileZilla (mingw-w64)"
 arch=('any')
@@ -15,8 +15,8 @@ depends=('mingw-w64-crt')
 makedepends=('mingw-w64-configure')
 options=(staticlibs !strip !buildflags)
 install=
-source=("http://downloads.sourceforge.net/project/filezilla/libfilezilla/${pkgver}/${_name}-${pkgver}.tar.bz2")
-md5sums=('3d4728ce8949490b09198443e955c8b6')
+source=("http://download.filezilla-project.org/libfilezilla/libfilezilla-$pkgver.tar.bz2")
+md5sums=('4676304b048869ab6ac6ae09a1ab29f9')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

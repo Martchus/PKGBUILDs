@@ -10,24 +10,18 @@
 
 _name=geany
 pkgname=mingw-w64-geany
-pkgver=1.27.9681888
+pkgver=1.30
 pkgrel=1
 pkgdesc='Fast and lightweight IDE (mingw-w64)'
 arch=('any')
 url='https://www.geany.org/'
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-gtk2')
-makedepends=('perl-xml-parser' 'setconf' 'intltool' 'mingw-w64-gcc' 'mingw-w64-configure' 'mingw-w64-binutils' 'git')
+makedepends=('perl-xml-parser' 'setconf' 'intltool' 'mingw-w64-gcc' 'mingw-w64-configure' 'mingw-w64-binutils')
 optdepends=('mingw-w64-geany-plugins: various extra features'
             'mingw-w64-python2')
-
-#source=("https://download.geany.org/${_name}-$pkgver.tar.bz2")
-#sha256sums=('846ff699a5944c5c3c068ae0199d4c13946a668bfc6d03f8c79765667c20cadf')
-
-# current stable version doesn't build so I'm using a more recent commit where the issue is fixed
-source=(${_name}-$pkgver::"git+https://github.com/geany/geany.git#commit=9681888")
-sha256sums=('SKIP')
-
+source=("https://download.geany.org/${_name}-$pkgver.tar.bz2")
+sha256sums=('b2dec920c77bc3e88d5f7b0f1dbe4f5200f36df3b346d1aba39323bc30afae6d')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"

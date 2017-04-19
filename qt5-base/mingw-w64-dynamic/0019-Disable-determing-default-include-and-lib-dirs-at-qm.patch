@@ -22,5 +22,5 @@ index 3f266dd2a4..258d374ee0 100644
              cmd_prefix = "LC_ALL=C"
              cmd_suffix = "</dev/null >/dev/null"
 -- 
-2.12.1
+2.12.2
 

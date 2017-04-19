@@ -21,5 +21,5 @@ index d51f9e98a4..2242b7c4f1 100644
  } else {
      CONFIG += no_core_dep
 -- 
-2.12.1
+2.12.2
 

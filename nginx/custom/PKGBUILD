@@ -1,5 +1,5 @@
-# Maintainer: Alexander Kuznecov <alexander@kuznetcov.me>
-# Contributor: Martchus <martchus@gmx.net>
+# Maintainer: Martchus <martchus@gmx.net>
+# Contributor: Alexander Kuznecov <alexander@kuznetcov.me>
 
 _pkgname="nginx"
 _user="http"

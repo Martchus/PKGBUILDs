@@ -1,4 +1,4 @@
-From aac58a3b3036bef496937b84668424ea1c3b761a Mon Sep 17 00:00:00 2001
+From fc69adfb98d736b6df628a12142c224c4b6730e2 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 19 Mar 2017 18:04:48 +0100
 Subject: [PATCH 2/2] Adjust service file for Arch Linux package
@@ -30,5 +30,5 @@ index 9f105bf8..99ca11e0 100644
  [Install]
  WantedBy=multi-user.target
 -- 
-2.12.0
+2.12.2
 

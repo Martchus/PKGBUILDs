@@ -5,7 +5,7 @@
 pkgname=gogs
 _pkgname=${pkgname}
 pkgver=0.11.4
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Self Hosted Git Service written in Go'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -29,8 +29,8 @@ source=("$_pkgname-$pkgver::https://${_gourl}/archive/v${pkgver}.tar.gz"
         '0001-Adjust-config-for-Arch-Linux-package.patch'
         '0002-Adjust-service-file-for-Arch-Linux-package.patch')
 sha512sums=('e262cdd2409dd846a1473993c222a7b9692c694ac9620a5dcd576a17714bfee76212935dcfbf0ad83b7b95623c075f1622613524f347d24d7530732e966c733f'
-            'eb888ebc4b85671eb06ba46fb15b53d96fdc27f5429258fed7d841104b358a7c51b465c22bde551b4627c48028822d39292e6933d8f68a5e0483efab16ad2265'
-            'd3ad394804fa801f28c324344ca2d99f92c3b547eb5326c48897aa8d80c6d92468ab2a528e721b7129db4836e48c58b2695f61555f7d134abdde5ac53053ca6b')
+            '1df73da8962605369bbefcf6ad2b2cf1594b628b182f9ef591089da9324d134b352a0cd3999748bf52b42a260421f08f128a8b61c9f89f70ef11c6c3bc92786c'
+            '9a869febcdd74e7cb81c4fb5f23d23e6ec70c94e88849fefe6e9c34902de380e5dd3aabced302a5c6b1eab061252b046aa3878caa69893a6240ae14984a0341c')
 _goroot='/usr/lib/go'
 
 prepare() {

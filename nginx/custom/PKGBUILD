@@ -37,12 +37,12 @@ _davext_ver="v0.0.3"
 _davext_dirname="ngx_davext"
 _naxsi_ver="0.55.3"
 _naxsi_dirname="ngx_naxsi"
-#_accesskey_ver="2.0.3"
-#_accesskey_dirname="ngx_accesskey"
+_accesskey_ver="2.0.4"
+_accesskey_dirname="ngx_accesskey"
 
 pkgname=nginx-custom
 pkgver=1.12.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Lightweight HTTP server and IMAP/POP3 proxy server (with standard, additional and 3rd party modules)'
 arch=('i686' 'x86_64')
 
@@ -84,7 +84,7 @@ source=("nginx.sh"
         "${_rtmp_dirname}.zip::https://github.com/arut/nginx-rtmp-module/archive/${_rtmp_ver}.zip"
         "${_davext_dirname}.tar.gz::https://github.com/arut/nginx-dav-ext-module/archive/${_davext_ver}.tar.gz"
         "${_naxsi_dirname}.tar.gz::https://github.com/nbs-system/naxsi/archive/${_naxsi_ver}.tar.gz"
-#        "${_accesskey_dirname}.tar.gz::https://github.com/Martchus/nginx-accesskey/archive/v${_accesskey_ver}.tar.gz"
+        "${_accesskey_dirname}.tar.gz::https://github.com/Martchus/nginx-accesskey/archive/v${_accesskey_ver}.tar.gz"
 )
 validpgpkeys=('B0F4253373F8F6F510D42178520A9993A1C052F8') # Maxim Dounin <mdounin@mdounin.ru>
 md5sums=('d56559ed5e8cc0b1c7adbe33f2300c4c'
@@ -106,12 +106,9 @@ md5sums=('d56559ed5e8cc0b1c7adbe33f2300c4c'
          'b471efc97b9602c5b4087756c9295496'
          '2cb502dbda335be4ebd5fed0b3182bae'
          'b50f6d41aa017cbfcab577ed70d7b3b7'
-#         '9d5dc36ffe87cee59dfa8d4931fb528e'
-         )
+         '838abf762055e489afd98940ef3bcba0')
 
-build() {
-  local _src_dir="${srcdir}/${_pkgname}-${pkgver}"
-
+prepare() {
   mv ngx-fancyindex-* ${_fancyindex_dirname}
   mv ngx_cache_purge-* ${_cachepurge_dirname}
   mv ngx_slowfs_cache-* ${_slowfscache_dirname}
@@ -122,11 +119,14 @@ build() {
   mv ngx_http_auth_pam_module-${_authpam_ver} ${_authpam_dirname}
   mv ngx_pagespeed-* ${_pagespeed_dirname}
   mv psol ${_pagespeed_dirname}/
-#  mv nginx-accesskey* ${_accesskey_dirname}
+  mv nginx-accesskey* ${_accesskey_dirname}
   mv nginx-rtmp-module* ${_rtmp_dirname}
   mv nginx-dav-ext-module* ${_davext_dirname}
   mv naxsi* ${_naxsi_dirname}
+}
 
+build() {
+  local _src_dir="${srcdir}/${_pkgname}-${pkgver}"
   cd $_src_dir
 
   ./configure \
@@ -144,6 +144,7 @@ build() {
     --error-log-path=${_log_path}/error.log \
     --user=${_user} \
     --group=${_group} \
+    --with-compat \
     --with-debug \
     --with-ipv6 \
     --with-pcre-jit \
@@ -189,6 +190,7 @@ build() {
     --add-module=../${_fancyindex_dirname} \
     --add-module=../${_authpam_dirname} \
     --add-module=../${_pagespeed_dirname} \
+    --add-module=../${_accesskey_dirname} \
     --add-module=../${_rtmp_dirname} \
     --add-module=../${_davext_dirname}
   make

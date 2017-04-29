@@ -1,0 +1,33 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=arm-none-eabi-cmake
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc='CMake wrapper for arm-none-eabi'
+depends=('cmake' 'arm-none-eabi-gcc')
+license=('GPL')
+url='https://github.com/Martchus/PKGBUILDs'
+source=("arm-none-eabi-cmake.sh"
+        "toolchain.cmake")
+md5sums=('SKIP' 'SKIP')
+_architectures="arm-none-eabi"
+
+build() {
+  for _arch in ${_architectures}; do
+    sed "s|@TRIPLE@|${_arch}|g" toolchain.cmake > toolchain-${_arch}.cmake
+    sed "s|@TRIPLE@|${_arch}|g" arm-none-eabi-cmake.sh > ${_arch}-cmake
+  done
+}
+
+package() {
+  install -d "${pkgdir}"/usr/bin
+  install -d "${pkgdir}"/usr/share/arm-none-eabi
+  for _arch in ${_architectures}; do
+    install -m 644 toolchain-${_arch}.cmake "${pkgdir}"/usr/share/arm-none-eabi/
+    install -m 755 ${_arch}-cmake "${pkgdir}"/usr/bin/
+  done
+}

@@ -15,7 +15,7 @@ _name=${pkgname%-git}
 pkgver=289.900eb45ef8
 pkgrel=1
 arch=('i686' 'x86_64')
-pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus and Matroska'
+pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska'
 license=('GPL')
 depends=('qtutilities-git' 'tagparser-git' 'desktop-file-utils' 'xdg-utils')
 [[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && depends+=('qt5-base')

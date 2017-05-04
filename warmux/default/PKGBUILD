@@ -8,7 +8,7 @@
 
 pkgname=warmux
 pkgver=11.04.1
-pkgrel=8.1
+pkgrel=8.2
 pkgdesc="Clone of turn-based artillery games like Scorched Earth or Worms (formerly known as Wormux)"
 arch=('i686' 'x86_64')
 url="http://gna.org/projects/warmux/"

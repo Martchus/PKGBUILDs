@@ -3,19 +3,28 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-pkgname=blackwidowcontrol
-pkgver=1.0.1
+pkgname=blackwidowcontrol-git
+_reponame=${pkgname%-git}
+pkgver=10.e793f18
 pkgrel=1
 pkgdesc='Python script to enable macro keys of the Razer BlackWidow keyboard under GNU/Linux'
-url='https://github.com/Martchus/blackwidowcontrol'
 arch=('any')
 license=('GPL')
 depends=('python-pyusb')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('d3fadf1fb4611528afd0bbe214e178821505cb5becbc784ed68727548a4c3355')
+makedepends=('git')
+conflicts=(${_reponame})
+provides=(${_reponame})
+url="https://github.com/Martchus/${_reponame}"
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
 
 package() {
-  local _srcdir="${srcdir}/${PROJECT_DIR_NAME:-$pkgname-$pkgver}"
+  local _srcdir="$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   install -Dm755 "${_srcdir}/blackwidowcontrol.py" "${pkgdir}/usr/bin/blackwidowcontrol"
   install -Dm644 "${_srcdir}/razer_blackwidow.rules" "${pkgdir}/etc/udev/rules.d/70-razer_blackwidow.rules"
 }

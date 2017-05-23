@@ -1,0 +1,74 @@
+pkgname=mingw-w64-gdk-pixbuf2
+pkgver=2.36.6
+pkgrel=1
+pkgdesc='An image loading library (mingw-w64)'
+arch=(any)
+url='https://wiki.gnome.org/Projects/GdkPixbuf'
+license=('LGPL')
+makedepends=(
+  'mingw-w64-gcc'
+  'mingw-w64-pkg-config'
+  'mingw-w64-configure'
+  'git'
+  'gtk-doc'
+  'gdk-pixbuf2')
+depends=(
+  'mingw-w64-crt'
+  'mingw-w64-glib2'
+  'mingw-w64-jasper'
+  'mingw-w64-libpng'
+  'mingw-w64-libjpeg-turbo'
+  'mingw-w64-libtiff')
+options=(!strip !buildflags staticlibs)
+_commit=d8ae54bc5e3e31d43acf410a6689be2d40567b03  # tags/2.36.6^0
+source=("git+https://git.gnome.org/browse/gdk-pixbuf#commit=$_commit")
+sha256sums=('SKIP')
+
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+pkgver() {
+  cd gdk-pixbuf
+  git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+  cd "${srcdir}/gdk-pixbuf"
+
+  # Jasper sometimes runs into this limit
+  sed -i 's/ifdef HAVE_SETRLIMIT/if 0/' tests/pixbuf-randomly-modified.c
+
+  # disable tests and docs
+  sed -i '/SUBDIRS/s/tests//' Makefile.am
+  sed -i '/SUBDIRS/s/docs//' Makefile.am
+
+  NOCONFIGURE=1 ./autogen.sh
+}
+
+build() {
+  cd "${srcdir}/gdk-pixbuf"
+  for _arch in ${_architectures}; do
+    mkdir -p "build-${_arch}"
+    cd "build-${_arch}"
+    ${_arch}-configure \
+      --enable-relocations \
+      --with-included-loaders=png \
+      --with-libjasper
+    sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+    sed -i -e '/gdk-pixbuf-thumbnailer.thumbnailer/s/$(top_builddir)\/gdk-pixbuf\/loaders.cache//g' thumbnailer/Makefile
+    sed -i -e 's/GDK_PIXBUF_PIXDATA=$(top_builddir)\/gdk-pixbuf/\/usr\/bin/g' thumbnailer/Makefile
+    make
+    cd ..
+  done
+}
+
+package() {
+  cd "${srcdir}/gdk-pixbuf"
+  for _arch in ${_architectures}; do
+    cd "build-${_arch}"
+    make DESTDIR="$pkgdir" install
+    find "$pkgdir/usr/${_arch}" -name '*.exe' | xargs -rtL1 ${_arch}-strip --strip-all
+    find "$pkgdir/usr/${_arch}" -name '*.dll' | xargs -rtL1 ${_arch}-strip --strip-unneeded
+    find "$pkgdir/usr/${_arch}" -name '*.a' -o -name '*.dll' | xargs -rtL1 ${_arch}-strip -g
+    cd ..
+  done
+}

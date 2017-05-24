@@ -36,6 +36,9 @@ optdepends=('mplayer: MPlayer backend'
             'ruby: scripting'
             'python: scripting')
 
+conflicts=($_name)
+provides=($_name)
+
 source=("git+https://github.com/maxrd2/${_name}.git")
 #source=("git+https://github.com/Martchus/${_name}.git")
 sha256sums=('SKIP')

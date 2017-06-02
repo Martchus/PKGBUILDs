@@ -1,0 +1,4 @@
+9f54c27c79347531e7a23ce94ef4757f  qtwebkit-examples-opensource-src-5.9.0.tar.xz
+18be83897f18f49584115427047ccf80  qtwebkit-examples-opensource-src-5.9.0.zip
+1fc0ed873cc9326b823a8a83126714f5  qtwebkit-opensource-src-5.9.0.tar.xz
+f294cd74d5e6acd1f8ee7c2619cba9ce  qtwebkit-opensource-src-5.9.0.zip

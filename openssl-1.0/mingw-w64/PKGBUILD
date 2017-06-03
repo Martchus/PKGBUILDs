@@ -7,7 +7,7 @@ pkgname=mingw-w64-openssl-1.0
 _ver=1.0.2l
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
-pkgrel=1
+pkgrel=2
 pkgdesc='The Open Source toolkit for Secure Sockets Layer and Transport Layer Security'
 arch=('any')
 depends=('mingw-w64-zlib')
@@ -71,9 +71,9 @@ package() {
 
     # Move some files around
     install -m755 -d "$pkgdir/usr/${_arch}/include/openssl-1.0"
-    install -m755 -d "$pkgdir/usr/${_arch}/bin/openssl-1.0"
+    #install -m755 -d "$pkgdir/usr/${_arch}/bin/openssl-1.0"
     mv "$pkgdir/usr/${_arch}/include/openssl" "$pkgdir/usr/${_arch}/include/openssl-1.0/"
-    mv "$pkgdir/usr/${_arch}/bin/"*.dll "$pkgdir/usr/${_arch}/bin/openssl-1.0"
+    #mv "$pkgdir/usr/${_arch}/bin/"*.dll "$pkgdir/usr/${_arch}/bin/openssl-1.0"
     mv "$pkgdir/usr/${_arch}/bin/openssl.exe" "$pkgdir/usr/${_arch}/bin/openssl-1.0.exe"
     rm -r "$pkgdir/usr/${_arch}/ssl/" "$pkgdir/usr/${_arch}/bin/c_rehash"
     install -m644 ms/applink.c "${pkgdir}/usr/${_arch}/include/openssl-1.0/"

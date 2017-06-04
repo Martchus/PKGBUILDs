@@ -6,7 +6,7 @@
 
 pkgname='mingw-w64-qca-qt5'
 pkgver=2.1.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Qt Cryptographic Architecture'
 arch=('any')
 url='https://userbase.kde.org/QCA'
@@ -32,9 +32,9 @@ build() {
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_TESTS=OFF \
       -DQCA_INSTALL_IN_QT_PREFIX=ON \
-      -DOPENSSL_INCLUDE_DIR=/usr/${_arch}/include \
-      -DOPENSSL_SSL_LIBRARY=/usr/${_arch}/lib/libssl.dll.a \
-      -DOPENSSL_CRYPTO_LIBRARY=/usr/${_arch}/lib/libcrypto.dll.a \
+      -DOPENSSL_INCLUDE_DIR=/usr/${_arch}/include/openssl-1.0 \
+      -DOPENSSL_SSL_LIBRARY=/usr/${_arch}/lib/openssl-1.0/libssl.dll.a \
+      -DOPENSSL_CRYPTO_LIBRARY=/usr/${_arch}/lib/openssl-1.0/libcrypto.dll.a \
       ../qca-$pkgver
     make
     popd

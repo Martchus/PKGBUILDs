@@ -2,17 +2,17 @@
 # Contributor: Thomas Fanninger <thomas@fanninger.at>
 # Contributor: Thomas Laroche <tho.laroche@gmail.com>
 
-_pkgname=gogs
+_pkgname=gitea
 _orga=go-${_pkgname}
-_gourl=github.com/gogits/$_pkgname
+_gourl=code.$_pkgname.io/$_pkgname
 
-pkgname=$_pkgname
-pkgver=0.11.19
+pkgname=${_pkgname}
+pkgver=1.1.2
 pkgrel=1
-epoch=1
+#epoch=
 pkgdesc='Self Hosted Git Service written in Go'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
-url='http://gogs.io/'
+url="https://$_pkgname.io"
 license=('MIT')
 depends=('git>=1.7.1')
 optdepends=('sqlite: SQLite support'
@@ -29,9 +29,9 @@ install=$_pkgname.install
 source=("$_pkgname-$pkgver::https://github.com/$_orga/$_pkgname/archive/v${pkgver}.tar.gz"
         '0001-Adjust-config-for-Arch-Linux-package.patch'
         '0002-Adjust-service-file-for-Arch-Linux-package.patch')
-sha512sums=('80339daefe9c4eb9e39af4ab90b6803e9d86648565c0f109a34c00aad9bd40e2edfc77d58e18ad1192ce2e8bc7322113a407e7a02c0116229e1cecf8e67fc8b5'
-            'a3632ed26abb634711c0c51defcf7288053845dfebcf27712de49319cfe80c5f7f7ef725c1a20413b1550a866f106818b5f2fd041c5b2a9158d77eae11897ef4'
-            'fbb75efd69740638cbb2ce2f0fde3710a466c1128c6afddfd54028b04bb69e7e1f983aba60bbba378c35a854ef1bc7d6fd066acf3846aa48d424784dc15beb4d')
+sha512sums=('ecad2e11cc01fd9c2b05b672e334c013d65824a111be25cbd3956196688c0d52e31875263e16fdae497e651d771539de7c9244cb01fbc522ef77a763315ecaca'
+            '2885691d8f35ecb72e3a1d5a52708209715b537a0afef1147f32d10c188b1bbb067fd3db7c034273a5499a46f9fbb3310004fcf67eda1797dd193eef5a81460b'
+            '5ea1d89809427fe395214c5dde88bdb4c4a62e2d19f9da7fa480a0a3cfaaaf2e97c906bd3dceb11676c9720896d72a73f48638411389fa1f07fcbc17e94e0545')
 _goroot='/usr/lib/go'
 
 prepare() {

@@ -55,8 +55,8 @@ prepare() {
   export GOROOT="$srcdir/build/go"
   export GOPATH="$srcdir/build"
 
-  mkdir -p "$GOPATH/src/$_gourl"
-  mv "$srcdir/$_pkgname-${pkgver}" "$GOPATH/src/${_gourl%/$_pkgname}"
+  mkdir -p "$GOPATH/src/${_gourl%/$_pkgname}"
+  mv "$srcdir/$_pkgname-${pkgver}" "$GOPATH/src/${_gourl}"
 
   msg2 'Patch config and service file'
   cd "$GOPATH/src/${_gourl}"
@@ -65,6 +65,8 @@ prepare() {
 }
 
 build() {
+  export GOROOT="$srcdir/build/go"
+  export GOPATH="$srcdir/build"
   cd "$GOPATH/src/${_gourl}"
 
   go fix

@@ -222,7 +222,6 @@ build() {
 
   for _arch in ${_architectures}; do
     echo "INCLUDEPATH += /usr/${_arch}/include/openssl-1.0" >> src/network/network.pro
-    export OPENSSL_LIBS='-L/usr/${_arch}/lib/openssl-1.0 -lssl -lcrypto'
 
     # Phonon is disabled for now because we lack the directx headers
     # FIXME: check whether this is still the case

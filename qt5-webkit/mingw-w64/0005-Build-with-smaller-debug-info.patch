@@ -1,4 +1,4 @@
-From 61bf0f4560c108b844d3807d10852efc5a2da47b Mon Sep 17 00:00:00 2001
+From 9363b27eaf146dba68ce7522dbb5ee39492916d2 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 25 Sep 2016 22:13:44 +0200
 Subject: [PATCH 5/9] Build with smaller debug info
@@ -106,5 +106,5 @@ index 3611524e6..f54b9cabf 100644
      $$SOURCE_DIR \
      $$SOURCE_DIR/Platform \
 -- 
-2.13.0
+2.13.2
 

@@ -9,7 +9,6 @@ pre_install() {
 }
 
 post_install(){
-  mkdir -p /var/log/gitea
   chown -R gitea:gitea /var/log/gitea
   chown -R gitea:gitea /var/lib/gitea
 

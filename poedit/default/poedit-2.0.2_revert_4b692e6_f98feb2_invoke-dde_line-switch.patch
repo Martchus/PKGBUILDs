@@ -1,0 +1,323 @@
+diff --git a/src/catalog.cpp b/src/catalog.cpp
+index dbc77ac97..fdc57bc6a 100644
+--- a/src/catalog.cpp
++++ b/src/catalog.cpp
+@@ -1365,19 +1365,13 @@ void Catalog::RemoveDeletedItems()
+ 
+ CatalogItemPtr Catalog::FindItemByLine(int lineno)
+ {
+-    int i = FindItemIndexByLine(lineno);
+-    return i == -1 ? CatalogItemPtr() : m_items[i];
+-}
+-
+-int Catalog::FindItemIndexByLine(int lineno)
+-{
+-    int last = -1;
++    CatalogItemPtr last;
+ 
+     for (auto& i: m_items)
+     {
+-        if (i->GetLineNumber() > lineno)
++        if ( i->GetLineNumber() > lineno )
+             return last;
+-        last++;
++        last = i;
+     }
+ 
+     return last;
+diff --git a/src/catalog.h b/src/catalog.h
+index 710a7e40f..494497dbd 100644
+--- a/src/catalog.h
++++ b/src/catalog.h
+@@ -709,9 +709,6 @@ class Catalog
+         /// Finds item by line number
+         CatalogItemPtr FindItemByLine(int lineno);
+ 
+-        /// Finds catalog index by line number
+-        int FindItemIndexByLine(int lineno);
+-
+         /// Sets the given item to have the given bookmark and returns the index
+         /// of the item that previously had this bookmark (or -1)
+         int SetBookmark(int id, Bookmark bookmark);
+diff --git a/src/edapp.cpp b/src/edapp.cpp
+index 2d08b8d93..f220c5b1f 100644
+--- a/src/edapp.cpp
++++ b/src/edapp.cpp
+@@ -148,27 +148,19 @@ private:
+             wxString payload;
+             if (data == "Activate")
+             {
+-                dispatch::on_main([=] {
+-                    m_app->OpenNewFile();
+-                });
++                m_app->OpenNewFile();
+                 return true;
+             }
+             if (data.StartsWith("OpenURI:", &payload))
+             {
+-                dispatch::on_main([=] {
+-                    m_app->HandleCustomURI(payload);
+-                });
++                m_app->HandleCustomURI(payload);
+                 return true;
+             }
+             if (data.StartsWith("OpenFile:", &payload))
+             {
+-                long lineno = 0;
+-                payload.BeforeFirst(':').ToLong(&lineno);
+                 wxArrayString a;
+-                a.push_back(payload.AfterFirst(':'));
+-                dispatch::on_main([=] {
+-                    m_app->OpenFiles(a, lineno);
+-                });
++                a.push_back(payload);
++                m_app->OpenFiles(a);
+                 return true;
+             }
+             return false;
+@@ -242,11 +234,11 @@ public:
+         Command("OpenURI:" + uri);
+     }
+ 
+-    void OpenFile(const wxString& filename, int lineno = 0)
++    void OpenFile(const wxString& filename)
+     {
+         wxFileName fn(filename);
+         fn.MakeAbsolute();
+-        Command(wxString::Format("OpenFile:%d:%s", lineno, fn.GetFullPath()));
++        Command("OpenFile:" + fn.GetFullPath());
+     }
+ 
+ private:
+@@ -320,7 +312,6 @@ bool PoeditApp::CheckForBetaUpdates() const
+ #ifndef __WXOSX__
+ static wxArrayString gs_filesToOpen;
+ #endif
+-static int gs_lineToOpen = 0;
+ 
+ extern void InitXmlResource();
+ 
+@@ -456,9 +447,8 @@ bool PoeditApp::OnInit()
+     //     passing files on command line
+     if (!gs_filesToOpen.empty())
+     {
+-        OpenFiles(gs_filesToOpen, gs_lineToOpen);
++        OpenFiles(gs_filesToOpen);
+         gs_filesToOpen.clear();
+-        gs_lineToOpen = 0;
+     }
+     else
+     {
+@@ -615,7 +605,7 @@ void PoeditApp::OpenNewFile()
+         PoeditFrame::CreateWelcome();
+ }
+ 
+-void PoeditApp::OpenFiles(const wxArrayString& names, int lineno)
++void PoeditApp::OpenFiles(const wxArrayString& names)
+ {
+     PoeditFrame *active = PoeditFrame::UnusedActiveWindow();
+ 
+@@ -638,12 +628,12 @@ void PoeditApp::OpenFiles(const wxArrayString& names, int lineno)
+ 
+         if (active)
+         {
+-            active->OpenFile(name, lineno);
++            active->OpenFile(name);
+             active = nullptr;
+         }
+         else
+         {
+-            PoeditFrame::Create(name, lineno);
++            PoeditFrame::Create(name);
+         }
+     }
+ }
+@@ -674,7 +664,6 @@ namespace
+ {
+ const char *CL_KEEP_TEMP_FILES = "keep-temp-files";
+ const char *CL_HANDLE_POEDIT_URI = "handle-poedit-uri";
+-const char *CL_LINE = "line";
+ }
+ 
+ void PoeditApp::OnInitCmdLine(wxCmdLineParser& parser)
+@@ -685,8 +674,6 @@ void PoeditApp::OnInitCmdLine(wxCmdLineParser& parser)
+                      _("don't delete temporary files (for debugging)"));
+     parser.AddLongOption(CL_HANDLE_POEDIT_URI,
+                      _("handle a poedit:// URI"), wxCMD_LINE_VAL_STRING);
+-    parser.AddLongOption(CL_LINE,
+-                     _("go to item at given line number"), wxCMD_LINE_VAL_NUMBER);
+     parser.AddParam("catalog.po", wxCMD_LINE_VAL_STRING,
+                     wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_PARAM_MULTIPLE);
+ }
+@@ -696,10 +683,6 @@ bool PoeditApp::OnCmdLineParsed(wxCmdLineParser& parser)
+     if (!wxApp::OnCmdLineParsed(parser))
+         return false;
+ 
+-    long lineno = 0;
+-    if (parser.Found(CL_LINE, &lineno))
+-        gs_lineToOpen = (int)lineno;
+-
+     if ( parser.Found(CL_KEEP_TEMP_FILES) )
+         TempDirectory::KeepFiles();
+ 
+@@ -727,7 +710,7 @@ bool PoeditApp::OnCmdLineParsed(wxCmdLineParser& parser)
+             else
+             {
+                 for (size_t i = 0; i < parser.GetParamCount(); i++)
+-                    client.OpenFile(parser.GetParam(i), (int)lineno);
++                    client.OpenFile(parser.GetParam(i));
+             }
+             return false; // terminate program
+         }
+@@ -1021,13 +1004,6 @@ void PoeditApp::OpenPoeditWeb(const wxString& path)
+ 
+ #ifdef __WXOSX__
+ 
+-void PoeditApp::MacOpenFiles(const wxArrayString& names)
+-{
+-    OpenFiles(names, gs_lineToOpen);
+-    gs_lineToOpen = 0;
+-}
+-
+-
+ static NSMenuItem *AddNativeItem(NSMenu *menu, int pos, const wxString&text, SEL ac, NSString *key)
+ {
+     NSString *str = str::to_NS(text);
+diff --git a/src/edapp.h b/src/edapp.h
+index 4e46452af..19e1cd176 100644
+--- a/src/edapp.h
++++ b/src/edapp.h
+@@ -61,7 +61,7 @@ class PoeditApp : public wxApp
+         bool CheckForBetaUpdates() const;
+ 
+         // opens files in new frame
+-        void OpenFiles(const wxArrayString& filenames, int lineno = 0);
++        void OpenFiles(const wxArrayString& filenames);
+         // opens empty frame or catalogs manager
+         void OpenNewFile();
+ 
+@@ -70,7 +70,7 @@ class PoeditApp : public wxApp
+ #endif
+ 
+ #ifdef __WXOSX__
+-        virtual void MacOpenFiles(const wxArrayString& names);
++        virtual void MacOpenFiles(const wxArrayString& names) { OpenFiles(names); }
+         virtual void MacNewFile() { OpenNewFile(); }
+         virtual void MacOpenURL(const wxString &url) { HandleCustomURI(url); }
+ #endif
+diff --git a/src/edframe.cpp b/src/edframe.cpp
+index 59a383d27..0478dc202 100644
+--- a/src/edframe.cpp
++++ b/src/edframe.cpp
+@@ -212,7 +212,7 @@ bool g_focusToText = false;
+     return false;
+ }
+ 
+-/*static*/ PoeditFrame *PoeditFrame::Create(const wxString& filename, int lineno)
++/*static*/ PoeditFrame *PoeditFrame::Create(const wxString& filename)
+ {
+     PoeditFrame *f = PoeditFrame::Find(filename);
+     if (f)
+@@ -245,9 +245,7 @@ bool g_focusToText = false;
+     }
+ 
+     f->Show(true);
+-
+-    // HACK: make sure this is called *after* the delayed call in PoeditListCtrl::CatalogChanged
+-    f->m_list->CallAfter([=]{ f->PlaceInitialFocus(lineno); });
++    f->PlaceInitialFocus();
+ 
+     return f;
+ }
+@@ -788,23 +786,15 @@ PoeditFrame::~PoeditFrame()
+ }
+ 
+ 
+-void PoeditFrame::PlaceInitialFocus(int lineno)
++void PoeditFrame::PlaceInitialFocus()
+ {
+     if (g_focusToText && m_editingArea)
+         m_editingArea->SetTextFocus();
+     else if (m_list)
+         m_list->SetFocus();
+ 
+-    if (m_catalog && m_list && m_list->GetItemCount() > 0)
+-    {
+-        int item = 0;
+-        if (lineno > 0)
+-        {
+-            item = m_catalog->FindItemIndexByLine(lineno);
+-            item = (item == -1) ? 0 : m_list->CatalogIndexToList(item);
+-        }
+-        m_list->SelectAndFocus(item);
+-    }
++    if (m_list && m_list->GetItemCount() > 0)
++        m_list->SelectAndFocus(0);
+ }
+ 
+ 
+@@ -926,20 +916,19 @@ void PoeditFrame::OnCloseCmd(wxCommandEvent&)
+ #endif
+ 
+ 
+-void PoeditFrame::OpenFile(const wxString& filename, int lineno)
++void PoeditFrame::OpenFile(const wxString& filename)
+ {
+     DoIfCanDiscardCurrentDoc([=]{
+-        DoOpenFile(filename, lineno);
++        DoOpenFile(filename);
+     });
+ }
+ 
+ 
+-void PoeditFrame::DoOpenFile(const wxString& filename, int lineno)
++void PoeditFrame::DoOpenFile(const wxString& filename)
+ {
+     ReadCatalog(filename);
+ 
+-    // HACK: make sure this is called *after* the delayed call in PoeditListCtrl::CatalogChanged
+-    m_list->CallAfter([=]{ PlaceInitialFocus(lineno); });
++    PlaceInitialFocus();
+ }
+ 
+ 
+diff --git a/src/edframe.h b/src/edframe.h
+index 1ed599851..0ba310192 100644
+--- a/src/edframe.h
++++ b/src/edframe.h
+@@ -69,7 +69,7 @@ class PoeditFrame : public PoeditFrameBase
+ 
+             \param catalog filename of catalog to open.
+          */
+-        static PoeditFrame *Create(const wxString& catalog, int lineno = 0);
++        static PoeditFrame *Create(const wxString& catalog);
+ 
+         /** Public constructor functions. Creates and shows frame
+             without catalog or other content.
+@@ -83,7 +83,7 @@ class PoeditFrame : public PoeditFrameBase
+ 
+         /// Opens given file in this frame. Asks user for permission first
+         /// if there's unsaved document.
+-        void OpenFile(const wxString& filename, int lineno = 0);
++        void OpenFile(const wxString& filename);
+ 
+         /** Returns pointer to existing instance of PoeditFrame that currently
+             exists and edits \a catalog. If no such frame exists, returns NULL.
+@@ -183,7 +183,7 @@ class PoeditFrame : public PoeditFrameBase
+         wxWindow* CreateContentViewEmptyPO();
+         void DestroyContentView();
+ 
+-        void PlaceInitialFocus(int lineno = 0);
++        void PlaceInitialFocus();
+ 
+         typedef std::set<PoeditFrame*> PoeditFramesList;
+         static PoeditFramesList ms_instances;
+@@ -206,7 +206,7 @@ class PoeditFrame : public PoeditFrameBase
+         wxWindowPtr<wxMessageDialog> CreateAskAboutSavingDialog();
+ 
+         // implements opening of files, without asking user
+-        void DoOpenFile(const wxString& filename, int lineno = 0);
++        void DoOpenFile(const wxString& filename);
+ 
+         /// Updates statistics in statusbar.
+         void UpdateStatusBar();

@@ -3,6 +3,9 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
+# if tests fail due to timeout, you can try to increase the timeout
+# by setting SYNCTHING_TEST_TIMEOUT_FACTOR
+
 # set the web view provider: either webkit, webengine, auto or none
 _webview_provider=webkit
 

@@ -10,12 +10,14 @@ shopt -s nullglob
 
 if ! [[ $1 ]]; then
     echo 'No Qt repo specified - must be specified like eg. base or multimedia.'
+    echo "Usage: $0 repo [variant=mingw-w64]"
     exit -1
 fi
 
 pkg="qt5-$1"
 repo="qt$1"
-dest="${DEFAULT_PKGBUILDS_DIR}/${pkg}/mingw-w64"
+variant="${2:-mingw-w64}"
+dest="${DEFAULT_PKGBUILDS_DIR}/${pkg}/${variant}"
 wd="${QT_GIT_REPOS_DIR}/${repo}"
 
 if ! [[ -d $wd ]]; then
@@ -23,7 +25,7 @@ if ! [[ -d $wd ]]; then
     exit -2
 fi
 if ! [[ -d $dest ]]; then
-    echo "\$DEFAULT_PKGBUILDS_DIR/$pkg/mingw-w64 is no directory."
+    echo "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} is no directory."
     exit -3
 fi
 
@@ -49,15 +51,15 @@ for patch in "${patches[@]}"; do
 done
 
 pushd "$wd" > /dev/null
-git checkout "${pkgver}-mingw-w64"
+git checkout "${pkgver}-${variant}"
 remote=
-for maybe_remote in 'martchus' 'upstream'; do
+for maybe_remote in 'origin' 'upstream' 'martchus'; do
 	if git remote get-url $maybe_remote; then
 		remote=$maybe_remote
 		break
 	fi
 done
-git format-patch "${remote}/${pkgver}" --output-directory "$dest"
+git format-patch "v${pkgver}" --output-directory "$dest"
 popd > /dev/null
 
 new_patches=("$dest"/*.patch)

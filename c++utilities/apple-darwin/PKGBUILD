@@ -4,21 +4,22 @@
 # you also find the URL of a binary repository.
 
 _reponame=cpp-utilities
-pkgname=mingw-w64-c++utilities
-_name=${pkgname#mingw-w64-}
-pkgver=4.9.1
+pkgname=apple-darwin-c++utilities
+_name=${pkgname#apple-darwin-}
+pkgver=4.9.2
 pkgrel=1
 arch=('any')
-pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities (mingw-w64)'
+pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities (apple-darwin)'
 license=('GPL')
-depends=('mingw-w64-crt' 'mingw-w64-libiconv')
+depends=('osxcross-git')
 optdepends=("$_name-doc: API documentation")
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake')
+makedepends=('clang')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('cc10db34bfca2d35216203d07b849cf4f43348160fe4891a3a6f624a5a6c23c4')
 options=(!buildflags staticlibs !strip !emptydirs)
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures='i386-apple-darwin15 x86_64-apple-darwin15'
+# NOTE: can not build for x86_64h-apple-darwin15 because libstdc++ is (currently) only availabe for x86_64
 [[ $NO_STATIC_LIBS ]] || _configurations='-DENABLE_STATIC_LIBS:BOOL=ON'
 [[ $NO_SHARED_LIBS ]] && _configurations+=' -DDISABLE_SHARED_LIBS:BOOL=ON'
 
@@ -26,9 +27,11 @@ build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   for _arch in ${_architectures}; do
     mkdir -p "build-${_arch}" && pushd "build-${_arch}"
-    ${_arch}-cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
-        -DUSE_NATIVE_FILE_BUFFER=ON \
+    /opt/osxcross/bin/${_arch}-cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_CXX_FLAGS='-std=c++14 -foc-use-gcc-libstdc++ -fvisibility=hidden' \
+        -DCMAKE_INSTALL_PREFIX:PATH="/opt/osxcross/${_arch}" \
+        -Diconv_DYNAMIC_LIB:FILEPATH='/opt/osxcross/SDK/MacOSX10.11.sdk/usr/lib/libiconv.2.tbd' \
+        -Diconv_DYNAMIC_INCLUDE_DIR='/opt/osxcross/SDK/MacOSX10.11.sdk/usr/include' \
         ${_configurations} \
         ../
     make
@@ -40,7 +43,8 @@ package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   for _arch in ${_architectures}; do
     mkdir -p "build-${_arch}" && pushd "build-${_arch}"
-    make DESTDIR="${pkgdir}" install-mingw-w64-strip
+    make DESTDIR="${pkgdir}" install
+    make DESTDIR="${pkgdir}" install-binary-strip
     popd
   done
 }

@@ -67,7 +67,7 @@ build() {
 package() {
   for _arch in ${_architectures}; do
     cd "${srcdir}/build-${_arch}"
-    make -j1 INSTALL_PREFIX="${pkgdir}" install
+    make -j1 INSTALL_PREFIX="${pkgdir}" install_sw
 
     # Move some files around
     install -m755 -d "$pkgdir/usr/${_arch}/include/openssl-1.0"

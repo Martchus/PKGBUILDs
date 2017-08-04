@@ -11,6 +11,7 @@ arch=('i686' 'x86_64')
 pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
 license=('GPL')
 depends=('c++utilities' 'openssl')
+optdepends=("$pkgname-doc: API documentation")
 makedepends=('cmake')
 checkdepends=('cppunit')
 optdepends=("$pkgname-doc: API documentation")

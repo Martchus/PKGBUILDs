@@ -19,6 +19,14 @@
 #   by me, such as apple-darwin-qt5-base (so if you want to build these, use my this package)
 # * osxcross-git does not provide symlinks for ccache
 
+# Note that this package includes a MacOSX SDK and hence is not redistributable. Hence it might be worth
+# splitting it into:
+# * apple-darwin-sdk-macosx10.11: contains the MacOSX SDK, the only part users would still need to build
+#   from sources
+# * apple-darwin-osxcross: contains the actual sources of osxcross reporitory
+# * apple-darwin-toolchain: contains the Clang toolchain built with scripts in apple-darwin-osxcross
+# * apple-darwin-gcc: contains the gcc toolchain built with scripts in apple-darwin-osxcross
+
 pkgname=apple-darwin-osxcross
 _pkgname=osxcross
 # There's no official release of osxcross yet, so let's just stick to a Git revision

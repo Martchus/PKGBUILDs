@@ -21,11 +21,19 @@ depends=('mingw-w64-crt' 'mingw-w64-bzip2' 'mingw-w64-fontconfig' 'mingw-w64-fri
          'mingw-w64-zlib' 'mingw-w64-x265')
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'yasm')
-source=(https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz{,.asc})
+source=(https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz{,.asc}
+        'ffmpeg-openjpeg2.2.patch')
 validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8') # ffmpeg-devel
 sha256sums=('d2a9002cdc6b533b59728827186c044ad02ba64841f1b7cd6c21779875453a1e'
-            'SKIP')
+            'SKIP'
+            '490598f78d7879af8ef5b8d7f92ada83d0ee64f9609f6c7b989eb331c2539f68')
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+prepare() {
+  cd ffmpeg-${pkgver}
+
+  patch -Np1 -i ../ffmpeg-openjpeg2.2.patch
+}
 
 build() {
   for _arch in ${_architectures}; do

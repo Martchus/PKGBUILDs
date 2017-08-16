@@ -21,7 +21,7 @@ provides=("ffmpeg=$pkgver"
           'libswscale.so')
 conflicts=("$_name")
 source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
-md5sums=('SKIP')
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$pkgname"

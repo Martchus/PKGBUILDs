@@ -1,0 +1,20 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=kernel-backup-hooks
+pkgver=0.0.1
+pkgrel=1
+pkgdesc='Hooks to keep system fully functional after kernel upgrade'
+url="https://github.com/Martchus/${pkgname}"
+arch=('any')
+license=('MIT')
+depends=('rsync')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('7fa5e2e2754aeea62121a0921e271d8cdeb2027c7349dc221d518945bd2b73c0')
+
+package() {
+  cd "${srcdir}/${PROJECT_DIR_NAME:-$pkgname-$pkgver}"
+  DESTDIR="${pkgdir}" ./install.sh
+}

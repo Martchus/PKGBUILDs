@@ -16,7 +16,7 @@ Each package is in its own subdirectoy:
 ```
 default-pkg-name/variant
 ```
-where `default-pkg-name` is the of the default package name (eg. `qt5-base`) and `variant` usually one of:
+where `default-pkg-name` is the default package name (eg. `qt5-base`) and `variant` usually one of:
 
 * `default`: the regular package
 * `git`/`svn`/`hg`: the development version

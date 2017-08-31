@@ -13,10 +13,14 @@ _webview_provider=webkit
 # Dolphin file browser
 _enable_kio_plugin=1
 
+# set to non-empty string to enable (still experimental and incomplete)
+# Plasmoid for Plasma 5 desktop
+_enable_plasmoid=1
+
 _reponame=syncthingtray
 pkgname=syncthingtray-git
 _name=${pkgname%-git}
-pkgver=0.5.1
+pkgver=0.6.3
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Tray application for Syncthing'
@@ -26,9 +30,11 @@ depends=('qtutilities-git' 'qt5-svg' 'openssl' 'desktop-file-utils' 'xdg-utils')
 [[ $_webview_provider == webkit ]] && depends+=('qt5-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('qt5-webengine')
 [[ $_enable_kio_plugin ]] && optdepends+=('kio: KIO plugin for Syncthing actions in Dolphin')
+[[ $_enable_plasmoid ]] && optdepends+=('plasma-framework: Plasmoid for Plasma 5 desktop')
 makedepends=('cmake' 'qt5-tools' 'git')
 checkdepends=('cppunit' 'syncthing')
 [[ $_enable_kio_plugin ]] && makedepends+=('kio')
+[[ $_enable_plasmoid ]] && makedepends+=('plasma-framework' 'extra-cmake-modules')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
@@ -43,7 +49,8 @@ pkgver() {
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   local additional_args=
-  [[ $_enable_kio_plugin ]] || additional_args+=-DNO_FILE_ITEM_ACTION_PLUGIN=ON
+  [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
+  [[ $_enable_plasmoid ]] && additional_args+=' -DNO_PLASMOID=OFF'
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="/usr" \

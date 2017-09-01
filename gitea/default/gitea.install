@@ -9,6 +9,12 @@ pre_install() {
 }
 
 post_install(){
+  # ensure subdirs in data dir are present
+  for subdir in avatars repos certs data/sessions data/tmp; do
+    mkdir -p /var/lib/gitea/$subdir
+  done
+
+  # ensure ownership is correct
   chown -R gitea:gitea /var/log/gitea
   chown -R gitea:gitea /var/lib/gitea
 

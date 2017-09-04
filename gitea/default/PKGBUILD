@@ -7,8 +7,8 @@ _orga=go-${_pkgname}
 _gourl=code.$_pkgname.io/$_pkgname
 
 pkgname=${_pkgname}
-pkgver=1.1.3
-pkgrel=2
+pkgver=1.1.4
+pkgrel=1
 #epoch=
 pkgdesc='Self Hosted Git Service written in Go'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
@@ -29,7 +29,7 @@ install=$_pkgname.install
 source=("$_pkgname-$pkgver::https://github.com/$_orga/$_pkgname/archive/v${pkgver}.tar.gz"
         '0001-Adjust-config-for-Arch-Linux-package.patch'
         '0002-Adjust-service-file-for-Arch-Linux-package.patch')
-sha512sums=('3b5c432daa2f571be0a7891e4b1e690d447bc96fab567793571cc79098059ada241af35f59bb7fd8d33cfd555ebe0b90dd6585e2d8e5d700a371d98131cdc576'
+sha512sums=('4427c4c1a588dcf201f707c3e2827fd702a0f8c0add63c6a5eff0d6ef8d21fdaaaf275f8e790017751f161431d563df22f71a6ea046085f9fb1d57da99f20524'
             '2885691d8f35ecb72e3a1d5a52708209715b537a0afef1147f32d10c188b1bbb067fd3db7c034273a5499a46f9fbb3310004fcf67eda1797dd193eef5a81460b'
             '5ea1d89809427fe395214c5dde88bdb4c4a62e2d19f9da7fa480a0a3cfaaaf2e97c906bd3dceb11676c9720896d72a73f48638411389fa1f07fcbc17e94e0545')
 _goroot='/usr/lib/go'

@@ -14,6 +14,7 @@ license=('GPL')
 depends=('c++utilities-git' 'zlib')
 optdepends=("$_name-doc: API documentation")
 makedepends=('cmake' 'git')
+checkdepends=('cppunit' 'openssl')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
@@ -29,6 +30,15 @@ build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
   make
+}
+
+check() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
+  if [[ $TEST_FILE_PATH ]]; then
+    make check
+  else
+    msg2 'Skipping execution of testsuite because the environment variable TESTFILE_PATH is not set.'
+  fi
 }
 
 package() {

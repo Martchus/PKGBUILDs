@@ -1,8 +1,7 @@
 #!/usr/bin/bash
 
 # Copies patches from QT_GIT_REPOS_DIR to default
-# variant of specified repo and outputs altered source and
-# md5sums arrays
+# variant of specified repo and updates sources and checksums
 
 #set -euxo pipefail
 set -e # abort on first error
@@ -35,50 +34,73 @@ new_sources=()
 new_md5sums=()
 file_index=0
 for source in "${source[@]}"; do
-	[ "${source: -6}" != .patch ] && \
-		new_sources+=("$source") \
-		new_md5sums+=("${sha256sums[$file_index]}")
-	file_index=$((file_index + 1))
+    [ "${source: -6}" != .patch ] && \
+        new_sources+=("$source") \
+        new_md5sums+=("${sha256sums[$file_index]}")
+    file_index=$((file_index + 1))
 done
 
 patches=("$dest"/*.patch)
-#for patch in "${patches[@]}"; do
-#	new_sources+=("$patch")
-#done
 
 for patch in "${patches[@]}"; do
-	[[ -f $patch ]] && rm "$patch"
+    [[ -f $patch ]] && rm "$patch"
 done
 
 pushd "$wd" > /dev/null
-git checkout "${pkgver}-${variant}"
-remote=
-for maybe_remote in 'origin' 'upstream' 'martchus'; do
-	if git remote get-url $maybe_remote; then
-		remote=$maybe_remote
-		break
-	fi
-done
+git status # do some Git stuff just to check whether it is a Git repo
+if ! git checkout "${pkgver}-${variant}"; then
+    echo "No patches required for $1, skipping."
+    exit 0
+fi
 git format-patch "v${pkgver}" --output-directory "$dest"
 popd > /dev/null
 
 new_patches=("$dest"/*.patch)
 for patch in "${new_patches[@]}"; do
-	new_sources+=("$patch")
-	sum=$(sha256sum "$patch")
-	new_md5sums+=(${sum%% *})
+    new_sources+=("$patch")
+    sum=$(sha256sum "$patch")
+    new_md5sums+=(${sum%% *})
 done
 
-echo -n "source=(\"${new_sources[0]}\""
+# preserve first src line to keep variables unevaluated
+newsrc=$(grep 'source=(' "$dest/PKGBUILD")
+[[ $newsrc ]] || newsrc="source=(${new_sources[0]}"
 for source in "${new_sources[@]:1}"; do
-	echo
-	echo -n "        '${source##*/}'"
+    newsrc+="\n        '${source##*/}'"
 done
-echo ')'
+newsrc+=')'
 
-echo -n "sha256sums=('${new_md5sums[0]}'"
+newsums="sha256sums=('${new_md5sums[0]}'"
 for sum in "${new_md5sums[@]:1}"; do
-	echo
-	echo -n "            '${sum}'"
+    newsums+="\n            '${sum}'"
 done
-echo ')'
+newsums+=')'
+
+# apply changes
+mv "$dest/PKGBUILD" "$dest/PKGBUILD.bak"
+awk -v newsrc="$newsrc" -v newsums="$newsums" '
+    /^[[:blank:]]*source(_[^=]+)?=/,/\)[[:blank:]]*(#.*)?$/ {
+        if (!s) {
+            print newsrc
+            s++
+        }
+        next
+    }
+    /^[[:blank:]]*(md|sha)[[:digit:]]+sums(_[^=]+)?=/,/\)[[:blank:]]*(#.*)?$/ {
+        if (!w) {
+            print newsums
+            w++
+        }
+        next
+    }
+
+    1
+    END {
+        if (!s) {
+            print newsrc
+        }
+        if (!w) {
+            print newsums
+        }
+    }
+' "$dest/PKGBUILD.bak" > "$dest/PKGBUILD"

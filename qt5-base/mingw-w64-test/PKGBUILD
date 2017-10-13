@@ -1,0 +1,145 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# NOTE: This package only serves as a test package for mingw-w64-qt5-base and mingw-w64-qt5-base-static.
+# If it builds, it means that basic functionality of those packages is not broken. The package itself
+# has no further use.
+
+pkgname=mingw-w64-qt5-base-test
+pkgver=5.9.1
+pkgrel=1
+pkgdesc='A cross-platform application and UI framework (test for mingw-w64)'
+arch=('any')
+url='https://www.qt.io/'
+license=('GPL3' 'LGPL3' 'FDL' 'custom')
+depends=('mingw-w64-qt5-base' 'mingw-w64-qt5-base-static' 'mingw-w64-pkg-config'
+         'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c' 'mingw-w64-openssl')
+groups=('mingw-w64-qt5')
+optdepends=()
+makedepends=('mingw-w64-gcc' 'qt5-examples' 'mingw-w64-qtutilities' 'mingw-w64-tagparser' 'mingw-w64-cmake')
+conflicts=('mingw-w64-qt5-examples' 'mingw-w64-tageditor')
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="qtbase-opensource-src-${pkgver}"
+source=("tageditor-2.2.5.tar.gz::https://github.com/Martchus/tageditor/archive/v2.2.5.tar.gz")
+sha256sums=('1b5e44ffc224cd26531f3dd99945ff5e60c051027421dd027bd3f133fbb0d2a8')
+
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+prepare() {
+  # workaround: auto-MOC/UIC requires Qt5Core (and not only StaticQt5Core) to work
+  echo -e "find_package(Qt5Core)" >> "$srcdir/tageditor-2.2.5/CMakeLists.txt"
+}
+
+build() {
+  cd "${srcdir}"
+
+  declare -A _config=()
+  declare -A _config_cmake=()
+  _config['static']='CONFIG+=static QTPLUGIN=qwindows CONFIG+=no_smart_library_merge'
+  _config_cmake['static']='\
+    -DQT_LINKAGE=STATIC \
+    -DENABLE_STATIC_LIBS:BOOL=ON
+    -DDISABLE_SHARED_LIBS:BOOL=ON
+    -DSTATIC_LINKAGE:BOOL=0N'
+
+  for _arch in ${_architectures}; do
+    for _variant in shared static; do
+      # build qmake-based project
+      local dir="mainwindows-${_arch}-${_variant}"
+      mkdir -p "${dir}" && pushd "${dir}"
+      ${_arch}-qmake-qt5 ${_config[${_variant}]}  '/usr/share/doc/qt/examples/widgets/mainwindows'
+      make
+      popd
+
+      # build cmake-based project
+      dir="tageditor-${_arch}-${_variant}"
+      mkdir -p "${dir}" && pushd "${dir}"
+      ${_arch}-cmake \
+        -DCMAKE_BUILD_TYPE:STRING=Release \
+        -DCMAKE_INSTALL_PREFIX:PATH="/usr/${_arch}" \
+        -DQUICK_GUI:BOOL="no" \
+        -DENABLE_QT_TRANSLATIONS:BOOL=OFF \
+        -DJS_PROVIDER:STRING=none \
+        -DWEBVIEW_PROVIDER:STRING=none \
+        -DSVG_SUPPORT:BOOL=OFF \
+        -DSVG_ICON_SUPPORT:BOOL=OFF \
+        ${_config_cmake[${_variant}]} \
+      "$srcdir/tageditor-2.2.5"
+      make VERBOSE=1
+      popd
+    done
+  done
+}
+
+fail() {
+    error "$1"
+    exit -1
+}
+
+checkdlls() {
+  app="$1"
+  shift
+  local dlls="$(${_arch}-objdump -x "$app" | grep 'DLL Name: .*\.dll')"
+  declare -A dllarray
+  for dll in $dlls; do
+    [[ $dll == 'DLL' || $dll == 'NAME:' || $dll == 'Name:' ]] && continue
+    dllarray[$dll]='present'
+  done
+  for dll in "$@"; do
+    [[ ${dllarray["$dll"]} == 'present' ]] || fail "DLL $dll is not present in $PWD/$app; present DLLs:\n$dlls"
+    dllarray["$dll"]='expected'
+  done
+  for dll in "${!dllarray[@]}"; do
+    [[ ${dllarray["$dll"]} == 'expected' ]] || fail "DLL $dll.dll not expected but ${dllarray["$dll"]} in $PWD/$app; present DLLs:\n$dlls"
+  done
+  unset dllarray
+}
+
+check() {
+  cd "${srcdir}"
+
+  for _arch in ${_architectures}; do
+    for _variant in shared static; do
+      pushd "mainwindows-${_arch}-${_variant}"
+      # launch application
+      #${_arch}-wine 'mainwindow/release/mainwindow.exe' --help
+
+      # check DLLs
+      [[ $_variant == shared ]] && checkdlls 'mainwindow/release/mainwindow.exe' Qt5Core.dll Qt5Gui.dll Qt5Widgets.dll libgcc_s_sjlj-1.dll KERNEL32.dll msvcrt.dll SHELL32.dll libstdc++-6.dll
+      [[ $_variant == static ]] && checkdlls 'mainwindow/release/mainwindow.exe' ADVAPI32.dll GDI32.dll KERNEL32.dll msvcrt.dll ole32.dll SHELL32.dll USER32.dll UxTheme.dll VERSION.dll WS2_32.dll
+      popd
+
+      pushd "tageditor-${_arch}-${_variant}"
+      # check DLLs
+      [[ $_variant == shared ]] && checkdlls 'tageditor.exe' Qt5Core.dll Qt5Gui.dll Qt5Network.dll Qt5Widgets.dll libgcc_s_sjlj-1.dll KERNEL32.dll msvcrt.dll libstdc++-6.dll c++utilities.dll qtutilities.dll tagparser.dll
+      [[ $_variant == static ]] && checkdlls 'tageditor.exe' ADVAPI32.dll CRYPT32.dll dwmapi.dll GDI32.dll KERNEL32.dll msvcrt.dll ole32.dll OLEAUT32.dll SHELL32.dll USER32.dll UxTheme.dll VERSION.dll WS2_32.dll
+      popd
+    done
+  done
+}
+
+package() {
+  cd "${srcdir}"
+
+  for _arch in ${_architectures}; do
+    for _variant in shared static; do
+      # install qmake-based project
+      pushd "mainwindows-${_arch}-${_variant}"
+      make INSTALL_ROOT="$pkgdir" install
+      popd
+
+      # install qmake-based project
+      pushd "tageditor-${_arch}-${_variant}"
+      make DESTDIR="${pkgdir}" install-mingw-w64-strip
+      popd
+    done
+
+    find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
+    find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" -name "*.a" -exec ${_arch}-strip -g {} \;
+  done
+
+
+}

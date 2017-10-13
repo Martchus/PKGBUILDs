@@ -15,6 +15,7 @@ elif [[ ! -d $master ]]; then
 fi
 
 for dir in mingw-w64 mingw-w64-*; do
+  [[ $dir == *'-test' ]] && continue
   if [[ $dir != $master ]] && [[ -d $dir ]]; then
     rm "$dir/"* # clean first (files might have been removed in master)
     cp "$master/"* "$dir"

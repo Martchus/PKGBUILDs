@@ -37,7 +37,7 @@ check() {
   if [[ $TEST_FILE_PATH ]]; then
     make check
   else
-    msg2 'Skipping execution of testsuite because the environment variable TESTFILE_PATH is not set.'
+    msg2 'Skipping execution of testsuite because the environment variable TEST_FILE_PATH is not set.'
   fi
 }
 

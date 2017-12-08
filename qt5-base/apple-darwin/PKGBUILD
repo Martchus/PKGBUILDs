@@ -5,7 +5,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=apple-darwin-qt5-base
-pkgver=5.9.2
+pkgver=5.10.0
 pkgrel=1
 pkgdesc='A cross-platform application and UI framework (apple-darwin)'
 arch=('i686' 'x86_64')
@@ -16,8 +16,8 @@ groups=('apple-darwin-qt5')
 optdepends=()
 makedepends=('clang')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
-_pkgfqn="qtbase-opensource-src-${pkgver}"
-source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
+_pkgfqn="qtbase-everywhere-src-${pkgver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Enable-cross-compilation-with-osxcross.patch'
         '0002-Allow-overriding-stdlib-under-MacOS.patch'
         '0003-Remove-error-handling-for-Xcode-detection.patch'
@@ -26,7 +26,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver:0:3}/${pkgver}/sub
         '0006-Pull-dependencies-of-static-libraries-in-CMake-modul.patch'
         '0007-Fix-finding-gl.h-when-cross-compiling-with-osxcross.patch'
         '0008-Prevent-error-when-qmlimportscanner-not-available.patch')
-sha256sums=('bc9a21e9f6fff9629019fdf9f989f064751d5073c3a28dc596def92f4d4275c6'
+sha256sums=('fd5578cd320a13617c12cf2b19439386b203d6d45548e855f94e07be9829f762'
             'f5b474fc11f929c8e1563136c6b53d09c9e405ebf5a7940a63dc13f00d3e2bbd'
             'a51749efb16b81f5e272a0864a6e2583942998bca1fe397c0e4205b269c97ae4'
             '73d314dad7a93073140ee9d868e1071a107b1afdecc67cb67d85a91391452a82'

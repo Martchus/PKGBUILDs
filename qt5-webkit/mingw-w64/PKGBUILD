@@ -41,9 +41,9 @@ options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')
 license=('GPL3' 'LGPL' 'FDL' 'custom')
 url='https://www.qt.io/'
-_pkgfqn="${_qt_module}-opensource-src-${pkgver}"
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 groups=('mingw-w64-qt5')
-source=("https://download.qt.io/community_releases/${pkgver:0:3}/${pkgver}-final/${_pkgfqn}.tar.xz"
+source=("https://download.qt.io/community_releases/${pkgver%.*}/${pkgver}-final/${_pkgfqn}.tar.xz"
         '0001-Use-correct-ICU-libs.patch'
         '0002-Use-pkg-config.patch'
         '0003-Use-system-ANGLE-rather-than-bundled-version.patch'

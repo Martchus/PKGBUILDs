@@ -15,7 +15,7 @@ provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})
 license=('GPL3' 'LGPL' 'FDL' 'custom')
 url='https://www.qt.io/'
-_pkgfqn="${_qt_module}-opensource-src-${pkgver}"
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 groups=('qt5')
 source=(${_qt_module}::git://code.qt.io/qt/${_qt_module}.git#branch=dev)
 md5sums=('SKIP')

@@ -19,7 +19,7 @@ options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')
 license=('LGPL3' 'LGPL2.1' 'BSD')
 url='https://www.qt.io/'
-_pkgfqn="${_qt_module}-opensource-src-${pkgver}"
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 groups=('mingw-w64-qt5')
 source=(${_qt_module}::git://code.qt.io/qt/${_qt_module}.git#branch=dev)
 md5sums=('SKIP')

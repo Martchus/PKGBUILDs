@@ -65,6 +65,7 @@ done
 # preserve first src line to keep variables unevaluated
 newsrc=$(grep 'source=(' "$dest/PKGBUILD")
 [[ $newsrc ]] || newsrc="source=(${new_sources[0]}"
+[ "${newsrc: -1:1}" == ')' ] && newsrc="${newsrc: 0:-1}" # truncate trailing )
 for source in "${new_sources[@]:1}"; do
     newsrc+="\n        '${source##*/}'"
 done

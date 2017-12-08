@@ -5,7 +5,7 @@
 
 _qt_module=qtwebview
 pkgname=qt5-webview
-pkgver=5.9.2
+pkgver=5.10.0
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Provides a way to display web content in an application by using native APIs'
@@ -13,7 +13,7 @@ depends=('qt5-quickcontrols' 'qt5-webengine')
 makedepends=('git')
 license=('GPL3' 'LGPL' 'FDL' 'custom')
 url='https://www.qt.io/'
-_pkgfqn="${_qt_module}-opensource-src-${pkgver}"
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 groups=('qt5')
 source=(${_qt_module}::git://code.qt.io/qt/${_qt_module}.git#tag=v$pkgver)
 md5sums=('15c4a903f692ab4ea1ffb7c0ddb58e7a')

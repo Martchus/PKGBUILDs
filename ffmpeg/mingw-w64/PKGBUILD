@@ -6,7 +6,7 @@
 
 _name=ffmpeg
 pkgname=mingw-w64-ffmpeg
-pkgver=3.3.4
+pkgver=3.4.1
 pkgrel=1
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (mingw-w64)'
@@ -22,17 +22,19 @@ depends=('mingw-w64-crt' 'mingw-w64-bzip2' 'mingw-w64-fontconfig' 'mingw-w64-fri
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'yasm')
 source=(https://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.xz{,.asc}
-        'ffmpeg-openjpeg2.2.patch')
+        'fs56089.patch')
 validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8') # ffmpeg-devel
 sha256sums=('98b97e1b908dfeb6aeb6d407e5a5eacdfc253a40c2d195f5867ed2d1d46ea957'
             'SKIP'
-            '490598f78d7879af8ef5b8d7f92ada83d0ee64f9609f6c7b989eb331c2539f68')
+            '0bfcd12d1992903f21c146ae56d9ad89b52818cfb2303197ee905347c25a5427')
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
 prepare() {
   cd ffmpeg-${pkgver}
 
-  patch -Np1 -i ../ffmpeg-openjpeg2.2.patch
+  # https://bugs.archlinux.org/task/56089
+  # Backport of http://git.videolan.org/?p=ffmpeg.git;a=commitdiff;h=a606f27f4c610708fa96e35eed7b7537d3d8f712
+  patch -Np1 -i ../fs56089.patch
 }
 
 build() {

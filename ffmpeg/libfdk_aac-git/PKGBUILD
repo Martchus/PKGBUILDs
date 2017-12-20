@@ -20,8 +20,18 @@ provides=("ffmpeg=$pkgver"
           'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
           'libswscale.so')
 conflicts=("$_name")
-source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
-sha256sums=('SKIP')
+source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git'
+        'fs56089.patch')
+sha256sums=('SKIP'
+            '0bfcd12d1992903f21c146ae56d9ad89b52818cfb2303197ee905347c25a5427')
+
+prepare() {
+  cd ffmpeg-${pkgver}
+
+  # https://bugs.archlinux.org/task/56089
+  # Backport of http://git.videolan.org/?p=ffmpeg.git;a=commitdiff;h=a606f27f4c610708fa96e35eed7b7537d3d8f712
+  patch -Np1 -i ../fs56089.patch
+}
 
 pkgver() {
   cd "$srcdir/$pkgname"

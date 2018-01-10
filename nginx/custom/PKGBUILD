@@ -124,7 +124,7 @@ prepare() {
   mv masterzen-nginx-upload-progress-module-* ${_uploadprogress_dirname}
   mv unixfox-nginx-upstream-fair-* ${_upstreamfair_dirname}
   mv ngx_http_auth_pam_module-${_authpam_ver} ${_authpam_dirname}
-  mv ngx_pagespeed-* ${_pagespeed_dirname}
+  mv incubator-pagespeed-ngx-* ${_pagespeed_dirname}
   mv psol ${_pagespeed_dirname}/
   mv nginx-accesskey* ${_accesskey_dirname}
   mv nginx-rtmp-module* ${_rtmp_dirname}

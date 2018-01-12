@@ -3,13 +3,9 @@
 # Syncs the different variants of mingw-w64-qt5-base
 
 set -e # abort on first error
-master="$1"
+master="${1:-mingw-w64}"
 
-if [[ ! $master ]]; then
-  # no default here to prevent unintented use
-  echo "Error: no master specified"
-  exit -1
-elif [ $# -gt 1 ]; then
+if [ $# -gt 1 ]; then
   echo "Error: too many arguments specified"
   echo "Usage: $0 master_dir"
   exit -2

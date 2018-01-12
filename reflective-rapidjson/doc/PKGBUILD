@@ -3,23 +3,23 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_name=qtutilities
-_reponame=$_name
+_name=reflective-rapidjson
+_reponame=reflective-rapidjson
 pkgname=$_name-doc
-pkgver=5.8.2
+pkgver=0.0.2
 pkgrel=1
 arch=('any')
-pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (API documentation)'
+pkgdesc='Code generator for serializing/deserializing C++ objects to/from JSON using Clang and RapidJSON (API documentation)'
 license=('GPL')
-makedepends=('cmake' 'doxygen' 'dia' 'graphviz' 'c++utilities' 'qt5-tools')
+makedepends=('c++utilities' 'cmake' 'doxygen' 'dia' 'graphviz' 'clang' 'clang-tools-extra'  'llvm' 'rapidjson')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('a20cdd3e854c77bc25f9a05c079e5b81dc53d1eef3b8a6d913f3f14d8b6eabaa')
+sha256sums=('7a41deebf594e845a02f9f037a00f8cc19af65ba2fd7c364a0e5c3702e324506')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
-  make ${_name}_apidoc
+  make reflective_rapidjson_apidoc
 }
 
 package() {

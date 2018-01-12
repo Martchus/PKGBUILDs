@@ -9,19 +9,19 @@ _webview_provider=none
 _reponame=syncthingtray
 pkgname=mingw-w64-syncthingtray-static
 _name=${_reponame}
-pkgver=0.7.1
+pkgver=0.7.2
 pkgrel=1
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=('GPL')
 depends=('mingw-w64-crt')
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-base-static' 'mingw-w64-qt5-tools' 'mingw-w64-qt5-svg' 'mingw-w64-qtutilities' 'mingw-w64-openssl' 'breeze-icons' 'numix-icon-theme-git' 'ffmpeg')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-base-static' 'mingw-w64-qt5-tools' 'mingw-w64-qt5-translations' 'mingw-w64-qt5-svg' 'mingw-w64-qtutilities' 'mingw-w64-openssl' 'breeze-icons' 'numix-icon-theme-git' 'ffmpeg')
 [[ $_webview_provider == webkit ]] && makedepends+=('mingw-w64-qt5-webkit')
 [[ $_webview_provider == webengine ]] && makedepends+=('mingw-w64-qt5-webengine')
 conflicts=("${pkgname%-static}")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('b2824df6a4361a9fe1097cc4288056b254f8059415e2eb303202ae3cb80685cd')
+sha256sums=('af1769702676dbde33db692a39f81627b29dc09a8ce8c3bd8c2ee5eef22a5a3f')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
@@ -39,6 +39,7 @@ build() {
       -DDISABLE_SHARED_LIBS:BOOL=ON \
       -DSTATIC_LINKAGE:BOOL=ON \
       -DBUILTIN_TRANSLATIONS:BOOL=ON \
+      -DENABLE_QT_TRANSLATIONS:BOOL=ON \
       -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
       -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
       -DSVG_SUPPORT:BOOL=ON \

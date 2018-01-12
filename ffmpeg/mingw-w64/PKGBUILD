@@ -66,7 +66,6 @@ build() {
         --enable-libopencore_amrwb \
         --enable-libopenjpeg \
         --enable-libopus \
-        --enable-libschroedinger \
         --enable-libsoxr \
         --enable-libspeex \
         --enable-libssh \

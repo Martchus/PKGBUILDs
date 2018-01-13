@@ -212,7 +212,7 @@ prepare() {
 
   # Apply patches; further descriptions can be found in patch files itself
   for patch in "$srcdir/"*.patch; do
-    patch -Np1 -i "$patch" || true
+    patch -p1 -i "$patch"
   done
 
   # Make sure the Qt5 build system uses our external ANGLE library

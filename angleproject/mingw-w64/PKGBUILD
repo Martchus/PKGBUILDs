@@ -68,7 +68,7 @@ prepare() {
   cd "${srcdir}/angleproject"
 
   # Ensure depot-tools are in PATH
-  source /etc/profile.d/depot_tools.sh
+  export PATH="${PATH}:/opt/depot_tools"
 
   # Provide recent versions of some Windows header files
   mkdir -p sysinclude

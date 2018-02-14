@@ -13,19 +13,38 @@ if ! [[ $1 ]]; then
     exit -1
 fi
 
+pkgbuildsdirs=()
+if [[ $DEFAULT_PKGBUILDS_DIR ]]; then
+    # split colon separated path
+    OIFS=$IFS
+    IFS=':'
+    for dir in $DEFAULT_PKGBUILDS_DIR; do
+        pkgbuildsdirs+=("$dir")
+    done
+    IFS=$OIFS
+else
+    pkgbuildsdirs+=("$PWD/pkgbuilds")
+fi
+
 pkg="qt5-$1"
 repo="qt$1"
 variant="${2:-mingw-w64}"
-dest="${DEFAULT_PKGBUILDS_DIR}/${pkg}/${variant}"
-wd="${QT_GIT_REPOS_DIR}/${repo}"
 
+# find dest dir
+for dir in "${pkgbuildsdirs[@]}"; do
+    dest="${dir}/${pkg}/${variant}"
+    [[ -d $dest ]] && break || dest=
+done
+if ! [[ $dest ]]; then
+    echo "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} is no directory."
+    exit -3
+fi
+
+# find repo dir
+wd="${QT_GIT_REPOS_DIR}/${repo}"
 if ! [[ -d $wd ]]; then
     echo "\$QT_GIT_REPOS_DIR/$repo is no directory."
     exit -2
-fi
-if ! [[ -d $dest ]]; then
-    echo "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} is no directory."
-    exit -3
 fi
 
 source "$dest/PKGBUILD"

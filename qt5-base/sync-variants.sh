@@ -5,6 +5,8 @@
 set -e # abort on first error
 master="${1:-mingw-w64}"
 
+[[ -d 'qt5-base' ]] && pushd 'qt5-base' || pushd .
+
 if [ $# -gt 1 ]; then
   echo "Error: too many arguments specified"
   echo "Usage: $0 master_dir"
@@ -22,3 +24,5 @@ for dir in mingw-w64 mingw-w64-*; do
     sed -e '/pkgname=mingw-w64-qt5-base/{c\pkgname=mingw-w64-qt5-base'${dir#mingw-w64} -e ';d}' "$master/PKGBUILD" > "$dir/PKGBUILD"
   fi
 done
+
+popd

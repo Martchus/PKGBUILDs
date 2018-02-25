@@ -1,0 +1,23 @@
+From 645effb2077e3aa9de70d30e14afc3e395ade2c6 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 24 Feb 2018 01:35:46 +0100
+Subject: [PATCH] text_renderer: freetype: allow using recent fribidi
+
+---
+ modules/text_renderer/freetype/text_layout.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/modules/text_renderer/freetype/text_layout.c b/modules/text_renderer/freetype/text_layout.c
+index 13efd567b46..6e554d4cbe1 100644
+--- a/modules/text_renderer/freetype/text_layout.c
++++ b/modules/text_renderer/freetype/text_layout.c
+@@ -54,6 +54,9 @@
+ #if defined(HAVE_FRIBIDI)
+ # define FRIBIDI_NO_DEPRECATED 1
+ # include <fribidi.h>
++# ifndef fribidi_get_par_embedding_levels
++#  include <fribidi-deprecated.h>
++# endif
+ #endif
+ 
+ /* Complex Scripts */

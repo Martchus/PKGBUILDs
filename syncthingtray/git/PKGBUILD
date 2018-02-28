@@ -40,6 +40,19 @@ url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
+ephemeral_port() {
+  local lport=32768;
+  local uport=60999;
+  while true; do
+    local mport=$[$lport + ($RANDOM % $uport)];
+    (echo '' >/dev/tcp/127.0.0.1/${mport}) >/dev/null 2>&1
+    if [[ $? -ne 0 ]]; then
+        echo $mport;
+        return 0;
+    fi
+  done
+}
+
 pkgver() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
@@ -61,7 +74,7 @@ build() {
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make check
+  make SYNCTHING_PORT=$(ephemeral_port) check
 }
 
 package() {

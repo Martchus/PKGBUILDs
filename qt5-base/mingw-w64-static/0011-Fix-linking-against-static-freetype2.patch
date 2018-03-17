@@ -1,4 +1,4 @@
-From 3deafc5a5c28faaafb1f1ec52d32c9fc5df2986d Mon Sep 17 00:00:00 2001
+From f622ed99d6d99283d7405cb0a96757c9e4922558 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 3 Feb 2017 20:51:19 +0100
 Subject: [PATCH 11/32] Fix linking against static freetype2
@@ -26,5 +26,5 @@ index bc501bd3fc..f7a4a39fd4 100644
          },
          "fontconfig": {
 -- 
-2.16.1
+2.16.2
 

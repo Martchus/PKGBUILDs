@@ -1,0 +1,143 @@
+From ef02a56ff99e9c2352d1395b8deada3c3078887f Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Fri, 3 Feb 2017 18:30:51 +0100
+Subject: [PATCH 01/32] Adjust win32-g++ profile for cross compilation with
+ mingw-w64
+
+Adding a new, separate mkspec instead of patching the existing one
+might be the cleaner solution. However tools like windeployqt and
+qbs do checks based on the hardcoded mkspec name to detect MinGW.
+So for this to work, the mkspec must be called win32-g++.
+
+Also see the following issues:
+* https://github.com/Martchus/PKGBUILDs/issues/59
+* https://github.com/Martchus/PKGBUILDs/issues/60
+---
+ mkspecs/win32-g++/qmake.conf | 56 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 37 insertions(+), 19 deletions(-)
+
+diff --git a/mkspecs/win32-g++/qmake.conf b/mkspecs/win32-g++/qmake.conf
+index 9f366e08b8..848837e732 100644
+--- a/mkspecs/win32-g++/qmake.conf
++++ b/mkspecs/win32-g++/qmake.conf
+@@ -1,11 +1,13 @@
+ #
+-# qmake configuration for win32-g++
++# qmake configuration for i686-w64-mingw32-g++ and x86_64-w64-mingw32-g++
+ #
+-# Written for MinGW-w64 / gcc 5.3 or higher
++# Written for cross compilation with mingw-w64 under GNU/Linux
+ #
+ # Cross compile example for i686-w64-mingw32-g++:
+-#   configure -xplatform win32-g++ -device-option CROSS_COMPILE=i686-w64-mingw32-
++#   configure -xplatform mingw-w64-g++ -device-option CROSS_COMPILE=i686-w64-mingw32-
+ #
++# The device options CROSS_COMPILE_CUSTOM_CONFIG and CROSS_COMPILE_CFLAGS can be used
++# to specify custom config/flags for cross compilation.
+ 
+ load(device_config)
+ include(../common/gcc-base.conf)
+@@ -14,12 +16,11 @@ include(../common/angle.conf)
+ include(../common/windows-vulkan.conf)
+ 
+ # modifications to gcc-base.conf and g++-base.conf
+-
+ MAKEFILE_GENERATOR      = MINGW
+ QMAKE_PLATFORM          = win32 mingw
+-CONFIG                 += debug_and_release debug_and_release_target precompile_header
+-DEFINES                += UNICODE _UNICODE WIN32
+-QMAKE_COMPILER_DEFINES += __GNUC__ _WIN32
++CONFIG                 += debug_and_release debug_and_release_target precompile_header $${CROSS_COMPILE_CUSTOM_CONFIG}
++DEFINES                += UNICODE _UNICODE
++QMAKE_COMPILER_DEFINES += __GNUC__ WIN32
+ # can't add 'DEFINES += WIN64' and 'QMAKE_COMPILER_DEFINES += _WIN64' defines for
+ # x86_64 platform similar to 'msvc-desktop.conf' toolchain, because, unlike for MSVC,
+ # 'QMAKE_TARGET.arch' is inherently unavailable.
+@@ -29,7 +30,7 @@ QMAKE_LEX               = flex
+ QMAKE_LEXFLAGS          =
+ QMAKE_YACC              = bison -y
+ QMAKE_YACCFLAGS         = -d
+-QMAKE_CFLAGS           += -fno-keep-inline-dllexport
++QMAKE_CFLAGS            = -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -fno-keep-inline-dllexport $${CROSS_COMPILE_CFLAGS}
+ QMAKE_CFLAGS_WARN_ON   += -Wextra
+ 
+ QMAKE_CFLAGS_SSE2      += -mstackrealign
+@@ -40,6 +41,7 @@ QMAKE_CXXFLAGS_WARN_ON  = $$QMAKE_CFLAGS_WARN_ON
+ QMAKE_CXXFLAGS_RTTI_ON  = -frtti
+ QMAKE_CXXFLAGS_RTTI_OFF = -fno-rtti
+ QMAKE_CXXFLAGS_EXCEPTIONS_ON = -fexceptions -mthreads
++QMAKE_CXXFLAGS_EXCEPTIONS_OFF = -fno-exceptions
+ 
+ QMAKE_INCDIR            =
+ 
+@@ -50,40 +52,56 @@ QMAKE_RUN_CXX_IMP       = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
+ 
+ QMAKE_LINK              = $${CROSS_COMPILE}g++
+ QMAKE_LINK_C            = $${CROSS_COMPILE}gcc
++QMAKE_LFLAGS            = -g
+ QMAKE_LFLAGS_EXCEPTIONS_ON = -mthreads
+-QMAKE_LFLAGS_RELEASE    = -Wl,-s
++QMAKE_LFLAGS_RELEASE    =
++QMAKE_LFLAGS_DEBUG      =
+ QMAKE_LFLAGS_CONSOLE    = -Wl,-subsystem,console
+ QMAKE_LFLAGS_WINDOWS    = -Wl,-subsystem,windows
+ QMAKE_LFLAGS_DLL        = -shared
+ QMAKE_LFLAGS_GCSECTIONS = -Wl,--gc-sections
+-equals(QMAKE_HOST.os, Windows) {
+-    QMAKE_LINK_OBJECT_MAX = 10
+-    QMAKE_LINK_OBJECT_SCRIPT = object_script
+-}
++QMAKE_LINK_OBJECT_MAX   = 10
++QMAKE_LINK_OBJECT_SCRIPT = object_script
+ QMAKE_EXT_OBJ           = .o
+ QMAKE_EXT_RES           = _res.o
+ QMAKE_PREFIX_SHLIB      =
+ QMAKE_EXTENSION_SHLIB   = dll
+ QMAKE_PREFIX_STATICLIB  = lib
+ QMAKE_EXTENSION_STATICLIB = a
+-QMAKE_LIB_EXTENSIONS    = a dll.a
++QMAKE_EXTENSION_IMPORTLIB = dll.a
+ 
+ QMAKE_LIBS              =
+-QMAKE_LIBS_GUI          = -lgdi32 -lcomdlg32 -loleaut32 -limm32 -lwinmm -lws2_32 -lole32 -luuid -luser32 -ladvapi32
+-QMAKE_LIBS_NETWORK      = -lws2_32
++QMAKE_LIBS_CORE         = -lz -lpcre2-16 -liconv -lversion -lnetapi32 -luserenv -lole32 -luuid -lwinmm -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32
++QMAKE_LIBS_GUI          = -lopengl32 -lgdi32 -lcomdlg32 -loleaut32 -limm32 -lwinmm -lws2_32 -lole32 -luuid -luser32 -ladvapi32 -ljpeg -lpng \
++                              $$system($${QMAKE_PKG_CONFIG} --libs harfbuzz) \
++                              $$system($${QMAKE_PKG_CONFIG} --libs freetype2)
++QMAKE_LIBS_GUI_STATIC   = -lopengl32 -lgdi32 -lcomdlg32 -loleaut32 -limm32 -lwinmm -lws2_32 -lole32 -luuid -luser32 -ladvapi32 -ljpeg -lpng \
++                              $$system($${QMAKE_PKG_CONFIG} --static --libs harfbuzz) \
++                              $$system($${QMAKE_PKG_CONFIG} --static --libs freetype2)
++QMAKE_LIBS_NETWORK      = -lws2_32 -lcrypt32 -ldnsapi -liphlpapi
++QMAKE_LIBS_NETWORK_STATIC = $$system($${QMAKE_PKG_CONFIG} --static --libs openssl) \
++                              -lws2_32 -lcrypt32 -ldnsapi -liphlpapi
++QMAKE_LIBS_DBUS         = $$system($${QMAKE_PKG_CONFIG} --libs dbus-1)
++QMAKE_LIBS_DBUS_STATIC  = $$system($${QMAKE_PKG_CONFIG} --static --libs dbus-1)
++QMAKE_LIBS_WIDGETS_STATIC = -ldwmapi -luxtheme
+ QMAKE_LIBS_OPENGL       = -lglu32 -lopengl32 -lgdi32 -luser32
+-QMAKE_LIBS_OPENGL_ES2   = -lgdi32 -luser32
+-QMAKE_LIBS_OPENGL_ES2_DEBUG = -lgdi32 -luser32
++QMAKE_LIBS_OPENGL_ES2   = -l$${LIBEGL_NAME} -l$${LIBGLESV2_NAME} -ld3d9 -ldxguid -lgdi32 -luser32
++QMAKE_LIBS_OPENGL_ES2_DEBUG = -l$${LIBEGL_NAME} -l$${LIBGLESV2_NAME} -ld3d9 -ldxguid -lgdi32 -luser32
+ QMAKE_LIBS_COMPAT       = -ladvapi32 -lshell32 -lcomdlg32 -luser32 -lgdi32 -lws2_32
+ QMAKE_LIBS_QT_ENTRY     = -lmingw32 -lqtmain
+ 
+-QMAKE_IDL               = midl
++QMAKE_IDL               = $${CROSS_COMPILE}widl
+ QMAKE_LIB               = $${CROSS_COMPILE}ar -rc
+ QMAKE_RC                = $${CROSS_COMPILE}windres
++QMAKE_DLLTOOL           = $${CROSS_COMPILE}dlltool
++QMAKE_LRELEASE          = $${CROSS_COMPILE}lrelease-qt5
+ 
+ QMAKE_STRIP             = $${CROSS_COMPILE}strip
+ QMAKE_STRIPFLAGS_LIB   += --strip-unneeded
+ QMAKE_OBJCOPY           = $${CROSS_COMPILE}objcopy
+ QMAKE_NM                = $${CROSS_COMPILE}nm -P
+ 
++PKG_CONFIG              = $${CROSS_COMPILE}pkg-config
++QMAKE_PKG_CONFIG        = $${CROSS_COMPILE}pkg-config
++
+ load(qt_config)
+-- 
+2.16.2
+

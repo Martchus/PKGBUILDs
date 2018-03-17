@@ -9,7 +9,7 @@ shopt -s nullglob
 
 if ! [[ $1 ]]; then
     echo 'No Qt repo specified - must be specified like eg. base or multimedia.'
-    echo "Usage: $0 repo [variant=mingw-w64]"
+    echo "Usage: $0 repo [branch=\$pkgver-\$variant] [variant=mingw-w64]"
     exit -1
 fi
 
@@ -28,7 +28,8 @@ fi
 
 pkg="qt5-$1"
 repo="qt$1"
-variant="${2:-mingw-w64}"
+branch="${2}"
+variant="${3:-mingw-w64}"
 
 # find dest dir
 for dir in "${pkgbuildsdirs[@]}"; do
@@ -67,7 +68,10 @@ done
 
 pushd "$wd" > /dev/null
 git status # do some Git stuff just to check whether it is a Git repo
-if ! git checkout "${pkgver}-${variant}"; then
+if ! [[ $branch ]]; then
+    branch="${pkgver}-${variant}"
+fi
+if ! git checkout "${branch}"; then
     echo "No patches required for $1, skipping."
     exit 0
 fi

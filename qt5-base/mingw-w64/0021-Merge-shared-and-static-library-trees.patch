@@ -1,4 +1,4 @@
-From 297f163b0298a45307f397842bca505c860a7fc3 Mon Sep 17 00:00:00 2001
+From 4c3092a30e8981125414d71fa481436ea4f917f5 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:45:08 +0200
 Subject: [PATCH 21/32] Merge shared and static library trees
@@ -128,5 +128,5 @@ index 0d07d6c333..5e84628e72 100644
  
      t << endl;
 -- 
-2.16.1
+2.16.2
 

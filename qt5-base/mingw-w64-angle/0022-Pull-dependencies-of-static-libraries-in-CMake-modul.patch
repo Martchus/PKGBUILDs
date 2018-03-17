@@ -1,4 +1,4 @@
-From 22098826acc64ddaa2dbbeabe2d509fd8a54a6d1 Mon Sep 17 00:00:00 2001
+From 9913c74ba93c506abaa5f13e02ac29e6cd82783d Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:32:00 +0200
 Subject: [PATCH 22/32] Pull dependencies of static libraries in CMake modules
@@ -278,5 +278,5 @@ index 5e84628e72..43f570fb2c 100644
  }
  
 -- 
-2.16.1
+2.16.2
 

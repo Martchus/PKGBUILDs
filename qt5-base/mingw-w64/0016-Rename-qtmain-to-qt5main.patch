@@ -1,4 +1,4 @@
-From 810f18a177482cbe7bef0a8674b4f47de6730821 Mon Sep 17 00:00:00 2001
+From d659c5369bd8059643edd4674d21e5b575c95b8e Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:25:40 +0200
 Subject: [PATCH 16/32] Rename qtmain to qt5main
@@ -7,8 +7,9 @@ Prevents conflict with mingw-w64-qt4 package
 ---
  mkspecs/features/create_cmake.prf  | 4 ++--
  mkspecs/features/win32/windows.prf | 2 +-
+ mkspecs/win32-g++/qmake.conf       | 2 +-
  src/winmain/winmain.pro            | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/mkspecs/features/create_cmake.prf b/mkspecs/features/create_cmake.prf
 index bb5083c925..146e83ae67 100644
@@ -38,6 +39,19 @@ index ecb167bf18..7c9368c3b3 100644
              !contains(QMAKE_DEFAULT_LIBDIRS, $$QT.core.libs): \
                  QMAKE_LIBS += -L$$QT.core.libs
              CONFIG(debug, debug|release): QMAKE_LIBS += $${entryLib}$${QT_LIBINFIX}d
+diff --git a/mkspecs/win32-g++/qmake.conf b/mkspecs/win32-g++/qmake.conf
+index 848837e732..ad924a7c2a 100644
+--- a/mkspecs/win32-g++/qmake.conf
++++ b/mkspecs/win32-g++/qmake.conf
+@@ -88,7 +88,7 @@ QMAKE_LIBS_OPENGL       = -lglu32 -lopengl32 -lgdi32 -luser32
+ QMAKE_LIBS_OPENGL_ES2   = -l$${LIBEGL_NAME} -l$${LIBGLESV2_NAME} -ld3d9 -ldxguid -lgdi32 -luser32
+ QMAKE_LIBS_OPENGL_ES2_DEBUG = -l$${LIBEGL_NAME} -l$${LIBGLESV2_NAME} -ld3d9 -ldxguid -lgdi32 -luser32
+ QMAKE_LIBS_COMPAT       = -ladvapi32 -lshell32 -lcomdlg32 -luser32 -lgdi32 -lws2_32
+-QMAKE_LIBS_QT_ENTRY     = -lmingw32 -lqtmain
++QMAKE_LIBS_QT_ENTRY     = -lmingw32 -lqt5main
+ 
+ QMAKE_IDL               = $${CROSS_COMPILE}widl
+ QMAKE_LIB               = $${CROSS_COMPILE}ar -rc
 diff --git a/src/winmain/winmain.pro b/src/winmain/winmain.pro
 index 4140ae48de..9ae73db74b 100644
 --- a/src/winmain/winmain.pro
@@ -52,5 +66,5 @@ index 4140ae48de..9ae73db74b 100644
  
  CONFIG += static
 -- 
-2.16.1
+2.16.2
 

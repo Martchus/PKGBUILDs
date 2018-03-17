@@ -3,61 +3,13 @@
 # Contributor: Filip Brcic <brcha@gna.org>
 # Contributor: jellysheep <max.mail@dameweb.de>
 
+# BEFORE COMMENTING OR REPORING ISSUES, PLEASE READ THE FILE `README.md` IN THIS REPOSITORY.
+# ALSO HAVE A LOOK AT THE COMMENTS IN THE AUR.
+
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
 # All patches are managed at https://github.com/Martchus/qtbase
-
-# There are different variants of the package which can be selected by simply adjusting pkgname:
-# - mingw-w64-qt5-base or mingw-w64-qt5-base-opengl: using native OpenGL
-# - mingw-w64-qt5-base-angle: using ANGLE rather than native OpenGL
-# - mingw-w64-qt5-base-dynamic: allows choosing between ANGLE and native OpenGL dynamically at runtime
-# - mingw-w64-qt5-base-noopenql: no OpenGL support
-# The variants are conflicting (and hence can not be installed at the same time).
-# See also: http://doc.qt.io/qt-5/windows-requirements.html#dynamically-loading-graphics-drivers
-
-# The variants listed above only contain dynamic libraries. For building static libraries
-# just append '-static' to the package name, eg. mingw-w64-qt5-base-static or mingw-w64-qt5-base-angle-static.
-# The static variants rely on the corresponding dynamic variant for headers and tools.
-# I only tested the static variant using native OpenGL so far (mingw-w64-qt5-base-static).
-# Note that ANGLE will still be loaded as dynamic library in mingw-w64-qt5-base-dynamic-static.
-
-# By default CMake and qmake will link against the dynamic Qt libraries.
-
-# To use the static Qt libraries with CMake prepend the Qt module name with Static:
-#  eg. find_package(Qt5Core) becomes find_package(StaticQt5Core)
-# To use a static module, add the corresponding imported target, eg.
-#  target_link_libraries(target ... StaticQt5::Core)
-#  and using
-# This approach allows installing dynamic and static Qt in the same prefix
-# and using both variants in the same CMake project.
-
-# To use a static plugin, add the corresponding imported target, eg.
-#  target_link_libraries(target ... StaticQt5::QWindowsIntegrationPlugin)
-# Automatically importing static plugins is currently not possible, though. Hence it is required to use Q_IMPORT_PLUGIN, eg.
-#  #include<QtPlugin>
-#  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
-
-# It is also possible to use static Qt libraries with CMake by setting the
-# variable USE_STATIC_QT_BY_DEFAULT: set(USE_STATIC_QT_BY_DEFAULT ON)
-# In this case the regular imported targets (eg. Qt5::Core) will be static.
-# This approach does *not* allow to use dynamic and static Qt in the same
-# CMake project.
-
-# To use the static Qt libraries with qmake add 'static' to the project config (either inside the *.pro file or as qmake argument):
-#  CONFIG+=static
-
-# Further Qt modules (those not found in the base repository and hence not included in this package) include by default
-# static and dynamic libraries; if only one version is requried, just set NO_STATIC_LIBS or NO_SHARED_LIBS when building
-# the package, eg. by adding 'NO_STATIC_LIBS=1' to /etc/makepkg.conf.
-
-# By default, executables will not be removed because I find them useful when testing. To remove executables
-# set NO_EXECUTABLES (or NO_STATIC_EXECUTABLES to remove statically linked executables only) when building the package.
-# If Qt modules containing tools are built as static and as dynamic library only the dynamically linked tools will be present
-# in the package.
-
-# Qt packages can be built in the following order (for example):
-#  qt5-base qt5-base-static qt5-declarative qt5-tools qt5-xmlpatterns qt5-script qt5-location qt5-multimedia qt5-sensors qt5-webchannel qt5-3d qt5-imageformats qt5-quickcontrols qt5-quickcontrols2 qt5-translations qt5-svg qt5-websockets qt5-winextras qt5-serialport qt5-canvas3d qt5-connectivity qt5-charts qt5-gamepad qt5-scxml qt5-datavis3s qt5-virtualkeyboard qt5-activeqt qt5-webkit
 
 # Helper functions for the split builds
 isDefault() {
@@ -85,7 +37,7 @@ isNoOpenGL() {
 
 pkgname=mingw-w64-qt5-base
 pkgver=5.10.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 # The static variant doesn't contain any executables which need to be executed on the build machine
 isStatic && arch=('any') || arch=('i686' 'x86_64')
@@ -100,7 +52,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtbase-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
-        '0001-Add-profile-for-cross-compilation-with-mingw-w64.patch'
+        '0001-Adjust-win32-g-profile-for-cross-compilation-with-mi.patch'
         '0002-Ensure-GLdouble-is-defined-when-using-dynamic-OpenGL.patch'
         '0003-Use-external-ANGLE-library.patch'
         '0004-Fix-too-many-sections-assemler-error-in-OpenGL-facto.patch'
@@ -133,38 +85,38 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/subm
         '0031-Hardcode-linker-flags-for-platform-plugins.patch'
         '0032-Fix-linking-against-static-plugins-with-qmake.patch')
 sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969'
-            '6b29d7a3751a506c15155425d6dc213e9f4654ee5b833007a0119bda6a050b28'
-            'ca10438f4a2d309f496e85d7b974d9eeb88115e068e146ca511b9784db95b822'
-            '75bf0d8b155f95bad2dfbc5c046f88afd6a5f2233336a1f6d148583ba445fca6'
-            'd70dcd1c44e751b0120f514af9db4ff20ebb0a327a22a371cf5e8d9453f66953'
-            'cbad834340bc9e9261704034e9192bd0d7306f9ff02a99fd73fc348948c37ed9'
-            '3c7cd1839a6f0891b871c75824b8ebeb05e4e61884c342d6b6ab583f10819138'
-            'c923da99871dac4fc58b8e70bd76c70fba0f421fc676a53bcb8c0187190ba737'
-            'f9be656281652f72297f1e573f23298c22f4849857d92106096feb4b3fe9244f'
-            '5add111a9e521159e31ecef4d85ebef86285bbbe2adce5d8cec94fd22822731e'
-            '7d38e79bc6b2e5d74515291bf78c3a6168f8bc834f7f59bda2c013f65e45bd3e'
-            '9ab62cc8cd1cf68ee5e87e276d5a2f19c43b04a1c50c10341794924277cfcca5'
-            'f1926bd51376a95ea1deee933dadd62166296e5780e24ce8312637c9d3eda27b'
-            '03f7a178af6b630f48da79c76e1239695d96137fd8394ba814e4bdf8c7e0a826'
-            'dc3e0e3fe4ba979f74ff9dc343b235d32473edb18ca7f8afea3076f613564a95'
-            'ef64b965a19e1e2848761829a6817dcb9f3ad616faa666f9e52736d810190c66'
-            '9e0c3848df586ec7decd9b7a6dab86a9e7e5cc7bf5ac06ff97d7d63e370bb05b'
-            '7dc90045a838f9ebcb7933d582abb3e8bba250644602e1019bf1a03e74cc3b09'
-            'b5cc23a29e80ec8185da8ca0950ab8a2f12f4ef4b998c763334d352e68b53fc2'
-            '944cfdbfd9d13285aefb4305596950d2880cc1023b5ad241af08e3d6995daa69'
-            '5f7498a98912542c39b081c2df1930246df3bdb533c2e30204bf795cea8b885f'
-            '0b8408d70a4544e43fd573e5b9ac751fb2732d3e4490f21e1737ac09ece25b62'
-            '08155a41f22c03741096145bf201d5503e38495c2f255f3c81ea658948258cd3'
-            '7b30d46f739dffa20a1964e09958a92af1749104fe7a88d7ea255aa54e553b25'
-            'c92d6a124b7b0333175122555ef9f647817eb54563480cf3eaaf47decfd907c3'
-            '0818c4d59aabb898fed8f313e21085cc8fc576d3f4975383eb73ba3f758c302e'
-            'ce5d416a3404199072062063d8038084c23bbfe8aa45ed3340c4afb4dfa461e4'
-            '8d1e93bea1cdcdf1b965f4c061975668334cef6a65130f1b4b528f2b6952a602'
-            '298ffdcd378e2b07fe8e978cfb5faac29c117a5f79288273545a6938b905f33a'
-            '7514edba8ecd28b27715650bbafa8649492b68efba1df9c9fa70f06a924fea14'
-            '7c232c385303b447e17270b946d333b56274312b08b4e76439a5f77cb77aa909'
-            'acfdf70ae8738a0373bbd93e42048d1c699f666dd72933ad3c09b09620fb0715'
-            'c3df40da9b2494e59aae786a26ba93d88128b69971d10a64cb6d610045a101f8')
+            '1c482310bbfef78733a2013f42e505657059e720cf139ddcf5ad692c4dbf06b1'
+            '45a1020a351931b7171e55ef8165d2cc4af3bf2473b142daa51f3b5b15c447f3'
+            'ceb05dabed9fa2fc781e5abcfb54285960267922bac753df4179831a240da9b7'
+            'c4138094696342f8f976c01c9ce66919ae38802f36d3280b47883446e8d74bf9'
+            '2f99ae05056636b434bf7a533db6de7561c6f6e3fe8e854b4e9a182e30c684b3'
+            'fa69c484d557f45b1929e0b4be6328837717337155477a8fab3f9ea59731c749'
+            '57de459c6af72293560afcf7a872b1a4b10badd986c1fc1b43d7aaf55caf52c5'
+            '58e6f6a0271e82be5b7560a247cb70809169148e6413c473e2c3fed97e5d1c45'
+            'ea39d2b90a848a4c36a7685688283b773ff2ed5e6912be52a943f31376eefc81'
+            'b8f5a6a707f20cce64d9e5f04c35c555d7d14cd20344510205babc9a5698a15a'
+            'b1eaea87c7d7b774657feb4745450ab4e423c158ff81c144d724dcd8ac950c6f'
+            '8092fe23e35906b9a967ec78e1892769f06f1699c4c177ea0814876fb7c423d2'
+            '4b73f19e254466e5e4d13459088f773a44c9f05033ad5d29995c5116f18f999d'
+            '6a1411e406efab5521af71b2b8cf122c8443157114799f23d3e2cd1dc59c8e14'
+            '52b0fc09f05d1ca2efbf3a046cf933e72dae4bfd63026298fd60360103106c5a'
+            '30b5bded4f2e3ac5e4c83412c92afe0ad604e3eb18a94a3357f220b5e0456d86'
+            '1a18636d6089fe49ae7e0592dad6d71a1466aa0fc2d033ca926c14e468aff0c9'
+            '9710090523aefca66211bd8b74bcdc650125299912b735ba4845408e9e860649'
+            '551f05ad17737fe8b9b00c24a3a5539988455cbb706458e44c3df2df56599f63'
+            'd2f5aaacd2be586cfab27a23120a9f21749c1ac96664071c399f91097274ec89'
+            '23878d79148e4db9e1c5ba2e6e6d2ced259b64aa1ba2f1503ab9938863b2104f'
+            '30f5b6c738609a8ac03f806b86a632c3cf6d85b56e038f812d46358b592cc427'
+            '2782b7eb4f55cb5905b5bcb8387ad3a7130727b036b0fc482b1294380862f5d1'
+            '156e720e4ad44f257019dbe2fe1eef7b7a27989307f8a9f53072f4cbe178c655'
+            '53088ce6f9a22ee1735fb8b7145ce569ac1914ac05fb947ca3afae39d3cb3199'
+            'e61f2fd0c91c72822c1074844897641ce1c9500423b4c646aa8ae1671f9f967b'
+            'cccad985154167818657d0561ec349cb75931a0a64a689ab51041337d73a88b8'
+            'ffbc7f20785904ba64f108498aafe8b5a4c1de76c44aa5353ee3d7202f186408'
+            '1572c30c43e9e6d23d0f42c99c9501f092eae5d2bad2b0bc0eb694b295c0c473'
+            'ef96dffc0dd3bb76b237c6e886d6d5cc154e25f5ed4d5f65643e272a58306327'
+            '73d9df72df2f55c19ddeb9241de818d39c8da3399eee55f306889dc3c11dc934'
+            '892bb35a340597c77da5310685cc47102cf2522fb01cbc6d1785016babc78727')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

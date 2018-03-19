@@ -38,16 +38,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/a
 sha256sums=('bb68130de4bb47fb7da4d4cefecbec6ec5fca3408790c172dfd9779b7e3b14d7')
 
 ephemeral_port() {
-  local lport=32768;
-  local uport=60999;
-  while true; do
-    local mport=$[$lport + ($RANDOM % $uport)];
-    (echo '' >/dev/tcp/127.0.0.1/${mport}) >/dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
-        echo $mport;
-        return 0;
-    fi
-  done
+  comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1
 }
 
 build() {

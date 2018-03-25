@@ -13,3 +13,7 @@ declare -A versions=(
     [dbus-soundrecorder]=1.2.2
     [qt5]=5.10.1
 )
+declare -A github_names=(
+    [c++utilities]=cpp-utilities
+    [qt5]=skip
+)

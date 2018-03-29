@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
 source versions.sh

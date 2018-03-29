@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 declare -A versions=(
     [c++utilities]=4.13.0
     [qtutilities]=5.9.0

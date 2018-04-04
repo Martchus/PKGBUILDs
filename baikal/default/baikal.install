@@ -1,0 +1,28 @@
+# Maintainer: Florian Bruhin (The Compiler) <archlinux.org@the-compiler.org>
+
+post_install() {
+  if [[ ! -f /var/lib/baikal/db/db.sqlite ]]; then
+    # Create initial database if it doesn't exist.
+    # Note we can't do this while packaging because we don't want to override
+    # an older database.
+    mkdir /var/lib/baikal/db
+    cp /usr/share/webapps/baikal/Core/Resources/Db/SQLite/db.sqlite \
+      /var/lib/baikal/db
+    chown -R http:http /var/lib/baikal
+  fi
+  echo "Please add /var/lib/baikal to open_basedir in your /etc/php.ini."
+  echo
+  echo "You also need to set up your webserver for baikal, there are example"
+  echo "configs for Apache/nginx at http://sabre.io/baikal/install/."
+  echo
+  echo "After that, navigate to your baikal instance to complete the setup."
+}
+
+post_upgrade() {
+  if [[ $(vercmp $2 '0.2.7-5') == -1 ]]; then
+    echo "Please add /var/lib/baikal to open_basedir in your /etc/php.ini."
+  fi
+  echo "Navigate to your baikal admin interface to complete the upgrade."
+}
+
+# vim:set ts=2 sw=2 et ft=sh:

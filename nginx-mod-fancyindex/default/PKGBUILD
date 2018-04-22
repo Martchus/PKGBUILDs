@@ -1,0 +1,41 @@
+# $Id$
+# Maintainer: Martchus <martchus@gmx.net>
+
+pkgname=nginx-mod-fancyindex
+pkgver=0.4.2
+pkgrel=1
+_dirname="ngx-fancyindex-${pkgver}"
+_nginxver=1.14.0
+
+pkgdesc='Fancy indexes module for the Nginx web server'
+arch=('x86_64')
+depends=("nginx=$_nginxver" "libutil-linux")
+url='https://github.com/aperezdc/ngx-fancyindex'
+license=('CUSTOM')
+
+source=(
+  https://nginx.org/download/nginx-$_nginxver.tar.gz{,.asc}
+  "$pkgname-$pkgver::https://github.com/aperezdc/ngx-fancyindex/archive/v${pkgver}.tar.gz"
+)
+validpgpkeys=(B0F4253373F8F6F510D42178520A9993A1C052F8) # Maxim Dounin <mdounin@mdounin.ru>
+sha256sums=('5d15becbf69aba1fe33f8d416d97edd95ea8919ea9ac519eff9bafebb6022cb5'
+            'SKIP'
+            '8327150864ca267b735d550d3304030efbbd863fdddfe0a94e970f249a8827ee')
+
+prepare() {
+  cd "$srcdir/$_dirname"
+}
+
+build() {
+  cd "$srcdir"/nginx-$_nginxver
+  ./configure --with-compat --add-dynamic-module="../$_dirname"
+  make modules
+}
+
+package() {
+  install -Dm755 "$srcdir/$_dirname/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
+  cd "$srcdir"/nginx-$_nginxver/objs
+  for mod in ngx_*.so; do
+    install -Dm755 $mod "$pkgdir"/usr/lib/nginx/modules/$mod
+  done
+}

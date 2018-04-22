@@ -1,12 +1,13 @@
 # Maintainer: Dinesh Manajipet <saidinesh5@gmail.com>
+# Contributor: Martchus <martchus@gmx.net>
 
 _pkgname=mxedeployqt
 pkgname=$_pkgname-git
 pkgver=0.1
 pkgrel=1
-pkgdesc="A little tool to substitute the missing windeployqt in mxe. It grabs all the qt dependencies your program may need, in order to deploy it.; MIT license - git development version"
-arch=('i686' 'x86_64')
-url="https://github.com/saidinesh5/mxedeployqt"
+pkgdesc='Little tool to substitute the missing windeployqt in mxe by grabbing all required Qt dependencies (git version)'
+arch=('any')
+url='https://github.com/saidinesh5/mxedeployqt'
 license=('MIT')
 groups=()
 depends=(python)

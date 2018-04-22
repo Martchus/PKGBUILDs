@@ -25,6 +25,29 @@ where `default-pkg-name` is the default package name (eg. `qt5-base`) and `varia
 
 The repository does not contain `.SRCINFO` files.
 
+## Contributing to patches
+Patches for most packages are managed in a fork of the project under my GitHub profile. For instance,
+patches for `mingw-w64-qt5-base` are managed at [github.com/Martchus/qtbase](https://github.com/Martchus/qtbase).
+
+I usually create a dedicated branch for each version, eg. `5.10.1-mingw-w64`. It contains all the patches based on
+Qt 5.10.1. When doing fixes later on, I usually preserve the original patches and create a new branch, eg.
+`5.10.1-mingw-w64-fixes`.
+
+So in this case it would make sense to contribute directly there. To fix an existing patch, just create a fixup commit.
+This (unusual) fixup workflow aims to keep the number of additional changes as small as possbile.
+
+To get the patches into the PKGBUILD files, the script `devel/qt5/update-patches.sh` is used.
+
+### Mass rebasing of Qt patches
+This is always done by me. Please don't try to help here because it will only cause conflicts. However, the
+workflow is quite simple:
+
+1. Run `devel/qt5/rebase-patches.sh` on all Qt repository forks
+    * eg. `rebase-patches.sh 5.11.0 5.10.1 fixes` to create branch `5.11.0-mingw-w64` based on `5.10.1-mingw-w64-fixes`
+    * after fixing possible conflicts, run `devel/qt5/continue-rebase-patches.sh`
+    * otherwise, that's it
+2. Run `devel/qt5/update-patches.sh` or `devel/qt5/update-all-patches.sh` to update PKGBUILDs
+
 ## Binary repository
 I also provide a [binary repository](https://martchus.no-ip.biz/repo/arch/ownstuff/os) containing the packages found
 in this repository and a lot of packages found in the AUR.

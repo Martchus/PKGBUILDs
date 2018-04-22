@@ -48,6 +48,16 @@ workflow is quite simple:
     * otherwise, that's it
 2. Run `devel/qt5/update-patches.sh` or `devel/qt5/update-all-patches.sh` to update PKGBUILDs
 
+## Supported build and deployment tools for mingw-w64-qt5 packages
+Currently, I test with qmake and CMake. With both build systems it is possible to use either the shared or the
+static libraries. Please read the comments in the PKGBUILD file itself and the pinned comments in
+[the AUR](https://aur.archlinux.org/packages/mingw-w64-qt5-base) for futher information.
+
+There are also pkgconfig files, but those aren't really tested.
+
+qbs and windeployqt currently don't work very well (see issues). Using mxedeployqt might be an alternative for
+windeployqt.
+
 ## Binary repository
 I also provide a [binary repository](https://martchus.no-ip.biz/repo/arch/ownstuff/os) containing the packages found
 in this repository and a lot of packages found in the AUR.

@@ -23,18 +23,8 @@ provides=('libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
           'libswscale.so'
           "ffmpeg=$pkgver")
 conflicts=("$_name")
-source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git'
-        'fs56089.patch')
-sha256sums=('SKIP'
-            '0bfcd12d1992903f21c146ae56d9ad89b52818cfb2303197ee905347c25a5427')
-
-prepare() {
-  cd ffmpeg-${pkgver}
-
-  # https://bugs.archlinux.org/task/56089
-  # Backport of http://git.videolan.org/?p=ffmpeg.git;a=commitdiff;h=a606f27f4c610708fa96e35eed7b7537d3d8f712
-  patch -Np1 -i ../fs56089.patch
-}
+source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$pkgname"
@@ -90,7 +80,7 @@ build() {
 
   make
   make tools/qt-faststart
-  make doc/ff{mpeg,play,server}.1
+  make doc/ff{mpeg,play}.1
 
   cp /usr/share/licenses/libfdk-aac/NOTICE .
 }

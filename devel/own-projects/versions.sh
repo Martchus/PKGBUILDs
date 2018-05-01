@@ -2,7 +2,7 @@
 declare -A versions=(
     [c++utilities]=4.13.0
     [qtutilities]=5.9.0
-    [tagparser]=7.0.0
+    [tagparser]=7.0.1
     [tageditor]=3.0.0
     [passwordfile]=3.1.4
     [passwordmanager]=3.1.5

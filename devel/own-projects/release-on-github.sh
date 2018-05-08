@@ -3,6 +3,11 @@ set -e # abort on first error
 shopt -s nullglob
 source versions.sh
 
+if ! [[ $GITHUB_TOKEN ]]; then
+    echo "Don't forget to set \$GITHUB_TOKEN."
+    exit -2
+fi
+
 # release latest version of my projects on GitHub (if not already released yet)
 for project in "${!versions[@]}"
 do

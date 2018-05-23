@@ -83,7 +83,7 @@ prepare() {
   python2 scripts/bootstrap.py
   gclient sync --deps=all
 
-  # Apply patches; further descriptions can be found in patch files itself
+  # apply patches; further descriptions can be found in patch files itself
   for patch in "$srcdir/"*.patch; do
     patch -p1 -i "$patch"
   done

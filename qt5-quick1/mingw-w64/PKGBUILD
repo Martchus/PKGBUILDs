@@ -55,7 +55,7 @@ package() {
 
       make INSTALL_ROOT="$pkgdir" install
 
-      # Use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
+      # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
       if [[ -d 'lib' ]]; then
         pushd 'lib'
         find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
@@ -67,23 +67,23 @@ package() {
         popd
       fi
 
-      find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
+      find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name '*.dll' -delete
       [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \
-        find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec rm {} \; || \
-        find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
-      find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
-      find "${pkgdir}/usr/${_arch}" -name "*.a" -exec ${_arch}-strip -g {} \;
+        find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete || \
+        find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
+      find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
+      find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;
       [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \
         find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
       find "${pkgdir}/usr/${_arch}/lib/" -iname "*.so.$pkgver" -exec strip --strip-unneeded {} \;
       popd
     done
 
-    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    # drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
   done
 
-  # Make sure the executables don't conflict with their mingw-qt4 counterpart
+  # make sure the executables don't conflict with their mingw-qt4 counterpart
   for _arch in ${_architectures}; do
     for exe_file in "${pkgdir}/usr/${_arch}/bin/"*.exe; do
       [[ -f $exe_file ]] && mv "${exe_file}" "${exe_file%.exe}-qt5.exe"

@@ -5,7 +5,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=apple-darwin-qt5-base
-pkgver=5.10.1
+pkgver=5.11.0
 pkgrel=1
 pkgdesc='A cross-platform application and UI framework (apple-darwin)'
 arch=('i686' 'x86_64')
@@ -74,7 +74,7 @@ patch() {
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
 
-  # Apply patches; further descriptions can be found in patch files itself
+  # apply patches; further descriptions can be found in patch files itself
   for patch in "$srcdir/"*.patch; do
     patch -p1 -i "$patch"
   done
@@ -195,6 +195,6 @@ package() {
     [[ $APPLE_DARWIN_QT_DEBUG_BUILD ]] || find "${pkgdir}/${_osxcrossprefix}" -iname '*_debug*' -exec rm {} \;
   done
 
-  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  # drop QMAKE_PRL_BUILD_DIR because reference the build dir
   find "$pkgdir/${_osxcrossprefix}" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 }

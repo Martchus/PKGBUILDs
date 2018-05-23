@@ -62,11 +62,11 @@ package() {
 
     make INSTALL_ROOT="${pkgdir}" install
 
-    # Use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
+    # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
     if [[ -d 'lib' ]]; then
-        pushd 'lib'
-        find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
-        popd
+      pushd 'lib'
+      find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
+      popd
     fi
     if [[ -d 'plugins' ]]; then
       pushd 'plugins'
@@ -74,14 +74,24 @@ package() {
       popd
     fi
 
-    # The .dll's are installed in both bindir and libdir
-    # One copy of the .dll's is sufficient
-    rm -f "${pkgdir}/usr/${_arch}/lib/"*.dll
-    find "${pkgdir}/usr/${_arch}" -name "*.exe" -o -name "*.bat" -o -name "*.def" -o -name "*.exp" -o -name '*.prl' | xargs -rtl1 rm
-    find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
-    find "${pkgdir}/usr/${_arch}" -name "*.a" -o -name "*.dll" | xargs -rtl1 ${_arch}-strip -g
+    # replace library path in *.prl files so it points to the installed location and not the build directory
+      find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:$PWD/lib:/usr/$_arch/lib:g" {} \;
 
-    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
-    find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+    # remove prl files for debug version
+    if ! [[ $MINGW_W64_QT_DEBUG_BUILD ]]; then
+      for file in $(find "${pkgdir}/usr/${_arch}" -name '*d.prl' -o -name '*d.static.prl'); do
+        [ -f "${file%d*}${file##*d}" ] && rm "${file}";
+      done
+    fi
+
+    find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name '*.dll' -delete
+    [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \
+    find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete || \
+    find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
+    find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;
+    [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \
+    find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
+    find "${pkgdir}/usr/${_arch}/lib/" -iname "*.so.$pkgver" -exec strip --strip-unneeded {} \;
   done
 }

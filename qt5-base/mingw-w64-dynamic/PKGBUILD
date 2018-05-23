@@ -36,8 +36,8 @@ isNoOpenGL() {
 }
 
 pkgname=mingw-w64-qt5-base-dynamic
-pkgver=5.10.1
-pkgrel=2
+pkgver=5.11.0
+pkgrel=1
 pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 # The static variant doesn't contain any executables which need to be executed on the build machine
 isStatic && arch=('any') || arch=('i686' 'x86_64')
@@ -83,40 +83,42 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/subm
         '0029-Ignore-failing-pkg-config-test.patch'
         '0030-Prevent-qmake-from-messing-static-lib-dependencies.patch'
         '0031-Hardcode-linker-flags-for-platform-plugins.patch'
-        '0032-Fix-linking-against-static-plugins-with-qmake.patch')
-sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969'
-            '1c482310bbfef78733a2013f42e505657059e720cf139ddcf5ad692c4dbf06b1'
-            '45a1020a351931b7171e55ef8165d2cc4af3bf2473b142daa51f3b5b15c447f3'
-            'ceb05dabed9fa2fc781e5abcfb54285960267922bac753df4179831a240da9b7'
-            'c4138094696342f8f976c01c9ce66919ae38802f36d3280b47883446e8d74bf9'
-            '2f99ae05056636b434bf7a533db6de7561c6f6e3fe8e854b4e9a182e30c684b3'
-            'fa69c484d557f45b1929e0b4be6328837717337155477a8fab3f9ea59731c749'
-            '57de459c6af72293560afcf7a872b1a4b10badd986c1fc1b43d7aaf55caf52c5'
-            '58e6f6a0271e82be5b7560a247cb70809169148e6413c473e2c3fed97e5d1c45'
-            'ea39d2b90a848a4c36a7685688283b773ff2ed5e6912be52a943f31376eefc81'
-            'b8f5a6a707f20cce64d9e5f04c35c555d7d14cd20344510205babc9a5698a15a'
-            'b1eaea87c7d7b774657feb4745450ab4e423c158ff81c144d724dcd8ac950c6f'
-            '8092fe23e35906b9a967ec78e1892769f06f1699c4c177ea0814876fb7c423d2'
-            '4b73f19e254466e5e4d13459088f773a44c9f05033ad5d29995c5116f18f999d'
-            '6a1411e406efab5521af71b2b8cf122c8443157114799f23d3e2cd1dc59c8e14'
-            '52b0fc09f05d1ca2efbf3a046cf933e72dae4bfd63026298fd60360103106c5a'
-            '30b5bded4f2e3ac5e4c83412c92afe0ad604e3eb18a94a3357f220b5e0456d86'
-            '1a18636d6089fe49ae7e0592dad6d71a1466aa0fc2d033ca926c14e468aff0c9'
-            '9710090523aefca66211bd8b74bcdc650125299912b735ba4845408e9e860649'
-            '551f05ad17737fe8b9b00c24a3a5539988455cbb706458e44c3df2df56599f63'
-            'd2f5aaacd2be586cfab27a23120a9f21749c1ac96664071c399f91097274ec89'
-            '23878d79148e4db9e1c5ba2e6e6d2ced259b64aa1ba2f1503ab9938863b2104f'
-            '30f5b6c738609a8ac03f806b86a632c3cf6d85b56e038f812d46358b592cc427'
-            '2782b7eb4f55cb5905b5bcb8387ad3a7130727b036b0fc482b1294380862f5d1'
-            '156e720e4ad44f257019dbe2fe1eef7b7a27989307f8a9f53072f4cbe178c655'
-            '53088ce6f9a22ee1735fb8b7145ce569ac1914ac05fb947ca3afae39d3cb3199'
-            'e61f2fd0c91c72822c1074844897641ce1c9500423b4c646aa8ae1671f9f967b'
-            'cccad985154167818657d0561ec349cb75931a0a64a689ab51041337d73a88b8'
-            'ffbc7f20785904ba64f108498aafe8b5a4c1de76c44aa5353ee3d7202f186408'
-            '1572c30c43e9e6d23d0f42c99c9501f092eae5d2bad2b0bc0eb694b295c0c473'
-            'ef96dffc0dd3bb76b237c6e886d6d5cc154e25f5ed4d5f65643e272a58306327'
-            '73d9df72df2f55c19ddeb9241de818d39c8da3399eee55f306889dc3c11dc934'
-            '892bb35a340597c77da5310685cc47102cf2522fb01cbc6d1785016babc78727')
+        '0032-Fix-linking-against-static-plugins-with-qmake.patch'
+        '0033-Disable-hardware-randomizer-for-32-bit.patch')
+sha256sums=('ed6e46db84f7d34923ab4eae165c63e05ab3cfa9d19a73d3f57b4e7bfd41de66'
+            'd01df5be5f96578f65c0343b1ae6eaac31e0c7608fb9b69e745865a5dfc8a1a3'
+            '29621ba67b026c9fb61ba865ba9d6198d3b8914623609b97bbc375feb33415b2'
+            '58435fde3af1478450c49637581884c217bd9080704dc80d035eb38df4706a6e'
+            '3b4dff095110e60257f794c31e5c3b7f73c91d690c7acb3182b489d04988dd27'
+            '2b62c549626e76da5c36779fe7dd18bddb8041fdb1b983cd29651cf5b0a2b905'
+            '5c94228d93b7a6340098968738477f9720908a360358f51cd1bc6590e83679c0'
+            '164b09da056113e19b859a151f93803f19e0c9ea5130db916722f5f0bcb7a8cd'
+            '351e61261c87d700f4076c6d3f19e81a60d1bfcc0e64f2164cb2696c47a0fafc'
+            'a1ed220ddba56656fdbc37163e794f3b43e9a5dae6099b2b23967e870cd9214e'
+            '844d136f65d498dc1eea11e1882cf2645320d249c82fdcec5d25875e9158cb39'
+            'a4a4f5ea9bc79b474ea3c5d86903054d6e9242a22b84589c210b3b8c2f797447'
+            '7d1d1d57bff00ae77d5480955b85737bd4f30185f5b99f8b34d89f90976f53fb'
+            '1937bb971912fa7021295174aee8c250a7be9c2d3e3ad76f700d9f7d80fd1117'
+            '504fd54855d13a326cb65cffc006d1c67d9e6236830df9f581106ae8fe319fff'
+            'b732bca79bced6595e278e9e7ceec79306f51be121e78db0a9faa461344c918d'
+            'f86242c7e013971812c9a17d667db362ac10d19a63b51cda23d1f306bc8f3242'
+            'da007b133f51f27342854e0fb251a1784096f24dab454def99c8496c143f38e5'
+            'e6e8f2290a019071ded71c090c3cb8b24e0e33a37dcabdc6f676b886c18dd06a'
+            '83645b01666aae48121ea9a952c6cfce9ba2aedb3edb9e1b11a893a5d8882831'
+            'bb7e54a090ceb6cddac43acee2f34d888a15df2ae0e99808ef6aad9ff6e9ebcf'
+            '7166f4ab8b7c5a60c4a6e3ac86411719fab67ef6a6c5a16463c6541e9955ce17'
+            'bf1defbedd5c0d26aa000178092ac2c87ecb70b992184dc8ffff4502351e70c2'
+            '29289ac6b2380c4a5d551d3c9b331f9b13190f4dafabdc203dcbfabcb4075c4d'
+            '0494a41d31ff097cd59117557a6869c5e0e7670eef33267f93974c15e4445e76'
+            'bc53b50f4055170fea15b669366b8961e896d2705f91382ee3beea013979408e'
+            '08d299eb938edc1d535bbb68b5b720203e2dffbc49129218bb1368791e6fb384'
+            '20d945b374b0e73501013fcf6ba9fd7e8732b76060c948faeb42c605f2f9dd1f'
+            'd9eeaceb89efd143918a1bfed6b60d33e004e8421a613036647f318320b25d6a'
+            'fb54191f4479ed66446d9c6b9066be11c5d2d580ff4aa0910a3ad29183329e75'
+            'df8bfa7901b6af9de447a4f4d0983419f7c1fe5882cc97614d0e5b0759c67dec'
+            '65d4a1aedc465dd9f5284cd1e2a352bc3c21e8e8e697e58ff9e89f54e5fcb173'
+            '178144d85cf4c69ae5cea694959a555c4a8eb3a0a5ad5116a2c979beac0e36c0'
+            '704c95d7fc157e58cc7d4436eb74bdcc0453ba29bb3326a3fe511ee35273e4c3')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
@@ -158,39 +160,33 @@ patch() {
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
 
-  # Apply patches; further descriptions can be found in patch files itself
+  # apply patches; further descriptions can be found in patch files itself
   for patch in "$srcdir/"*.patch; do
     patch -p1 -i "$patch"
   done
 
-  # Make sure the Qt5 build system uses our external ANGLE library
+  # make sure the Qt 5 build system uses our external ANGLE library
   rm -rf src/3rdparty/angle include/QtANGLE/{EGL,GLES2,GLES3,KHR}
 
-  # As well as our external PCRE library and zlib
+  # as well as our external PCRE library and zlib
   rm -rf src/3rdparty/{pcre,zlib}
 }
 
 build() {
   cd "${srcdir}/${_pkgfqn}"
 
-  # Do not set any flags here, flags are configured via mkspec
-  # Setting flags here is not appropriate as it does not allow to
-  # distinguish between flags for native compiler and cross compiler
+  # do not set any flags here, flags are configured via mkspec
+  # (Setting flags here is not appropriate as it does not allow to
+  #  distinguish between flags for native compiler and cross compiler.)
   unset CFLAGS
   unset CXXFLAGS
   unset LDFLAGS
   unset PKG_CONFIG_PATH
 
   for _arch in ${_architectures}; do
-    # To prevent conflicts with the mingw-w64-qt4 package we have
-    # to put tools in a dedicated folder
-
-    # The last device option allows using ccache despite the use of
-    # pre-compile header
-    # (sloppiness must be set to pch_defines,time_macros in ccache config)
-
+    # define general configure arguments
     local qt_configure_args="\
-      -xplatform mingw-w64-g++ \
+      -xplatform win32-g++ \
       -optimized-qmake \
       -verbose \
       -opensource \
@@ -229,18 +225,22 @@ build() {
       -sysconfdir /usr/${_arch}/etc \
       -translationdir /usr/${_arch}/share/qt/translations \
       -device-option CROSS_COMPILE=${_arch}- \
-      -device-option CROSS_COMPILE_PREFIX=/usr/${_arch} \
-      -device-option CROSS_COMPILE_CFLAGS=-fpch-preprocess"
+      -device-option CROSS_COMPILE_PREFIX=/usr/${_arch}"
 
-    # Fix include directory of freetype2 and dbus
-    qt_configure_args+=" $(${_arch}-pkg-config --cflags-only-I freetype2 dbus-1)"
+    # allows using ccache despite the use of pre-compile header (sloppiness must be set to pch_defines,time_macros in ccache config for this)
+    qt_configure_args+=' -device-option CROSS_COMPILE_CFLAGS=-fpch-preprocess'
 
-    # Enable debug build if MINGW_W64_QT_DEBUG_BUILD is set (in /etc/makepkg.config)
+    # add include directory of freetype2 and dbus manually (pkg-config detection in qmake doesn't work which is currently ignored via a patch)
+    qt_configure_args+=" $(${_arch}-pkg-config --cflags-only-I freetype2 dbus-1 | sed -e "s/-I\/usr\/${_arch}\/include //g")"
+    # note: The sed is required to prevent -isystem /usr/${_arch}/include (qmake will turn -I into -isystem) which would lead to
+    #       the same issue as here: https://github.com/Martchus/tageditor/issues/22#issuecomment-330899141
+
+    # enable debug build if MINGW_W64_QT_DEBUG_BUILD is set (could be set in eg. /etc/makepkg.config if debug build is wanted)
     [[ $MINGW_W64_QT_DEBUG_BUILD ]] \
       && qt_configure_args+=' -debug-and-release' \
       || qt_configure_args+=' -release'
 
-    # Configure usage of ANGLE/OpenGL
+    # configure usage of ANGLE/OpenGL
     if isOpenGL; then
       msg2 'Using native OpenGL backend'
       qt_configure_args+=' -opengl desktop'
@@ -255,35 +255,38 @@ build() {
         msg2 'Using ANGLE as OpenGL backend'
         qt_configure_args+=' -angle'
       fi
-      # GL_GLEXT_PROTOTYPES must be defined to enable declarations of GLES functions
+      # enable declarations of GLES functions
       qt_configure_args+=' -DGL_GLEXT_PROTOTYPES'
     fi
 
-    # Fix MariaDB
+    # add include directory of MariaDB
     qt_configure_args+=" -I/usr/${_arch}/include/mariadb"
 
     msg2 'Configure and build qmake'
     mkdir -p ../build-${_arch} && pushd ../build-${_arch}
     if isStatic; then
-      export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32"
-      ../${_pkgfqn}/configure \
-        $qt_configure_args \
-        -static \
-        -openssl-linked
-      msg2 'Build static Qt libraries'
-      make
+      qt_configure_args+=' -static'
+
+      # configure static version to use linked OpenSSL
+      qt_configure_args+=' -openssl-linked'
+      export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32 -ldnsapi -liphlpapi"
+
     else
-      # The LD_LIBRARY_PATH override is needed because libQt5Bootstrap* are shared
-      # libraries which various compiled tools (like moc) use. As the libQt5Bootstrap*
-      # libraries aren't installed at this point yet, we have to workaround this
-      ../${_pkgfqn}/configure \
-        $qt_configure_args \
-        -shared \
-        -openssl-runtime \
-        -device-option 'CROSS_COMPILE_CUSTOM_CONFIG=actually_a_shared_build'
-      msg2 'Build shared Qt libraries'
-      LD_LIBRARY_PATH="$PWD/lib" LDFLAGS="-L$PWD/lib" make
+      qt_configure_args+=' -shared'
+
+      # configure shared version to load OpenSSL dynamically
+      qt_configure_args+=' -openssl-runtime'
+
+      qt_configure_args+=' -device-option CROSS_COMPILE_CUSTOM_CONFIG=actually_a_shared_build'
+
+      # override LD_LIBRARY_PATH so libraries for native build tools like libQt5Bootstrap.so are found
+      export LD_LIBRARY_PATH="$PWD/lib"
+      export LDFLAGS="-L$PWD/lib"
     fi
+
+    msg2 'Build qmake and configure' && ../${_pkgfqn}/configure $qt_configure_args
+    msg2 'Build Qt libraries'        && make
+
     popd
   done
 }
@@ -293,20 +296,20 @@ package() {
     cd "$srcdir/${_pkgfqn}"
     make install -C ../build-${_arch} INSTALL_ROOT="${pkgdir}"
 
-    # Use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
+    # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
     pushd "$srcdir/build-${_arch}/lib"
-    find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
+    find -iname '*.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
     popd
     pushd "$srcdir/build-${_arch}/plugins"
-    find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib/qt/plugins" --parents {} +
+    find -iname '*.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib/qt/plugins" --parents {} +
     popd
 
     if isStatic; then
       # The static release contains only the static libs itself but relies on the
-      # shared release for Qt5Bootstrap library and tools (qmake, uic, ...)
+      # shared release for Qt5Bootstrap library and tools (qmake, uic, ...).
 
-      # Drop Qt5Bootstrap and libraries which are only provided as static lib
-      # and are hence already present in shared build (such as Qt5OpenGLExtensions)
+      # drop Qt5Bootstrap and libraries which are only provided as static lib
+      # and hence already present in shared build (such as Qt5OpenGLExtensions)
       rm -f \
         "${pkgdir}/usr/${_arch}/lib/"{lib,}qt5main* \
         "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5AccessibilitySupport* \
@@ -319,9 +322,10 @@ package() {
         "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5ThemeSupport* \
         "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5OpenGLExtensions* \
         "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5PlatformSupport* \
+        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5WindowsUIAutomationSupport* \
         "${pkgdir}/usr/${_arch}/lib/"libQt5Bootstrap* \
 
-      # Also ensure config files don't conflict with shared version
+      # ensure config files don't conflict with shared version
       pushd "${pkgdir}/usr/${_arch}/lib/cmake"
       for cmake_dir in $(find . ! -path . -type d ! -name 'Static*'); do
         mkdir -p "./Static${cmake_dir:2}";
@@ -332,56 +336,59 @@ package() {
       popd
       rm "${pkgdir}/usr/${_arch}/lib/pkgconfig/StaticQt5OpenGLExtensions.pc"
 
-      # Create links to static plugins in lib directory
+      # create links to static plugins in lib directory
       pushd "${pkgdir}/usr/${_arch}/lib/" && ln -s "./qt/plugins/"*/*.a . && popd
 
-      # Keep a couple pri files not found in base
+      # keep a couple pri files not found in base
       mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules/qt_plugin_"*.pri "${pkgdir}/usr/${_arch}"
 
-      # Delete duplicate files that are in the base package
+      # delete duplicate files that are in the base package
       rm -fR "${pkgdir}/usr/${_arch}/"{include,share}
       rm -fR "${pkgdir}/usr/${_arch}/lib/"{qt/bin,qt/mkspecs}
 
-      # Move pri files back
+      # move pri files back
       mkdir -p "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
       mv "${pkgdir}/usr/${_arch}/"*.pri "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
 
-    else # Shared release
-      # The .dll's are installed in both bindir and libdir, one copy of the .dll's is sufficient
+    else # shared version
+      # remove DLLs from libdir (DLLs are installed in both bindir and libdir, one copy is sufficient)
       find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
 
-      # The Qt5OpenGLExtensions module is only available as static library and hence part of the
-      # shared build
-
-      # Create symlinks for tools
+      # create symlinks for tools
       mkdir -p "${pkgdir}/usr/bin"
       for tool in qmake moc rcc uic qdbuscpp2xml qdbusxml2cpp qdoc syncqt.pl; do
         ln -s "../${_arch}/lib/qt/bin/${tool}" "${pkgdir}/usr/bin/${_arch}-${tool}-qt5"
       done
     fi
 
-    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    # drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
-    # Remove doc
+    # remove doc
     rm -rf "${pkgdir}/usr/${_arch}/share/doc"
 
-    # Strip the binaries
+    # remove prl files for debug version
+    if ! [[ $MINGW_W64_QT_DEBUG_BUILD ]]; then
+      for file in $(find "${pkgdir}/usr/${_arch}" -name '*d.prl' -o -name '*d.static.prl'); do
+        [ -f "${file%d*}${file##*d}" ] && rm "${file}";
+      done
+    fi
+
+    # replace library path in *.prl files so it points to the installed location and not the build directory
+    find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:${PWD%/*}/build-${_arch}/lib:/usr/${_arch}/lib:g" {} \;
+
+    # strip binaries, remove unuseful files
     if ! isStatic; then
       strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"*[!.pl]
       strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"{,DBus}.so.${pkgver}
     fi
-
-    # Applications might be useful as well; keeping them by default will not hurt anybody I suppose
     if isStatic || [[ $NO_EXECUTABLES ]]; then
-      find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec rm {} \;
+      find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
     else
-      find "${pkgdir}/usr/${_arch}" -name "*.exe" -exec ${_arch}-strip --strip-all {} \;
+      find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
     fi
-    # No use for these files though
-    find "${pkgdir}/usr/${_arch}" \( -name "*.bat" -o -name "*.def" -o -name "*.exp" \) -exec rm {} \;
-    # Strip binaries
-    find "${pkgdir}/usr/${_arch}" -name "*.dll" -exec ${_arch}-strip --strip-unneeded {} \;
-    find "${pkgdir}/usr/${_arch}" -name "*.a" -exec ${_arch}-strip -g {} \;
+    find "${pkgdir}/usr/${_arch}" \( -name '*.bat' -o -name '*.def' -o -name '*.exp' \) -delete
+    find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;
   done
 }

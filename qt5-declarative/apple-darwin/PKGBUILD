@@ -5,7 +5,7 @@
 
 _qt_module=qtdeclarative
 pkgname='apple-darwin-qt5-declarative'
-pkgver=5.10.1
+pkgver=5.11.0
 pkgrel=2
 arch=('i686' 'x86_64')
 pkgdesc="Classes for QML and JavaScript languages (apple-darwin)"
@@ -41,7 +41,7 @@ build() {
       mkdir -p build-${_arch}-${_config##*=} && pushd build-${_arch}-${_config##*=}
       ${_osxcrossprefix}/bin/${_arch}-qmake-qt5 ../${_qt_module}.pro ${_config}
 
-      # Search paths for host standard library (/usr/lib) and for Qt5Bootstrap (/usr/$_arch/lib) are not set correctly by qmake
+      # search paths for host standard library (/usr/lib) and for Qt5Bootstrap (/usr/$_arch/lib) are not set correctly by qmake
       # hence we need insert those paths manually
       make qmake_all
       find ./src/qmldevtools -type f -iname 'Makefile' -exec sed -i "s|-L$_osxcrossprefix/$_arch/lib -lQt5Bootstrap|-L/usr/lib $_osxcrossprefix/$_arch/lib/libQt5Bootstrap.a|g" {} \;
@@ -68,7 +68,7 @@ package() {
       # QmlDebuggerServiceFactory plugin is not available so remove CMake plugin file for it
       rm "${pkgdir}/${_osxcrossprefix}/${_arch}/lib/cmake/Qt5Qml/Qt5Qml_QQmlDebuggerServiceFactory.cmake"
 
-      # Strip the binaries, remove debug libraries
+      # strip the binaries, remove debug libraries
       find "${pkgdir}/${_osxcrossprefix}" -name "*.dylib" -a -not -iname '*_debug*' -exec ${_osxcrossprefix}/bin/${_arch}-strip -S -x {} \;
       find "${pkgdir}/${_osxcrossprefix}" -name '*.a' -a -not -iname '*_debug.a' -a -not -iname '*DevTools.a' -a -not -iname '*Bootstrap.a' -exec ${_osxcrossprefix}/bin/${_arch}-strip -S -x {} \;
       [[ $APPLE_DARWIN_QT_DEBUG_BUILD ]] || \
@@ -80,6 +80,6 @@ package() {
     done
   done
 
-  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  # drop QMAKE_PRL_BUILD_DIR because reference the build dir
   find "$pkgdir/${_osxcrossprefix}" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 }

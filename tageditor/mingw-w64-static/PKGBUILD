@@ -16,7 +16,7 @@ _reponame=tageditor
 pkgname=mingw-w64-tageditor-static
 _name=${_reponame}
 pkgver=3.1.0
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska'
 license=('GPL')
@@ -29,10 +29,21 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-base-static' 'ming
 [[ $_json_export == ON ]] && makedepends+=('mingw-w64-reflective-rapidjson')
 conflicts=("${pkgname%-static}")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('9b31ba05f44d59853da6f23d8052d07d50b8f1cc8237d3469ab3a63a6e8a32c8')
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
+        "0001-Include-QHeaderView-explicitely.patch::https://github.com/Martchus/${_reponame}/commit/95ac0d6aa713325e8d1c6378c59e10d2bfe42317.patch")
+sha256sums=('9b31ba05f44d59853da6f23d8052d07d50b8f1cc8237d3469ab3a63a6e8a32c8'
+            'todo')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    patch -p1 -i "$patch"
+  done
+}
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

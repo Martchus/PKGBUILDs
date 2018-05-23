@@ -1,7 +1,7 @@
-From ef02a56ff99e9c2352d1395b8deada3c3078887f Mon Sep 17 00:00:00 2001
+From bd010d1fb00f61dd6cca52c93a4285c5d967029b Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 3 Feb 2017 18:30:51 +0100
-Subject: [PATCH 01/32] Adjust win32-g++ profile for cross compilation with
+Subject: [PATCH 01/33] Adjust win32-g++ profile for cross compilation with
  mingw-w64
 
 Adding a new, separate mkspec instead of patching the existing one
@@ -13,35 +13,32 @@ Also see the following issues:
 * https://github.com/Martchus/PKGBUILDs/issues/59
 * https://github.com/Martchus/PKGBUILDs/issues/60
 ---
- mkspecs/win32-g++/qmake.conf | 56 +++++++++++++++++++++++++++++---------------
- 1 file changed, 37 insertions(+), 19 deletions(-)
+ mkspecs/common/g++-win32.conf      | 56 +++++++++++++++++++++---------
+ mkspecs/win32-clang-g++/qmake.conf |  4 +--
+ mkspecs/win32-g++/qmake.conf       |  4 +--
+ 3 files changed, 43 insertions(+), 21 deletions(-)
 
-diff --git a/mkspecs/win32-g++/qmake.conf b/mkspecs/win32-g++/qmake.conf
-index 9f366e08b8..848837e732 100644
---- a/mkspecs/win32-g++/qmake.conf
-+++ b/mkspecs/win32-g++/qmake.conf
-@@ -1,11 +1,13 @@
- #
--# qmake configuration for win32-g++
-+# qmake configuration for i686-w64-mingw32-g++ and x86_64-w64-mingw32-g++
- #
--# Written for MinGW-w64 / gcc 5.3 or higher
-+# Written for cross compilation with mingw-w64 under GNU/Linux
- #
- # Cross compile example for i686-w64-mingw32-g++:
--#   configure -xplatform win32-g++ -device-option CROSS_COMPILE=i686-w64-mingw32-
-+#   configure -xplatform mingw-w64-g++ -device-option CROSS_COMPILE=i686-w64-mingw32-
+diff --git a/mkspecs/common/g++-win32.conf b/mkspecs/common/g++-win32.conf
+index 610503379d..f099380cca 100644
+--- a/mkspecs/common/g++-win32.conf
++++ b/mkspecs/common/g++-win32.conf
+@@ -8,22 +8,31 @@
+ # Compiler-specific settings go into win32-g++/qmake.conf and
+ # win32-clang-g++/qmake.conf
  #
 +# The device options CROSS_COMPILE_CUSTOM_CONFIG and CROSS_COMPILE_CFLAGS can be used
 +# to specify custom config/flags for cross compilation.
++#
  
  load(device_config)
- include(../common/gcc-base.conf)
-@@ -14,12 +16,11 @@ include(../common/angle.conf)
- include(../common/windows-vulkan.conf)
+ include(gcc-base.conf)
+ include(g++-base.conf)
  
++include(angle.conf)
++include(windows-vulkan.conf)
++
  # modifications to gcc-base.conf and g++-base.conf
--
+ 
  MAKEFILE_GENERATOR      = MINGW
  QMAKE_PLATFORM          = win32 mingw
 -CONFIG                 += debug_and_release debug_and_release_target precompile_header
@@ -49,20 +46,18 @@ index 9f366e08b8..848837e732 100644
 -QMAKE_COMPILER_DEFINES += __GNUC__ _WIN32
 +CONFIG                 += debug_and_release debug_and_release_target precompile_header $${CROSS_COMPILE_CUSTOM_CONFIG}
 +DEFINES                += UNICODE _UNICODE
-+QMAKE_COMPILER_DEFINES += __GNUC__ WIN32
++QMAKE_COMPILER_DEFINES += __GNUC__ _WIN32 WIN32
  # can't add 'DEFINES += WIN64' and 'QMAKE_COMPILER_DEFINES += _WIN64' defines for
  # x86_64 platform similar to 'msvc-desktop.conf' toolchain, because, unlike for MSVC,
  # 'QMAKE_TARGET.arch' is inherently unavailable.
-@@ -29,7 +30,7 @@ QMAKE_LEX               = flex
+ 
++# prevent definition of _xgetbv() in psdk_inc/intrin-impl.h (already defined in xsaveintrin.h)
++DEFINES                += __INTRINSIC_DEFINED__xgetbv
++
+ QMAKE_LEX               = flex
  QMAKE_LEXFLAGS          =
  QMAKE_YACC              = bison -y
- QMAKE_YACCFLAGS         = -d
--QMAKE_CFLAGS           += -fno-keep-inline-dllexport
-+QMAKE_CFLAGS            = -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -fno-keep-inline-dllexport $${CROSS_COMPILE_CFLAGS}
- QMAKE_CFLAGS_WARN_ON   += -Wextra
- 
- QMAKE_CFLAGS_SSE2      += -mstackrealign
-@@ -40,6 +41,7 @@ QMAKE_CXXFLAGS_WARN_ON  = $$QMAKE_CFLAGS_WARN_ON
+@@ -34,6 +43,7 @@ QMAKE_CFLAGS_SSE2      += -mstackrealign
  QMAKE_CXXFLAGS_RTTI_ON  = -frtti
  QMAKE_CXXFLAGS_RTTI_OFF = -fno-rtti
  QMAKE_CXXFLAGS_EXCEPTIONS_ON = -fexceptions -mthreads
@@ -70,10 +65,10 @@ index 9f366e08b8..848837e732 100644
  
  QMAKE_INCDIR            =
  
-@@ -50,40 +52,56 @@ QMAKE_RUN_CXX_IMP       = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
+@@ -42,41 +52,53 @@ QMAKE_RUN_CC_IMP        = $(CC) -c $(CFLAGS) $(INCPATH) -o $@ $<
+ QMAKE_RUN_CXX           = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $obj $src
+ QMAKE_RUN_CXX_IMP       = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o $@ $<
  
- QMAKE_LINK              = $${CROSS_COMPILE}g++
- QMAKE_LINK_C            = $${CROSS_COMPILE}gcc
 +QMAKE_LFLAGS            = -g
  QMAKE_LFLAGS_EXCEPTIONS_ON = -mthreads
 -QMAKE_LFLAGS_RELEASE    = -Wl,-s
@@ -97,20 +92,22 @@ index 9f366e08b8..848837e732 100644
  QMAKE_EXTENSION_STATICLIB = a
 -QMAKE_LIB_EXTENSIONS    = a dll.a
 +QMAKE_EXTENSION_IMPORTLIB = dll.a
++
++PKG_CONFIG              = $${CROSS_COMPILE}pkg-config
++QMAKE_PKG_CONFIG        = $${CROSS_COMPILE}pkg-config
  
  QMAKE_LIBS              =
 -QMAKE_LIBS_GUI          = -lgdi32 -lcomdlg32 -loleaut32 -limm32 -lwinmm -lws2_32 -lole32 -luuid -luser32 -ladvapi32
 -QMAKE_LIBS_NETWORK      = -lws2_32
 +QMAKE_LIBS_CORE         = -lz -lpcre2-16 -liconv -lversion -lnetapi32 -luserenv -lole32 -luuid -lwinmm -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32
 +QMAKE_LIBS_GUI          = -lopengl32 -lgdi32 -lcomdlg32 -loleaut32 -limm32 -lwinmm -lws2_32 -lole32 -luuid -luser32 -ladvapi32 -ljpeg -lpng \
-+                              $$system($${QMAKE_PKG_CONFIG} --libs harfbuzz) \
-+                              $$system($${QMAKE_PKG_CONFIG} --libs freetype2)
++                            $$system($${QMAKE_PKG_CONFIG} --libs harfbuzz) \
++                            $$system($${QMAKE_PKG_CONFIG} --libs freetype2)
 +QMAKE_LIBS_GUI_STATIC   = -lopengl32 -lgdi32 -lcomdlg32 -loleaut32 -limm32 -lwinmm -lws2_32 -lole32 -luuid -luser32 -ladvapi32 -ljpeg -lpng \
-+                              $$system($${QMAKE_PKG_CONFIG} --static --libs harfbuzz) \
-+                              $$system($${QMAKE_PKG_CONFIG} --static --libs freetype2)
++                            $$system($${QMAKE_PKG_CONFIG} --static --libs harfbuzz) \
++                            $$system($${QMAKE_PKG_CONFIG} --static --libs freetype2)
 +QMAKE_LIBS_NETWORK      = -lws2_32 -lcrypt32 -ldnsapi -liphlpapi
-+QMAKE_LIBS_NETWORK_STATIC = $$system($${QMAKE_PKG_CONFIG} --static --libs openssl) \
-+                              -lws2_32 -lcrypt32 -ldnsapi -liphlpapi
++QMAKE_LIBS_NETWORK_STATIC = $$system($${QMAKE_PKG_CONFIG} --static --libs openssl) -lws2_32 -lcrypt32 -ldnsapi -liphlpapi
 +QMAKE_LIBS_DBUS         = $$system($${QMAKE_PKG_CONFIG} --libs dbus-1)
 +QMAKE_LIBS_DBUS_STATIC  = $$system($${QMAKE_PKG_CONFIG} --static --libs dbus-1)
 +QMAKE_LIBS_WIDGETS_STATIC = -ldwmapi -luxtheme
@@ -133,11 +130,45 @@ index 9f366e08b8..848837e732 100644
  QMAKE_STRIPFLAGS_LIB   += --strip-unneeded
  QMAKE_OBJCOPY           = $${CROSS_COMPILE}objcopy
  QMAKE_NM                = $${CROSS_COMPILE}nm -P
+-
+-include(angle.conf)
+-include(windows-vulkan.conf)
+diff --git a/mkspecs/win32-clang-g++/qmake.conf b/mkspecs/win32-clang-g++/qmake.conf
+index 4630ec4602..4981a28736 100644
+--- a/mkspecs/win32-clang-g++/qmake.conf
++++ b/mkspecs/win32-clang-g++/qmake.conf
+@@ -14,11 +14,11 @@ include(../common/g++-win32.conf)
+ QMAKE_COMPILER         += clang llvm   # clang pretends to be gcc
  
-+PKG_CONFIG              = $${CROSS_COMPILE}pkg-config
-+QMAKE_PKG_CONFIG        = $${CROSS_COMPILE}pkg-config
-+
- load(qt_config)
+ QMAKE_CC                = $${CROSS_COMPILE}clang
+-QMAKE_CFLAGS           +=
++QMAKE_CFLAGS           += -g -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -fno-keep-inline-dllexport $${CROSS_COMPILE_CFLAGS}
+ QMAKE_CFLAGS_WARN_ON   += -Wextra -Wno-ignored-attributes
+ 
+ QMAKE_CXX               = $${CROSS_COMPILE}clang++
+-QMAKE_CXXFLAGS         +=
++QMAKE_CXXFLAGS         += $${QMAKE_CFLAGS}
+ QMAKE_CXXFLAGS_WARN_ON  = $$QMAKE_CFLAGS_WARN_ON
+ 
+ QMAKE_LINK              = $${CROSS_COMPILE}clang++
+diff --git a/mkspecs/win32-g++/qmake.conf b/mkspecs/win32-g++/qmake.conf
+index ed131c6823..b77d86cd6b 100644
+--- a/mkspecs/win32-g++/qmake.conf
++++ b/mkspecs/win32-g++/qmake.conf
+@@ -12,11 +12,11 @@ include(../common/g++-win32.conf)
+ # modifications to g++-win32.conf
+ 
+ QMAKE_CC                = $${CROSS_COMPILE}gcc
+-QMAKE_CFLAGS           += -fno-keep-inline-dllexport
++QMAKE_CFLAGS           += -g -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4 -fno-keep-inline-dllexport $${CROSS_COMPILE_CFLAGS}
+ QMAKE_CFLAGS_WARN_ON   += -Wextra
+ 
+ QMAKE_CXX               = $${CROSS_COMPILE}g++
+-QMAKE_CXXFLAGS         += -fno-keep-inline-dllexport
++QMAKE_CXXFLAGS         += $${QMAKE_CFLAGS}
+ QMAKE_CXXFLAGS_WARN_ON  = $$QMAKE_CFLAGS_WARN_ON
+ 
+ QMAKE_LINK              = $${CROSS_COMPILE}g++
 -- 
-2.16.2
+2.17.0
 

@@ -13,8 +13,7 @@ oldbranchsuffix="$3"
 
 # determine branch from old version
 oldversionbranch="$oldversion-mingw-w64"
-if [[ $oldbranchsuffix ]] \
-    && oldversionbranch="$oldversionbranch-$oldbranchsuffix"
+[[ $oldbranchsuffix ]] && oldversionbranch="$oldversionbranch-$oldbranchsuffix"
 if [[ $(git branch | grep "$oldversionbranch" | wc -l) -gt 1 ]]; then
     echo 'Which of the following branches was the latest for the old version?'
     git branch | grep "$oldversionbranch"

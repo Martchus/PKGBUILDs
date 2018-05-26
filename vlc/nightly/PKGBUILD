@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20180517
+pkgver=4.0.0v20180520
 _pkgver=4.0.0
-_snapshot_=20180517
-_snapver_=0239
+_snapshot_=20180520
+_snapver_=0236
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
@@ -34,7 +34,7 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'libsamplerate' 'libsoxr' 'lirc' 'libgoom2' 'projectm'
              'chromaprint'
 
-             'libfdk-aac' 'portaudio' 'sidplay2-libs' 'daala-git' 'sndio')
+             'libfdk-aac' 'portaudio' 'sidplay2-libs' 'sndio')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
             'libdvdcss: decoding encrypted DVDs'
@@ -103,16 +103,17 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'vcdimager: navigate VCD with libvcdinfo'
             'schroedinger: schroedinger codec support'
             'sidplay2-libs: for C64 sid demuxer'
-            'daala-git: for Daala video support'
             'sndio: for OpenBSD sndio audio output')
+# note: removing 'daala-git: for Daala video support' because it is currently broken
 conflicts=("${_appname_}-plugin" "${_appname_}")
 provides=("${_appname_}")
 replaces=("${_appname_}-plugin")
 options=('!emptydirs')
 source=("http://nightlies.videolan.org/build/source/vlc-${_pkgver}-${_nightly_}-${_suffix_}.tar.xz"
         'update-vlc-plugin-cache.hook'
-        '0001-lua-fix-build-using-lua-5.3.patch'
+        '0001-lua-Fix-build-using-lua-5.3.patch'
         '0002-Fix-compatibility-with-OpenCV-3.4.1.patch'
+        '0003-Fix-compilation-with-Qt-5.11.patch'
         'find-deps.py')
 
 pkgver() {
@@ -124,8 +125,9 @@ prepare() {
 
   ./bootstrap
 
-  patch -Np1 -i "${srcdir}/0001-lua-fix-build-using-lua-5.3.patch"
+  patch -Np1 -i "${srcdir}/0001-lua-Fix-build-using-lua-5.3.patch"
   patch -Np1 -i "${srcdir}/0002-Fix-compatibility-with-OpenCV-3.4.1.patch"
+  patch -Np1 -i "${srcdir}/0003-Fix-compilation-with-Qt-5.11.patch"
   sed -i -e 's:truetype/ttf-dejavu:TTF:g' modules/visualization/projectm.cpp
   sed -i -e 's:truetype/freefont:TTF:g' modules/text_renderer/freetype/freetype.c
   sed 's|whoami|echo builduser|g' -i configure
@@ -233,8 +235,8 @@ build() {
               --enable-vlc \
               \
               --libexecdir=/usr/lib \
-              --enable-daala \
               --enable-fdkaac
+  # note: removing --enable-daala for now because it is currently broken
   make V=1
 }
 
@@ -258,8 +260,9 @@ package() {
   #  depends=("${_detected_depends[@]}" "${_undetected_depends[@]}")
 }
 
-sha256sums=('03c72248daf58d08aa6cf039a83b730787c9f1f73d8134bad33665e6df06cc0b'
+sha256sums=('4ff76580ca9fdc349a086ab6d8d2105bc51cb9c766fb488ef4f8ce47d08122dd'
             'c6f60c50375ae688755557dbfc5bd4a90a8998f8cf4d356c10d872a1a0b44f3a'
-            '75ad8802bad1a79754e40fd107f5a6922c54f7467dadef8b439b49d410c8f7d2'
-            '4e5c7582b2c1090e598710a6afa6062348f4e87b3909c3d9f12f12e08e0eea6c'
+            'a9400046090b4713edbae14f50afca0ff36335b69fd0d2d082c35eea35e97c15'
+            'ca3e7c38a335551fe8b0c8d3e270cca3a6f70ffd06ec82880b26a0f78ac1ea39'
+            'e64e37f98862aa14077a48ba313e590677f768e82d4cd9b01b194bdf4146bf7d'
             '90b0e34d5772d2307ba07a1c2aa715db7488389003cfe6d3570b2a9c63061db7')

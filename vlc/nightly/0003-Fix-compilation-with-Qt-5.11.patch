@@ -1,0 +1,24 @@
+From b086eb86b55868d61316996ac346bde57408d5a8 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 26 May 2018 15:12:05 +0200
+Subject: [PATCH 3/3] Fix compilation with Qt 5.11
+
+---
+ modules/gui/qt/components/simple_preferences.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/modules/gui/qt/components/simple_preferences.cpp b/modules/gui/qt/components/simple_preferences.cpp
+index 7a9c2dbf28..afdcf64672 100644
+--- a/modules/gui/qt/components/simple_preferences.cpp
++++ b/modules/gui/qt/components/simple_preferences.cpp
+@@ -33,6 +33,7 @@
+ #include <vlc_config_cat.h>
+ #include <vlc_configuration.h>
+ 
++#include <QButtonGroup>
+ #include <QString>
+ #include <QFont>
+ #include <QToolButton>
+-- 
+2.17.0
+

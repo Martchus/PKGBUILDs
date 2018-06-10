@@ -6,9 +6,11 @@ _pkgname=gitea
 _orga=go-${_pkgname}
 _gourl=code.$_pkgname.io/$_pkgname
 _userid=521
+_confdir=custom/conf
+_scriptsdir=contrib
 
 pkgname=${_pkgname}
-pkgver=1.1.4
+pkgver=1.4.2
 pkgrel=2
 #epoch=
 pkgdesc='Self Hosted Git Service written in Go'
@@ -29,9 +31,9 @@ backup=("etc/$_pkgname/app.ini")
 source=("$_pkgname-$pkgver::https://github.com/$_orga/$_pkgname/archive/v${pkgver}.tar.gz"
         '0001-Adjust-config-for-Arch-Linux-package.patch'
         '0002-Adjust-service-file-for-Arch-Linux-package.patch')
-sha512sums=('4427c4c1a588dcf201f707c3e2827fd702a0f8c0add63c6a5eff0d6ef8d21fdaaaf275f8e790017751f161431d563df22f71a6ea046085f9fb1d57da99f20524'
-            '2885691d8f35ecb72e3a1d5a52708209715b537a0afef1147f32d10c188b1bbb067fd3db7c034273a5499a46f9fbb3310004fcf67eda1797dd193eef5a81460b'
-            '5ea1d89809427fe395214c5dde88bdb4c4a62e2d19f9da7fa480a0a3cfaaaf2e97c906bd3dceb11676c9720896d72a73f48638411389fa1f07fcbc17e94e0545')
+sha512sums=('ab4cd43753afffec53a46c093bf92a9c31a633f9c8b5d730e8782eceee1e581cce673945005aaa6a94428d8acfcf2e6618f3abcc49f2ac5439aa8a4fb910b550'
+            '909021bf765f5c40ffab5e2d460b265fa4cd658f85728953cbe9a02694721ece9622a09438302a4b4c02d5ee5eca8cf27b99a874bf4e00a92cdd9f90f4cda47e'
+            'cad4f0ecf55cbee745c2b8da743206f639bf7f3384dd123c2746b7671213e322c55a4c51bb9b9af5f80b0e0a5b6128ec5f55f89788aa664b43cab5f6fe86ab19')
 _goroot='/usr/lib/go'
 
 prepare() {
@@ -73,26 +75,32 @@ build() {
   go build -x -ldflags="-s -w" -tags='sqlite pam cert'
 
   echo "u $_pkgname $_userid \"$_pkgname user\" /var/lib/$_pkgname" > "$srcdir/$_pkgname.sysusers"
-  echo "#!/usr/bin/bash
+
+  # build wrapper script for Gogs' backup command
+  if [[ $pkgname == 'gogs' ]]; then
+    echo "#!/usr/bin/bash
 if [[ \$USER != $_pkgname ]]; then
     echo \"Must run as user $_pkgname!\"
     exit -1
 fi
 export GOGS_CUSTOM=/var/lib/$_pkgname/custom
 /usr/bin/$_pkgname backup --config /etc/$_pkgname/app.ini \$@" > "$srcdir/$_pkgname-backup.sh"
+  fi
 }
 
 package() {
   install -Dm0755 "$srcdir/build/src/${_gourl}/$_pkgname" "$pkgdir/usr/bin/$_pkgname"
-  install -Dm0755 "$srcdir/$_pkgname-backup.sh" "$pkgdir/usr/bin/$_pkgname-backup"
+  if [[ $pkgname == 'gogs' ]]; then
+    install -Dm0755 "$srcdir/$_pkgname-backup.sh" "$pkgdir/usr/bin/$_pkgname-backup"
+  fi
 
   mkdir -p "$pkgdir/usr/share/${_pkgname}"
-  cp -r "$srcdir/build/src/${_gourl}/conf" "$pkgdir/usr/share/${_pkgname}"
+  cp -r "$srcdir/build/src/${_gourl}/${_confdir}" "$pkgdir/usr/share/${_pkgname}"
   cp -r "$srcdir/build/src/${_gourl}/public" "$pkgdir/usr/share/${_pkgname}"
   cp -r "$srcdir/build/src/${_gourl}/templates" "$pkgdir/usr/share/${_pkgname}"
 
-  install -Dm0664 -g "$_userid" "$pkgdir/usr/share/$_pkgname/conf/app.ini" "$pkgdir/etc/$_pkgname/app.ini"
-  install -Dm0644 "$srcdir/build/src/${_gourl}/scripts/systemd/$_pkgname.service" "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
+  install -Dm0664 -g "$_userid" "$pkgdir/usr/share/$_pkgname/conf/app.ini"* "$pkgdir/etc/$_pkgname/app.ini"
+  install -Dm0644 "$srcdir/build/src/${_gourl}/${_scriptsdir}/systemd/$_pkgname.service" "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
   install -Dm0644 "$srcdir/build/src/${_gourl}/LICENSE" "$pkgdir/usr/share/licenses/$_pkgname"
   install -Dm0644 "${srcdir}/$_pkgname.sysusers" "${pkgdir}/usr/lib/sysusers.d/$_pkgname.conf"
   install -dm0700 -o "$_userid" -g "$_userid" "$pkgdir/var/lib/$_pkgname"
@@ -100,4 +108,8 @@ package() {
   for subdir in avatars repos certs data/sessions data/tmp; do
     install -dm0700 -o "$_userid" -g "$_userid" "$pkgdir/var/lib/$_pkgname/$subdir"
   done
+  if [[ $pkgname == 'gitea' ]]; then
+    install -dm0700 -o "$_userid" -g "$_userid" "$pkgdir/var/lib/$_pkgname/conf"
+    cp -r "$srcdir/build/src/${_gourl}/options/locale" "$pkgdir/var/lib/$_pkgname/conf"
+  fi
 }

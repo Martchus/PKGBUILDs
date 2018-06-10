@@ -1,19 +1,19 @@
-From e0502aec7784f655db71380f375e959debacaa35 Mon Sep 17 00:00:00 2001
+From 69c3aa5739288c15f69f7f42d7df06db77e5b498 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 19 Mar 2017 18:04:48 +0100
 Subject: [PATCH 2/2] Adjust service file for Arch Linux package
 
 ---
- scripts/systemd/gitea.service | 10 +++++-----
+ contrib/systemd/gitea.service | 10 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/systemd/gitea.service b/scripts/systemd/gitea.service
-index 758f1590..302e7a9e 100644
---- a/scripts/systemd/gitea.service
-+++ b/scripts/systemd/gitea.service
-@@ -15,12 +15,12 @@ After=network.target
- #LimitMEMLOCK=infinity
+diff --git a/contrib/systemd/gitea.service b/contrib/systemd/gitea.service
+index 7c09fa321..c2ee2380d 100644
+--- a/contrib/systemd/gitea.service
++++ b/contrib/systemd/gitea.service
+@@ -16,12 +16,12 @@ After=network.target
  #LimitNOFILE=65535
+ RestartSec=2s
  Type=simple
 -User=git
 -Group=git
@@ -25,10 +25,10 @@ index 758f1590..302e7a9e 100644
 +ExecStart=/usr/bin/gitea web --config /etc/gitea/app.ini
  Restart=always
 -Environment=USER=git HOME=/home/git
-+Environment=USER=gitea HOME=/var/lib/gitea
++Environment=USER=gitea HOME=/var/lib/gitea GITEA_WORK_DIR=/var/lib/gitea
  
  [Install]
  WantedBy=multi-user.target
 -- 
-2.13.1
+2.17.1
 

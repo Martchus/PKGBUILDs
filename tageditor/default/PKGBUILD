@@ -25,7 +25,7 @@ depends=('qtutilities>=5.6.0' 'tagparser>=6.2.0' 'desktop-file-utils' 'xdg-utils
 [[ $_webview_provider == webengine ]] && depends+=('qt5-webengine>=5.6')
 [[ $_js_provider == script ]] && depends+=('qt5-script>=5.6')
 [[ $_js_provider == qml ]] && depends+=('qt5-declarative>=5.6')
-makedepends=('cmake' 'qt5-tools')
+makedepends=('cmake' 'qt5-tools' 'mesa')
 [[ $_json_export == ON ]] && makedepends+=('reflective-rapidjson')
 checkdepends=('cppunit')
 url="https://github.com/Martchus/${_reponame}"

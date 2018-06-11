@@ -74,7 +74,13 @@ build() {
   go fix
   go build -x -ldflags="-s -w" -tags='sqlite pam cert'
 
+  # build sysusers file
   echo "u $_pkgname $_userid \"$_pkgname user\" /var/lib/$_pkgname" > "$srcdir/$_pkgname.sysusers"
+
+  # build tmpfiles file
+  echo "d /var/lib/$_pkgname 0755 $_pkgname $_pkgname
+d /var/log/$_pkgname 0755 $_pkgname $_pkgname
+d /etc/$_pkgname 0775 root $_pkgname" > "$srcdir/$_pkgname.tmpfiles"
 
   # build wrapper script for Gogs' backup command
   if [[ $pkgname == 'gogs' ]]; then
@@ -103,6 +109,7 @@ package() {
   install -Dm0644 "$srcdir/build/src/${_gourl}/${_scriptsdir}/systemd/$_pkgname.service" "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
   install -Dm0644 "$srcdir/build/src/${_gourl}/LICENSE" "$pkgdir/usr/share/licenses/$_pkgname"
   install -Dm0644 "${srcdir}/$_pkgname.sysusers" "${pkgdir}/usr/lib/sysusers.d/$_pkgname.conf"
+  install -Dm0644 "${srcdir}/$_pkgname.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/$_pkgname.conf"
   install -dm0700 -o "$_userid" -g "$_userid" "$pkgdir/var/lib/$_pkgname"
   install -dm0700 -o "$_userid" -g "$_userid" "$pkgdir/var/log/$_pkgname"
   for subdir in avatars repos certs data/sessions data/tmp; do

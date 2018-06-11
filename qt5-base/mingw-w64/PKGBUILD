@@ -143,25 +143,12 @@ if ! isDefault; then
   fi
 fi
 
-patch() {
-  local input_found=
-  local patch_file=
-  for arg in $@; do
-    if [[ $input_found ]]; then
-      patch_file="$arg"
-      break
-    fi
-    [[ $arg == -i ]] && input_found=1
-  done
-  msg2 "Applying patch $patch_file"
-  /usr/bin/patch $@
-}
-
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
 
   # apply patches; further descriptions can be found in patch files itself
   for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
     patch -p1 -i "$patch"
   done
 

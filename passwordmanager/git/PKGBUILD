@@ -12,7 +12,8 @@ arch=('i686' 'x86_64')
 pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
 license=('GPL')
 depends=('qt5-base' 'qtutilities-git' 'passwordfile-git' 'openssl' 'libxkbcommon-x11' 'desktop-file-utils' 'xdg-utils')
-makedepends=('cmake' 'qt5-tools' 'git' 'mesa')
+makedepends=('cmake' 'qt5-tools' 'git' 'mesa' 'kirigami2')
+optdepends=('kirigami2: Qt Quick GUI')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
@@ -26,7 +27,7 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" -DQUICK_GUI="no"
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" -DQUICK_GUI=ON
   make
 }
 

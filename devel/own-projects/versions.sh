@@ -11,7 +11,7 @@ declare -A versions=(
     [reflective-rapidjson]=0.0.5
     [blackwidowcontrol]=1.0.1
     [dbus-soundrecorder]=1.2.2
-    [qt5]=5.11.0
+    [qt5]=5.11.1
 )
 declare -A github_names=(
     [c++utilities]=cpp-utilities

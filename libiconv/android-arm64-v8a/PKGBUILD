@@ -1,0 +1,68 @@
+# Maintainer: Martchus <martchus@gmx.net>
+# Contributor: Arthur Darcet <arthur.darcet at m4x.org>
+# Contributor: Techlive Zheng <techlivezheng at gmail.com>
+
+_pkgname=libiconv
+_android_arch=arm64-v8a
+_android_toolchain=aarch64-linux-android
+_prefix=/opt/android-libs/$_android_arch
+
+pkgname=android-libiconv-$_android_arch
+pkgver=1.15
+pkgrel=1
+pkgdesc="Provides libiconv.so and libcharset.so (Android $_android_arch)"
+arch=('i686' 'x86_64')
+url='http://www.gnu.org/software/libiconv/'
+license=('LGPL')
+makedepends=('android-ndk')
+source=("http://ftp.gnu.org/pub/gnu/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('ace8b5f2db42f7b3b3057585e80d9808')
+options=(!libtool !buildflags staticlibs !strip !emptydirs)
+
+build() {
+  cd $srcdir/${_pkgname}-${pkgver}
+  sed '/LD_RUN_PATH/d' -i Makefile.in
+
+  export ANDROID_NDK=/opt/android-ndk
+  export CROSS_COMPILE=aarch64-linux-android
+  export ANDROID_PREFIX=${ANDROID_NDK}/toolchains/${CROSS_COMPILE}-4.9/prebuilt/linux-x86_64
+  export ANDROID_SYSROOT=${ANDROID_NDK}/platforms/android-21/arch-arm64
+  export CROSS_PATH=${ANDROID_PREFIX}/bin/${CROSS_COMPILE}
+
+  export CPP=${CROSS_PATH}-cpp
+  export AR=${CROSS_PATH}-ar
+  export AS=${CROSS_PATH}-as
+  export NM=${CROSS_PATH}-nm
+  export CC=${CROSS_PATH}-gcc
+  export CXX=${CROSS_PATH}-g++
+  export LD=${CROSS_PATH}-ld
+  export RANLIB=${CROSS_PATH}-ranlib
+  export STRIP=${CROSS_PATH}-strip
+
+  export CFLAGS="${CFLAGS} --sysroot=${ANDROID_SYSROOT} -I${ANDROID_NDK}/sysroot/usr/include -I${ANDROID_NDK}/sysroot/usr/include/${CROSS_COMPILE} -I${ANDROID_SYSROOT}/usr/include -I${ANDROID_PREFIX}/include"
+  export CPPFLAGS="${CFLAGS}"
+  export LDFLAGS="${LDFLAGS} -L${ANDROID_SYSROOT}/usr/lib -L${ANDROID_PREFIX}/lib"
+
+  ./configure \
+    --host=$_android_toolchain \
+    --target=$_android_toolchain \
+    --build="$CHOST" \
+    --with-sysroot="$ANDROID_SYSROOT" \
+    --prefix="$_prefix" \
+    --libdir="$_prefix/lib" \
+    --includedir="$_prefix/include" \
+    --enable-shared=yes \
+    --enable-static=yes
+
+  make lib/localcharset.h
+  cd lib
+  make
+}
+
+package() {
+  cd $srcdir/${_pkgname}-${pkgver}/lib
+  make DESTDIR="$pkgdir" LIBDIR="$_prefix/lib" install
+  cd ..
+  mkdir -p "$pkgdir/$_prefix"/include
+  mv include/iconv.h "$pkgdir/$_prefix"/include
+}

@@ -75,7 +75,7 @@ build() {
   go build -x -ldflags="-s -w" -tags='sqlite pam cert'
 
   # build sysusers file
-  echo "u $_pkgname $_userid \"$_pkgname user\" /var/lib/$_pkgname" > "$srcdir/$_pkgname.sysusers"
+  echo "u $_pkgname $_userid \"$_pkgname user\" /var/lib/$_pkgname /bin/bash" > "$srcdir/$_pkgname.sysusers"
 
   # build tmpfiles file
   echo "d /var/lib/$_pkgname 0755 $_pkgname $_pkgname

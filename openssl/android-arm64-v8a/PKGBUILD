@@ -16,7 +16,7 @@ _pref=/opt/android-$_pkgname/$_android_arch
 pkgname=android-$_pkgname-$_android_arch
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
-pkgrel=1
+pkgrel=2
 pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (Android, $_android_arch)"
 arch=('any')
 url='https://www.openssl.org'
@@ -40,11 +40,18 @@ build() {
 		--openssldir="$_pref" \
 		-isystem"$ANDROID_NDK_ROOT/sysroot/usr/include" \
 		-isystem"$ANDROID_NDK_ROOT/sysroot/usr/include/${_ANDROID_EABI%-*}" \
+		-Wl,--no-allow-shlib-undefined \
+		-Wl,--no-undefined \
+		no-stdio \
+		no-ui \
 		shared \
 		android
 	
 	# ensure the libraries are not versioned (setting CALC_VERSIONS doesn't work for some reason)
-        sed -i -e 's/\.\$(SHLIB_MAJOR)\.\$(SHLIB_MINOR)//g' Makefile
+	sed -i -e 's/\.\$(SHLIB_MAJOR)\.\$(SHLIB_MINOR)//g' Makefile
+
+	# get rid of debug printing so the library doesn't depend on stdio (no-stdio and no-ui are not entirely sufficient)
+	sed -i -e 's/\#define TEST_ENG_OPENSSL_RC4_P_INIT//' crypto/engine/eng_openssl.c
 
 	# build only libraries
 	make CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" build_libs	

@@ -1,0 +1,90 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=passwordmanager
+_pkgname=passwordmanager
+_android_arch=arm64-v8a
+_android_toolchain=aarch64-linux-android
+_android_api_level=21
+
+pkgname=android-$_pkgname-$_android_arch
+pkgver=3.1.5
+pkgrel=1
+arch=('any')
+pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (Android, $_android_arch)"
+license=('GPL')
+depends=("android-passwordfile-$_android_arch" "android-qtutilities-$_android_arch" "android-kirigami2-$_android_arch")
+optdepends=("$_pkgname-doc: API documentation")
+makedepends=('cmake' 'android-ndk' 'android-sdk' 'extra-cmake-modules' 'jdk8-openjdk')
+#checkdepends=('cppunit')
+url="https://github.com/Martchus/${_reponame}"
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('5b9a6c9ab2e34a146a728867591189721622d89dfec32c58a6416d21f6b42510')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+}
+
+build() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  local android_sdk_root=${ANDROID_SDK_ROOT:-/opt/android-sdk}
+  local android_ndk_root=${ANDROID_NDK_ROOT:-/opt/android-ndk}
+  local qt_version=$(pacman -Q "android-qt5-$_android_arch" | sed 's/.* \(.*\)-.*/\1/')
+  local build_tools_version=$(pacman -Q android-sdk-build-tools | sed 's/.* r\(.*\)-.*/\1/')
+  local qt_root=/opt/android-qt5/$qt_version/$_android_arch
+  local root="$android_ndk_root/sysroot;/opt/android-libs/$_android_arch;$qt_root"
+
+  mkdir home
+  export HOME=$PWD/home
+
+  archlinux-java set java-8-openjdk/jre
+  yes | sdkmanager --licenses
+
+  cmake \
+    -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=$_android_api_level \
+    -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
+    -DCMAKE_ANDROID_NDK="$android_ndk_root" \
+    -DCMAKE_ANDROID_SDK="$android_sdk_root" \
+    -DCMAKE_ANDROID_STL_TYPE=gnustl_shared \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/android-libs/$_android_arch \
+    -DCMAKE_PREFIX_PATH="$root" \
+    -DCMAKE_FIND_ROOT_PATH="$root" \
+    -DNO_DOXYGEN=ON \
+    -DWIDGETS_GUI=OFF \
+    -DQUICK_GUI=ON \
+    -DQt5Core_DIR="$qt_root/lib/cmake/Qt5Core" \
+    -DANDROID_API_LEVEL=$_android_api_level \
+    -DANDROID_ABI=$_android_arch \
+    -DANDROID_ARCHITECTURE=${_android_arch%-*} \
+    -DANDROID_SDK_ROOT="$android_sdk_root" \
+    -DANDROID_SDK_BUILD_TOOLS_REVISION="$build_tools_version" \
+    -DECM_ADDITIONAL_FIND_ROOT_PATH="$root;$android_ndk_root/platforms/android-$_android_api_level/arch-${_android_arch%-*};$android_ndk_root/sources/cxx-stl/gnu-libstdc++/4.9/libs/$_android_arch" \
+    -DQTANDROID_EXPORTED_TARGET=$_pkgname \
+    -DANDROID_APK_DIR=android \
+    -DANDROID_EXTRA_LIBS=/opt/android-openssl/arm64-v8a/lib/libcrypto.so;/opt/android-openssl/arm64-v8a/lib/libssl.so;/opt/android-libs/arm64-v8a/lib/libiconv.so;/opt/android-libs/arm64-v8a/lib/libKF5Kirigami2.so
+
+    #-DCMAKE_EXE_LINKER_FLAGS="-fPIE;-pie;-Wl,--gc-sections;-Wl,-rpath-link=/opt/android-libs/$_android_arch/lib;/opt/android-qt5/$qt_version/$_android_arch/lib:/opt/android-openssl/$_android_arch/lib" \
+
+  make VERBOSE=1
+  make DESTDIR="${pkgdir}" create-apk
+}
+
+#check() {
+#  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+#  make check
+#}
+
+package() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  local api_dir=${pkgdir}/opt/android-libs/apk
+  mkdir -p "$apk_dir"
+  cp --target-directory="$apk_dir" "${_pkgname}_build_apk/build/outputs/apk/*.apk"
+}

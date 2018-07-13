@@ -1,0 +1,56 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=cpp-utilities
+_pkgname=c++utilities
+_android_arch=arm64-v8a
+_android_toolchain=aarch64-linux-android
+
+pkgname=android-$_pkgname-$_android_arch
+pkgver=4.15
+pkgrel=1
+arch=('any')
+pkgdesc="Common C++ classes and routines such as argument parser, IO and conversion utilities (Android, $_android_arch)"
+license=('GPL')
+depends=("android-libiconv-$_android_arch")
+optdepends=("$_pkgname-doc: API documentation")
+makedepends=('cmake' 'android-ndk' 'android-sdk')
+#checkdepends=('cppunit')
+url="https://github.com/Martchus/${_reponame}"
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('b101f3d826215dfbcdd9e679f7c23fdeeec9c6c77d56d8f8e9257b77ffd585ad')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+}
+
+build() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=21 \
+    -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
+    -DCMAKE_ANDROID_NDK=/opt/android-ndk \
+    -DCMAKE_ANDROID_SDK=/opt/android-sdk \
+    -DCMAKE_ANDROID_STL_TYPE=gnustl_shared \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/android-libs/$_android_arch \
+    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;/opt/android-libs/$_android_arch" \
+    -Diconv_DYNAMIC_INCLUDE_DIR="/opt/android-libs/$_android_arch/include" \
+    -Diconv_STATIC_INCLUDE_DIR="/opt/android-libs/$_android_arch/include" \
+    -DNO_DOXYGEN=ON
+  make VERBOSE=1
+}
+
+#check() {
+#  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+#  make check
+#}
+
+package() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

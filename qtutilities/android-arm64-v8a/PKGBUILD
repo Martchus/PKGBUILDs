@@ -1,0 +1,57 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=qtutilities
+_pkgname=qtutilities
+_android_arch=arm64-v8a
+_android_toolchain=aarch64-linux-android
+
+pkgname=android-$_pkgname-$_android_arch
+pkgver=5.10.0
+pkgrel=1
+arch=('any')
+pkgdesc="Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (Android, $_android_arch)"
+license=('GPL')
+depends=("android-c++utilities-$_android_arch" "android-qt5-$_android_arch")
+optdepends=("$_pkgname-doc: API documentation")
+makedepends=('cmake' 'android-ndk' 'android-sdk')
+#checkdepends=('cppunit')
+url="https://github.com/Martchus/${_reponame}"
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('b0330de29dbf4878f2681417c6b632a98a04369134998cff1f34a4377fe1493f')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+}
+
+build() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  local qt_version=$(pacman -Q "android-qt5-$_android_arch" | sed 's/.* \(.*\)-.*/\1/')
+  cmake \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=21 \
+    -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
+    -DCMAKE_ANDROID_NDK=/opt/android-ndk \
+    -DCMAKE_ANDROID_SDK=/opt/android-sdk \
+    -DCMAKE_ANDROID_STL_TYPE=gnustl_shared \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/android-libs/$_android_arch \
+    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;/opt/android-libs/$_android_arch;/opt/android-qt5/$qt_version/$_android_arch" \
+    -DNO_DOXYGEN=ON \
+    -DWIDGETS_GUI=OFF \
+    -DQUICK_GUI=ON
+  make VERBOSE=1
+}
+
+#check() {
+#  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+#  make check
+#}
+
+package() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

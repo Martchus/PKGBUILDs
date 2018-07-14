@@ -105,7 +105,8 @@ package() {
   cp -r "$srcdir/build/src/${_gourl}/public" "$pkgdir/usr/share/${_pkgname}"
   cp -r "$srcdir/build/src/${_gourl}/templates" "$pkgdir/usr/share/${_pkgname}"
 
-  install -Dm0664 -g "$_userid" "$pkgdir/usr/share/$_pkgname/conf/app.ini"* "$pkgdir/etc/$_pkgname/app.ini"
+  mkdir -p "$pkgdir/etc/$_pkgname"
+  install -Dm0664 -g "$_userid" "$pkgdir/usr/share/$_pkgname/conf/app.ini"* "$pkgdir/etc/$_pkgname"
   install -Dm0644 "$srcdir/build/src/${_gourl}/${_scriptsdir}/systemd/$_pkgname.service" "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
   install -Dm0644 "$srcdir/build/src/${_gourl}/LICENSE" "$pkgdir/usr/share/licenses/$_pkgname"
   install -Dm0644 "${srcdir}/$_pkgname.sysusers" "${pkgdir}/usr/lib/sysusers.d/$_pkgname.conf"

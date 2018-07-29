@@ -68,9 +68,9 @@ build() {
     -DECM_ADDITIONAL_FIND_ROOT_PATH="$root;$android_ndk_root/platforms/android-$_android_api_level/arch-${_android_arch%-*};$android_ndk_root/sources/cxx-stl/gnu-libstdc++/4.9/libs/$_android_arch" \
     -DQTANDROID_EXPORTED_TARGET=$_pkgname \
     -DANDROID_APK_DIR=android \
-    -DANDROID_EXTRA_LIBS=/opt/android-openssl/arm64-v8a/lib/libcrypto.so;/opt/android-openssl/arm64-v8a/lib/libssl.so;/opt/android-libs/arm64-v8a/lib/libiconv.so;/opt/android-libs/arm64-v8a/lib/libKF5Kirigami2.so
+    -DANDROID_EXTRA_LIBS=/opt/android-libs/arm64-v8a/lib/libcrypto.so;/opt/android-libs/arm64-v8a/lib/libssl.so;/opt/android-libs/arm64-v8a/lib/libiconv.so;/opt/android-libs/arm64-v8a/lib/libKF5Kirigami2.so
 
-    #-DCMAKE_EXE_LINKER_FLAGS="-fPIE;-pie;-Wl,--gc-sections;-Wl,-rpath-link=/opt/android-libs/$_android_arch/lib;/opt/android-qt5/$qt_version/$_android_arch/lib:/opt/android-openssl/$_android_arch/lib" \
+    #-DCMAKE_EXE_LINKER_FLAGS="-fPIE;-pie;-Wl,--gc-sections;-Wl,-rpath-link=/opt/android-libs/$_android_arch/lib;/opt/android-qt5/$qt_version/$_android_arch/lib:/opt/android-libs/$_android_arch/lib" \
 
   make VERBOSE=1
   make DESTDIR="${pkgdir}" create-apk

@@ -85,7 +85,7 @@ build() {
 
     export ANDROID_NDK_ROOT=/opt/android-ndk
     export ANDROID_SDK_ROOT=/opt/android-sdk
-    export OPENSSL_PREFIX=/opt/android-openssl/${android_arch}
+    export OPENSSL_PREFIX=/opt/android-libs/${android_arch}
 
     if [ -z "${ANDROID_BUILD_TOOLS_REVISION}" ]; then
         export ANDROID_BUILD_TOOLS_REVISION=$(get_last ${ANDROID_SDK_ROOT}/build-tools)

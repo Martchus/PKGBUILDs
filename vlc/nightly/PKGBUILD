@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20180520
+pkgver=4.0.0v20180729
 _pkgver=4.0.0
-_snapshot_=20180520
-_snapver_=0236
+_snapshot_=20180729
+_snapver_=0245
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
@@ -139,7 +139,7 @@ build() {
 
   export CFLAGS+=" -I/usr/include/samba-4.0"
   export CPPFLAGS+=" -I/usr/include/samba-4.0" 
-  export CXXFLAGS+=" -std=gnu++11"
+  export CXXFLAGS+=" -std=c++11"
   export LUAC=/usr/bin/luac
   export LUA_LIBS="`pkg-config --libs lua`"
   export RCC=/usr/bin/rcc-qt5
@@ -260,9 +260,9 @@ package() {
   #  depends=("${_detected_depends[@]}" "${_undetected_depends[@]}")
 }
 
-sha256sums=('4ff76580ca9fdc349a086ab6d8d2105bc51cb9c766fb488ef4f8ce47d08122dd'
+sha256sums=('40ae221dbbf76b99b03b76175b558db88bdbc18c5799e64423b8493394e885d4'
             'c6f60c50375ae688755557dbfc5bd4a90a8998f8cf4d356c10d872a1a0b44f3a'
-            'a9400046090b4713edbae14f50afca0ff36335b69fd0d2d082c35eea35e97c15'
-            'ca3e7c38a335551fe8b0c8d3e270cca3a6f70ffd06ec82880b26a0f78ac1ea39'
-            'e64e37f98862aa14077a48ba313e590677f768e82d4cd9b01b194bdf4146bf7d'
+            '3e6bddbaed443e40036c494a0754aedd2f94fe41bfa3754855e16f7452a03cdf'
+            'c33461cad1fb725754a80b4dd63eb144dbd9719ac99139f9553089ef09907b0a'
+            '9ba5fcc11de9ee2a88be3d2eedd1ab45133cb8bed3943c2e11531b45834aa9b2'
             '90b0e34d5772d2307ba07a1c2aa715db7488389003cfe6d3570b2a9c63061db7')

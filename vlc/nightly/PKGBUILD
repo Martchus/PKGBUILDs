@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20180729
+pkgver=4.0.0v20180807
 _pkgver=4.0.0
-_snapshot_=20180729
-_snapver_=0245
+_snapshot_=20180807
+_snapver_=0241
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1

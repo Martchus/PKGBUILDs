@@ -5,6 +5,7 @@ shopt -s nullglob
 if ! [[ $1 ]] || ! [[ $2 ]]; then
     echo 'No version specified, must specify the new and old version, eg. 5.9.2 5.9.1'
     echo "Usage: $0 newversion oldversion [old-branch-suffix]"
+    echo "Note: supposed to be run within the Qt Git checkout"
     exit -1
 fi
 newversion="$1"

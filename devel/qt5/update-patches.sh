@@ -10,6 +10,7 @@ shopt -s nullglob
 if ! [[ $1 ]]; then
     echo 'No Qt repo specified - must be specified like eg. base or multimedia.'
     echo "Usage: $0 repo [branch=\$pkgver-\$variant] [variant=mingw-w64]"
+    echo "Note: DEFAULT_PKGBUILDS_DIR and QT_GIT_REPOS_DIR must point to directories containing PKGBUILDs and the Qt repos."
     exit -1
 fi
 

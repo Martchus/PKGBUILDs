@@ -1,14 +1,14 @@
-From 69c3aa5739288c15f69f7f42d7df06db77e5b498 Mon Sep 17 00:00:00 2001
+From 341499f12a729c9eeaf3740d052c2cce05ccc855 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 19 Mar 2017 18:04:48 +0100
 Subject: [PATCH 2/2] Adjust service file for Arch Linux package
 
 ---
- contrib/systemd/gitea.service | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ contrib/systemd/gitea.service | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/contrib/systemd/gitea.service b/contrib/systemd/gitea.service
-index 7c09fa321..c2ee2380d 100644
+index 387de14fa..53ed61490 100644
 --- a/contrib/systemd/gitea.service
 +++ b/contrib/systemd/gitea.service
 @@ -16,12 +16,12 @@ After=network.target
@@ -17,18 +17,17 @@ index 7c09fa321..c2ee2380d 100644
  Type=simple
 -User=git
 -Group=git
--WorkingDirectory=/home/git/gitea
--ExecStart=/home/git/gitea/gitea web
 +User=gitea
 +Group=gitea
-+WorkingDirectory=/var/lib/gitea
-+ExecStart=/usr/bin/gitea web --config /etc/gitea/app.ini
+ WorkingDirectory=/var/lib/gitea/
+-ExecStart=/usr/local/bin/gitea web -c /etc/gitea/app.ini
++ExecStart=/usr/bin/gitea web -c /etc/gitea/app.ini
  Restart=always
--Environment=USER=git HOME=/home/git
+-Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/gitea
 +Environment=USER=gitea HOME=/var/lib/gitea GITEA_WORK_DIR=/var/lib/gitea
- 
- [Install]
- WantedBy=multi-user.target
+ # If you want to bind Gitea to a port below 1024 uncomment
+ # the two values below
+ ###
 -- 
-2.17.1
+2.18.0
 

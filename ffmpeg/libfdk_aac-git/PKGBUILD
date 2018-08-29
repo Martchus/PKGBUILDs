@@ -19,8 +19,7 @@ depends=('alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'glibc' 'gmp' 'gnutls' 'gsm'
 makedepends=('ladspa' 'libvdpau' 'yasm')
 optdepends=('ladspa: LADSPA filters')
 provides=('libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
-          'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
-          'libswscale.so'
+          'libavutil.so' 'libpostproc.so' 'libswresample.so' 'libswscale.so'
           "ffmpeg=$pkgver")
 conflicts=("$_name")
 source=("$pkgname"::'git://source.ffmpeg.org/ffmpeg.git')
@@ -40,7 +39,6 @@ build() {
     --disable-static \
     --disable-stripping \
     --enable-avisynth \
-    --enable-avresample \
     --enable-fontconfig \
     --enable-gmp \
     --enable-gnutls \
@@ -72,6 +70,9 @@ build() {
     --enable-libxcb \
     --enable-libxml2 \
     --enable-libxvid \
+    --enable-nvdec \
+    --enable-nvenc \
+    --enable-omx \
     --enable-shared \
     --enable-version3 \
     --enable-x11grab \

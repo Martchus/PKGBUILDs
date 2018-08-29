@@ -40,7 +40,6 @@ build() {
         --enable-static \
         --disable-stripping \
         --enable-avisynth \
-        --enable-avresample \
         --enable-fontconfig \
         --enable-gmp \
         --enable-gnutls \

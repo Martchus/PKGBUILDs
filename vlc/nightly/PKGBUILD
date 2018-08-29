@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20180807
+pkgver=4.0.0v20180829
 _pkgver=4.0.0
-_snapshot_=20180807
-_snapver_=0241
+_snapshot_=20180829
+_snapver_=0251
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
@@ -23,7 +23,7 @@ depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'libtiger' 'lua'
          'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'libplacebo'
          'wayland-protocols')
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
-             'flac' 'kdelibs' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
+             'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
              'librsvg' 'libgme' 'xosd' 'twolame' 'aalib' 'avahi' 'libsystemd'
              'libmtp' 'libmicrodns' 'libdvdcss' 'smbclient'
              'vcdimager' 'libssh2' 'mesa' 'protobuf' 'opencv' 'libnfs' 'mpg123'
@@ -34,13 +34,12 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'libsamplerate' 'libsoxr' 'lirc' 'libgoom2' 'projectm'
              'chromaprint'
 
-             'libfdk-aac' 'portaudio' 'sidplay2-libs' 'sndio')
+             'fluidsynth' 'libfdk-aac' 'portaudio' 'sidplay2-libs' 'sndio')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
             'libdvdcss: decoding encrypted DVDs'
             'libavc1394: devices using the 1394ta AV/C'
             'libdc1394: IEEE 1394 access plugin'
-            'kdelibs: KDE Solid hardware integration'
             'kwallet: kwallet keystore'
             'libva-vdpau-driver: vdpau backend nvidia'
             'libva-intel-driver: video backend intel'
@@ -98,6 +97,7 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'libnotify: notification plugin'
             'gtk3: notification plugin'
 
+            'fluidsynth: FluidSynth plugin for MIDI playback'
             'libfdk-aac: FDK AAC codec'
             'portaudio: portaudio support'
             'vcdimager: navigate VCD with libvcdinfo'
@@ -233,6 +233,7 @@ build() {
               --enable-notify \
               --enable-libplacebo \
               --enable-vlc \
+              --with-kde-solid=/usr/share/solid/actions/ \
               \
               --libexecdir=/usr/lib \
               --enable-fdkaac

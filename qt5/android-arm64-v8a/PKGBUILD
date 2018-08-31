@@ -48,24 +48,9 @@ depends=('java-runtime-headless>=7'
          'android-sdk-build-tools'
          'android-sdk-platform-tools')
 groups=('android-qt5')
-optdepends=("android-openssl-${android_arch}: OpenSSL support")
-
-case "$android_arch" in
-    arm*)
-        optdepends=('android-google-apis-armv7a-eabi: AVD support'
-                    'android-armv7a-eabi-system-image: AVD support')
-        ;;
-    x86)
-        optdepends=('android-google-apis-x86: AVD support'
-                    'android-x86-system-image: AVD support')
-        ;;
-    x86_64)
-        optdepends=('android-google-apis-x86-64: AVD support'
-                    'android-x86-64-system-image: AVD support')
-        ;;
-    *)
-        ;;
-esac
+optdepends=("android-openssl-${android_arch}: OpenSSL support"
+            "android-google-apis-${android_arch}: AVD support"
+            "android-system-image-${android_arch}: AVD support")
 
 options=('!strip'
          '!buildflags'

@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20180829
+pkgver=4.0.0v20180907
 _pkgver=4.0.0
-_snapshot_=20180829
-_snapver_=0251
+_snapshot_=20180907
+_snapver_=0230
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
@@ -28,11 +28,10 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'libmtp' 'libmicrodns' 'libdvdcss' 'smbclient'
              'vcdimager' 'libssh2' 'mesa' 'protobuf' 'opencv' 'libnfs' 'mpg123'
              'libdvdread' 'libdvdnav' 'libogg' 'libshout' 'libmodplug' 'libvpx'
-             'libvorbis' 'speex' 'opus' 'libtheora' 'libpng'
-             'libjpeg-turbo' 'libx265.so' 'libx264.so' 'zvbi' 'libass'
-             'libkate' 'libtiger' 'sdl_image' 'libpulse' 'alsa-lib' 'jack'
-             'libsamplerate' 'libsoxr' 'lirc' 'libgoom2' 'projectm'
-             'chromaprint'
+             'libvorbis' 'speex' 'opus' 'libtheora' 'libpng' 'libjpeg-turbo'
+             'libx265.so' 'libx264.so' 'zvbi' 'libass' 'libkate' 'libtiger'
+             'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
+             'lirc' 'libgoom2' 'projectm' 'chromaprint' 'aribb24'
 
              'fluidsynth' 'libfdk-aac' 'portaudio' 'sidplay2-libs' 'sndio')
 optdepends=('avahi: service discovery using bonjour protocol'
@@ -79,6 +78,7 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'x265: HEVC/H.265 encoder'
             'zvbi: VBI/Teletext decoding'
             'libass: Subtitle support'
+            'aribb24: ARIB subtitles'
             'libkate: Kate codec'
             'libtiger: Tiger rendering for Kate streams'
             'sdl_image: SDL image support'
@@ -147,6 +147,7 @@ build() {
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --disable-rpath \
+              --with-kde-solid=/usr/share/solid/actions/ \
               --enable-nls \
               --enable-archive \
               --enable-live555 \
@@ -233,7 +234,7 @@ build() {
               --enable-notify \
               --enable-libplacebo \
               --enable-vlc \
-              --with-kde-solid=/usr/share/solid/actions/ \
+              --enable-aribsub \
               \
               --libexecdir=/usr/lib \
               --enable-fdkaac

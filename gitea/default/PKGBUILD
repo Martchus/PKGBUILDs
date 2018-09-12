@@ -10,7 +10,7 @@ _confdir=custom/conf
 _scriptsdir=contrib
 
 pkgname=${_pkgname}
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 #epoch=
 pkgdesc='Self Hosted Git Service written in Go'
@@ -31,7 +31,7 @@ backup=("etc/$_pkgname/app.ini")
 source=("$_pkgname-$pkgver::https://github.com/$_orga/$_pkgname/archive/v${pkgver}.tar.gz"
         '0001-Adjust-config-for-Arch-Linux-package.patch'
         '0002-Adjust-service-file-for-Arch-Linux-package.patch')
-sha512sums=('06cbcadc138496abf500b8d219d0770c5f6b8af419f9c3733596ee7e20cb50235815433979b2b1daa0a6117e6eb84de9678667236549e018079c49b793f22d68'
+sha512sums=('16d10d98caf377d3bd5b4933316290e853a8fc46f5fdb3c206b9607750b5bdbdfd5c50bf8dd59906d7476d0e9211a67332eb4b780d8d37cdfb1c0bc3141ceed7'
             '6c5d02d4b124a834b72283833d8f3fe7b16e21c2f45a1516e3ea28e9ba07d374fc98f2e3dbccc4e8e76cfd3fabf01ffefa36a56121b348a35255b13b134ad4c6'
             '73263dc75dad98c2b01e5fe0a7a2b6b0b5f63077895d35da6501f04c4f86ee652929e952b7800872d0b41877accbd84c518e3c9c440ae85741ed106582c0bf49')
 _goroot='/usr/lib/go'
@@ -106,7 +106,7 @@ package() {
   cp -r "$srcdir/build/src/${_gourl}/templates" "$pkgdir/usr/share/${_pkgname}"
 
   mkdir -p "$pkgdir/etc/$_pkgname"
-  install -Dm0664 -g "$_userid" "$pkgdir/usr/share/$_pkgname/conf/app.ini"* "$pkgdir/etc/$_pkgname"
+  install -Dm0664 -g "$_userid" "$pkgdir/usr/share/$_pkgname/conf/app.ini"* "$pkgdir/etc/$_pkgname/app.ini"
   install -Dm0644 "$srcdir/build/src/${_gourl}/${_scriptsdir}/systemd/$_pkgname.service" "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
   install -Dm0644 "$srcdir/build/src/${_gourl}/LICENSE" "$pkgdir/usr/share/licenses/$_pkgname"
   install -Dm0644 "${srcdir}/$_pkgname.sysusers" "${pkgdir}/usr/lib/sysusers.d/$_pkgname.conf"

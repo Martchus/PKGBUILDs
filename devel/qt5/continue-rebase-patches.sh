@@ -2,8 +2,8 @@
 set -e # abort on first error
 shopt -s nullglob
 
-if ! [[ $1 ]] || ! [[ $2 ]]; then
-    echo 'No version specified, must specify the new and old version, eg. 5.9.2 5.9.1'
+if ! [[ $1 ]]; then
+    echo 'No version specified, must specify the new version, eg. 5.9.2'
     echo "Usage: $0 newversion"
     exit -1
 fi
@@ -22,5 +22,7 @@ if ! [[ $remote ]]; then
     exit -2
 fi
 
-git cherry-pick --continue
+if ! git cherry-pick --continue; then
+    echo "Seems like the cherry-pick has been concluded manually."
+fi
 git push -u $maybe_remote "$newversion-mingw-w64"

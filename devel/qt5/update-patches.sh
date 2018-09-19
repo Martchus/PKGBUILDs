@@ -6,6 +6,8 @@
 #set -euxo pipefail
 set -e # abort on first error
 shopt -s nullglob
+source /usr/share/makepkg/util/message.sh
+colorize
 
 if ! [[ $1 ]]; then
     echo 'No Qt repo specified - must be specified like eg. base or multimedia.'
@@ -38,14 +40,14 @@ for dir in "${pkgbuildsdirs[@]}"; do
     [[ -d $dest ]] && break || dest=
 done
 if ! [[ $dest ]]; then
-    echo "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} is no directory."
-    exit -3
+    warning "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} is no directory - skipping repository $repo."
+    exit 0
 fi
 
 # find repo dir
 wd="${QT_GIT_REPOS_DIR}/${repo}"
 if ! [[ -d $wd ]]; then
-    echo "\$QT_GIT_REPOS_DIR/$repo is no directory."
+    error "\$QT_GIT_REPOS_DIR/$repo is no directory."
     exit -2
 fi
 
@@ -73,10 +75,10 @@ if ! [[ $branch ]]; then
     branch="${pkgver}-${variant}"
 fi
 if ! git checkout "${branch}"; then
-    echo "No patches required for $1, skipping."
+    msg2 "No patches required for $1, skipping."
     exit 0
 fi
-git format-patch "v${pkgver}" --output-directory "$dest"
+git format-patch "origin/${pkgver}" --output-directory "$dest"
 popd > /dev/null
 
 new_patches=("$dest"/*.patch)

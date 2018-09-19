@@ -42,7 +42,7 @@ To get the patches into the PKGBUILD files, the script `devel/qt5/update-patches
 This is always done by me. Please don't try to help here because it will only cause conflicts. However, the
 workflow is quite simple:
 
-1. Run `devel/qt5/rebase-patches.sh` on all Qt repository forks
+1. Run `devel/qt5/rebase-patches.sh` on all Qt repository forks or just `devel/qt5/rebase-all-patches.sh`
     * eg. `rebase-patches.sh 5.11.0 5.10.1 fixes` to create branch `5.11.0-mingw-w64` based on `5.10.1-mingw-w64-fixes`
     * after fixing possible conflicts, run `devel/qt5/continue-rebase-patches.sh`
     * otherwise, that's it

@@ -71,7 +71,7 @@ build() {
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make SYNCTHING_PORT=$(ephemeral_port) check
+  make SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 check
 }
 
 package() {

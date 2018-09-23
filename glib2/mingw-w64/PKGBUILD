@@ -2,10 +2,12 @@
 # Contributor: Filip Brcic <brcha@gna.org>
 # Contributor: ant32 <antreimer@gmail.com>
 # Contributor: Renato Silva <br.renatosilva@gmail.com>
+# Contributor: Martchus <martchus@gmx.net>
+
 pkgname=mingw-w64-glib2
-pkgver=2.58.0
+pkgver=2.58.1
 pkgrel=1
-_commit=f0b57dd7a80425264e318f85c331a039a3cddd87  # tags/2.58.0
+_commit=a9f5a6fa2fdd6eb2f754709d7e790d24e3ceaa18 # tags/2.58.1^0
 arch=(any)
 pkgdesc="Low level core library (mingw-w64)"
 depends=(mingw-w64-libffi mingw-w64-pcre mingw-w64-gettext mingw-w64-zlib)
@@ -56,7 +58,17 @@ build() {
 
 package() {
   for _arch in ${_architectures}; do
+    # fix pkg-config files (see https://github.com/mesonbuild/meson/pull/3939)
+    for pc_file in ${srcdir}/glib/build-${_arch}/meson-private/*.pc; do
+      sed -i 's/-lgnulib//g' "$pc_file"
+      sed -i 's/-lcharset//g' "$pc_file"
+      sed -i 's/-lgiowin32//g' "$pc_file"
+    done
     DESTDIR="${pkgdir}" ninja -C "${srcdir}/glib/build-${_arch}" install
+    
+    #FIXME: Ranlib (isn't meson supposed to do this?)
+    ${_arch}-gcc-ranlib ${pkgdir}/usr/${_arch}/lib/*.a
+
   done
 }
 

@@ -1,17 +1,17 @@
 #!/bin/bash
 declare -A versions=(
-    [c++utilities]=4.14.2
-    [qtutilities]=5.10.0
-    [tagparser]=7.1.0
-    [tageditor]=3.1.1
-    [passwordfile]=3.1.4
-    [passwordmanager]=3.1.5
-    [syncthingtray]=0.8.1
+    [c++utilities]=4.15.0
+    [qtutilities]=5.11.0
+    [tagparser]=8.0.0
+    [tageditor]=3.1.2
+    [passwordfile]=3.2.0
+    [passwordmanager]=3.2.0
+    [syncthingtray]=0.8.2
     [videodownloader]=1.3.3
     [reflective-rapidjson]=0.0.5
     [blackwidowcontrol]=1.0.1
     [dbus-soundrecorder]=1.2.2
-    [qt5]=5.11.1
+    [qt5]=5.11.2
 )
 declare -A github_names=(
     [c++utilities]=cpp-utilities

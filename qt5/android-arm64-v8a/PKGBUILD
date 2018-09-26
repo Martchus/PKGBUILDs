@@ -24,7 +24,7 @@ _mapboxcfg='QT.global.disabled_features+=geoservices_mapboxgl'
 
 _pkgname=android-qt5
 pkgname=${_pkgname}-${android_arch}
-pkgver=5.11.1
+pkgver=5.11.2
 pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')

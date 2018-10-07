@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20180915
+pkgver=4.0.0v20181007
 _pkgver=4.0.0
-_snapshot_=20180915
-_snapver_=0232
+_snapshot_=20181007
+_snapver_=0231
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
@@ -16,12 +16,12 @@ pkgdesc='Multi-platform MPEG, VCD/DVD, and DivX player - nightly snapshot'
 url='https://www.videolan.org/vlc/'
 arch=('x86_64')
 license=('LGPL2.1' 'GPL2')
-depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'libtiger' 'lua'
+depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua' 'libidn'
          'libmatroska' 'taglib' 'libmpcdec' 'ffmpeg' 'faad2' 'libupnp' 'libmad'
          'libmpeg2' 'xcb-util-keysyms' 'libtar' 'libxinerama' 'libsecret'
          'libarchive' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
          'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'libplacebo'
-         'wayland-protocols')
+         'wayland-protocols' 'aribb24')
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
              'librsvg' 'libgme' 'xosd' 'twolame' 'aalib' 'avahi' 'libsystemd'
@@ -31,7 +31,7 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'libvorbis' 'speex' 'opus' 'libtheora' 'libpng' 'libjpeg-turbo'
              'libx265.so' 'libx264.so' 'zvbi' 'libass' 'libkate' 'libtiger'
              'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
-             'lirc' 'libgoom2' 'projectm' 'chromaprint' 'aribb24'
+             'lirc' 'libgoom2' 'projectm' 'chromaprint'
 
              'fluidsynth' 'libfdk-aac' 'portaudio' 'sidplay2-libs' 'sndio')
 optdepends=('avahi: service discovery using bonjour protocol'
@@ -78,7 +78,6 @@ optdepends=('avahi: service discovery using bonjour protocol'
             'x265: HEVC/H.265 encoder'
             'zvbi: VBI/Teletext decoding'
             'libass: Subtitle support'
-            'aribb24: ARIB subtitles'
             'libkate: Kate codec'
             'libtiger: Tiger rendering for Kate streams'
             'sdl_image: SDL image support'
@@ -113,7 +112,6 @@ source=("http://nightlies.videolan.org/build/source/vlc-${_pkgver}-${_nightly_}-
         'update-vlc-plugin-cache.hook'
         '0001-lua-Fix-build-using-lua-5.3.patch'
         '0002-Fix-compatibility-with-OpenCV-3.4.1.patch'
-        '0003-Fix-compilation-with-Qt-5.11.patch'
         'find-deps.py')
 
 pkgver() {
@@ -127,7 +125,6 @@ prepare() {
 
   patch -Np1 -i "${srcdir}/0001-lua-Fix-build-using-lua-5.3.patch"
   patch -Np1 -i "${srcdir}/0002-Fix-compatibility-with-OpenCV-3.4.1.patch"
-  patch -Np1 -i "${srcdir}/0003-Fix-compilation-with-Qt-5.11.patch"
   sed -i -e 's:truetype/ttf-dejavu:TTF:g' modules/visualization/projectm.cpp
   sed -i -e 's:truetype/freefont:TTF:g' modules/text_renderer/freetype/freetype.c
   sed 's|whoami|echo builduser|g' -i configure

@@ -12,8 +12,9 @@ arch=('any')
 pkgdesc='Code generator for serializing/deserializing C++ objects to/from JSON using Clang and RapidJSON (mingw-w64)'
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities' 'mingw-w64-rapidjson' 'reflective-rapidjson')
-optdepends=("mingw-w64-boost: use Boost.Hana instead of code generator")
-optdepends=("$_name-doc: API documentation")
+optdepends=("mingw-w64-boost: use Boost.Hana instead of code generator"
+            "$_name-doc: API documentation")
+checkdepends=('mingw-w64-cppunit' 'mingw-w64-wine' 'mingw-w64-boost')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -34,6 +35,17 @@ build() {
         ${_configurations} \
         ../
     make
+    popd
+  done
+}
+
+check() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  for _arch in ${_architectures}; do
+    mkdir -p "build-${_arch}" && pushd "build-${_arch}"
+    export WINEPATH="/usr/${_arch}/bin"
+    export WINEDEBUG=-all
+    make check
     popd
   done
 }

@@ -29,20 +29,26 @@ prepare() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  local android_sdk_path=${ANDROID_SDK_ROOT:-/opt/android-sdk}
+  local android_ndk_path=${ANDROID_NDK_ROOT:-/opt/android-ndk}
+  local prefix=/opt/android-libs/$_android_arch
+  local include_dir=$prefix/include
+
   cmake \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=21 \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
-    -DCMAKE_ANDROID_NDK=/opt/android-ndk \
-    -DCMAKE_ANDROID_SDK=/opt/android-sdk \
-    -DCMAKE_ANDROID_STL_TYPE=gnustl_shared \
+    -DCMAKE_ANDROID_SDK="$android_sdk_path" \
+    -DCMAKE_ANDROID_NDK="$android_ndk_path" \
+    -DCMAKE_ANDROID_STL_TYPE=c++_shared \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/opt/android-libs/$_android_arch \
-    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;/opt/android-libs/$_android_arch" \
-    -Dcrypto_DYNAMIC_INCLUDE_DIR="/opt/android-openssl/$_android_arch/include" \
-    -Dcrypto_STATIC_INCLUDE_DIR="/opt/android-openssl/$_android_arch/include" \
-    -Dcrypto_DYNAMIC_LIB="/opt/android-openssl/$_android_arch/lib/libcrypto.so" \
-    -Dcrypto_STATIC_LIB="/opt/android-openssl/$_android_arch/lib/libcrypto.a" \
+    -DCMAKE_INSTALL_PREFIX=$prefix \
+    -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$prefix" \
+    -Dcrypto_DYNAMIC_INCLUDE_DIR="$include_dir" \
+    -Dcrypto_STATIC_INCLUDE_DIR="$include_dir" \
+    -Dcrypto_DYNAMIC_LIB="$prefix/lib/libcrypto.so" \
+    -Dcrypto_STATIC_LIB="$prefix/lib/libcrypto.a" \
     -DNO_DOXYGEN=ON
   make VERBOSE=1
 }

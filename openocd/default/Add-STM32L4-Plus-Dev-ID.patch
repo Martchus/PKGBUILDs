@@ -1,0 +1,45 @@
+From 829e7d9eaca3f47f32b184e3479c066e05f8554b Mon Sep 17 00:00:00 2001
+From: Elrond <elrond+openocd.org@samba-tng.org>
+Date: Mon, 5 Mar 2018 13:20:28 +0100
+Subject: [PATCH] Add STM32L4+ flash/dev_id
+
+According to RM0432 chapter 51.6.1 the DBGMCU_IDCODE is
+0x470.
+
+Tested on NUCLEO-STM32L4R5ZI with a similiar change to
+openocd 0.10.0-4 in Debian.
+
+Signed-off-by: Elrond <elrond+openocd.org@samba-tng.org>
+Change-Id: I9b57013ef23fa963abfecddb728e4a6fadd1f8a1
+---
+ src/flash/nor/stm32l4x.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/flash/nor/stm32l4x.c b/src/flash/nor/stm32l4x.c
+index 6a1fa07..dcb7a92 100644
+--- a/src/flash/nor/stm32l4x.c
++++ b/src/flash/nor/stm32l4x.c
+@@ -618,6 +618,9 @@ static int stm32l4_probe(struct flash_bank *bank)
+ 
+ 	/* set max flash size depending on family */
+ 	switch (device_id & 0xfff) {
++	case 0x470:
++		max_flash_size_in_kb = 2048;
++		break;
+ 	case 0x461:
+ 	case 0x415:
+ 		max_flash_size_in_kb = 1024;
+@@ -743,6 +746,10 @@ static int get_stm32l4_info(struct flash_bank *bank, char *buf, int buf_size)
+ 		device_str = "STM32L43x/44x";
+ 		break;
+ 
++	case 0x470:
++		device_str = "STM32L4Rxxx/4Sxxx";
++		break;
++
+ 	default:
+ 		snprintf(buf, buf_size, "Cannot identify target as a STM32L4\n");
+ 		return ERROR_FAIL;
+-- 
+1.9.1
+

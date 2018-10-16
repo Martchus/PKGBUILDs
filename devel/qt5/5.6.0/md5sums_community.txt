@@ -1,4 +1,0 @@
-4b60927705adf3c2cfe8c705c274105e  qtwebkit-opensource-src-5.6.0.7z
-13111d76e067fca9feadd01953ea690a  qtwebkit-opensource-src-5.6.0.tar.gz
-b68565d18db63ee4db998bb8e37608a5  qtwebkit-opensource-src-5.6.0.tar.xz
-43a6a62b8b1db60734f0d55204d09e61  qtwebkit-opensource-src-5.6.0.zip

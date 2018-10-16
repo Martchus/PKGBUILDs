@@ -22,7 +22,7 @@ arch=('any')
 url='https://www.openssl.org'
 license=('custom:BSD')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
-depends=('perl' 'android-sdk' 'android-ndk')
+depends=('android-sdk' 'android-ndk')
 source=("https://www.openssl.org/source/${_pkgname}-${_ver}.tar.gz"
         "https://www.openssl.org/source/${_pkgname}-${_ver}.tar.gz.asc"
         'setenv-android.sh')
@@ -71,7 +71,7 @@ package() {
 	install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 
 	# strip binaries
-        local strip_path=$ANDROID_TOOLCHAIN/${CROSS_COMPILE}strip
+	local strip_path=$ANDROID_TOOLCHAIN/${CROSS_COMPILE}strip
 	find "$pkgdir" -name 'lib*.so' -type f -exec "$strip_path" --strip-unneeded {} \;
 	find "$pkgdir" -name 'lib*.a' -type f -exec "$strip_path" -g {} \;
 }

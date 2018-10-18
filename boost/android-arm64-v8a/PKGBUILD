@@ -51,16 +51,13 @@ build() {
     -funwind-tables \
     -no-canonical-prefixes \
     -D__ANDROID_API__=$_android_api_level \
-    -DBOOST_ASIO_HAS_STD_STRING_VIEW=1 \
-    -D_FORTIFY_SOURCE=2 \
-    -pipe \
-    -fstack-protector-strong \
-    --param=ssp-buffer-size=4 \
-    -fPIE -fPIC -O3"
+    -O3 \
+    -fPIC \
+    -DBOOST_ASIO_HAS_STD_STRING_VIEW=1"
   local ld_flags=" \
     $target_flags \
-    -Wl,-O1,--sort-common,--as-needed,-z,relro,-pie \
-    $_android_ndk_path/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so"
+    $_android_ndk_path/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so \
+    -nostdlib++"
 
   cd ${_pkgname}_${_boostver}
 
@@ -123,12 +120,13 @@ build() {
     address-model=$_boost_address_model \
     -sICONV_PATH="/opt/android-libs/$_android_arch" \
     cflags="$common_flags" \
-    cxxflags="$common_flags -fexceptions -frtti -std=c++14 -stdlib=libc++" \
+    cxxflags="$common_flags -fexceptions -frtti -std=c++14" \
     linkflags="$ld_flags" \
     --layout=system \
     ${jobs} \
     \
     --prefix="${_stagedir}" \
+    -d+2 \
     install
 }
 

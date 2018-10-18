@@ -45,16 +45,13 @@ build() {
     -funwind-tables \
     -no-canonical-prefixes \
     -D__ANDROID_API__=$_android_api_level \
-    -D_FORTIFY_SOURCE=2 \
-    -pipe \
-    -fstack-protector-strong \
-    --param=ssp-buffer-size=4 \
-    -fPIE -fPIC -O3 \
+     -O3 \
+    -fPIC \
     -DCPPUNIT_HAVE_LIBDL=1 \
     -Wno-unused-command-line-argument"
   local ld_flags=" \
-    -Wl,-O1,--sort-common,--as-needed,-z,relro,-pie \
-    $_android_ndk_path/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so"
+    $_android_ndk_path/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so \
+    -nostdlib++"
 
   export AR=${_android_gcc_tool_prefix}-ar
   export AS=${_android_gcc_tool_prefix}-as

@@ -9,7 +9,7 @@ _android_toolchain=aarch64-linux-android
 _android_prefix=/opt/android-libs/$_android_arch
 _android_ndk_path=/opt/android-ndk
 _android_api_level=21
-_android_platform=android-28/arch-arm64
+_android_platform=android-$_android_api_level/arch-arm64
 _boost_arch=arm
 _boost_address_model=64
 

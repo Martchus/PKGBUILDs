@@ -1,0 +1,26 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=qemu-binfmt-arm
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc='binfmt configuration to run ARM binaries transparently with qemu'
+depends=('qemu-arch-extra')
+license=('GPL')
+url='https://github.com/Martchus/PKGBUILDs'
+source=()
+
+build() {
+  echo ':qemu-aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-aarch64:OCF' > qemu-aarch64.conf
+  echo ':qemu-arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm:OCF' > qemu-arm.conf
+}
+
+package() {
+  install -d "${pkgdir}"/usr/lib/binfmt.d
+  for config_file in "${srcdir}"/qemu-*.conf; do
+    install -m 644 "${config_file}" "${pkgdir}"/usr/lib/binfmt.d
+  done
+}

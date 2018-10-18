@@ -16,8 +16,10 @@ pkgdesc="Common C++ classes and routines such as argument parser, IO and convers
 license=('GPL')
 depends=("android-libiconv-$_android_arch" "android-boost-$_android_arch")
 optdepends=("$_pkgname-doc: API documentation")
+checkdepends=("android-cppunit-$_android_arch")
+# FIXME: run tests with qemu
+#checkdepends+=('qemu-binfmt-arm' "android-linker-$_android_arch")
 makedepends=('cmake' 'android-ndk' 'android-sdk')
-#checkdepends=('cppunit')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('85b5c79d333cf08771aa2a01f3ae5ced7fa3626adc9f73d652c909cbe07eac45')
@@ -46,20 +48,42 @@ build() {
     -DCMAKE_INSTALL_PREFIX=$prefix \
     -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$prefix" \
     -DUSE_NATIVE_FILE_BUFFER=ON \
+    -DNO_DOXYGEN=ON \
     -Diconv_DYNAMIC_INCLUDE_DIR="$include_dir" \
     -Diconv_STATIC_INCLUDE_DIR="$include_dir" \
     -Dboost_iostreams_DYNAMIC_INCLUDE_DIR="$include_dir" \
     -Dboost_iostreams_STATIC_INCLUDE_DIR="$include_dir" \
-    -DNO_DOXYGEN=ON
+    -Dcppunit_DYNAMIC_INCLUDE_DIR="$include_dir" \
+    -Dcppunit_STATIC_INCLUDE_DIR="$include_dir" \
+    -Dcppunit_DYNAMIC_LIB="$prefix/lib/libcppunit-1.14.so" \
+    -Dcppunit_STATIC_LIB="$prefix/lib/libcppunit.a"
   make VERBOSE=1
 }
 
-#check() {
-#  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-#  make check
-#}
+check() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  # can not run the tests so compile them at least
+  make tests VERBOSE=1
+
+  # FIXME: run tests with qemu
+  # * currently getting error
+  #    "libc: Fatal signal 4 (SIGILL), code 2, fault addr 0x4000c28b40 in tid 193 (test), pid 193 (test)"
+  # * not possible because the default Linux kernel is not able to run Android libc?
+  # use dynamic linker supposed to be located under $prefix/system/bin/linker64
+  #export QEMU_LD_PREFIX=$prefix
+  # use libraries from build directory, prefix and Android NDK
+  #export LD_LIBRARY_PATH=$PWD:$prefix/lib:$android_ndk_path/sources/cxx-stl/llvm-libc++/libs/arm64-v8a:$android_ndk_path/platforms/android-28/arch-arm64/usr/lib
+  #make check VERBOSE=1
+}
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   make DESTDIR="${pkgdir}" install
+
+  # add tests to the package for possibly executing them later under Android
+  if [[ -f c++utilities_tests ]]; then
+    mkdir "${pkgdir}/bin"
+    cp c++utilities_tests "${pkgdir}/bin"
+  fi
 }

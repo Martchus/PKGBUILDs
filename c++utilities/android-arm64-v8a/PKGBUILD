@@ -7,9 +7,10 @@ _reponame=cpp-utilities
 _pkgname=c++utilities
 _android_arch=arm64-v8a
 _android_toolchain=aarch64-linux-android
+_prefix=/opt/android-libs/$_android_arch
 
 pkgname=android-$_pkgname-$_android_arch
-pkgver=4.15.0
+pkgver=4.16.0
 pkgrel=1
 arch=('any')
 pkgdesc="Common C++ classes and routines such as argument parser, IO and conversion utilities (Android, $_android_arch)"
@@ -22,7 +23,7 @@ checkdepends=("android-cppunit-$_android_arch")
 makedepends=('cmake' 'android-ndk' 'android-sdk')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('85b5c79d333cf08771aa2a01f3ae5ced7fa3626adc9f73d652c909cbe07eac45')
+sha256sums=('c4487d6e684c523e596bfc91203a6f10609606786553517bcf44ffae181feaa5')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 prepare() {
@@ -34,8 +35,7 @@ build() {
 
   local android_sdk_path=${ANDROID_SDK_ROOT:-/opt/android-sdk}
   local android_ndk_path=${ANDROID_NDK_ROOT:-/opt/android-ndk}
-  local prefix=/opt/android-libs/$_android_arch
-  local include_dir=$prefix/include
+  local include_dir=$_prefix/include
 
   cmake \
     -DCMAKE_SYSTEM_NAME=Android \
@@ -45,8 +45,8 @@ build() {
     -DCMAKE_ANDROID_NDK="$android_ndk_path" \
     -DCMAKE_ANDROID_STL_TYPE=c++_shared \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=$prefix \
-    -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$prefix" \
+    -DCMAKE_INSTALL_PREFIX=$_prefix \
+    -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$_prefix" \
     -DUSE_NATIVE_FILE_BUFFER=ON \
     -DNO_DOXYGEN=ON \
     -Diconv_DYNAMIC_INCLUDE_DIR="$include_dir" \
@@ -55,8 +55,8 @@ build() {
     -Dboost_iostreams_STATIC_INCLUDE_DIR="$include_dir" \
     -Dcppunit_DYNAMIC_INCLUDE_DIR="$include_dir" \
     -Dcppunit_STATIC_INCLUDE_DIR="$include_dir" \
-    -Dcppunit_DYNAMIC_LIB="$prefix/lib/libcppunit-1.14.so" \
-    -Dcppunit_STATIC_LIB="$prefix/lib/libcppunit.a"
+    -Dcppunit_DYNAMIC_LIB="$_prefix/lib/libcppunit-1.14.so" \
+    -Dcppunit_STATIC_LIB="$_prefix/lib/libcppunit.a"
   make VERBOSE=1
 }
 
@@ -83,7 +83,7 @@ package() {
 
   # add tests to the package for possibly executing them later under Android
   if [[ -f c++utilities_tests ]]; then
-    mkdir "${pkgdir}/bin"
-    cp c++utilities_tests "${pkgdir}/bin"
+    mkdir "${pkgdir}/$_prefix/bin"
+    cp c++utilities_tests "${pkgdir}/$_prefix/bin"
   fi
 }

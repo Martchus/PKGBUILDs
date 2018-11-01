@@ -7,24 +7,27 @@
 # by setting SYNCTHING_TEST_TIMEOUT_FACTOR
 
 # set the web view provider: either webkit, webengine, auto or none
-_webview_provider=webkit
+_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-webkit}
 
 # set the JavaScript provider: either script, qml, auto or none
-_js_provider=qml
+_js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
 
 # set to non-empty string to enable KIO plugin to show Syncthing actions in
 # Dolphin file browser
-_enable_kio_plugin=1
+_enable_kio_plugin=${SYNCTHING_TRAY_ENABLE_KIO_PLUGIN:-1}
 
 # set to non-empty string to enable Plasmoid for Plasma 5 desktop
-_enable_plasmoid=1
+_enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID:-1}
+
+[[ $_enable_kio_plugin == 0 ]] && _enable_kio_plugin=
+[[ $_enable_plasmoid == 0 ]] && _enable_plasmoid=
 
 _reponame=syncthingtray
 pkgname=syncthingtray-git
 _name=${pkgname%-git}
 pkgver=0.7.2
 pkgrel=1
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=('GPL')
 depends=('qtutilities-git' 'qt5-svg' 'openssl' 'desktop-file-utils' 'xdg-utils')

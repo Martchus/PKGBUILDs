@@ -34,7 +34,7 @@ do
     file_name=${latest_file##*/}
 
     # check whether upload already exists
-    if github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artefact: $latest_file"; then
+    if github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $file_name"; then
         echo "auto-skipping $project/v$version; $latest_file already present"
         continue
     fi

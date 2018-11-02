@@ -1,0 +1,36 @@
+# Maintainer: Christopher Arndt <aur -at- chrisarndt -dot- de>
+# Contributor: Giampaolo Mancini <giampaolo@trampolineup.com>
+
+_name=python-colorzero
+_name2=${_name##python-}
+pkgname=$_name-git
+pkgver=46.963f1a0
+pkgrel=1
+pkgdesc='Another color manipulation library for Python'
+arch=('any')
+url="https://github.com/waveform80/${_name2}"
+license=('BSD')
+depends=('python')
+makedepends=('git' 'python-setuptools')
+provides=("${_name}")
+conflicts=("${_name}")
+source=("git://github.com/waveform80/${_name2}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_name2}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}/${_name2}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_name2}"
+  python setup.py install --root="${pkgdir}/" --optimize=1
+  install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+# vim:set ts=2 sw=2 et:

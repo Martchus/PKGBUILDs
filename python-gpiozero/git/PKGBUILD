@@ -1,0 +1,39 @@
+# Maintainer: Christopher Arndt <aur -at- chrisarndt -dot- de>
+# Contributor: Giampaolo Mancini <giampaolo@trampolineup.com>
+
+_name=python-gpiozero
+pkgname=$_name-git
+pkgver=940.4aa1c16
+pkgrel=1
+pkgdesc='A simple interface to GPIO devices with Raspberry Pi'
+arch=('any')
+url="https://github.com/RPi-Distro/${_name}"
+license=('BSD')
+optdepends=(
+    'python-spidev: for SPI access'
+    'python-rpi.gpio: for Raspberry Pi GPIO pin access via RPi.GPIO library'
+)
+depends=()
+makedepends=('git' 'python-setuptools')
+provides=("${_name}")
+conflicts=("${_name}")
+source=("git://github.com/RPi-Distro/${_name}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_name}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}/${_name}"
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_name}"
+  python setup.py install --root="${pkgdir}/" --optimize=1
+  install -Dm644 LICENCE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+# vim:set ts=2 sw=2 et:

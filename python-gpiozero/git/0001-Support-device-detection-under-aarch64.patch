@@ -1,0 +1,50 @@
+From 28845f63eb831f9c0d30b0ce58f23dd3aa95caa2 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 3 Nov 2018 21:38:21 +0000
+Subject: [PATCH] Support device detection under aarch64
+
+Under aarch64, /proc/cpuinfo does not contain the revision
+number. This adds a fallback to /proc/device-tree so the
+revision can be detected under 64-bit systems as well.
+
+See https://github.com/RPi-Distro/python-gpiozero/issues/688
+---
+ gpiozero/pins/local.py | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/gpiozero/pins/local.py b/gpiozero/pins/local.py
+index 4a9e522..4e25f38 100644
+--- a/gpiozero/pins/local.py
++++ b/gpiozero/pins/local.py
+@@ -56,6 +56,8 @@ class LocalPiFactory(PiFactory):
+         # Cache the result as we can reasonably assume it won't change during
+         # runtime (this is LocalPin after all; descendents that deal with
+         # remote Pis should inherit from Pin instead)
++
++        # Read revision from /proc/cpuinfo
+         with io.open('/proc/cpuinfo', 'r') as f:
+             for line in f:
+                 if line.startswith('Revision'):
+@@ -64,7 +66,18 @@ class LocalPiFactory(PiFactory):
+                     if overvolted:
+                         revision = revision[-4:]
+                     return revision
+-        raise PinUnknownPi('unable to locate Pi revision in /proc/cpuinfo')
++
++        # Fallback to reading /proc/device-tree if available to support 64-bit systems
++        try:
++            with io.open('/proc/device-tree/system/linux,revision', 'rb') as f:
++                f.seek(1)
++                revision = int.from_bytes(f.read(), byteorder='big', signed=False)
++                if revision != 0:
++                    return hex(revision)[2:]
++        except FileNotFoundError:
++            pass
++
++        raise PinUnknownPi('unable to locate Pi revision in /proc/cpuinfo or /proc/device-tree')
+ 
+ 
+ class LocalPiPin(PiPin):
+-- 
+2.19.1
+

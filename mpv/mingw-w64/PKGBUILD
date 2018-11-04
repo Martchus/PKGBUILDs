@@ -3,7 +3,7 @@
 
 _name=mpv
 pkgname=mingw-w64-mpv
-pkgver=0.16.0
+pkgver=0.29.1
 pkgrel=1
 epoch=1
 pkgdesc="Video player based on MPlayer/mplayer2 (mingw-w64)"
@@ -18,7 +18,7 @@ depends=(
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'python')
 source=("$_name-$pkgver.tar.gz::https://github.com/mpv-player/$_name/archive/v$pkgver.tar.gz")
-sha256sums=('fc3619de0ede16fbb023ac72589090e8e77fd9d9e03a81adc728105d50ef38ba')
+sha256sums=('f9f9d461d1990f9728660b4ccb0e8cb5dce29ccaa6af567bec481b79291ca623')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
@@ -43,7 +43,7 @@ build() {
     ./waf configure \
       --prefix=/usr/$_arch \
       --confdir=../etc/mpv \
-      --enable-libmpv-static
+      --enable-libmpv-static --enable-static
     ./waf build
 
     # build shared libmpv

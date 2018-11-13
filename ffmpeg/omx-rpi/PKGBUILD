@@ -91,12 +91,11 @@ build() {
     \
     --enable-libfdk_aac \
     --enable-omx-rpi \
-    --enable-mmal \
     --disable-opencl \
-    --extra-cflags="-march=armv8-a+crc -mfpu=neon-fp-armv8 -mtune=cortex-a53" \
     --enable-nonfree
 
-  make
+    #--enable-mmal \
+  make V=1
   make tools/qt-faststart
   make doc/ff{mpeg,play}.1
 

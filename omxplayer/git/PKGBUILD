@@ -1,0 +1,49 @@
+# Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
+# Contributor: Huulivoide <gmail.com: jesse.jaara>
+# Contributor: Jonathan Hudson <daria.co.uk: jh+arch>
+
+buildarch=20
+
+pkgname=omxplayer-git
+pkgver=517.a70e9b4
+pkgrel=1
+pkgdesc="Command line media player for the RaspberryPi"
+arch=('armv6h' 'armv7h' 'aarch64')
+url="https://github.com/popcornmix/omxplayer"
+license=(GPL2)
+depends=('ffmpeg' 'raspberrypi-firmware' 'fbset')
+makedepends=('git' 'boost')
+optdepends=('ttf-freefont')
+provides=(omxplayer)
+conflicts=('omxplayer' 'omxplayer-bin')
+source=('git://github.com/popcornmix/omxplayer.git'
+        '0001-alarm-fixes.patch'
+        '0002-fix-keyboard-input.patch')
+md5sums=('SKIP'
+         'fe4efaa1cf49570a65c51cef319fdf8b'
+         '28cb317db75a866b22484ac16eb3152a')
+
+pkgver() {
+  cd omxplayer
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+prepare() {
+  cd "${srcdir}/omxplayer"
+
+  git apply ../0001-alarm-fixes.patch
+  git apply ../0002-fix-keyboard-input.patch
+}
+
+build() {
+  cd "${srcdir}/omxplayer"
+
+  [[ $CARCH == "armv7h" ]] && CFLAGS=`echo $CFLAGS | sed -e 's/vfpv3-d16/neon/'` && CXXFLAGS="$CFLAGS"
+  make
+}
+
+package() {
+  cd "${srcdir}/omxplayer"
+
+  make DESTDIR="${pkgdir}" install
+}

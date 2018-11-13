@@ -1,0 +1,93 @@
+From 26db8c18b7eb27db94a664eb5875748dcead262e Mon Sep 17 00:00:00 2001
+From: Kevin Mihelich <kevin@archlinuxarm.org>
+Date: Wed, 24 Sep 2014 08:47:14 -0600
+Subject: [PATCH 1/2] alarm fixes
+
+---
+ Makefile      | 31 +++++++++----------------------
+ omxplayer.cpp |  4 ++--
+ 2 files changed, 11 insertions(+), 24 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 5f4e414..cb836a5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,9 +2,9 @@ CFLAGS=-pipe -mfloat-abi=hard -mcpu=arm1176jzf-s -fomit-frame-pointer -mabi=aapc
+ CFLAGS+=-std=c++0x -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX -DTARGET_LINUX -fPIC -DPIC -D_REENTRANT -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -DHAVE_CMAKE_CONFIG -D__VIDEOCORE4__ -U_FORTIFY_SOURCE -Wall -DHAVE_OMXLIB -DUSE_EXTERNAL_FFMPEG  -DHAVE_LIBAVCODEC_AVCODEC_H -DHAVE_LIBAVUTIL_OPT_H -DHAVE_LIBAVUTIL_MEM_H -DHAVE_LIBAVUTIL_AVUTIL_H -DHAVE_LIBAVFORMAT_AVFORMAT_H -DHAVE_LIBAVFILTER_AVFILTER_H -DHAVE_LIBSWRESAMPLE_SWRESAMPLE_H -DOMX -DOMX_SKIP64BIT -ftree-vectorize -DUSE_EXTERNAL_OMX -DTARGET_RASPBERRY_PI -DUSE_EXTERNAL_LIBBCM_HOST
+ 
+ LDFLAGS=-L$(SDKSTAGE)/opt/vc/lib/
+-LDFLAGS+=-L./ -Lffmpeg_compiled/usr/local/lib/ -lc -lbrcmGLESv2 -lbrcmEGL -lbcm_host -lopenmaxil -lfreetype -lz -lasound
++LDFLAGS+=-L./ -lc -lbrcmGLESv2 -lbrcmEGL -lbcm_host -lopenmaxil -lfreetype -lz -lasound
+ 
+-INCLUDES+=-I./ -Ilinux -Iffmpeg_compiled/usr/local/include/ -I /usr/include/dbus-1.0 -I /usr/lib/arm-linux-gnueabihf/dbus-1.0/include -I/usr/include/freetype2 -isystem$(SDKSTAGE)/opt/vc/include -isystem$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads
++INCLUDES+=-I./ -Ilinux -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/freetype2 -I/opt/vc/include
+ 
+ DIST ?= omxplayer-dist
+ STRIP ?= strip
+@@ -41,7 +41,7 @@ SRC=		linux/XMemUtils.cpp \
+ 
+ OBJS+=$(filter %.o,$(SRC:.cpp=.o))
+ 
+-all: dist
++all: omxplayer.bin
+ 
+ %.o: %.cpp
+ 	@rm -f $@ 
+@@ -53,7 +53,7 @@ version:
+ 	bash gen_version.sh > version.h 
+ 
+ omxplayer.bin: version $(OBJS)
+-	$(CXX) $(LDFLAGS) -o omxplayer.bin $(OBJS) -lvchiq_arm -lvchostif -lvcos -ldbus-1 -lrt -lpthread -lavutil -lavcodec -lavformat -lswscale -lswresample -lpcre
++	$(CXX) -o omxplayer.bin $(OBJS) $(LDFLAGS) -lvchiq_arm -lvchostif -lvcos -ldbus-1 -lrt -lpthread -lavutil -lavcodec -lavformat -lswscale -lswresample -lpcre
+ 	$(STRIP) omxplayer.bin
+ 
+ help.h: README.md Makefile
+@@ -76,25 +76,12 @@ clean:
+ 	@rm -rf $(DIST)
+ 	@rm -f omxplayer-dist.tar.gz
+ 
+-ffmpeg:
+-	@rm -rf ffmpeg
+-	make -f Makefile.ffmpeg
+-	make -f Makefile.ffmpeg install
+-
+-dist: omxplayer.bin omxplayer.1
+-	mkdir -p $(DIST)/usr/lib/omxplayer
+-	mkdir -p $(DIST)/usr/bin
+-	mkdir -p $(DIST)/usr/share/doc/omxplayer
+-	mkdir -p $(DIST)/usr/share/man/man1
+-	cp omxplayer omxplayer.bin $(DIST)/usr/bin
+-	cp COPYING $(DIST)/usr/share/doc/omxplayer
+-	cp README.md $(DIST)/usr/share/doc/omxplayer/README
+-	cp omxplayer.1 $(DIST)/usr/share/man/man1
+-	cp -P ffmpeg_compiled/usr/local/lib/*.so* $(DIST)/usr/lib/omxplayer/
+-	cd $(DIST); tar -czf ../$(DIST).tgz *
+-
+ install:
+-	cp -r $(DIST)/* /
++	install -d $(DESTDIR)/usr/bin
++	install -d $(DESTDIR)/usr/share/doc/omxplayer
++	install omxplayer $(DESTDIR)/usr/bin/
++	install omxplayer.bin $(DESTDIR)/usr/bin/
++	install README.md COPYING $(DESTDIR)/usr/share/doc/omxplayer/
+ 
+ uninstall:
+ 	rm -rf /usr/bin/omxplayer
+diff --git a/omxplayer.cpp b/omxplayer.cpp
+index 8fe7bdd..d04cab4 100644
+--- a/omxplayer.cpp
++++ b/omxplayer.cpp
+@@ -83,8 +83,8 @@ bool              m_osd                 = true;
+ bool              m_no_keys             = false;
+ std::string       m_external_subtitles_path;
+ bool              m_has_external_subtitles = false;
+-std::string       m_font_path           = "/usr/share/fonts/truetype/freefont/FreeSans.ttf";
+-std::string       m_italic_font_path    = "/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf";
++std::string       m_font_path           = "/usr/share/fonts/TTF/FreeSans.ttf";
++std::string       m_italic_font_path    = "/usr/share/fonts/TTF/FreeSansOblique.ttf";
+ std::string       m_dbus_name           = "org.mpris.MediaPlayer2.omxplayer";
+ bool              m_asked_for_font      = false;
+ bool              m_asked_for_italic_font = false;
+-- 
+2.18.0
+

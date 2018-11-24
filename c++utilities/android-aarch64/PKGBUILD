@@ -6,21 +6,25 @@
 _reponame=cpp-utilities
 _pkgname=c++utilities
 _android_arch=arm64-v8a
-_android_toolchain=aarch64-linux-android
-_prefix=/opt/android-libs/$_android_arch
+_pkg_arch=aarch64
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
+_prefix=/opt/android-libs/$_pkg_arch
 
-pkgname=android-$_pkgname-$_android_arch
+pkgname=android-$_pkg_arch-$_pkgname
 pkgver=4.16.0
 pkgrel=1
 arch=('any')
-pkgdesc="Common C++ classes and routines such as argument parser, IO and conversion utilities (Android, $_android_arch)"
+pkgdesc="Common C++ classes and routines such as argument parser, IO and conversion utilities (Android, $_pkg_arch)"
 license=('GPL')
-depends=("android-libiconv-$_android_arch" "android-boost-$_android_arch")
+depends=("android-$_pkg_arch-libiconv" "android-$_pkg_arch-boost")
 optdepends=("$_pkgname-doc: API documentation")
-checkdepends=("android-cppunit-$_android_arch")
+checkdepends=("android-$_pkg_arch-cppunit")
 # FIXME: run tests with qemu
-#checkdepends+=('qemu-binfmt-arm' "android-linker-$_android_arch")
+#checkdepends+=('qemu-binfmt-arm' "android-$_pkg_arch-linker")
 makedepends=('cmake' 'android-ndk' 'android-sdk')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('c4487d6e684c523e596bfc91203a6f10609606786553517bcf44ffae181feaa5')
@@ -39,7 +43,7 @@ build() {
 
   cmake \
     -DCMAKE_SYSTEM_NAME=Android \
-    -DCMAKE_SYSTEM_VERSION=21 \
+    -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
     -DCMAKE_ANDROID_SDK="$android_sdk_path" \
     -DCMAKE_ANDROID_NDK="$android_ndk_path" \
@@ -82,8 +86,8 @@ package() {
   make DESTDIR="${pkgdir}" install
 
   # add tests to the package for possibly executing them later under Android
-  if [[ -f c++utilities_tests ]]; then
+  if [[ -f ${_pkgname}_tests ]]; then
     mkdir "${pkgdir}/$_prefix/bin"
-    cp c++utilities_tests "${pkgdir}/$_prefix/bin"
+    cp ${_pkgname}_tests "${pkgdir}/$_prefix/bin"
   fi
 }

@@ -6,19 +6,21 @@
 _reponame=passwordmanager
 _pkgname=passwordmanager
 _android_arch=arm64-v8a
-_android_toolchain=aarch64-linux-android
-_android_api_level=21
+_pkg_arch=aarch64
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
+_prefix=/opt/android-libs/$_pkg_arch
 
-pkgname=android-$_pkgname-$_android_arch
+pkgname=android-$_pkg_arch-$_pkgname
 pkgver=3.2.0
 pkgrel=1
 arch=('any')
-pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (Android, $_android_arch)"
+pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (Android, $_pkg_arch)"
 license=('GPL')
-depends=("android-passwordfile-$_android_arch" "android-qtutilities-$_android_arch" "android-kirigami2-$_android_arch")
-optdepends=("$_pkgname-doc: API documentation")
+depends=("android-$_pkg_arch-passwordfile" "android-$_pkg_arch-qtutilities" "android-$_pkg_arch-kirigami2")
 makedepends=('cmake' 'android-ndk' 'android-sdk' 'extra-cmake-modules' 'jdk8-openjdk')
-#checkdepends=('cppunit')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('418a3ca93d4c4a614e55b7f22ddfc7fcc765eacc571dd69ce3086f8441a9d59d')
@@ -33,10 +35,8 @@ build() {
 
   local android_sdk_path=${ANDROID_SDK_ROOT:-/opt/android-sdk}
   local android_ndk_path=${ANDROID_NDK_ROOT:-/opt/android-ndk}
-  local qt_version=$(pacman -Q "android-qt5-$_android_arch" | sed 's/.* \(.*\)-.*/\1/')
   local build_tools_version=$(pacman -Q android-sdk-build-tools | sed 's/.* r\(.*\)-.*/\1/')
-  local qt_root=/opt/android-qt5/$qt_version/$_android_arch
-  local root="$android_ndk_root/sysroot;/opt/android-libs/$_android_arch;$qt_root"
+  local root="$android_ndk_root/sysroot;$_prefix"
 
   mkdir home
   export HOME=$PWD/home
@@ -47,39 +47,34 @@ build() {
   cmake \
     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
     -DCMAKE_SYSTEM_NAME=Android \
-    -DCMAKE_SYSTEM_VERSION=$_android_api_level \
+    -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
     -DCMAKE_ANDROID_SDK="$android_sdk_path" \
     -DCMAKE_ANDROID_NDK="$android_ndk_path" \
     -DCMAKE_ANDROID_STL_TYPE=c++_shared \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/opt/android-libs/$_android_arch \
+    -DCMAKE_INSTALL_PREFIX=$_prefix \
     -DCMAKE_PREFIX_PATH="$root" \
     -DCMAKE_FIND_ROOT_PATH="$root" \
     -DNO_DOXYGEN=ON \
     -DWIDGETS_GUI=OFF \
     -DQUICK_GUI=ON \
-    -DQt5Core_DIR="$qt_root/lib/cmake/Qt5Core" \
-    -DANDROID_API_LEVEL=$_android_api_level \
+    -DQt5Core_DIR="$_prefix/lib/cmake/Qt5Core" \
+    -DANDROID_API_LEVEL=$_android_platform \
     -DANDROID_ABI=$_android_arch \
     -DANDROID_ARCHITECTURE=${_android_arch%-*} \
     -DANDROID_SDK_ROOT="$android_sdk_root" \
     -DANDROID_SDK_BUILD_TOOLS_REVISION="$build_tools_version" \
-    -DECM_ADDITIONAL_FIND_ROOT_PATH="$root;$android_ndk_root/platforms/android-$_android_api_level/arch-${_android_arch%-*};$android_ndk_root/sources/cxx-stl/gnu-libstdc++/4.9/libs/$_android_arch" \
+    -DECM_ADDITIONAL_FIND_ROOT_PATH="$root;$android_ndk_root/platforms/android-$_android_platform/arch-${_android_arch%-*};$android_ndk_root/sources/cxx-stl/gnu-libstdc++/4.9/libs/$_android_arch" \
     -DQTANDROID_EXPORTED_TARGET=$_pkgname \
     -DANDROID_APK_DIR=android \
-    -DANDROID_EXTRA_LIBS=/opt/android-libs/arm64-v8a/lib/libcrypto.so;/opt/android-libs/arm64-v8a/lib/libssl.so;/opt/android-libs/arm64-v8a/lib/libiconv.so;/opt/android-libs/arm64-v8a/lib/libKF5Kirigami2.so
+    -DANDROID_EXTRA_LIBS="$_prefix/lib/libcrypto.so;$_prefix/lib/libssl.so;$_prefix/lib/libiconv.so;$_prefix/lib/libKF5Kirigami2.so"
 
     #-DCMAKE_EXE_LINKER_FLAGS="-fPIE;-pie;-Wl,--gc-sections;-Wl,-rpath-link=/opt/android-libs/$_android_arch/lib;/opt/android-qt5/$qt_version/$_android_arch/lib:/opt/android-libs/$_android_arch/lib" \
 
   make VERBOSE=1
   make DESTDIR="${pkgdir}" create-apk
 }
-
-#check() {
-#  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-#  make check
-#}
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

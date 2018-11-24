@@ -1,5 +1,5 @@
 # PKGCONFIG for android-qt5
-# Maintainer: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
+# Maintainer in the AUR: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
 # Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
 # Contributor: jimmy00784 <jimmy00784@gmail.com>
 # Contributor: Ricardo (XenGi) Band <email@ricardo.band>
@@ -8,23 +8,18 @@
 # Useful link to keep track of latest API changes:
 # https://developer.android.com/ndk/downloads/revision_history
 
-android_arch=arm64-v8a
+_android_arch=arm64-v8a
+_pkg_arch=aarch64
 
 # Minimum Android platform based on:
 # https://developer.android.com/about/dashboards/
-export ANDROID_MINIMUM_PLATFORM=${ANDROID_MINIMUM_PLATFORM:-21}
+export ANDROID_MINIMUM_PLATFORM=${ANDROID_MINIMUM_PLATFORM:-22}
 
 export ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT:-/opt/android-ndk}
 export ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-/opt/android-sdk}
-export OPENSSL_PREFIX=${OPENSSL_PREFIX:-/opt/android-libs/${android_arch}}
 
-# skip building mapboxgl as it increases compile time significantly and
-# likely not a lot of people actually using it; if you need it, just remove the
-# following line:
-_mapboxcfg='QT.global.disabled_features+=geoservices_mapboxgl'
-
-_pkgname=android-qt5
-pkgname=${_pkgname}-${android_arch}
+_pkgname=
+pkgname=android-$_pkg_arch-qt5
 pkgver=5.11.2
 pkgrel=1
 pkgdesc="Qt 5 for Android"
@@ -40,7 +35,7 @@ makedepends=('libgl'
              'gperf'
              'libxslt'
              'fontconfig'
-             'android-openssl-'$android_arch)
+             "android-$_pkg_arch-openssl")
 depends=('java-runtime-headless>=7'
          'apache-ant'
          'android-ndk'
@@ -49,9 +44,30 @@ depends=('java-runtime-headless>=7'
          'android-sdk-build-tools'
          'android-sdk-platform-tools')
 groups=('android-qt5')
-optdepends=("android-openssl-${android_arch}: OpenSSL support"
-            "android-google-apis-${android_arch}: AVD support"
-            "android-system-image-${android_arch}: AVD support")
+conflicts=("android-${_android_arch}-qt5")
+replaces=("android-${_android_arch}-qt5")
+
+case "$_pkg_arch" in
+    aarch64)
+        optdepends=('android-google-apis-aarch64: AVD support'
+                    'android-aarch64-system-image: AVD support')
+        ;;
+    armv7a-eabi)
+        optdepends=('android-google-apis-armv7a-eabi: AVD support'
+                    'android-armv7a-eabi-system-image: AVD support')
+        ;;
+    x86)
+        optdepends=('android-google-apis-x86: AVD support'
+                    'android-x86-system-image: AVD support')
+        ;;
+    x86-64)
+        optdepends=('android-google-apis-x86-64: AVD support'
+                    'android-x86-64-system-image: AVD support')
+        ;;
+    *)
+        ;;
+esac
+optdepends+=("android-$_pkg_arch-openssl: SSL support for Qt Network")
 
 options=('!strip'
          '!buildflags'
@@ -59,14 +75,23 @@ options=('!strip'
          '!emptydirs')
 _pkgfqn="qt-everywhere-src-${pkgver}"
 source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkgver}/single/${_pkgfqn}.tar.xz"
-        '0001-Fix-clang-build.patch')
-sha256sums=('c6f0854d7de7bde80cfd8cc85bb7152b'
-            'todo')
+        '0001-Fix-clang-build.patch'
+        '0002-Disable-mapbox.patch')
+sha256sums=('c6104b840b6caee596fa9a35bc5f57f67ed5a99d6a36497b6fe66f990a53ca81'
+            'cd3b76a87ab6b2237529da353ef5eb4946bc562df9eaf265f8281d69ab2fee88'
+            '1156ae8ee34dd34985ede19ca841a6ec6644ba299e4a0d35c26cbb5a1a9ad0cf')
+
+_pref=/opt/android-libs/$_pkg_arch
 
 prepare() {
     cd ${_pkgfqn}
 
     patch -Np1 -i "../0001-Fix-clang-build.patch"
+
+    # skip building mapboxgl as it increases compile time significantly and
+    # likely not a lot of people actually using it; if you need it, just remove the
+    # following line:
+    patch -Np1 -i "../0002-Disable-mapbox.patch"
 }
 
 get_last() {
@@ -83,14 +108,15 @@ build() {
     export ANDROID_NDK_PLATFORM=${ANDROID_NDK_PLATFORM:-android-$ANDROID_MINIMUM_PLATFORM}
     export PYTHON=/usr/bin/python2
 
-    local prefix=/opt/${_pkgname}/${pkgver}/${android_arch}
-
     configue_opts="
         -confirm-license
         -opensource
         -silent
-        -prefix ${prefix}
-        -docdir ${prefix}/doc
+        -prefix ${_pref}
+        -archdatadir ${_pref}/lib/qt
+        -datadir ${_pref}/share/qt
+        -examplesdir ${_pref}/share/qt/examples
+        -testsdir ${_pref}/share/qt/tests
         -xplatform android-clang
         -nomake tests
         -nomake examples
@@ -104,13 +130,16 @@ build() {
         -qt-zlib
         -qt-freetype
         -openssl-runtime
-        -android-arch ${android_arch}
+        -android-arch ${_android_arch}
         -android-ndk-platform ${ANDROID_NDK_PLATFORM}
-        -I${OPENSSL_PREFIX}/include
-        ${_mapboxcfg}"
+        -I/opt/android-libs/$_pkg_arch/include"
+
+    [[ $ANDROID_DEBUG_BUILD ]] \
+        && configue_opts+=' -debug-and-release' \
+        || configue_opts+=' -release'
 
     # add architecture specific options
-    case "$android_arch" in
+    case "$_pkg_arch" in
         x86*)
              configue_opts+="
                  -no-sql-mysql
@@ -130,12 +159,12 @@ package() {
 
     make INSTALL_ROOT=${pkgdir} install
 
-    case "$android_arch" in
-        arm64-v8a)
+    case "$_pkg_arch" in
+        aarch64)
             toolchain=aarch64-linux-android-4.9
             stripFolder=aarch64-linux-android
             ;;
-        armeabi-v7a)
+        armv7a-eabi)
             toolchain=arm-linux-androideabi-4.9
             stripFolder=arm-linux-androideabi
             ;;
@@ -143,16 +172,17 @@ package() {
             toolchain=x86-4.9
             stripFolder=i686-linux-android
             ;;
-        x86_64)
+        x86-64)
             toolchain=x86_64-4.9
             stripFolder=x86_64-linux-android
             ;;
     esac
 
     local STRIP=${ANDROID_NDK_ROOT}/toolchains/${toolchain}/prebuilt/linux-x86_64/${stripFolder}/bin/strip
-    find ${pkgdir}/opt/${_pkgname}/${pkgver}/${android_arch}/lib -name 'lib*.so' -exec ${STRIP} {} \;
-    find ${pkgdir}/opt/${_pkgname}/${pkgver}/${android_arch}/lib \( -name 'lib*.a' ! -name 'libQt5Bootstrap.a' ! -name 'libQt5QmlDevTools.a' \) -exec ${STRIP} {} \;
-    find ${pkgdir}/opt/${_pkgname}/${pkgver}/${android_arch}/plugins -name 'lib*.so' -exec ${STRIP} {} \;
+    find ${pkgdir}/${_pref}/bin ! -name '*.pl' -exec ${STRIP} {} \;
+    find ${pkgdir}/${_pref}/lib -name 'lib*.so' -exec ${STRIP} {} \;
+    find ${pkgdir}/${_pref}/lib \( -name 'lib*.a' ! -name 'libQt5Bootstrap.a' ! -name 'libQt5QmlDevTools.a' \) -exec ${STRIP} {} \;
+    find ${pkgdir}/${_pref}/lib/qt/plugins -name 'lib*.so' -exec ${STRIP} {} \;
 
     # drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/" -type f -name '*.prl' \

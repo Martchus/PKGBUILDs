@@ -2,18 +2,20 @@
 
 _android_api_level=24
 _rev=r07
+_pkg_arch=aarch64
 _android_arch=arm64-v8a
 
-pkgname=android-system-image-${_android_arch}
+pkgname=android-$_pkg_arch-system-image
 pkgver=${_android_api_level}_${_rev}
 pkgrel=1
-pkgdesc="Android system image (${_android_arch}, latest API)"
+pkgdesc="Android system image (${_pkg_arch}, latest API)"
 arch=('any')
 url='http://developer.android.com/sdk/index.html'
 license=('custom')
 depends=("android-platform")
-provides=("${pkgname}-${_android_api_level}")
-conflicts=("${pkgname}-${_android_api_level}")
+provides=("${pkgname}-${_android_api_level}" "android-system-image-${_android_arch}")
+conflicts=("${pkgname}-${_android_api_level}" "android-system-image-${_android_arch}")
+replaces=("android-system-image-${_android_arch}")
 options=('!strip')
 source=("http://dl-ssl.google.com/android/repository/sys-img/android/${_android_arch}-${_android_api_level}_${_rev}.zip"
         "source.properties")

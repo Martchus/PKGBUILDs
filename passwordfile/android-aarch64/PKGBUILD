@@ -1,0 +1,89 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=passwordfile
+_pkgname=passwordfile
+_android_arch=arm64-v8a
+_pkg_arch=aarch64
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
+_prefix=/opt/android-libs/$_pkg_arch
+
+pkgname=android-$_pkg_arch-$_pkgname
+pkgver=3.2.0
+pkgrel=1
+arch=('any')
+pkgdesc="C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL (Android, $_pkg_arch)"
+license=('GPL')
+depends=("android-$_pkg_arch-c++utilities" "android-$_pkg_arch-openssl")
+optdepends=("$_pkgname-doc: API documentation")
+makedepends=('cmake' 'android-ndk' 'android-sdk')
+checkdepends=("android-$_pkg_arch-cppunit")
+# FIXME: run tests with qemu
+#checkdepends+=('qemu-binfmt-arm' "android-$_pkg_arch-linker")
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
+url="https://github.com/Martchus/${_reponame}"
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('48e95ad852dc83b598c428f9fd0e9717aa12e81aae8254c2946f380afee1b768')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+}
+
+build() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  local android_sdk_path=${ANDROID_SDK_ROOT:-/opt/android-sdk}
+  local android_ndk_path=${ANDROID_NDK_ROOT:-/opt/android-ndk}
+  local include_dir=$_prefix/include
+
+  cmake \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=$_android_platform \
+    -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
+    -DCMAKE_ANDROID_SDK="$android_sdk_path" \
+    -DCMAKE_ANDROID_NDK="$android_ndk_path" \
+    -DCMAKE_ANDROID_STL_TYPE=c++_shared \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=$_prefix \
+    -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$_prefix" \
+    -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,$_prefix/lib" \
+    -Dcrypto_DYNAMIC_INCLUDE_DIR="$include_dir" \
+    -Dcrypto_STATIC_INCLUDE_DIR="$include_dir" \
+    -Dcrypto_DYNAMIC_LIB="$_prefix/lib/libcrypto.so" \
+    -Dcrypto_STATIC_LIB="$_prefix/lib/libcrypto.a" \
+    -DNO_DOXYGEN=ON
+  make VERBOSE=1
+}
+
+check() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  # can not run the tests so compile them at least
+  make tests VERBOSE=1
+
+  # FIXME: run tests with qemu
+  # * currently getting error
+  #    "libc: Fatal signal 4 (SIGILL), code 2, fault addr 0x4000c28b40 in tid 193 (test), pid 193 (test)"
+  # * not possible because the default Linux kernel is not able to run Android libc?
+  # use dynamic linker supposed to be located under $prefix/system/bin/linker64
+  #export QEMU_LD_PREFIX=$prefix
+  # use libraries from build directory, prefix and Android NDK
+  #export LD_LIBRARY_PATH=$PWD:$prefix/lib:$android_ndk_path/sources/cxx-stl/llvm-libc++/libs/arm64-v8a:$android_ndk_path/platforms/android-28/arch-arm64/usr/lib
+  #make check VERBOSE=1
+}
+
+package() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  # add tests to the package for possibly executing them later under Android
+  if [[ -f ${_pkgname}_tests ]]; then
+    mkdir "${pkgdir}/$_prefix/bin"
+    cp ${_pkgname}_tests "${pkgdir}/$_prefix/bin"
+  fi
+}

@@ -6,19 +6,24 @@
 
 _pkgname=kirigami2
 _android_arch=arm64-v8a
-_android_toolchain=aarch64-linux-android
+_pkg_arch=aarch64
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
+_prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkgname-$_android_arch
-pkgver=5.47.0
+pkgver=5.52.0
 pkgrel=1
-pkgdesc="A QtQuick based components set (Android, $_android_arch)"
+pkgdesc="A QtQuick based components set (Android, $_pkg_arch)"
 arch=('any')
 url='https://community.kde.org/Frameworks'
 license=(LGPL)
-depends=( "android-qt5-$_android_arch")
+depends=("android-$_pkg_arch-qt5")
 makedepends=('cmake' 'android-ndk' 'android-sdk' 'extra-cmake-modules')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
 source=("https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('ed2dd9e3a56f4728aca40c74ab02d48f9dda8d140b20328c5b29825f5683aad5'
+sha256sums=('375ec103d56a71ee3a5f43de1cfb4720fc33c125b2b2de545f9e563851c38c24'
             'SKIP')
 validpgpkeys=('53E6B47B45CEA3E0D5B7457758D0EE648A48B3BB') # David Faure <faure@kde.org>
 options=(!buildflags staticlibs !strip !emptydirs)
@@ -29,17 +34,16 @@ prepare() {
 
 build() {
   cd build
-  local qt_version=$(pacman -Q "android-qt5-$_android_arch" | sed 's/.* \(.*\)-.*/\1/')
   cmake ../$_pkgname-$pkgver \
     -DCMAKE_SYSTEM_NAME=Android \
-    -DCMAKE_SYSTEM_VERSION=21 \
+    -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
     -DCMAKE_ANDROID_NDK=/opt/android-ndk \
     -DCMAKE_ANDROID_SDK=/opt/android-sdk \
-    -DCMAKE_ANDROID_STL_TYPE=gnustl_shared \
+    -DCMAKE_ANDROID_STL_TYPE=c++_shared \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/opt/android-libs/$_android_arch \
-    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;/opt/android-libs/$_android_arch;/opt/android-qt5/$qt_version/$_android_arch" \
+    -DCMAKE_INSTALL_PREFIX="$_prefix" \
+    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;$_prefix" \
     -DBUILD_EXAMPLES=OFF \
     -DBUILD_TESTING=OFF \
     -DBUILD_QCH=OFF

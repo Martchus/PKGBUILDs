@@ -5,9 +5,10 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_name=cppunit
+_pkgname=cppunit
 _android_arch=arm64-v8a
-_android_toolchain=aarch64-linux-android
+_pkg_arch=aarch64
+_android_toolchain=$_pkg_arch-linux-android
 _android_ndk_path=/opt/android-ndk
 _android_api_level=28
 _android_platform=android-28/arch-arm64
@@ -16,9 +17,9 @@ _android_sysroot=${_android_ndk_path}/platforms/android-28/arch-arm64
 _android_gcc_toolchain_path=$_android_ndk_path/toolchains/$_android_toolchain-4.9/prebuilt/linux-x86_64
 _android_gcc_tool_prefix=${_android_gcc_toolchain_path}/bin/${_android_toolchain}
 _android_clang_toolchain_path=$_android_ndk_path/toolchains/llvm/prebuilt/linux-x86_64/bin
-_install_prefix=/opt/android-libs/$_android_arch
+_install_prefix=/opt/android-libs/$_pkg_arch
 
-pkgname=android-$_name-$_android_arch
+pkgname=android-$_pkg_arch-$_pkgname
 pkgver=1.14.0
 pkgrel=1
 pkgdesc="A C++ unit testing framework (Android, $_android_arch)"
@@ -26,11 +27,14 @@ arch=('any')
 url="http://www.freedesktop.org/wiki/Software/cppunit"
 license=('LGPL')
 depends=('android-ndk')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
 options=(!strip !buildflags !libtool staticlibs !emptydirs)
-source=("https://dev-www.libreoffice.org/src/${_name}-${pkgver}.tar.gz")
+source=("https://dev-www.libreoffice.org/src/${_pkgname}-${pkgver}.tar.gz")
 sha256sums=('3d569869d27b48860210c758c4f313082103a5e58219a7669b52bfd29d674780')
 
 build() {
+  # configure flags
   local target_flags=" \
     --target=$_android_toolchain \
     --gcc-toolchain=$_android_gcc_toolchain_path \
@@ -52,7 +56,12 @@ build() {
   local ld_flags=" \
     $_android_ndk_path/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so \
     -nostdlib++"
+  export CPPFLAGS="$common_flags"
+  export CFLAGS="$common_flags $ld_flags"
+  export CXXFLAGS="$common_flags -fexceptions -frtti -std=c++14 $ld_flags"
+  export LDFLAGS="$target_flags $ld_flags"
 
+  # configure tools
   export AR=${_android_gcc_tool_prefix}-ar
   export AS=${_android_gcc_tool_prefix}-as
   export NM=${_android_gcc_tool_prefix}-nm
@@ -62,13 +71,8 @@ build() {
   export RANLIB=${_android_gcc_tool_prefix}-ranlib
   export STRIP=${_android_gcc_tool_prefix}-strip
 
-  export CPPFLAGS="$common_flags"
-  export CFLAGS="$common_flags $ld_flags"
-  export CXXFLAGS="$common_flags -fexceptions -frtti -std=c++14 $ld_flags"
-  export LDFLAGS="$target_flags $ld_flags"
-
-  mkdir -p "${srcdir}/${_name}-${pkgver}/build-${_android_toolchain}"
-  cd "${srcdir}/${_name}-${pkgver}/build-${_android_toolchain}"
+  mkdir -p "${srcdir}/${_pkgname}-${pkgver}/build-${_android_toolchain}"
+  cd "${srcdir}/${_pkgname}-${pkgver}/build-${_android_toolchain}"
 
   ../configure \
     --host=$_android_toolchain \
@@ -91,8 +95,8 @@ build() {
 }
 
 package() {
-  mkdir -p "${srcdir}/${_name}-${pkgver}/build-${_android_toolchain}"
-  cd "${srcdir}/${_name}-${pkgver}/build-${_android_toolchain}"
+  mkdir -p "${srcdir}/${_pkgname}-${pkgver}/build-${_android_toolchain}"
+  cd "${srcdir}/${_pkgname}-${pkgver}/build-${_android_toolchain}"
 
   cd src/cppunit
   make DESTDIR="${pkgdir}" install

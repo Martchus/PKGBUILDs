@@ -4,26 +4,29 @@
 # you also find the URL of a binary repository.
 
 _pkgname=boost
+_pkg_arch=aarch64
 _android_arch=arm64-v8a
-_android_toolchain=aarch64-linux-android
-_android_prefix=/opt/android-libs/$_android_arch
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
+_android_prefix=/opt/android-libs/$_pkg_arch
 _android_ndk_path=/opt/android-ndk
-_android_api_level=21
-_android_platform=android-$_android_api_level/arch-arm64
+_android_platform_dir=android-$_android_platform/arch-arm64
 _boost_arch=arm
 _boost_address_model=64
 
-pkgname=android-$_pkgname-$_android_arch
+pkgname=android-$_pkg_arch-$_pkgname
 pkgver=1.68.0
 _boostver=${pkgver//./_}
 pkgrel=1
 url='http://www.boost.org/'
 arch=('any')
 license=('custom')
-pkgdesc="Free peer-reviewed portable C++ source libraries (Android, $_android_arch)"
-depends=("boost-libs=${pkgver}" "android-libiconv-$_android_arch")
+pkgdesc="Free peer-reviewed portable C++ source libraries (Android, $_pkg_arch)"
+depends=("android-$_pkg_arch-libiconv")
 options=(!buildflags staticlibs !strip !emptydirs)
 makedepends=('bzip2' 'zlib' 'android-ndk' 'android-sdk')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
 source=(https://downloads.sourceforge.net/project/${_pkgname}/${_pkgname}/${pkgver}/${_pkgname}_${_boostver}.tar.bz2
         no-versioned-shlibs.patch)
 sha256sums=('7f6130bc3cf65f56a618888ce9d5ea704fa10b462be126ad053e80e553d6d8b7'
@@ -40,7 +43,7 @@ build() {
   local target_flags=" \
     --target=$_android_toolchain \
     --gcc-toolchain=$_android_ndk_path/toolchains/$_android_toolchain-4.9/prebuilt/linux-x86_64 \
-    --sysroot=$_android_ndk_path/platforms/$_android_platform/usr"
+    --sysroot=$_android_ndk_path/platforms/$_android_platform_dir/usr"
   local common_flags=" \
     $target_flags \
     -isystem $_android_ndk_path/sources/android/support/include \
@@ -50,7 +53,7 @@ build() {
     -isystem $_android_ndk_path/sysroot/usr/include/$_android_toolchain \
     -funwind-tables \
     -no-canonical-prefixes \
-    -D__ANDROID_API__=$_android_api_level \
+    -D__ANDROID_API__=$_android_platform \
     -O3 \
     -fPIC \
     -DBOOST_ASIO_HAS_STD_STRING_VIEW=1"

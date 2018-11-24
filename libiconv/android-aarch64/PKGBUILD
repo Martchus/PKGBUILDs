@@ -1,0 +1,90 @@
+# Maintainer: Martchus <martchus@gmx.net>
+# Contributor: Arthur Darcet <arthur.darcet at m4x.org>
+# Contributor: Techlive Zheng <techlivezheng at gmail.com>
+
+_pkgname=libiconv
+_android_arch=arm64-v8a
+_pkg_arch=aarch64
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
+_prefix=/opt/android-libs/$_pkg_arch
+
+pkgname=android-$_pkg_arch-$_pkgname
+pkgver=1.15
+pkgrel=1
+pkgdesc="Provides libiconv.so and libcharset.so (Android $_pkg_arch)"
+arch=('any')
+url='http://www.gnu.org/software/libiconv/'
+license=('LGPL')
+makedepends=('android-ndk')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
+source=("http://ftp.gnu.org/pub/gnu/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('ace8b5f2db42f7b3b3057585e80d9808')
+options=(!libtool !buildflags staticlibs !strip !emptydirs)
+
+build() {
+  cd $srcdir/${_pkgname}-${pkgver}
+  sed '/LD_RUN_PATH/d' -i Makefile.in
+
+  # configure paths
+  export ANDROID_NDK=/opt/android-ndk
+  export CROSS_COMPILE=$_android_toolchain
+  export ANDROID_PREFIX=${ANDROID_NDK}/toolchains/$_android_toolchain-4.9/prebuilt/linux-x86_64
+  export ANDROID_SYSROOT=${ANDROID_NDK}/platforms/android-$_android_platform/arch-${_android_arch%-*}/usr
+  export CROSS_PATH=${ANDROID_PREFIX}/bin/$_android_toolchain
+
+  # configure tools
+  export CPP=${PWD}/cpp.sh
+  export AR=${CROSS_PATH}-ar
+  export AS=${CROSS_PATH}-as
+  export NM=${CROSS_PATH}-nm
+  export CC=${CROSS_PATH}-gcc
+  export CXX=${CROSS_PATH}-g++
+  export LD=${CROSS_PATH}-ld
+  export RANLIB=${CROSS_PATH}-ranlib
+  export STRIP=${CROSS_PATH}-strip
+
+  # configure flags
+  export CFLAGS="${CFLAGS} --gcc-toolchain=${ANDROID_PREFIX} --sysroot=${ANDROID_SYSROOT} -I${ANDROID_NDK}/sysroot/usr/include -I${ANDROID_NDK}/sysroot/usr/include/${CROSS_COMPILE} -I${ANDROID_SYSROOT}/usr/include -I${ANDROID_PREFIX}/include"
+  export CPPFLAGS="${CFLAGS}"
+  export LDFLAGS="${LDFLAGS} -L${ANDROID_SYSROOT}/usr/lib"
+
+  # setup preprocessor (because the NDK doesn't provide a wrapper like for gcc and g++)
+  printf "#!/bin/bash\nexec \"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\" -target $_android_toolchain -E \"\$@\"" > "$CPP"
+  chmod +x "$CPP"
+
+  ./configure \
+    --host=$_android_toolchain \
+    --target=$_android_toolchain \
+    --build="$CHOST" \
+    --with-sysroot="$ANDROID_SYSROOT" \
+    --prefix="$_prefix" \
+    --libdir="$_prefix/lib" \
+    --includedir="$_prefix/include" \
+    --enable-shared=yes \
+    --enable-static=yes
+
+  # make sure the LDFLAGS are actually used (LDFLAGS are not passed otherwise)
+  local libtool_subst="s:\\\$CC -shared:\\\$CC -shared --gcc-toolchain=${ANDROID_PREFIX} --sysroot=${ANDROID_SYSROOT} $LDFLAGS:g"
+  sed -i "$libtool_subst" libtool
+  sed -i "$libtool_subst" libcharset/libtool
+
+  # build target lib/localcharset.h and directory lib to experience less brokenness
+  make lib/localcharset.h
+  cd lib
+  make
+}
+
+package() {
+  cd $srcdir/${_pkgname}-${pkgver}/lib
+  make DESTDIR="$pkgdir" LIBDIR="$_prefix/lib" install
+  cp libcharset.a "$pkgdir/$_prefix/lib/libcharset.a"
+  cp libcharset.so "$pkgdir/$_prefix/lib/libcharset.so"
+  cd ..
+  mkdir -p "$pkgdir/$_prefix"/include
+  mv include/iconv.h "$pkgdir/$_prefix"/include
+  cd libcharset
+  mv include/libcharset.h "$pkgdir/$_prefix"/include
+  mv include/localcharset.h "$pkgdir/$_prefix"/include
+}

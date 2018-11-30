@@ -11,7 +11,7 @@ _android_toolchain=$_pkg_arch-linux-android
 _android_platform=22
 _prefix=/opt/android-libs/$_pkg_arch
 
-pkgname=android-$_pkgname-$_android_arch
+pkgname=android-$_pkg_arch-$_pkgname
 pkgver=5.52.0
 pkgrel=1
 pkgdesc="A QtQuick based components set (Android, $_pkg_arch)"

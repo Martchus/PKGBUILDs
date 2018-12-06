@@ -3,9 +3,9 @@
 
 pkgname=nginx-mod-substitutions-filter
 pkgver=0.6.4.108.bc58cb1
-pkgrel=2
+pkgrel=3
 _dirname="$pkgname"
-_nginxver=1.14.1
+_nginxver=1.14.2
 
 pkgdesc='NGINX filter module which can do both regular expression and fixed string substitutions'
 arch=('x86_64')

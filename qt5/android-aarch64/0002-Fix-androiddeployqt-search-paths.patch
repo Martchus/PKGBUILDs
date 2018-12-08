@@ -1,6 +1,17 @@
---- a/qtbase/src/tools/androiddeployqt/main.cpp	2018-09-13 01:25:10.000000000 -0300
-+++ b/qtbase/src/tools/androiddeployqt/main.cpp	2018-11-28 11:01:22.654317806 -0300
-@@ -1629,7 +1629,7 @@
+From bbb3a15a58bb3d8071b39b4e1a4b20c04f0cf9d1 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sun, 9 Dec 2018 14:31:30 +0100
+Subject: [PATCH 2/2] Fix androiddeployqt search paths
+
+---
+ src/tools/androiddeployqt/main.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/tools/androiddeployqt/main.cpp b/src/tools/androiddeployqt/main.cpp
+index 11213872f3..5d8866076a 100644
+--- a/src/tools/androiddeployqt/main.cpp
++++ b/src/tools/androiddeployqt/main.cpp
+@@ -1663,7 +1663,7 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
          rootPath += QLatin1Char('/');
  
      QStringList importPaths;
@@ -9,7 +20,7 @@
      importPaths += rootPath;
      for (const QString &qmlImportPath : qAsConst(options->qmlImportPaths))
          importPaths += shellQuote(qmlImportPath);
-@@ -1760,7 +1760,7 @@
+@@ -1794,7 +1794,7 @@ bool readDependencies(Options *options)
          return false;
  
      // Jam in the dependencies of the platform plugin, since the application will crash without it
@@ -17,4 +28,7 @@
 +    if (!readDependenciesFromElf(options, options->qtInstallDirectory + QLatin1String("/lib/qt/plugins/platforms/android/libqtforandroid.so"), &usedDependencies, &remainingDependencies))
          return false;
  
-     QString qtDir = options->qtInstallDirectory + QLatin1Char('/');
+     while (!remainingDependencies.isEmpty()) {
+-- 
+2.19.2
+

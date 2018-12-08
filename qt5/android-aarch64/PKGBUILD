@@ -20,8 +20,8 @@ export ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-/opt/android-sdk}
 
 _pkgname=
 pkgname=android-$_pkg_arch-qt5
-pkgver=5.11.2
-pkgrel=2
+pkgver=5.12.0
+pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
 url='https://www.qt.io'
@@ -44,8 +44,8 @@ depends=('java-runtime-headless>=7'
          'android-sdk-build-tools'
          'android-sdk-platform-tools')
 groups=('android-qt5')
-conflicts=("android-${_android_arch}-qt5")
-replaces=("android-${_android_arch}-qt5")
+conflicts=("android-qt5-${_android_arch}")
+replaces=("android-qt5-${_android_arch}")
 
 case "$_pkg_arch" in
     aarch64)
@@ -75,27 +75,30 @@ options=('!strip'
          '!emptydirs')
 _pkgfqn="qt-everywhere-src-${pkgver}"
 source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkgver}/single/${_pkgfqn}.tar.xz"
-        '0001-Fix-clang-build.patch'
-        '0002-Disable-mapbox.patch'
-        '0003-Fix-androiddeployqt-search-paths.patch')
-sha256sums=('c6104b840b6caee596fa9a35bc5f57f67ed5a99d6a36497b6fe66f990a53ca81'
-            'cd3b76a87ab6b2237529da353ef5eb4946bc562df9eaf265f8281d69ab2fee88'
-            '1156ae8ee34dd34985ede19ca841a6ec6644ba299e4a0d35c26cbb5a1a9ad0cf'
-            '08dd66502af219c5382f738cb3ddff857ab03deb7a4f024c654d4e43ec47c098')
+        '0001-Fix-clang-libc-build-under-Android.patch'
+        '0002-Fix-androiddeployqt-search-paths.patch'
+        '0001-Disable-mapboxgl.patch')
+sha256sums=('356f42d9087718f22f03d13d0c2cdfb308f91dc3cf0c6318bed33f2094cd9d6c'
+            '8a32e92dbaab5a371467903c89781a4e27f8c2403fe47b9a0ef0dca65c80be41'
+            'cfb3de9c62ed6956bb1fe9f7d13384de236e87ff949aa6a4bb8257078729c9e0'
+            '2ef1ddd8f84474b2dbe06c5e1a2db80a96ebd8cf529f1e1ce465fb6d406e366f')
 
 _pref=/opt/android-libs/$_pkg_arch
 
 prepare() {
     cd ${_pkgfqn}
 
-    patch -Np1 -i "../0001-Fix-clang-build.patch"
+    pushd qtbase
+    patch -Np1 -i "../../0001-Fix-clang-libc-build-under-Android.patch"
+    patch -Np1 -i "../../0002-Fix-androiddeployqt-search-paths.patch"
+    popd
 
+    pushd qtlocation
     # skip building mapboxgl as it increases compile time significantly and
     # likely not a lot of people actually using it; if you need it, just remove the
     # following line:
-    patch -Np1 -i "../0002-Disable-mapbox.patch"
-
-    patch -Np1 -i "../0003-Fix-androiddeployqt-search-paths.patch"
+    patch -Np1 -i "../../0001-Disable-mapboxgl.patch"
+    popd
 
     sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/mkspecs/features/android/sdk.prf
     sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/src/android/jar/jar.pro

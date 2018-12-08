@@ -35,12 +35,16 @@ branch="${2}"
 variant="${3:-mingw-w64}"
 
 # find dest dir
+pkgdir=
 for dir in "${pkgbuildsdirs[@]}"; do
-    dest="${dir}/${pkg}/${variant}"
-    [[ -d $dest ]] && break || dest=
+    for _pkgdir in "$pkg" "qt5"; do
+        dest="${dir}/${_pkgdir}/${variant}"
+        pkgdir=$_pkgdir
+        [[ -d $dest ]] && break 2 || dest=
+    done
 done
 if ! [[ $dest ]]; then
-    warning "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} is no directory - skipping repository $repo."
+    warning "\$DEFAULT_PKGBUILDS_DIR/$pkg/${variant} or \$DEFAULT_PKGBUILDS_DIR/qt5/${variant} is no directory - skipping repository $repo."
     exit 0
 fi
 
@@ -63,11 +67,12 @@ for source in "${source[@]}"; do
     file_index=$((file_index + 1))
 done
 
-patches=("$dest"/*.patch)
-
-for patch in "${patches[@]}"; do
-    [[ -f $patch ]] && rm "$patch"
-done
+if [[ $pkgdir != qt5 ]]; then
+    patches=("$dest"/*.patch)
+    for patch in "${patches[@]}"; do
+        [[ -f $patch ]] && rm "$patch"
+    done
+fi
 
 pushd "$wd" > /dev/null
 git status # do some Git stuff just to check whether it is a Git repo
@@ -80,6 +85,8 @@ if ! git checkout "${branch}"; then
 fi
 git format-patch "origin/${pkgver}" --output-directory "$dest"
 popd > /dev/null
+
+[[ $pkgdir == qt5 ]] && exit 0
 
 new_patches=("$dest"/*.patch)
 for patch in "${new_patches[@]}"; do

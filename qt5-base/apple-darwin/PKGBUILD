@@ -5,7 +5,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=apple-darwin-qt5-base
-pkgver=5.11.2
+pkgver=5.12.0
 pkgrel=1
 pkgdesc='A cross-platform application and UI framework (apple-darwin)'
 arch=('i686' 'x86_64')

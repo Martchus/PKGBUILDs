@@ -6,23 +6,17 @@ colorize
 
 if ! [[ $1 ]] || ! [[ $2 ]]; then
     echo 'No version specified, must specify the new and old version, eg. 5.9.2 5.9.1'
-    echo "Usage: $0 newversion oldversion [old-branch-suffix]"
+    echo "Usage: $0 newversion oldversion [old-branch-suffix=mingw-w64] [new-branch-suffix=mingw-w64]"
     echo "Note: supposed to be run within the Qt Git checkout"
     exit -1
 fi
 newversion="$1"
 oldversion="$2"
 oldbranchsuffix="$3"
+newbranchsuffix="${4:-mingw-w64}"
 
 # determine branch from old version
-oldversionbranch="$oldversion-mingw-w64"
-[[ $oldbranchsuffix ]] && oldversionbranch_with_suffix="$oldversionbranch-$oldbranchsuffix"
-branch_count=$(git branch | grep -- "$oldversionbranch_with_suffix" | wc -l)
-if [[ $branch_count -lt 1 ]]; then
-    msg2 "Trying without suffix because $oldversionbranch doesn't exist"
-else
-    oldversionbranch=$oldversionbranch_with_suffix
-fi
+oldversionbranch="$oldversion-${oldbranchsuffix:-mingw-w64}"
 branch_count=$(git branch | grep -- "$oldversionbranch" | wc -l)
 if [[ $branch_count -lt 1 ]]; then
     msg2 "Branch for old version $oldversionbranch doesn't exist. Likely we just don't need any patches for this repo :-)"
@@ -50,6 +44,6 @@ fi
 
 # update Git checkout, create new branch with rebased commits, push to remote
 git remote update
-git checkout -b "$newversion-mingw-w64" "origin/$newversion"
+git checkout -b "$newversion-$newbranchsuffix" "origin/$newversion"
 git cherry-pick "v$oldversion..$oldversionbranch"
-git push -u $maybe_remote "$newversion-mingw-w64"
+git push -u $maybe_remote "$newversion-$newbranchsuffix"

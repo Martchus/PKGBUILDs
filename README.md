@@ -4,8 +4,9 @@ Contains PKGBUILD files for creating Arch Linux packages:
 * Packages for my own applications and libraries such as [Syncthing Tray](https://github.com/Martchus/syncthingtray),
   [Tag Editor](https://github.com/Martchus/tageditor), [Password Manager](https://github.com/Martchus/passwordmanager), ...
 * Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go):
-    * misc packages, eg. Subtitle Composer, openelec-dvb-firmware
-    * mingw-w64 packages which allow to build for Windows under Arch Linux, eg. freetype2 and Qt 5
+    * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
+    * mingw-w64 packages which allow to build for Windows under Arch Linux, eg. FreeType 2 and Qt 5
+    * android packages which allow to build for Android under Arch Linux, eg. iconv, Boost, OpenSSL, CppUnit, Qt 5 and Kirigami
     * apple-darwin packages which allow to build for MaxOS X under Arch Linux, eg. osxcross and Qt 5 (still experimental)
 * Other packages imported from the AUR to build with slight modifications
 

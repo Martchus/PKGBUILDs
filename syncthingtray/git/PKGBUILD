@@ -7,7 +7,7 @@
 # by setting SYNCTHING_TEST_TIMEOUT_FACTOR
 
 # set the web view provider: either webkit, webengine, auto or none
-_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-webkit}
+_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-webengine}
 
 # set the JavaScript provider: either script, qml, auto or none
 _js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}

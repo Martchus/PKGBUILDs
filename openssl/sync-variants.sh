@@ -3,7 +3,7 @@
 # Syncs the different variants of android-openssl
 
 set -e # abort on first error
-master="${1:-android-arm64-v8a}"
+master="${1:-android-aarch64}"
 
 [[ -d 'openssl' ]] && pushd 'openssl' || pushd .
 
@@ -24,10 +24,10 @@ for dir in android-*; do
   source "$dir/PKGBUILD"
   rm "$dir/"* # clean first (files might have been removed in master)
   cp "$master/"* "$dir"
-  sed -e "s/pkgname=android-openssl-.*/pkgname=android-openssl${dir#android}/" \
-      -e "s/ANDROID_EABI=.*/ANDROID_EABI=$ANDROID_EABI/" \
-      -e "s/ANDROID_ARCH=.*/ANDROID_ARCH=$ANDROID_ARCH/" \
+  sed -e "s/pkgname=android-.*-openssl/pkgname=$dir-openssl/" \
       -e "s/_android_arch=.*/_android_arch=$_android_arch/" \
+      -e "s/_pkg_arch=.*/_pkg_arch=$_pkg_arch/" \
+      -e "s/_android_platform=.*/_android_platform=$_android_platform/" \
       "$master/PKGBUILD" > "$dir/PKGBUILD"
 done
 

@@ -44,8 +44,9 @@ where `default-pkg-name` is the default package name (eg. `qt5-base`) and `varia
 
 * `default`: the regular package
 * `git`/`svn`/`hg`: the development version
-* `mingw-w64`: the Windows version
-* `apple-darwin`: the MacOS X version
+* `mingw-w64`: the Windows version (i686/SJLJ and x86_64/SEH)
+* `android-{aarch64,armv7a-eabi,x86-64,x86}`: the Android version (currently only aarch64 actively maintained/tested)
+* `apple-darwin`: the MacOS X version (still experimental)
 
 The repository does not contain `.SRCINFO` files.
 

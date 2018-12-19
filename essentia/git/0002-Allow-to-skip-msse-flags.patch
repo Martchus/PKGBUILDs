@@ -1,0 +1,45 @@
+From 7a4520834d8a6dc69a54daef0bef3590e71681e3 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Wed, 19 Dec 2018 10:28:23 +0100
+Subject: [PATCH 2/2] Allow to skip msse flags
+
+This makes sense when building for other platforms
+than x86.
+---
+ wscript | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/wscript b/wscript
+index 4be3812c..3b7c1e7e 100644
+--- a/wscript
++++ b/wscript
+@@ -54,6 +54,10 @@ def options(ctx):
+                    dest='ARCH', default="x64",
+                    help='Target architecture when compiling on OSX: i386, x64 or FAT')
+ 
++    ctx.add_option('--no-msse', action='store_true',
++                   dest='NO_MSSE', default=False,
++                   help='never add compiler flags for msse')
++
+     ctx.add_option('--cross-compile-mingw32', action='store_true',
+                    dest='CROSS_COMPILE_MINGW32', default=False,
+                    help='cross-compile for windows using mingw32 on linux')
+@@ -95,6 +99,7 @@ def configure(ctx):
+     ctx.env.ALGOINCLUDE          = []
+     ctx.env.INCLUDE_ALGOS        = ctx.options.INCLUDE_ALGOS
+     ctx.env.FFT                  = ctx.options.FFT
++    ctx.env.NO_MSSE              = ctx.options.NO_MSSE
+ 
+ 
+     if ctx.options.CROSS_COMPILE_MINGW32:
+@@ -126,6 +131,7 @@ def configure(ctx):
+     if (not ctx.options.EMSCRIPTEN and 
+         not ctx.options.CROSS_COMPILE_ANDROID and 
+         not ctx.options.CROSS_COMPILE_IOS and
++        not ctx.options.NO_MSSE and
+         sys.platform != 'win32'):
+         ctx.env.CXXFLAGS += ['-msse', '-msse2', '-mfpmath=sse']
+ 
+-- 
+2.20.1
+

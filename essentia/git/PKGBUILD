@@ -1,0 +1,62 @@
+# Maintainer: Eugene Cherny <iam@oscii.ru>
+# Contributor: Martchus <martchus@gmx.net>
+
+pkgname=essentia-git
+pkgrel=1
+pkgver=r1956.c5ea2738
+pkgdesc='Library and tools for audio and music analysis, description and synthesis'
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+url="http://essentia.upf.edu/documentation/"
+license=('AGPL')
+makedepends=('git' 'python' 'glibc')
+depends=('fftw' 'ffmpeg' 'libsamplerate' 'taglib' 'libyaml'
+         'python' 'python-numpy' 'python-yaml' 'chromaprint')
+provides=('essentia')
+conflicts=('essentia' 'essentia-acousticbrainz'
+           'lib32-essentia-acousticbrainz')
+source=('git+https://github.com/MTG/essentia.git#branch=master'
+        '0001-Allow-to-skip-adding-debug-optimization-flags.patch'
+        '0002-Allow-to-skip-msse-flags.patch')
+sha256sums=('SKIP'
+            '25e29d35bee35a6229ed6e0736503ca8aefca13d022e3be4a9798342d01b2943'
+            'b715673958026bc26e459c0dba4adc18fd287f095fa1afc2a6e880d4f4c17102')
+
+pkgver() {
+  cd "$srcdir/essentia"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$srcdir/essentia"
+  patch -p1 -i ../0001-Allow-to-skip-adding-debug-optimization-flags.patch
+  patch -p1 -i ../0002-Allow-to-skip-msse-flags.patch
+}
+
+build() {
+  cd "$srcdir/essentia"
+
+  local platform_flags=
+  [[ $CARCH != x86_64 ]] && [[ $CARCH != i686 ]] && \
+    platform_flags+='--no-msse'
+
+  ./waf configure \
+    --mode=default \
+    --with-cpptests \
+    --with-examples \
+    --with-python \
+    --python=$(which python) \
+    $platform_flags \
+    --prefix="$pkgdir/usr"
+  ./waf $MAKEFLAGS
+}
+
+#check() {
+#  cd "$srcdir/$pkgname"
+#  ./waf run_tests
+#  ./waf run_python_tests
+#}
+
+package() {
+  cd "$srcdir/essentia"
+  ./waf install
+}

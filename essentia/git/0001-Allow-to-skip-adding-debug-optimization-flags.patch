@@ -1,0 +1,38 @@
+From 26fcda33ac3864d2d5c9f307708881018f6b5c78 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Wed, 19 Dec 2018 10:28:03 +0100
+Subject: [PATCH 1/2] Allow to skip adding debug/optimization flags
+
+---
+ wscript | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/wscript b/wscript
+index 3916036b..4be3812c 100644
+--- a/wscript
++++ b/wscript
+@@ -44,7 +44,7 @@ def options(ctx):
+ 
+     ctx.add_option('--mode', action='store',
+                    dest='MODE', default="release",
+-                   help='debug or release')
++                   help='debug, release or default')
+ 
+     ctx.add_option('--std', action='store',
+                    dest='STD', default='c++11',
+@@ -140,8 +140,11 @@ def configure(ctx):
+         print ('→ Building in release mode')
+         ctx.env.CXXFLAGS += ['-O2']  # '-march=native' ] # '-msse3', '-mfpmath=sse' ]
+ 
++    elif ctx.options.MODE == 'default':
++        pass
++
+     else:
+-        raise ValueError('mode should be either "debug" or "release"')
++        raise ValueError('mode should be either "debug" or "release" or "default"')
+ 
+     if not ctx.options.CROSS_COMPILE_MINGW32 and sys.platform != 'win32':
+         # required if we want to use libessentia.a to be linked in the python bindings
+-- 
+2.20.1
+

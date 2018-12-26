@@ -1,7 +1,7 @@
 From 7a4520834d8a6dc69a54daef0bef3590e71681e3 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Wed, 19 Dec 2018 10:28:23 +0100
-Subject: [PATCH 2/2] Allow to skip msse flags
+Subject: [PATCH 2/3] Allow to skip msse flags
 
 This makes sense when building for other platforms
 than x86.

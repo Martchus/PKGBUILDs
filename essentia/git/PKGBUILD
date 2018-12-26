@@ -2,24 +2,31 @@
 # Contributor: Martchus <martchus@gmx.net>
 
 pkgname=essentia-git
-pkgrel=1
+pkgrel=2
 pkgver=r1956.c5ea2738
 pkgdesc='Library and tools for audio and music analysis, description and synthesis'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="http://essentia.upf.edu/documentation/"
 license=('AGPL')
 makedepends=('git' 'python' 'glibc')
-depends=('fftw' 'ffmpeg' 'libsamplerate' 'taglib' 'libyaml'
-         'python' 'python-numpy' 'python-yaml' 'chromaprint')
+depends=('fftw' 'ffmpeg' 'libsamplerate' 'taglib' 'libyaml' 'chromaprint')
+optdepends=('python-six: Python bindings'
+            'python-numpy: Python bindings'
+            'python-yaml: Python bindings')
+makedepends=('git' 'python-numpy' 'python-yaml')
+checkdepends=('python-six')
 provides=('essentia')
 conflicts=('essentia' 'essentia-acousticbrainz'
            'lib32-essentia-acousticbrainz')
 source=('git+https://github.com/MTG/essentia.git#branch=master'
+        'git+https://github.com/MTG/essentia-audio.git#branch=master'
         '0001-Allow-to-skip-adding-debug-optimization-flags.patch'
-        '0002-Allow-to-skip-msse-flags.patch')
+        '0002-Allow-to-skip-msse-flags.patch'
+        '0003-Use-libswresample-instead-of-libavresample.patch')
 sha256sums=('SKIP'
-            '25e29d35bee35a6229ed6e0736503ca8aefca13d022e3be4a9798342d01b2943'
-            'b715673958026bc26e459c0dba4adc18fd287f095fa1afc2a6e880d4f4c17102')
+            '32bc137a3ba2c17e42f5c0b2f241d4ac423ca8f2d197b2a6fad318256d516f1d'
+            '71c11477bdfc61f07238d36c7d944f894bfc7f12fbafa5f62fd1f95543c46fb2'
+            '1e9373276022a4d2c5d59642acc2b5bbc1871e76ae61902bd952fce883230dce')
 
 pkgver() {
   cd "$srcdir/essentia"
@@ -28,8 +35,15 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/essentia"
+
   patch -p1 -i ../0001-Allow-to-skip-adding-debug-optimization-flags.patch
   patch -p1 -i ../0002-Allow-to-skip-msse-flags.patch
+  patch -p1 -i ../0003-Use-libswresample-instead-of-libavresample.patch
+
+  # symlink audio testfiles so they can be found by the testsuite
+  cd test
+  rm -r audio
+  ln -s "$srcdir/essentia-audio" audio
 }
 
 build() {
@@ -50,11 +64,12 @@ build() {
   ./waf $MAKEFLAGS
 }
 
-#check() {
-#  cd "$srcdir/$pkgname"
-#  ./waf run_tests
-#  ./waf run_python_tests
-#}
+check() {
+  cd "$srcdir/essentia"
+  export LD_LIBRARY_PATH="$srcdir/essentia/build/src"
+  ./waf run_tests
+  ./waf run_python_tests
+}
 
 package() {
   cd "$srcdir/essentia"

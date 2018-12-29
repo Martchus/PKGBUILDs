@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
-source ../versions.sh
+source "$(dirname $0)/../versions.sh"
 
 if ! [[ $GITHUB_TOKEN ]]; then
     echo "Don't forget to set \$GITHUB_TOKEN."

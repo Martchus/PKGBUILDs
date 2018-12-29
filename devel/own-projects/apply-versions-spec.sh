@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
-source ../versions.sh
+source "$(dirname $0)/../versions.sh"
 
 for spec_file in "$OSC_DIR"/*/*/*.spec; do
     trimmed_path=${spec_file#$OSC_DIR/*/*/}

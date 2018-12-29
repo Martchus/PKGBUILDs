@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
-source versions.sh
+source "$(dirname $0)/versions.sh"
 
-for pkgbuild_file in "${PKGBUILD_DIR:-..}"/*/*/PKGBUILD; do
-    trimmed_path=${pkgbuild_file#${PKGBUILD_DIR:-..}/}
+for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
+    trimmed_path=${pkgbuild_file#${PKGBUILD_DIR:-.}/}
     project_name=${trimmed_path%%/*}
     variant=${trimmed_path%/PKGBUILD}
     variant=${variant#$project_name/}

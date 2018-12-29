@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
-source ../versions.sh
+source "$(dirname $0)/../versions.sh"
 
 repo_dir=${PATH_REPO_OWNSTUFF}
 if ! [[ $repo_dir ]]; then

@@ -6,12 +6,12 @@
 # you also find the URL of a binary repository.
 
 _pkgname=cppunit
-_pkg_arch=aarch64
-_android_arch=arm64-v8a
+_pkg_arch=armv7a-eabi
+_android_arch=armeabi-v7a
 _android_toolchain=$_pkg_arch-linux-android
 _android_ndk_path=/opt/android-ndk
 _android_api_level=28
-_android_platform_arch=arch-arm64
+_android_platform_arch=arch-arm
 _android_platform_dir=android-$_android_api_level/${_android_platform_arch}
 _android_prefix=${_android_ndk_path}/toolchains/${_android_toolchain}-4.9/prebuilt/linux-x86_64
 _android_sysroot=${_android_ndk_path}/platforms/android-$_android_api_level/${_android_platform_arch}

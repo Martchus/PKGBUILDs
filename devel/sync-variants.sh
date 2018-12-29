@@ -60,22 +60,28 @@ for variant_dir in "${variant_dirs[@]}"; do
 
     # ensure variant dir exists
     if [[ ! -d $variant_dir ]]; then
-        warning "Creating $path/$variant_dir because it doesn't exist yet"
+        warning "Creating $path/$variant_dir because it doesn't exist yet; won't be able to preserve any variables"
         mkdir "$variant_dir"
     fi
 
     # read values to preserve (use sed rather than just sourcing to preserve variables)
     msg2 "Saving values to preserve"
-    declare -A values_to_preserve=()
-    for variable_to_preserve in "${variables_to_preserve[@]}"; do
-        value=$(sed -n -e "/^${variable_to_preserve}=.*$/p" "$variant_dir/PKGBUILD" | sed -E 's/([\:#$%&\-\])/\\\1/g')
-        values_to_preserve[$variable_to_preserve]=${value#${variable_to_preserve}=}
-        [[ $value ]] && plain " - $value"
-        # note: Last sed to escape special characters is required because the value is later passed again to sed as replacement value.
-    done
+    if [[ -f $variant_dir/PKGBUILD ]]; then
+        declare -A values_to_preserve=()
+        for variable_to_preserve in "${variables_to_preserve[@]}"; do
+            value=$(sed -n -e "/^${variable_to_preserve}=.*$/p" "$variant_dir/PKGBUILD" | sed -E 's/([\:#$%&\-\])/\\\1/g')
+            values_to_preserve[$variable_to_preserve]=${value#${variable_to_preserve}=}
+            [[ $value ]] && plain " - $value"
+            # note: Last sed to escape special characters is required because the value is later passed again to sed as replacement value.
+        done
+    else
+        warning "\"$path/$variant_dir/PKGBUILD\" does not exist; unable to preserve variables"
+    fi
 
     msg2 "Replace files"
-    rm "$variant_dir/"* # clean existing files first (files might have been removed in master and we don't want any leftovers)
+    if [ "$variant_dir/"* ]; then
+        rm "$variant_dir/"* # clean existing files first (files might have been removed in master and we don't want any leftovers)
+    fi
     cp "$master/"* "$variant_dir"
 
     msg2 "Restore values to preserve"

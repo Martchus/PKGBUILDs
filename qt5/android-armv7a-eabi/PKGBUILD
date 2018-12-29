@@ -8,9 +8,9 @@
 # Useful link to keep track of latest API changes:
 # https://developer.android.com/ndk/downloads/revision_history
 
-_pkg_arch=aarch64
-_android_arch=arm64-v8a
-_android_platform=22
+_pkg_arch=armv7a-eabi
+_android_arch=armeabi-v7a
+_android_platform=21
 
 # Minimum Android platform based on:
 # https://developer.android.com/about/dashboards/
@@ -20,7 +20,7 @@ export ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT:-/opt/android-ndk}
 export ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-/opt/android-sdk}
 
 _pkgname=
-pkgname=android-$_pkg_arch-qt5
+pkgname=
 pkgver=5.12.0
 pkgrel=1
 pkgdesc="Qt 5 for Android"

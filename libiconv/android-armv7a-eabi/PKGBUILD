@@ -3,10 +3,10 @@
 # Contributor: Techlive Zheng <techlivezheng at gmail.com>
 
 _pkgname=libiconv
-_pkg_arch=aarch64
-_android_arch=arm64-v8a
+_pkg_arch=armv7a-eabi
+_android_arch=armeabi-v7a
 _android_toolchain=$_pkg_arch-linux-android
-_android_platform=22
+_android_platform=21
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname

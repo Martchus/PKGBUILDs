@@ -68,7 +68,7 @@ check() {
   cd "$srcdir/essentia"
   export LD_LIBRARY_PATH="$srcdir/essentia/build/src"
   ./waf run_tests
-  ./waf run_python_tests
+  #./waf run_python_tests
 }
 
 package() {

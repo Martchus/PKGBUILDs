@@ -3,8 +3,8 @@ set -e # abort on first error
 shopt -s nullglob
 source versions.sh
 
-for pkgbuild_file in "${PKGBUILD_DIR:-../..}"/*/*/PKGBUILD; do
-    trimmed_path=${pkgbuild_file#${PKGBUILD_DIR:-../..}/}
+for pkgbuild_file in "${PKGBUILD_DIR:-..}"/*/*/PKGBUILD; do
+    trimmed_path=${pkgbuild_file#${PKGBUILD_DIR:-..}/}
     project_name=${trimmed_path%%/*}
     variant=${trimmed_path%/PKGBUILD}
     variant=${variant#$project_name/}
@@ -27,7 +27,7 @@ for pkgbuild_file in "${PKGBUILD_DIR:-../..}"/*/*/PKGBUILD; do
     [[ $version == $pkgver ]] && continue
 
     # apply new version
-    sed -i -e "s/pkgver=.*/pkgver=$version/" -e "s/pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
+    sed -i -e "s/^pkgver=.*/pkgver=$version/" -e "s/pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
     chmod 644 "$pkgbuild_file"
 
     echo "$trimmed_path -> $version"

@@ -21,6 +21,8 @@ depends=('mingw-w64-crt')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-base-static' 'mingw-w64-qt5-tools' 'mingw-w64-qt5-translations' 'mingw-w64-qt5-svg' 'mingw-w64-qtutilities' 'mingw-w64-openssl' 'breeze-icons' 'numix-icon-theme-git' 'ffmpeg')
 [[ $_webview_provider == webkit ]] && makedepends+=('mingw-w64-qt5-webkit')
 [[ $_webview_provider == webengine ]] && makedepends+=('mingw-w64-qt5-webengine')
+[[ $_js_provider == script ]] && depends+=('mingw-w64-qt5-script')
+[[ $_js_provider == qml ]] && depends+=('mingw-w64-qt5-declarative')
 conflicts=("${pkgname%-static}")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")

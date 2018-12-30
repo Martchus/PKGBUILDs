@@ -1,7 +1,7 @@
 
 pkgname=mingw-w64-configure
-pkgver=0.1
-pkgrel=2
+pkgver=0.1.1
+pkgrel=2.1
 arch=(any)
 pkgdesc="configure wrapper for MinGW (mingw-w64)"
 depends=('mingw-w64-gcc' 'mingw-w64-pkg-config')
@@ -24,3 +24,4 @@ package() {
     install -m 755 ${_arch}-configure "${pkgdir}"/usr/bin/
   done
 }
+

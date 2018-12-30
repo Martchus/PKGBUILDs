@@ -1,4 +1,4 @@
-From e9810c35b4a294691ffea20dd51ba8ef2faf41ed Mon Sep 17 00:00:00 2001
+From 63e0fdf86c9ceaa4da247f35e7127cbab6a35c03 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:58:25 +0200
 Subject: [PATCH 15/33] Fix linking against shared/static PostgreSQL

@@ -1,4 +1,5 @@
 set (CMAKE_SYSTEM_NAME Windows)
+set (CMAKE_SYSTEM_PROCESSOR @PROCESSOR@)
 
 # specify the cross compiler
 set (CMAKE_C_COMPILER @TRIPLE@-gcc)
@@ -29,4 +30,5 @@ set (Boost_THREADAPI win32)
 set (CMAKE_Fortran_COMPILER @TRIPLE@-gfortran)
 set (CMAKE_AR:FILEPATH @TRIPLE@-ar)
 set (CMAKE_RANLIB:FILEPATH @TRIPLE@-ranlib)
+
 

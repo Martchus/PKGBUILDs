@@ -1,4 +1,4 @@
-From 27a1638bad652da1e73bbe1533aca8b625eeda4d Mon Sep 17 00:00:00 2001
+From 6f001ca09fe5bb1aca85a3f532489b3aa412cd2a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 2 Jun 2017 18:28:10 +0200
 Subject: [PATCH 10/33] Don't try to use debug version of D-Bus library

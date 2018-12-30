@@ -1,4 +1,4 @@
-From 29f7e60d2712d9229d96d5aa1ec3fd0253075bca Mon Sep 17 00:00:00 2001
+From df4107f83f185cb4b621c128da8cc893fdf3745a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:27:28 +0200
 Subject: [PATCH 17/33] Build dynamic host libraries

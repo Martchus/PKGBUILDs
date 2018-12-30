@@ -3,24 +3,30 @@ mingw_prefix=/usr/@TRIPLE@
 
 export PKG_CONFIG_LIBDIR="${mingw_prefix}/lib/pkgconfig"
 
-mingw_flags="${CUSTOM_MINGW_FLAGS:--O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4}"
-export CFLAGS="$mingw_flags $CFLAGS"
-export CXXFLAGS="$mingw_flags $CXXFLAGS"
+default_mingw_pp_flags="-D_FORTIFY_SOURCE=2"
+default_mingw_compiler_flags="$default_mingw_pp_flags -O2 -pipe -fstack-protector-strong -fno-plt -fexceptions --param=ssp-buffer-size=4"
+default_mingw_linker_flags="-Wl,-O1,--sort-common,--as-needed"
 
-additional_args=" \
-  -DCMAKE_INSTALL_PREFIX:PATH=${mingw_prefix} \
-  -DCMAKE_INSTALL_LIBDIR:PATH=${mingw_prefix}/lib \
-  -DINCLUDE_INSTALL_DIR:PATH=${mingw_prefix}/include \
-  -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES:PATH=${mingw_prefix}/include \
-  -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH=${mingw_prefix}/include \
-  -DLIB_INSTALL_DIR:PATH=${mingw_prefix}/lib \
-  -DSYSCONF_INSTALL_DIR:PATH=${mingw_prefix}/etc \
-  -DSHARE_INSTALL_DIR:PATH=${mingw_prefix}/share \
-  -DCMAKE_TOOLCHAIN_FILE=/usr/share/mingw/toolchain-@TRIPLE@.cmake \
-  -DCMAKE_CROSSCOMPILING_EMULATOR=/usr/bin/@TRIPLE@-wine"
+export CPPFLAGS="${MINGW_CPPFLAGS:-$default_mingw_pp_flags $CPPFLAGS}"
+export CFLAGS="${MINGW_CFLAGS:-$default_mingw_compiler_flags $CFLAGS}"
+export CXXFLAGS="${MINGW_CXXFLAGS:-$default_mingw_compiler_flags $CXXFLAGS}"
+export LDFLAGS="${MINGW_LDFLAGS:-$default_mingw_linker_flags $LDFLAGS}"
 
-[[ ! $PREVENT_FORCING_SHARED_LIBS ]] &&
-  additional_args+=' -DBUILD_SHARED_LIBS:BOOL=ON' ||
-  additional_args+=' -DBUILD_SHARED_LIBS:BOOL=OFF'
-
-PATH=${mingw_prefix}/bin:$PATH cmake $additional_args "$@"
+PATH=${mingw_prefix}/bin:$PATH cmake \
+    -DCMAKE_INSTALL_PREFIX:PATH=${mingw_prefix} \
+    -DCMAKE_INSTALL_LIBDIR:PATH=${mingw_prefix}/lib \
+    -DINCLUDE_INSTALL_DIR:PATH=${mingw_prefix}/include \
+    -DLIB_INSTALL_DIR:PATH=${mingw_prefix}/lib \
+    -DSYSCONF_INSTALL_DIR:PATH=${mingw_prefix}/etc \
+    -DSHARE_INSTALL_DIR:PATH=${mingw_prefix}/share \
+    -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH=${mingw_prefix}/include \
+    -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES:PATH=${mingw_prefix}/include \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DCMAKE_TOOLCHAIN_FILE=/usr/share/mingw/toolchain-@TRIPLE@.cmake \
+    -DCMAKE_CROSSCOMPILING_EMULATOR=/usr/bin/@TRIPLE@-wine \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+    -DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+    -DCMAKE_SHARED_LINKER_FLAGS_RELEASE="$LDFLAGS" \
+    -DCMAKE_EXE_LINKER_FLAGS_RELEASE="$LDFLAGS" \
+    "$@"

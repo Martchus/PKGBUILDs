@@ -1,4 +1,4 @@
-From 23c9fc7eaa3164d47e0c6049e61bfeec0bd30a0f Mon Sep 17 00:00:00 2001
+From b9f8213ea416663467061840443547a3b3412f9f Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:25:40 +0200
 Subject: [PATCH 16/33] Rename qtmain to qt5main
@@ -12,10 +12,10 @@ Prevents conflict with mingw-w64-qt4 package
  4 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/mkspecs/common/g++-win32.conf b/mkspecs/common/g++-win32.conf
-index 48d1c49d44..a011f681eb 100644
+index 07e2b6a88e..5bfbcfdca6 100644
 --- a/mkspecs/common/g++-win32.conf
 +++ b/mkspecs/common/g++-win32.conf
-@@ -87,7 +87,7 @@ QMAKE_LIBS_OPENGL       = -lglu32 -lopengl32 -lgdi32 -luser32
+@@ -86,7 +86,7 @@ QMAKE_LIBS_OPENGL       = -lglu32 -lopengl32 -lgdi32 -luser32
  QMAKE_LIBS_OPENGL_ES2   = -l$${LIBEGL_NAME} -l$${LIBGLESV2_NAME} -ld3d9 -ldxguid -lgdi32 -luser32
  QMAKE_LIBS_OPENGL_ES2_DEBUG = -l$${LIBEGL_NAME} -l$${LIBGLESV2_NAME} -ld3d9 -ldxguid -lgdi32 -luser32
  QMAKE_LIBS_COMPAT       = -ladvapi32 -lshell32 -lcomdlg32 -luser32 -lgdi32 -lws2_32

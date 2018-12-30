@@ -79,7 +79,7 @@ for variant_dir in "${variant_dirs[@]}"; do
     fi
 
     msg2 "Replace files"
-    if [ "$variant_dir/"* ]; then
+    if [ -z "$(ls -A "$variant_dir")" ]; then
         rm "$variant_dir/"* # clean existing files first (files might have been removed in master and we don't want any leftovers)
     fi
     cp "$master/"* "$variant_dir"

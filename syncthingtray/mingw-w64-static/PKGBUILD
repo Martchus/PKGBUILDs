@@ -51,7 +51,6 @@ build() {
       -DSVG_SUPPORT:BOOL=ON \
       -DSVG_ICON_SUPPORT:BOOL=0N \
       ../
-    find . -type f -iname 'linklibs.rsp' -exec sed -i "s|-L/lib||g" {} \;
     make
     popd
   done

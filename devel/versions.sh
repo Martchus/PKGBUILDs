@@ -2,8 +2,8 @@
 declare -A versions=(
     [c++utilities]=4.16.0
     [qtutilities]=5.12.1
-    [tagparser]=8.0.1
-    [tageditor]=3.1.2
+    [tagparser]=8.1.0
+    [tageditor]=3.1.3
     [passwordfile]=4.0.0
     [passwordmanager]=4.0.0
     [syncthingtray]=0.8.4

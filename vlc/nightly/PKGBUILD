@@ -5,10 +5,10 @@
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20181205
+pkgver=4.0.0v20190127
 _pkgver=4.0.0
-_snapshot_=20181205
-_snapver_=0229
+_snapshot_=20190127
+_snapver_=0231
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
@@ -33,7 +33,7 @@ makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'sdl_image' 'libpulse' 'alsa-lib' 'jack' 'libsamplerate' 'libsoxr'
              'lirc' 'libgoom2' 'projectm' 'chromaprint'
 
-             'fluidsynth' 'portaudio' 'sidplay2-libs' 'sndio')
+             'fluidsynth' 'portaudio' 'sidplay2-libs' 'sndio' 'vulkan-headers')
 optdepends=('avahi: service discovery using bonjour protocol'
             'gst-plugins-base-libs: for libgst plugins'
             'libdvdcss: decoding encrypted DVDs'
@@ -260,7 +260,7 @@ package() {
   #  depends=("${_detected_depends[@]}" "${_undetected_depends[@]}")
 }
 
-sha256sums=('d3fe18aba25d7542110b155e273909864d8810a61d545647c1fb3ebb26ea03c6'
+sha256sums=('479f8e90d2ff300047eddda33a5c63bcfedc54d6fdd5e1fc46fc548fa065a6c7'
             'c6f60c50375ae688755557dbfc5bd4a90a8998f8cf4d356c10d872a1a0b44f3a'
             '3e6bddbaed443e40036c494a0754aedd2f94fe41bfa3754855e16f7452a03cdf'
             'c33461cad1fb725754a80b4dd63eb144dbd9719ac99139f9553089ef09907b0a'

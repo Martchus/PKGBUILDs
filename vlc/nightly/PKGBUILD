@@ -13,7 +13,7 @@ _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
 pkgrel=1
 pkgdesc='Multi-platform MPEG, VCD/DVD, and DivX player - nightly snapshot'
-url='https://www.videolan.org/vlc/'
+url='https://nightlies.videolan.org/'
 arch=('x86_64')
 license=('LGPL2.1' 'GPL2')
 depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua' 'libidn'
@@ -110,7 +110,6 @@ options=('!emptydirs')
 source=("http://nightlies.videolan.org/build/source/vlc-${_pkgver}-${_nightly_}-${_suffix_}.tar.xz"
         'update-vlc-plugin-cache.hook'
         '0001-lua-Fix-build-using-lua-5.3.patch'
-        '0002-Fix-compatibility-with-OpenCV-3.4.1.patch'
         'find-deps.py')
 
 pkgver() {
@@ -235,6 +234,8 @@ build() {
               --enable-aribsub \
               \
               --libexecdir=/usr/lib \
+	      --disable-daala \
+	      --disable-fdkaac
   # note: removing --enable-daala for now because it is currently broken
   #       removing --enable-fdkaac for now because it is currently broken
   make V=1
@@ -263,5 +264,4 @@ package() {
 sha256sums=('479f8e90d2ff300047eddda33a5c63bcfedc54d6fdd5e1fc46fc548fa065a6c7'
             'c6f60c50375ae688755557dbfc5bd4a90a8998f8cf4d356c10d872a1a0b44f3a'
             '3e6bddbaed443e40036c494a0754aedd2f94fe41bfa3754855e16f7452a03cdf'
-            'c33461cad1fb725754a80b4dd63eb144dbd9719ac99139f9553089ef09907b0a'
             '90b0e34d5772d2307ba07a1c2aa715db7488389003cfe6d3570b2a9c63061db7')

@@ -28,7 +28,7 @@ if [[ ! $1 ]] || [[ ! $2 ]] || [[ ! $3 ]]; then
     echo 'Syncs different variants of a PKGBUILD'
     echo "Usage:   $0 path/to/variants master-variant variants-to-adjust"
     echo "example: $0 ~/pkgbuilds/qt5-base mingw-w64 mingw-w64-{static,angle,dynamic}"
-    echo "example: $0 ~/pkgbuilds/qt5-base android-aarch64 android-*"
+    echo "example: $0 ~/pkgbuilds/qt5 android-aarch64 android-*"
     exit -1
 fi
 path=$1
@@ -79,7 +79,7 @@ for variant_dir in "${variant_dirs[@]}"; do
     fi
 
     msg2 "Replace files"
-    if [ -z "$(ls -A "$variant_dir")" ]; then
+    if [ "$(ls -A "$variant_dir")" ]; then
         rm "$variant_dir/"* # clean existing files first (files might have been removed in master and we don't want any leftovers)
     fi
     cp "$master/"* "$variant_dir"

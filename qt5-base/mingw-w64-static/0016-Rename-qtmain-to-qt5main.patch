@@ -1,7 +1,7 @@
-From b9f8213ea416663467061840443547a3b3412f9f Mon Sep 17 00:00:00 2001
+From c37572ff090abe65285eacaedf7e7022af92aae6 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:25:40 +0200
-Subject: [PATCH 16/33] Rename qtmain to qt5main
+Subject: [PATCH 16/34] Rename qtmain to qt5main
 
 Prevents conflict with mingw-w64-qt4 package
 ---
@@ -53,7 +53,7 @@ index ecb167bf18..7c9368c3b3 100644
                  QMAKE_LIBS += -L$$QT.core.libs
              CONFIG(debug, debug|release): QMAKE_LIBS += $${entryLib}$${QT_LIBINFIX}d
 diff --git a/src/winmain/winmain.pro b/src/winmain/winmain.pro
-index 4140ae48de..9ae73db74b 100644
+index 61e9f29d23..a1795bf265 100644
 --- a/src/winmain/winmain.pro
 +++ b/src/winmain/winmain.pro
 @@ -2,7 +2,7 @@

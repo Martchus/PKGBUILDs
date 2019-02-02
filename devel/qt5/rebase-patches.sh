@@ -12,11 +12,19 @@ if ! [[ $1 ]] || ! [[ $2 ]]; then
 fi
 newversion="$1"
 oldversion="$2"
-oldbranchsuffix="$3"
+oldbranchsuffix="${3:-mingw-w64}"
 newbranchsuffix="${4:-mingw-w64}"
 
+# check whether branch for new version already exists
+newversionbranch=$newversion-$newbranchsuffix
+branch_count=$(git branch | grep -- "$newversionbranch" | wc -l)
+if [[ $branch_count -ge 1 ]]; then
+    msg2 "Branch for new version $newversionbranch already exists. Likely already rebased (otherwise, use continue-rebase-patches.sh)."
+    continue
+fi
+
 # determine branch from old version
-oldversionbranch="$oldversion-${oldbranchsuffix:-mingw-w64}"
+oldversionbranch=$oldversion-$oldbranchsuffix
 branch_count=$(git branch | grep -- "$oldversionbranch" | wc -l)
 if [[ $branch_count -lt 1 ]]; then
     msg2 "Branch for old version $oldversionbranch doesn't exist. Likely we just don't need any patches for this repo :-)"
@@ -44,6 +52,6 @@ fi
 
 # update Git checkout, create new branch with rebased commits, push to remote
 git remote update
-git checkout -b "$newversion-$newbranchsuffix" "origin/$newversion"
+git checkout -b "$newversionbranch" "origin/$newversion"
 git cherry-pick "v$oldversion..$oldversionbranch"
-git push -u $maybe_remote "$newversion-$newbranchsuffix"
+git push -u $maybe_remote "$newversionbranch"

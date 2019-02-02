@@ -36,8 +36,8 @@ isNoOpenGL() {
 }
 
 pkgname=mingw-w64-qt5-base-static
-pkgver=5.12.0
-pkgrel=2
+pkgver=5.12.1
+pkgrel=1
 pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 # The static variant doesn't contain any executables which need to be executed on the build machine
 isStatic && arch=('any') || arch=('i686' 'x86_64')
@@ -84,41 +84,43 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/subm
         '0030-Prevent-qmake-from-messing-static-lib-dependencies.patch'
         '0031-Hardcode-linker-flags-for-platform-plugins.patch'
         '0032-Fix-linking-against-static-plugins-with-qmake.patch'
-        '0033-Disable-hardware-randomizer-for-32-bit.patch')
-sha256sums=('5e03221d780e121aabd734896aab8f331e5d8c9d9b54f1eb04907d0818eaeecb'
-            '9ec51628c255573f7c243efa23957fb0eaae7051e2e8f14c80004b53113843dd'
-            '0d78f4826dd41c4d6ee7d095c8f35b3546655d375fca0ece7974ed0cfd61b4ec'
-            '44679f37ed58b22297f7666e798c8f099af665ceb0725edf94ca5250f56df60b'
-            'bed019caedb56d1e9949bf227c17f3c62cf3f929e2ac5960f989ebd09031f70a'
-            '6591e1b6df919bd0054fc60c5cbef0ce9c5c99e7e792003af3337e6b58c17a5e'
-            'c70a8fe8243225d44532834eba25c849276131152791dd9c3f505ad3a07bd91e'
-            'ea17823807394adbffc74ef9a61613c7b134072ed081b370ecc9d0f1e0d61525'
-            'a19b79876793858af82c4f52fa3756d297059968b30b9e3a99c874ef5edd86d5'
-            '93803937c9d3d79738bd9098cadbc652d92811356d33cbc5694fd86636ea2cd6'
-            '07e5c641133c796ec10cb2259deb05e2c73e79d6dca61306c57c26be941de357'
-            'e737d0aaf73aeed0926420632718469549f339ba9246330232b4e0a7c2590542'
-            '99538cd36fbf5b850125b1f887bca7d9f244c00b1b1647251dd46576da666aa4'
-            '95b5da98388f36a10a811d9c11edb9ffecaaefeec55cd2d7dc33420410fcc691'
-            'b47c7760212833986820cce8face4eb3fe4a3a0f50dd89d9151fe59d771e18a3'
-            '609dfac8f60be7cc425638d1f5671a4a22cd8985ee5f08571444e6acae823a74'
-            'f58260547b4ed3a5f43fd4fc6b4b7716b9c4f8355ce00c89931e54763f88e5f9'
-            'e5bf5056b223f0fe6edd6326fc9a360428fdbfff22930090d5b5d192d50733ec'
-            'f8dd5e4f49b342ce4c5df2c677ecc63ea8df2730dd2101181a7ed56ff6b9ecaa'
-            'e497ff375a28d1d87f7b6d04c099df65fdb54bb6a4eb9fe4c638a042731cab61'
-            'c9122faeabd32285c5c1ed58d34ee52ae2b429089eb2d34a1d0ee2f017c57de1'
-            '2d249396a381c3b6348258ebcc52afc8d1be0a3f48554952ff0632c674c7dfde'
-            'a384a727dce6c1b823eb43d16a139d49835c7b9772b39e8ad0ff53ca3a2d4f02'
-            'd52dc5d9c0d7e58c08e42e84d8c566604137f95d036b324320f71b1fd34abeb8'
-            '3eae353c8dde508f328cdbb245c93423b365a414b3007b5720abb0396d053830'
-            '6a8f2a7a70f2f06ecbbfb7cae9f5728b7cdad19c9bd9496064c9440cf22df96d'
-            'bdcdb320de3b6da2925ca1ad76edf14ace5b2a1a51fbfc7ae9c89574a57c146c'
-            'e00e00695e9db071bea0c6f214d3561a58114b9211a8ffa94f09398bb2147b2a'
-            'bd0f5cfe2cf38218b12f979223b3286a6ae16fb17feb561695df0f155dd61a73'
-            'c41798441c49d3eb30d87fe5a2aae5d5a957e4694d76d1f6d11f8a926fd2c857'
-            'aac08c720053c206845bf0ee54c4ef833d7f3481d32522c23ece7b790f89af7d'
-            '301dfe13ab0dca5fc99f0a9ed9c62d145bf7e76ce1afe60adbbd0b7ec86d6ce3'
-            'd90088ce7f2fe633a9b46a4cfd097044bffc6c8e03d9244f08b82328b0b83737'
-            '7f9393c25dd4a4cd1fec292a8dbf98708990719d9dca8ca7d00b96d78d61969f')
+        '0033-Disable-hardware-randomizer-for-32-bit.patch'
+        '0034-Prevent-static-build-to-prefer-dynamic-libraries.patch')
+sha256sums=('533078ce02678988576e224cb3844979907950cf83e0fda3364bc1d5701c9049'
+            '4e1dbb878b77dbba96a9564ecbded6dbd74482b52e1cf4becaa1ce741c8cf489'
+            'f54815ff2fede9dbdc0ade572305ff684940714ca65e76d25f5b15cd0cb0a3da'
+            'c60e6cef5d0c95b6d034ade75fde3cf150e1570f5ca62d6b32d942abcb937f86'
+            '0a82cde28edae5abb8d624cea407db515c1d52e8963f07aa8430c1d1f810e54a'
+            '39059ed786851c1cdf416c4d0a9a5b042edda83bddd03b5bfcbcae1eaf8f7694'
+            '4ef83cf4d211c446a5715cfa422f130492ae18bfb5cb42db9ff6516ed7fb29f1'
+            '48ee96ffc01d5ab7c648f4aae6cee286992e4eb406e48718058092206f8ad2eb'
+            '58f27f2359b3571aac44a3770a705692eed9e6fd24b6e6bf730e7aad5ee4a030'
+            'cf6154d83655efbf30281c4f83d29feb252fd104849f8e2ad495da688e581314'
+            'edf080092f4d158d2e42cedd50f80b3b5715ae47f740b16fa43132f1dc68cf9d'
+            '1c3c46c26809e59e91732d2ff082a445dac4986294f400277272c2337d8c21f3'
+            '3ee7b4f4ed6ea86794a5d119c7000033d0f61208150e37f35428e52611f7ae3f'
+            '1d18e225c4bda89fe024a47834a8b79d9c8e4d1ba884d7dc6b07a93bf0307a85'
+            '2affe7ac03016cfd536f63d61c0f5bd42932fc3823b7f2dbabca9c2db5a53ae6'
+            'd0a2e33d20c4d6063f7546fbc84d2f6a5a96955f998ba7af4320bc005fa2a722'
+            '9941e9c883496bb3409a12ef3f73b6f3d76e106061381deb74380eafb1ac472f'
+            'f336402daf227aa529080ab31612a205c936438ecbfab3627252164d8903c1b1'
+            '8cf716c22bf0fface6e3c015cd4d621425e3b20771b15ab03eeeeb59db248756'
+            '95f9847a1fe05ad78ae4a682208894d995becc0ca4f3463d39781e8a52543017'
+            '132fc790cfa528063fe95c3bc104826cb82105cd24e05ed77593115212987dc3'
+            '8ace42d2ec1b7a05a6bacf93f899775906c407f349efbbd2533b942fb474f200'
+            '8849864de4abf2dd70ffe2fe70aabb608c296eccdc41e6f4061645bd39f63c50'
+            '60ca9adfe6ae46d6dc7b4874c3202b46bc57f6649a45fb5301e4e4b63e70aa5e'
+            '47f83f04256afe1bd8701c31673e00e445b65840b5fe2bd132a98c8f292aa9c4'
+            '305b30fad80fba756bd3ad6c34c95030fc3927d52a3dc9b90d2705b390831734'
+            '91f37e9098e78881c1953c85e592e108be27dae08a83278f4a9885cb296a6871'
+            '9ca5f2175d8679b7312d8cb718ddc648e161a6aae631b5d4c9e528594a020d1a'
+            '3a5619542cb549ba7cc2bf1f9b77d524e5f9aa78d1e8dea6cd75c4f09b6aabc9'
+            'e30cf84af1ff7764cb0e0644a7bfbde920f463af9c24aab53abef9cf3410ceb3'
+            'fdd36ed82c5a8df7a0157b4ce9a3be16ec4c2b98cdf071a2be662603045da652'
+            '55b42d68ca7981ef777a7f081f840b1b80ada8c0dc9508092ec9fba151a88dfd'
+            '06f98f6ce25da7010e7398111ee7b79f380b79a7ab125eba3ef6d051af92cf8a'
+            '5a097dc80dc07aa755e77c50a469c3c08bf5b562ad9b116dbbf891a072e7bdc2'
+            '66047e08db2282d69563b3081b847fa7c041c3c387ab00ca72ff481b91124925')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
@@ -165,10 +167,10 @@ prepare() {
   CXXFLAGS="${MINGW_CXXFLAGS:-$CPPFLAGS -O2 -pipe -fno-plt -fexceptions --param=ssp-buffer-size=4}"
   LDFLAGS="${MINGW_LDFLAGS:--Wl,-O1,--sort-common,--as-needed}"
   sed -i -e "s|^\(QMAKE_CFLAGS_RELEASE.*=\).*$|\1 ${CFLAGS}|" \
-         -e "s|^\(QMAKE_CXXFLAGS_RELEASE.*=\).*$|\1 ${CXXFLAGS}|"\
+         -e "s|^\(QMAKE_CXXFLAGS_RELEASE.*=\).*$|\1 ${CXXFLAGS}|" \
          -e "s|^\(QMAKE_LFLAGS_RELEASE.*=\).*$|\1 ${LDFLAGS}|" \
     mkspecs/common/gcc-base.conf
-  sed -i -e "s|^\(QMAKE_LFLAGS_RELEASE.*=\).*$|" \
+  sed -i -e "s|^\(QMAKE_LFLAGS_RELEASE.*=\).*$|\1|" \
     mkspecs/common/g++-unix.conf
 }
 
@@ -343,6 +345,11 @@ package() {
 
       # keep a couple pri files not found in base
       mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules/qt_plugin_"*.pri "${pkgdir}/usr/${_arch}"
+
+      # fix bad library order for static CMake builds caused by Qt5Gui.static.prl
+      sed -i -e "s|-lfreetype;|-lfreetype;-lharfbuzz;-lfreetype;-lbz2;|" \
+             -e "s| -lz;| |" \
+                "${pkgdir}/usr/${_arch}/lib/Qt5Gui.static.prl"
 
       # delete duplicate files that are in the base package
       rm -fR "${pkgdir}/usr/${_arch}/"{include,share}

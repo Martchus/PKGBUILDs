@@ -11,7 +11,7 @@
 _qt_module=qtquick1
 pkgname="mingw-w64-qt5-quick1"
 pkgver=5.5.1
-pkgrel=3
+pkgrel=1
 arch=('any')
 pkgdesc="Qt Declarative is provided for Qt 4 compatibility (mingw-w64)"
 depends=('mingw-w64-qt5-base' 'mingw-w64-qt5-script' 'mingw-w64-qt5-tools')

@@ -35,12 +35,9 @@ prepare() {
 build() {
   cd build
 
-  # note: using toolchain file from Android NDK to work around https://gitlab.kitware.com/cmake/cmake/issues/18739
-  #       (variables "ANDROID_ABI" and "ANDROID_PLATFORM" are for Android NDK provided toolchain file)
+  # note: needs workaround for https://gitlab.kitware.com/cmake/cmake/issues/18739 (currently provided outside of the PKGBUILD itself)
+
   cmake ../$_pkgname-$pkgver \
-    -DANDROID_ABI=$_android_arch \
-    -DANDROID_PLATFORM=$_android_platform \
-    -DCMAKE_TOOLCHAIN_FILE=/opt/android-ndk/build/cmake/android.toolchain.cmake \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \

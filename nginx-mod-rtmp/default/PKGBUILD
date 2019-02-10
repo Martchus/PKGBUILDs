@@ -3,14 +3,14 @@
 
 pkgname=nginx-mod-rtmp
 pkgver=1.2.1
-pkgrel=3
+pkgrel=4
 _dirname="nginx-rtmp-module-$pkgver"
 _nginxver=1.14.2
 
-pkgdesc='NGINX module implementing an upload progress system, that monitors RFC1867 POST uploads'
+pkgdesc='Module for nginx that adds RTMP support'
 arch=('x86_64')
 depends=("nginx=$_nginxver" "libutil-linux")
-url='http://nginx-rtmp.blogspot.de'
+url='https://github.com/arut/nginx-rtmp-module'
 license=('BSD')
 
 source=(

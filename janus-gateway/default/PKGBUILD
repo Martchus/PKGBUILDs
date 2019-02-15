@@ -2,7 +2,7 @@
 # Contributor: Martchus <martchus@gmx.net>
 
 pkgname=janus-gateway
-pkgver=0.4.5
+pkgver=0.6.1
 pkgrel=2
 pkgdesc="WebRTC gateway"
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ license=('GPL3')
 depends=('libmicrohttpd' 'jansson' 'libnice' 'openssl' 'libsrtp'
          'sofia-sip' 'libusrsctp-git' 'libwebsockets' 'libevent' 
          'librabbitmq-c' 'opus' 'libogg' 'glib2' 'ding-libs' 'lua>=5.3'
-         'ffmpeg')
+         'ffmpeg' 'libconfig')
 makedepends=('gengetopt' 'paho-mqtt-c-git')
 provides=(janus-gateway)
 backup=('etc/janus/janus.cfg')
@@ -19,7 +19,7 @@ install=janus-gateway.install
 
 source=("https://github.com/meetecho/janus-gateway/archive/v${pkgver}.tar.gz"
         janus.service)
-sha256sums=('fc60e615e0c70249e41a32e068ef8feed7e01478fb7659ae16b73c6dd08d695d'
+sha256sums=('b95f5d67edd6bf3a6af296e455811ed4343733a0e6fec5b8786ac4dfa8fa1260'
             'cf2b6c8fdcd60ccfa179c4cd207a23ee7edfee90588c2c3847aa6cda418bed7f')
 
 _userid=531

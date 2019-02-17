@@ -6,7 +6,7 @@
 _reponame=cpp-utilities
 pkgname=apple-darwin-c++utilities
 _name=${pkgname#apple-darwin-}
-pkgver=4.16.0
+pkgver=4.17.0
 pkgrel=1
 arch=('any')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities (apple-darwin)'
@@ -16,7 +16,7 @@ optdepends=("$_name-doc: API documentation")
 makedepends=('clang' 'cmake')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('c4487d6e684c523e596bfc91203a6f10609606786553517bcf44ffae181feaa5')
+sha256sums=('92d288b606b4f32d69686cbf5a264f90e5e00d80894583a9df2284d593cdc2b4')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures='i386-apple-darwin15 x86_64-apple-darwin15'
 # NOTE: can not build for x86_64h-apple-darwin15 because libstdc++ is (currently) only availabe for x86_64

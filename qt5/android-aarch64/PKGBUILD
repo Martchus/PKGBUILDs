@@ -36,7 +36,7 @@ makedepends=('libgl'
              'libxslt'
              'fontconfig'
              "android-$_pkg_arch-openssl")
-depends=('java-runtime-headless>=7'
+depends=('jre-openjdk-headless'
          'apache-ant'
          'android-ndk'
          "android-platform-$ANDROID_MINIMUM_PLATFORM"

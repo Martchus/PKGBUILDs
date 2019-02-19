@@ -45,7 +45,8 @@ build() {
     -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;$_prefix" \
     -DNO_DOXYGEN=ON \
     -DWIDGETS_GUI=OFF \
-    -DQUICK_GUI=ON
+    -DQUICK_GUI=ON \
+    .
   make VERBOSE=1
 }
 

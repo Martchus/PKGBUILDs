@@ -68,7 +68,8 @@ build() {
     -DECM_ADDITIONAL_FIND_ROOT_PATH="$root;$android_ndk_root/platforms/android-$_android_platform/arch-${_android_arch%-*};$android_ndk_root/sources/cxx-stl/gnu-libstdc++/4.9/libs/$_android_arch" \
     -DQTANDROID_EXPORTED_TARGET=$_pkgname \
     -DANDROID_APK_DIR=android \
-    -DANDROID_EXTRA_LIBS="$_prefix/lib/libcrypto.so;$_prefix/lib/libssl.so;$_prefix/lib/libiconv.so;$_prefix/lib/libKF5Kirigami2.so"
+    -DANDROID_EXTRA_LIBS="$_prefix/lib/libcrypto.so;$_prefix/lib/libssl.so;$_prefix/lib/libiconv.so;$_prefix/lib/libKF5Kirigami2.so" \
+    .
 
     #-DCMAKE_EXE_LINKER_FLAGS="-fPIE;-pie;-Wl,--gc-sections;-Wl,-rpath-link=/opt/android-libs/$_android_arch/lib;/opt/android-qt5/$qt_version/$_android_arch/lib:/opt/android-libs/$_android_arch/lib" \
 

@@ -60,7 +60,8 @@ build() {
     -Dcppunit_DYNAMIC_INCLUDE_DIR="$include_dir" \
     -Dcppunit_STATIC_INCLUDE_DIR="$include_dir" \
     -Dcppunit_DYNAMIC_LIB="$_prefix/lib/libcppunit-1.14.so" \
-    -Dcppunit_STATIC_LIB="$_prefix/lib/libcppunit.a"
+    -Dcppunit_STATIC_LIB="$_prefix/lib/libcppunit.a" \
+    .
   make VERBOSE=1
 }
 

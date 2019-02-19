@@ -23,7 +23,8 @@ build() {
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DWEBVIEW_PROVIDER=webengine
+    -DWEBVIEW_PROVIDER=webengine \
+    .
   make
 }
 

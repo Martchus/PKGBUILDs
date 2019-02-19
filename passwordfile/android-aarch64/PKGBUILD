@@ -56,7 +56,8 @@ build() {
     -Dcrypto_STATIC_INCLUDE_DIR="$include_dir" \
     -Dcrypto_DYNAMIC_LIB="$_prefix/lib/libcrypto.so" \
     -Dcrypto_STATIC_LIB="$_prefix/lib/libcrypto.a" \
-    -DNO_DOXYGEN=ON
+    -DNO_DOXYGEN=ON \
+    .
   make VERBOSE=1
 }
 

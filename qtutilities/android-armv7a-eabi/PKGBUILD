@@ -1,0 +1,56 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=qtutilities
+_pkgname=qtutilities
+_android_arch=armeabi-v7a
+_pkg_arch=armv7a-eabi
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=21
+_prefix=/opt/android-libs/$_pkg_arch
+
+pkgname=android-$_pkg_arch-$_pkgname
+pkgver=5.12.2
+pkgrel=1
+arch=('any')
+pkgdesc="Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (Android, $_pkg_arch)"
+license=('GPL')
+depends=("android-$_pkg_arch-c++utilities" "android-$_pkg_arch-qt5")
+optdepends=("$_pkgname-doc: API documentation")
+makedepends=('cmake' 'android-ndk' 'android-sdk')
+conflicts=("android-$_pkgname-$_android_arch")
+replaces=("android-$_pkgname-$_android_arch")
+url="https://github.com/Martchus/${_reponame}"
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('636d3bc9f378e413d14d349b03849ad3da70290f6a25b36bdc80e4fda35776b0')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+}
+
+build() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake \
+    -DCMAKE_SYSTEM_NAME=Android \
+    -DCMAKE_SYSTEM_VERSION=$_android_platform \
+    -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
+    -DCMAKE_ANDROID_NDK=/opt/android-ndk \
+    -DCMAKE_ANDROID_SDK=/opt/android-sdk \
+    -DCMAKE_ANDROID_STL_TYPE=c++_shared \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$_prefix" \
+    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;$_prefix" \
+    -DNO_DOXYGEN=ON \
+    -DWIDGETS_GUI=OFF \
+    -DQUICK_GUI=ON \
+    .
+  make VERBOSE=1
+}
+
+package() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  make DESTDIR="${pkgdir}" install
+}

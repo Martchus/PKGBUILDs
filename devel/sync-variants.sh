@@ -19,6 +19,7 @@ variables_to_preserve=(
     _android_platform
     _android_platform_arch
     _android_api_level
+    _android_toolchain
     _boost_arch
     _boost_address_model
 )

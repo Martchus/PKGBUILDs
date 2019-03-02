@@ -39,7 +39,7 @@ build() {
   local target_flags=" \
     --target=$_android_toolchain \
     --gcc-toolchain=$_android_gcc_toolchain_path \
-    --sysroot=$_android_ndk_path/platforms/$_android_platform_dir/usr"
+    --sysroot=$_android_sysroot/usr"
   local common_flags=" \
     $target_flags \
     -isystem $_android_ndk_path/sources/android/support/include \

@@ -6,7 +6,7 @@
 _pkgname=boost
 _pkg_arch=armv7a-eabi
 _android_arch=armeabi-v7a
-_android_toolchain=$_pkg_arch-linux-android
+_android_toolchain=arm-linux-androideabi
 _android_platform=21 # https://developer.android.com/about/dashboards/
 _android_prefix=/opt/android-libs/$_pkg_arch
 _android_ndk_path=/opt/android-ndk

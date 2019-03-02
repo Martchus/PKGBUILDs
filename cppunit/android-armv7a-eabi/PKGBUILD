@@ -8,7 +8,7 @@
 _pkgname=cppunit
 _pkg_arch=armv7a-eabi
 _android_arch=armeabi-v7a
-_android_toolchain=$_pkg_arch-linux-android
+_android_toolchain=arm-linux-androideabi
 _android_ndk_path=/opt/android-ndk
 _android_api_level=28
 _android_platform_arch=arch-arm
@@ -39,7 +39,7 @@ build() {
   local target_flags=" \
     --target=$_android_toolchain \
     --gcc-toolchain=$_android_gcc_toolchain_path \
-    --sysroot=$_android_ndk_path/platforms/$_android_platform_dir/usr"
+    --sysroot=$_android_sysroot/usr"
   local common_flags=" \
     $target_flags \
     -isystem $_android_ndk_path/sources/android/support/include \

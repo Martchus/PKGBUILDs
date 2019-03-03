@@ -7,7 +7,6 @@ _reponame=qtutilities
 _pkgname=qtutilities
 _android_arch=armeabi-v7a
 _pkg_arch=armv7a-eabi
-_android_toolchain=$_pkg_arch-linux-android
 _android_platform=21
 _prefix=/opt/android-libs/$_pkg_arch
 

@@ -12,7 +12,7 @@ _js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
 _reponame=syncthingtray
 pkgname=mingw-w64-syncthingtray-static
 _name=${_reponame}
-pkgver=0.8.4
+pkgver=0.9.0
 pkgrel=1
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
@@ -26,7 +26,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-base-static' 'ming
 conflicts=("${pkgname%-static}")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('084289f3a295ef41ae4ebbc3976ca5782b47949ab73a7e12e33c72d271e869ea')
+sha256sums=('48e6f18302e820ae599c3028db246cec553d1a3c33b20a021a471273c84b30e9')
 options=(!buildflags staticlibs !strip !emptydirs)
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
@@ -51,6 +51,10 @@ build() {
       -DSVG_SUPPORT:BOOL=ON \
       -DSVG_ICON_SUPPORT:BOOL=0N \
       ../
+
+    # workaround issue https://github.com/Martchus/PKGBUILDs/issues/86
+    find -iname 'linklibs.rsp' -exec sed -i -e 's|-Wl,-Bdynamic||' {} \; 
+
     make
     popd
   done

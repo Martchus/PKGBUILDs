@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Syncs the different variants of mingw-w64-qt5-base
 

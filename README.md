@@ -71,6 +71,8 @@ workflow is quite simple:
     * eg. `rebase-patches.sh 5.11.0 5.10.1 fixes` to create branch `5.11.0-mingw-w64` based on `5.10.1-mingw-w64-fixes`
     * after fixing possible conflicts, run `devel/qt5/continue-rebase-patches.sh`
     * otherwise, that's it
+    * all scripts need to run in the Git repository directory of the Qt module except `rebase-all-patches.sh` which needs
+      the environment variable `QT_GIT_REPOS_DIR` to be set
 2. Run `devel/qt5/update-patches.sh` or `devel/qt5/update-all-patches.sh` to update PKGBUILDs
 
 ## Supported build and deployment tools for mingw-w64-qt5 packages

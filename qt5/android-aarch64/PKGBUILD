@@ -20,7 +20,7 @@ export ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT:-/opt/android-ndk}
 export ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-/opt/android-sdk}
 
 pkgname=android-$_pkg_arch-qt5
-pkgver=5.12.1
+pkgver=5.12.2
 pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
@@ -35,8 +35,9 @@ makedepends=('libgl'
              'gperf'
              'libxslt'
              'fontconfig'
+	     'java-environment-openjdk<=8'
              "android-$_pkg_arch-openssl")
-depends=('jre-openjdk-headless'
+depends=('java-runtime-headless-openjdk<=8'
          'apache-ant'
          'android-ndk'
          "android-platform-$ANDROID_MINIMUM_PLATFORM"
@@ -78,10 +79,10 @@ source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkg
         '0001-Fix-clang-libc-build-under-Android.patch'
         '0002-Fix-androiddeployqt-search-paths.patch'
         '0001-Disable-mapboxgl.patch')
-sha256sums=('caffbd625c7bc10ff8c5c7a27dbc7d84fa4de146975c0e1ffe904b514ccd6da4'
-            '361656ebccb24948eb1c7464b2d8c74ccf147e519b4f8bead05ddf13dd8fce24'
-            'f1ae0ba6431c32403d8628e8757541c39e950307578f174c300f79c7e3be39be'
-            '7c26e6617b0721ea2cefb0dc69b1b182b7237b58e43c15b5d9686b047c3ad7f8')
+sha256sums=('59b8cb4e728450b21224dcaaa40eb25bafc5196b6988f2225c394c6b7f881ff5'
+            '0a7e5d8d2192b69af5b648db57de2feb2e70348c73e0e7d9570d8dc170437aad'
+            'a958611bef4385b4e2d91ece10ab5cd48f621628c07612a18e36abae3cfbf440'
+            'add336aab427a319203205355029229592713cebcda2e8bc4ce99efdb0322b76')
 
 _pref=/opt/android-libs/$_pkg_arch
 

@@ -30,7 +30,7 @@ if [[ $branch_count -lt 1 ]]; then
     msg2 "Branch for old version $oldversionbranch doesn't exist. Likely we just don't need any patches for this repo :-)"
     exit 0
 fi
-if [[ $branch_count -gt 1 ]]; then
+if [[ -z $3 ]] && [[ $branch_count -gt 1 ]]; then
     msg 'Which of the following branches was the latest for the old version?'
     git branch | grep "$oldversionbranch"
     msg2 'Please disambiguate by specifying the corresponding suffix as 3rd argument.'

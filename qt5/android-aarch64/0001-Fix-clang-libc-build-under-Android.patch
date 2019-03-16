@@ -1,4 +1,4 @@
-From d61ebca16545ec3eadabedd1a5b60bb8b4e45836 Mon Sep 17 00:00:00 2001
+From a2e98de3e73003272729e4393e32ac49fa991f5a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Dec 2018 14:28:07 +0100
 Subject: [PATCH 1/2] Fix clang/libc++ build under Android
@@ -8,13 +8,13 @@ Subject: [PATCH 1/2] Fix clang/libc++ build under Android
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/mkspecs/android-clang/qmake.conf b/mkspecs/android-clang/qmake.conf
-index a0a369bb44..0efd86e43a 100644
+index a077c70cba..5cc6ee79e2 100644
 --- a/mkspecs/android-clang/qmake.conf
 +++ b/mkspecs/android-clang/qmake.conf
-@@ -31,11 +31,12 @@ else: equals(ANDROID_TARGET_ARCH, mips64): \
+@@ -34,11 +34,12 @@ QMAKE_CFLAGS += -gcc-toolchain $$NDK_TOOLCHAIN_PATH -fno-limit-debug-info
+ QMAKE_LINK    = $$QMAKE_CXX $$QMAKE_CFLAGS -Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libatomic.a
+ equals(ANDROID_TARGET_ARCH, armeabi-v7a): QMAKE_LINK += -Wl,--exclude-libs,libunwind.a
  
- QMAKE_CFLAGS += -gcc-toolchain $$NDK_TOOLCHAIN_PATH
- QMAKE_LINK    = $$QMAKE_CXX $$QMAKE_CFLAGS -Wl,--exclude-libs,libgcc.a
 -QMAKE_CFLAGS += -DANDROID_HAS_WSTRING --sysroot=$$NDK_ROOT/sysroot \
 +QMAKE_CFLAGS += -DANDROID_HAS_WSTRING --sysroot=$$ANDROID_PLATFORM_ROOT_PATH \
                  -isystem $$NDK_ROOT/sysroot/usr/include/$$NDK_TOOLS_PREFIX \
@@ -26,7 +26,7 @@ index a0a369bb44..0efd86e43a 100644
  
  ANDROID_SOURCES_CXX_STL_LIBDIR = $$NDK_ROOT/sources/cxx-stl/llvm-libc++/libs/$$ANDROID_TARGET_ARCH
  
-@@ -45,6 +46,8 @@ ANDROID_USE_LLVM = true
+@@ -48,6 +49,8 @@ ANDROID_USE_LLVM = true
  
  exists($$ANDROID_SOURCES_CXX_STL_LIBDIR/libc++.so): \
      ANDROID_CXX_STL_LIBS = -lc++
@@ -36,5 +36,5 @@ index a0a369bb44..0efd86e43a 100644
      ANDROID_CXX_STL_LIBS = $$ANDROID_SOURCES_CXX_STL_LIBDIR/libc++.so.$$replace(ANDROID_PLATFORM, "android-", "")
  
 -- 
-2.20.1
+2.21.0
 

@@ -52,10 +52,10 @@ build() {
       -DSVG_ICON_SUPPORT:BOOL=0N \
       ../
 
-    # workaround issue https://github.com/Martchus/PKGBUILDs/issues/86
-    find -iname 'linklibs.rsp' -exec sed -i -e 's|-Wl,-Bdynamic||' {} \; 
+    # workaround issue https://gitlab.kitware.com/cmake/cmake/issues/19095
+    find -iname 'includes_CXX.rsp' -exec sed -i -e "s|-isystem /usr/$_arch/include ||" {} \;
 
-    make
+    make VERBOSE=1
     popd
   done
 }

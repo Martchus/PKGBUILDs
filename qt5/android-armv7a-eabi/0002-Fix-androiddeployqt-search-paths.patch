@@ -1,7 +1,7 @@
 From e209f40d45c9ca8dfc8f7704904c49dd9998de28 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Dec 2018 14:31:30 +0100
-Subject: [PATCH 2/2] Fix androiddeployqt search paths
+Subject: [PATCH 2/3] Fix androiddeployqt search paths
 
 ---
  src/tools/androiddeployqt/main.cpp | 4 ++--

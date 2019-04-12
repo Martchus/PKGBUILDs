@@ -14,7 +14,7 @@ license=('GPL')
 depends=('c++utilities-git' 'qt5-base' 'mesa')
 optdepends=("$_name-doc: API documentation")
 makedepends=('cmake' 'git' 'qt5-tools')
-provides=("${_name}")
+#provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_reponame}.git")
@@ -27,7 +27,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" .
+  cmake \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    .
   make
 }
 

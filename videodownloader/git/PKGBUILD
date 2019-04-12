@@ -20,13 +20,17 @@ source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git://github.com/Martchus}/${_
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/${pkgname}"
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" .
+  cmake \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    .
   make
 }
 

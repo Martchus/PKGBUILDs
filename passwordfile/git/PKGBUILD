@@ -15,7 +15,7 @@ depends=('c++utilities-git' 'openssl')
 optdepends=("$_name-doc: API documentation")
 makedepends=('cmake' 'git')
 checkdepends=('cppunit')
-provides=("${_name}")
+#provides=("${_name}")
 conflicts=("${_name}")
 install=
 url="https://github.com/Martchus/${_reponame}"
@@ -29,7 +29,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" .
+  cmake \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    .
   make
 }
 

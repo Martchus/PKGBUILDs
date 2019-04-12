@@ -28,7 +28,11 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" .
+  cmake \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    .
   make
 }
 

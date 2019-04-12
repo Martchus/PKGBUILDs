@@ -11,8 +11,8 @@ pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc='Repository browser for Arch Linux'
 license=('GPL')
-depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities')
-makedepends=('cmake' 'git' 'yuicompressor' 'qtutilities')
+depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities-git')
+makedepends=('cmake' 'git' 'yuicompressor' 'qtutilities-git')
 backup=("etc/${_reponame}.conf")
 provides=("${_name}")
 conflicts=("${_name}")
@@ -28,13 +28,17 @@ pkgver() {
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr" .
+  cmake \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    .
   make
 }
 
 package_repoindex() {
   pkgdesc="Repository browser for Arch Linux (provides server binary, git version)."
-  depends=('qt5-base' 'qt5-websockets' 'karchive' 'c++utilities')
+  depends=('qt5-base' 'qt5-websockets' 'karchive' 'c++utilities-git')
   optdepends=('repoindex-header: header files')
   optdepends=('repoindex-web: file for web UI')
   optdepends=('repoindex-gui: application showing the web UI')

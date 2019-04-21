@@ -6,7 +6,7 @@
 _reponame=cpp-utilities
 pkgname=apple-darwin-c++utilities
 _name=${pkgname#apple-darwin-}
-pkgver=4.17.0
+pkgver=4.17.1
 pkgrel=1
 arch=('any')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities (apple-darwin)'

@@ -10,8 +10,8 @@ _android_arch=armeabi-v7a
 _android_platform=21
 
 pkgname=android-$_pkg_arch-qt5
-pkgver=5.12.2
-pkgrel=2
+pkgver=5.12.3
+pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
 url='https://www.qt.io'
@@ -69,19 +69,19 @@ source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkg
         '0003-Support-pkg-config-under-Android.patch'
         '0001-Disable-mapboxgl.patch'
         'android-env.sh')
-sha256sums=('59b8cb4e728450b21224dcaaa40eb25bafc5196b6988f2225c394c6b7f881ff5'
-            'fixme'
-            'fixme'
-            'fixme'
-            'fixme'
-            'fixme')
+sha256sums=('6462ac74c00ff466487d8ef8d0922971aa5b1d5b33c0753308ec9d57711f5a42'
+            '028f7cac1ff187353f17c3686edd6c3af2f4c20a19db4cca61982482e63cb8bb'
+            '7d4620df70a1c843f547c7af1044f68a182bfcb08130eec8129dc1c71a0cd500'
+            '2e47a471c6fb5c3d43817435eba87d1cbf8643dfb7d34ed7dc0a9f2042d9d91b'
+            '155427860cf724ed4da72d7c3b9b8e32459b89aefc68cb9e68a9a25d7d02cc93'
+            'c4bffe85aa675c1c1a76dda36c154154eccfcee353db6cafe2318c3848e23fb1')
 
 prepare() {
-    cd ${_pkgfqn}
-
     export ANDROID_MINIMUM_PLATFORM=${_android_platform}
-    source android-env.sh ${_android_arch}
+    source android-env.sh ${_pkg_arch} ${_android_arch}
 
+    cd ${_pkgfqn}
+    	
     pushd qtbase
     patch -Np1 -i "../../0001-Fix-clang-libc-build-under-Android.patch"
     patch -Np1 -i "../../0002-Fix-androiddeployqt-search-paths.patch"
@@ -102,15 +102,15 @@ prepare() {
 }
 
 build() {
-    cd ${_pkgfqn}
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
+    source android-env.sh  ${_pkg_arch} ${_android_arch}
 
     unset CC CXX CFLAGS CXXFLAGS LDFLAGS CHOST QMAKESPEC QTDIR CARCH
 
     export PKG_CONFIG=$ANDROID_PKGCONFIG
     export PYTHON=/usr/bin/python2
 
-    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
-    source android-env.sh ${_android_arch}
+    cd ${_pkgfqn}
 
     configue_opts="
         -confirm-license
@@ -122,8 +122,8 @@ build() {
         -xplatform android-clang
         -nomake tests
         -nomake examples
-        -android-ndk ${ANDROID_NDK_ROOT}
-        -android-sdk ${ANDROID_SDK_ROOT}
+        -android-ndk ${ANDROID_NDK_HOME}
+        -android-sdk ${ANDROID_HOME}
         -android-ndk-host linux-x86_64
         -android-toolchain-version 4.9
         -skip qtserialport
@@ -134,7 +134,7 @@ build() {
         -openssl-runtime
         -android-arch ${_android_arch}
         -android-ndk-platform ${ANDROID_NDK_PLATFORM}
-        -I${ANDROID_LIBS}/$_pkg_arch/include"
+        -I${ANDROID_LIBS}/include"
 
     [[ $ANDROID_DEBUG_BUILD ]] \
         && configue_opts+=' -debug-and-release' \
@@ -157,34 +157,13 @@ build() {
 }
 
 package() {
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
+    source android-env.sh  ${_pkg_arch} ${_android_arch}
+
     cd ${_pkgfqn}
 
-    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
-    source android-env.sh ${_android_arch}
-
     make INSTALL_ROOT=${pkgdir} install
 
-    case "$_pkg_arch" in
-        aarch64)
-            toolchain=aarch64-linux-android-4.9
-            stripFolder=aarch64-linux-android
-            ;;
-        armv7a-eabi)
-            toolchain=arm-linux-androideabi-4.9
-            stripFolder=arm-linux-androideabi
-            ;;
-        x86)
-            toolchain=x86-4.9
-            stripFolder=i686-linux-android
-            ;;
-        x86-64)
-            toolchain=x86_64-4.9
-            stripFolder=x86_64-linux-android
-            ;;
-    esac
-
-    make INSTALL_ROOT=${pkgdir} install
-    STRIP=${ANDROID_NDK_ROOT}/toolchains/${toolchain}/prebuilt/linux-x86_64/${stripFolder}/bin/strip
     find ${pkgdir}/${ANDROID_LIBS}/bin -type f ! -name '*.pl' -exec strip {} \;
     find ${pkgdir}/${ANDROID_LIBS}/lib -type f -name 'lib*.so' -exec ${ANDROID_STRIP} {} \;
     find ${pkgdir}/${ANDROID_LIBS}/lib -type f \( -name 'lib*.a' ! -name 'libQt5Bootstrap.a' ! -name 'libQt5QmlDevTools.a' \) -exec ${ANDROID_STRIP} {} \;
@@ -192,7 +171,7 @@ package() {
     find ${pkgdir}/${ANDROID_LIBS}/qml -type f -name 'lib*.so' -exec ${ANDROID_STRIP} {} \;
 
     # fix plugin path in Android-specific dependency file
-    sed -i 's/\"plugins\//\"lib\/qt\/plugins\//g' ${pkgdir}/${_pref}/lib/*-android-dependencies.xml
+    sed -i 's/\"plugins\//\"lib\/qt\/plugins\//g' ${pkgdir}/${ANDROID_LIBS}/lib/*-android-dependencies.xml
 
     # drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/" -type f -name '*.prl' \

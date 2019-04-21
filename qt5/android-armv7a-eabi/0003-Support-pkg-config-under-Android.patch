@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 From fc643d716b33387759d9be0eeff250deb624d5e9 Mon Sep 17 00:00:00 2001
+=======
+From f6f962530496138ad1f21e5d851603882de7ad1d Mon Sep 17 00:00:00 2001
+>>>>>>> 21a7125... WIP: Android
 From: Martchus <martchus@gmx.net>
 Date: Sun, 7 Apr 2019 09:54:49 +0200
 Subject: [PATCH 3/3] Support pkg-config under Android

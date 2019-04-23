@@ -28,7 +28,7 @@ arch=('any')
 url='https://chromium.googlesource.com/angle/angle/+/master/README.md'
 license=('BSD')
 depends=('mingw-w64-crt')
-makedepends=('mingw-w64-gcc' 'git' 'gyp-git' 'depot-tools-git' 'python' 'python2')
+makedepends=('mingw-w64-gcc' 'git' 'gyp-git' 'depot-tools-git' 'google-cloud-sdk' 'python' 'python2')
 options=('!strip' '!buildflags' 'staticlibs')
 source=("angleproject::git+https://chromium.googlesource.com/angle/angle$_angle_commit"
         "additional-mingw-header::git+https://github.com/Martchus/additional-mingw-header.git$_header_commit"

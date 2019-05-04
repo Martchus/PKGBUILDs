@@ -13,11 +13,11 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     [ ${variant##*-} == 'git' ] && continue
 
     # skip some of the qt5 packages
-    [[    $project_name == 'qt5-quick1'        \ # removed from official releases
-       || $project_name == 'qt5-webkit'        \ # even revived version is dead
-       || $project_name == 'qt5-webview'       \ # does not build for Windows, would require qt5-webengine
-       || $project_name == 'qt5-canvas3d'      \ # removed from official releases
-       || $variant      == 'mingw-w64-test'    \ # just our own 'test' package (not used anymore)
+    [[    $project_name == 'qt5-quick1'         # removed from official releases
+       || $project_name == 'qt5-webkit'         # even revived version is dead
+       || $project_name == 'qt5-webview'        # does not build for Windows, would require qt5-webengine
+       || $project_name == 'qt5-canvas3d'       # removed from official releases
+       || $variant      == 'mingw-w64-test'     # just our own 'test' package (not used anymore)
     ]] && continue
 
     # treat all qt5-* packages as qt5

@@ -11,7 +11,7 @@ _android_platform=21
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=8.3.0
+pkgver=9.0.0
 pkgrel=1
 arch=('any')
 pkgdesc="C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska tags (Android, $_pkg_arch)"
@@ -52,10 +52,7 @@ build() {
     -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$_prefix" \
     -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,$_prefix/lib" \
     -DNO_DOXYGEN=ON \
-    -Dcppunit_DYNAMIC_INCLUDE_DIR="$include_dir" \
-    -Dcppunit_STATIC_INCLUDE_DIR="$include_dir" \
-    -Dcppunit_DYNAMIC_LIB="$_prefix/lib/libcppunit-1.14.so" \
-    -Dcppunit_STATIC_LIB="$_prefix/lib/libcppunit.a" \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
     .
   make VERBOSE=1
 }

@@ -6,12 +6,14 @@
 _reponame=cpp-utilities
 _pkgname=c++utilities
 _android_arch=armeabi-v7a
+_android_cflags=
+_android_ldflags=-latomic
 _pkg_arch=armv7a-eabi
 _android_platform=21
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=4.17.1
+pkgver=5.0.0
 pkgrel=1
 arch=('any')
 pkgdesc="Common C++ classes and routines such as argument parser, IO and conversion utilities (Android, $_pkg_arch)"
@@ -26,7 +28,7 @@ conflicts=("android-$_pkgname-$_android_arch")
 replaces=("android-$_pkgname-$_android_arch")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('c5cbca152eb43e3b2e16309d934fc5832a5c52d83dfca2d231d26384d8fe3805')
+sha256sums=('92d288b606b4f32d69686cbf5a264f90e5e00d80894583a9df2284d593cdc2b4')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 prepare() {
@@ -41,25 +43,21 @@ build() {
   local include_dir=$_prefix/include
 
   cmake \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
     -DCMAKE_ANDROID_SDK="$android_sdk_path" \
     -DCMAKE_ANDROID_NDK="$android_ndk_path" \
     -DCMAKE_ANDROID_STL_TYPE=c++_shared \
-    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=$_prefix \
     -DCMAKE_FIND_ROOT_PATH="$android_ndk_path/sysroot;$_prefix" \
-    -DUSE_NATIVE_FILE_BUFFER=ON \
-    -DNO_DOXYGEN=ON \
-    -Diconv_DYNAMIC_INCLUDE_DIR="$include_dir" \
-    -Diconv_STATIC_INCLUDE_DIR="$include_dir" \
-    -Dboost_iostreams_DYNAMIC_INCLUDE_DIR="$include_dir" \
-    -Dboost_iostreams_STATIC_INCLUDE_DIR="$include_dir" \
-    -Dcppunit_DYNAMIC_INCLUDE_DIR="$include_dir" \
-    -Dcppunit_STATIC_INCLUDE_DIR="$include_dir" \
-    -Dcppunit_DYNAMIC_LIB="$_prefix/lib/libcppunit-1.14.so" \
-    -Dcppunit_STATIC_LIB="$_prefix/lib/libcppunit.a" \
+    -DCMAKE_CXX_FLAGS:STRING="$_android_cflags" \
+    -DUSER_DEFINED_ADDITIONAL_LIBRARIES:STRING="$_android_ldflags" \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DUSE_NATIVE_FILE_BUFFER:BOOL=ON \
+    -DUSE_STANDARD_FILESYSTEM:BOOL=OFF \
+    -DNO_DOXYGEN:BOOL=ON \
     .
   make VERBOSE=1
 }

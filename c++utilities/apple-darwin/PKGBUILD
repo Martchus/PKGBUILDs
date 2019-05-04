@@ -6,7 +6,7 @@
 _reponame=cpp-utilities
 pkgname=apple-darwin-c++utilities
 _name=${pkgname#apple-darwin-}
-pkgver=4.17.1
+pkgver=5.0.0
 pkgrel=1
 arch=('any')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities (apple-darwin)'
@@ -18,34 +18,64 @@ url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('92d288b606b4f32d69686cbf5a264f90e5e00d80894583a9df2284d593cdc2b4')
 options=(!buildflags staticlibs !strip !emptydirs)
-_architectures='i386-apple-darwin15 x86_64-apple-darwin15'
-# NOTE: can not build for x86_64h-apple-darwin15 because libstdc++ is (currently) only availabe for x86_64
-[[ $NO_STATIC_LIBS ]] || _configurations='-DENABLE_STATIC_LIBS:BOOL=ON'
-[[ $NO_SHARED_LIBS ]] && _configurations+=' -DDISABLE_SHARED_LIBS:BOOL=ON'
+
+_architectures=('x86_64-apple-darwin17')
+[[ $APPLE_32_BIT ]] && _architectures+=('i386-apple-darwin17')
+[[ $APPLE_HASWELL ]] && _architectures+=('x86_64h-apple-darwin17')
+_configurations=()
+[[ $NO_SHARED_LIBS ]] || _configurations+=('shared')
+[[ $NO_STATIC_LIBS ]] || _configurations+=('static')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  for _arch in ${_architectures}; do
-    mkdir -p "build-${_arch}" && pushd "build-${_arch}"
-    /opt/osxcross/bin/${_arch}-cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_FLAGS='-std=c++14 -foc-use-gcc-libstdc++ -fvisibility=hidden' \
+
+  declare -A _config_flags=(
+    [shared]='
+        -DBUILD_SHARED_LIBS:BOOL=ON
+    '
+    [static]='
+        -DBUILD_SHARED_LIBS:BOOL=OFF
+        -DCMAKE_FIND_LIBRARY_SUFFIXES:STRING=.a
+        -DSTATIC_LINKAGE:BOOL=ON
+        -DSTATIC_LIBRARY_LINKAGE:BOOL=ON
+    '
+  )
+
+  export PATH="/opt/osxcross/bin:$PATH"
+  export LD_LIBRARY_PATH="/opt/osxcross/lib"
+
+  for _arch in "${_architectures[@]}"; do
+    for _cfg in "${_configurations[@]}"; do
+      msg2 "${_arch}-${_cfg}"
+      mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
+      ${_arch}-cmake \
+        -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX:PATH="/opt/osxcross/${_arch}" \
-        -Diconv_DYNAMIC_LIB:FILEPATH='/opt/osxcross/SDK/MacOSX10.11.sdk/usr/lib/libiconv.2.tbd' \
-        -Diconv_DYNAMIC_INCLUDE_DIR='/opt/osxcross/SDK/MacOSX10.11.sdk/usr/include' \
-        -DENABLE_THREAD_LOCAL=OFF \
-        ${_configurations} \
+        -DCONFIGURATION_NAME:STRING="${_cfg}" \
+        -DCONFIGURATION_PACKAGE_SUFFIX:STRING="-${_cfg}" \
+        -DUSE_STANDARD_FILESYSTEM:BOOL=OFF \
+        -DENABLE_THREAD_LOCAL:BOOL=OFF \
+        ${_config_flags[$_cfg]} \
         ../
-    make
-    popd
+      make
+      popd
+    done
   done
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  for _arch in ${_architectures}; do
-    mkdir -p "build-${_arch}" && pushd "build-${_arch}"
-    make DESTDIR="${pkgdir}" install
-    make DESTDIR="${pkgdir}" install-binary-strip
-    popd
+
+  export PATH="/opt/osxcross/bin:$PATH"
+  export LD_LIBRARY_PATH="/opt/osxcross/lib"
+
+  for _arch in "${_architectures[@]}"; do
+    for _cfg in "${_configurations[@]}"; do
+      msg2 "${_arch}-${_cfg}"
+      pushd "build-${_arch}-${_cfg}"
+      make DESTDIR="${pkgdir}" install
+      make DESTDIR="${pkgdir}" install-binary-strip
+      popd
+    done
   done
 }

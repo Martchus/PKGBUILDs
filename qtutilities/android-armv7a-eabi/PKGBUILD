@@ -11,7 +11,7 @@ _android_platform=21
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=5.13.0
+pkgver=6.0.0
 pkgrel=1
 arch=('any')
 pkgdesc="Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (Android, $_pkg_arch)"
@@ -42,6 +42,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="$_prefix" \
     -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;$_prefix" \
+    -DBUILD_SHARED_LIBS:BOOL=ON \
     -DNO_DOXYGEN=ON \
     -DWIDGETS_GUI=OFF \
     -DQUICK_GUI=ON \

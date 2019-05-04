@@ -16,6 +16,8 @@ variables_to_preserve=(
     pkgname
     _pkg_arch
     _android_arch
+    _android_cflags
+    _android_ldflags
     _android_platform
     _android_platform_arch
     _android_api_level

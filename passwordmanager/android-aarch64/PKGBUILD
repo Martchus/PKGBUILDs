@@ -12,7 +12,7 @@ _android_platform=22
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=4.0.2
+pkgver=4.1.0
 pkgrel=1
 arch=('any')
 pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (Android, $_pkg_arch)"

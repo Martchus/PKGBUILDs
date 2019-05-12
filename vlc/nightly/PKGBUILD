@@ -1,13 +1,14 @@
 # $Id$
-# Maintainer: Sebastian Weiland <sebastianweiland97@gmail.com>
+# Maintainer: Solomon Choina <shlomochoina@gmail.com>
+# Contributor: Sebastian Weiland <sebastianweiland97@gmail.com>
 # Contributor: Martchus <martchus@gmx.net>
 # Original package: Xavion <Xavion (dot) 0 (at) Gmail (dot) com>
 
 _appname_=vlc
 pkgname=${_appname_}-nightly
-pkgver=4.0.0v20190327
+pkgver=4.0.0v20190512
 _pkgver=4.0.0
-_snapshot_=20190327
+_snapshot_=20190512
 _snapver_=0230
 _suffix_=dev
 _nightly_=${_snapshot_}-${_snapver_}
@@ -20,8 +21,11 @@ depends=('a52dec' 'libdvbpsi' 'libxpm' 'libdca' 'libproxy' 'lua' 'libidn'
          'libmatroska' 'taglib' 'libmpcdec' 'ffmpeg' 'faad2' 'libupnp' 'libmad'
          'libmpeg2' 'xcb-util-keysyms' 'libtar' 'libxinerama' 'libsecret'
          'libarchive' 'qt5-base' 'qt5-x11extras' 'qt5-svg' 'freetype2'
-         'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls' 'libplacebo'
-         'wayland-protocols' 'aribb24')
+         'fribidi' 'harfbuzz' 'fontconfig' 'libxml2' 'gnutls'
+         'wayland-protocols' 'aribb24'
+
+         'qt5-quickcontrols2' 'libgcrypt' 'libplacebo-git')
+# note: removing libplacebo (using libplacebo-git instead)
 makedepends=('gst-plugins-base-libs' 'live-media' 'libnotify' 'libbluray'
              'flac' 'libdc1394' 'libavc1394' 'libcaca' 'gtk3'
              'librsvg' 'libgme' 'xosd' 'twolame' 'aalib' 'avahi' 'libsystemd'
@@ -110,6 +114,9 @@ options=('!emptydirs')
 source=("http://nightlies.videolan.org/build/source/vlc-${_pkgver}-${_nightly_}-${_suffix_}.tar.xz"
         'update-vlc-plugin-cache.hook'
         '0001-lua-Fix-build-using-lua-5.3.patch'
+        '1-3-placebo-update-for-new-tone-mapping-desaturation-algo.patch'
+        '2-3-placebo-update-for-new-peak-detection-algo.patch'
+        '3-3-opengl-update-libplacebo-call-for-changed-API.patch'
         'find-deps.py')
 
 pkgver() {
@@ -122,13 +129,16 @@ prepare() {
   ./bootstrap
 
   patch -Np1 -i "${srcdir}/0001-lua-Fix-build-using-lua-5.3.patch"
+  patch -Np1 -i "${srcdir}/3-3-opengl-update-libplacebo-call-for-changed-API.patch"
+  patch -Np1 -i "${srcdir}/1-3-placebo-update-for-new-tone-mapping-desaturation-algo.patch"
+  patch -Np1 -i "${srcdir}/2-3-placebo-update-for-new-peak-detection-algo.patch"
   sed -i -e 's:truetype/ttf-dejavu:TTF:g' modules/visualization/projectm.cpp
   sed -i -e 's:truetype/freefont:TTF:g' modules/text_renderer/freetype/freetype.c
   sed 's|whoami|echo builduser|g' -i configure
   sed 's|hostname -f|echo arch|g' -i configure
 
-  # libplacebo 0.6 API
-  sed 's|pl_shader_alloc(tc->pl_ctx, NULL, 0, 0);|pl_shader_alloc(tc->pl_ctx, NULL, 0);|' -i modules/video_output/opengl/vout_helper.c
+  # fix for libplacebo 12 API
+  #sed 's|pl_shader_alloc(tc->pl_ctx, NULL, 0, 0);|pl_shader_alloc(tc->pl_ctx, NULL);|' -i modules/video_output/opengl/vout_helper.c
 }
 
 build() {
@@ -234,12 +244,15 @@ build() {
               --enable-aribsub \
               \
               --libexecdir=/usr/lib \
-	      --disable-daala \
-	      --disable-fdkaac \
-	      --disable-decklink
+              --disable-daala \
+              --disable-decklink \
+              --disable-skins2 \
+              --enable-libgcrypt
   # note: removing --enable-daala for now because it is currently broken
-  #       removing --enable-fdkaac for now because it is currently broken
+  #       removing --enable-fdkaac because it prevents distributing the binary and I don't need it
   #       adding --disable-decklink because it is broken
+  #       adding --disable-skins2 because skins are currently broken thanks to changes in upstream concerning how playlist and player works
+  #       adding --enable-libgcrypt because it is now not only used for the automatic update anymore
   make V=1
 }
 
@@ -263,7 +276,10 @@ package() {
   #  depends=("${_detected_depends[@]}" "${_undetected_depends[@]}")
 }
 
-sha256sums=('08a8962362d619c507f94b08a7e347e29a7c117b835c129c65f6239cf9b5c1de'
+sha256sums=('a0eb6bc0309e25b427cd93ec4f9fe7d9306b43de60b68483be218d5f81861885'
             'c6f60c50375ae688755557dbfc5bd4a90a8998f8cf4d356c10d872a1a0b44f3a'
             '3e6bddbaed443e40036c494a0754aedd2f94fe41bfa3754855e16f7452a03cdf'
+            '52d2818dde06fe5fd873b4a89f31884650c480528f7b61c0cbc05576fdbb3e53'
+            'af46e70a85a82f2428b1c6ab09d27ee8c18a4b8adc1a4d71bde66e89be877f04'
+            'cd7d11aa6aff73745170451ef769ccd62cdb8f3eaf803de7c7ab6bd388ab1d7b'
             '90b0e34d5772d2307ba07a1c2aa715db7488389003cfe6d3570b2a9c63061db7')

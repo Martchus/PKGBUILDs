@@ -20,14 +20,18 @@ in this repository and a lot of packages found in the AUR:
 [ownstuff-testing]
 SigLevel = Optional TrustAll
 Server = https://martchus.no-ip.biz/repo/arch/$repo/os/$arch
+Server = https://ftp.f3l.de/~martchus/$repo/os/$arch
 
 [ownstuff]
 SigLevel = Optional TrustAll
 Server = https://martchus.no-ip.biz/repo/arch/$repo/os/$arch
+Server = https://ftp.f3l.de/~martchus/$repo/os/$arch
 ```
 
 The testing repository is required if you have also enabled the official testing repository. (Packages contained by ownstuff-testing
 are linked against packages found in the official testing repository.)
+
+The repository is focusing on x86_64 but some packages are also provided for i686 and aarch64.
 
 Note that I can not assure that required rebuilds always happen fast enough (since the offical developers obviously don't wait for
 me before releasing their packages from staging).

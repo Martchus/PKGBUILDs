@@ -1,0 +1,78 @@
+From 5eb8a0d8bdeb9d9a332d730a19be663c00f4994b Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Wed, 25 Jan 2017 21:08:20 +0100
+Subject: [PATCH 26/33] Enable and fix use of iconv
+
+Change-Id: I5f0ab27afca0800dec11c7af74d196190820ae5c
+---
+ src/corelib/codecs/qiconvcodec.cpp | 7 +++----
+ src/corelib/configure.json         | 6 +++---
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/src/corelib/codecs/qiconvcodec.cpp b/src/corelib/codecs/qiconvcodec.cpp
+index 9c39727946..cc14036b25 100644
+--- a/src/corelib/codecs/qiconvcodec.cpp
++++ b/src/corelib/codecs/qiconvcodec.cpp
+@@ -47,7 +47,6 @@
+ #include <errno.h>
+ #include <locale.h>
+ #include <stdio.h>
+-#include <dlfcn.h>
+ 
+ // unistd.h is needed for the _XOPEN_UNIX macro
+ #include <unistd.h>
+@@ -180,7 +179,7 @@ QString QIconvCodec::convertToUnicode(const char* chars, int len, ConverterState
+     IconvState *state = *pstate;
+     size_t inBytesLeft = len;
+     // best case assumption, each byte is converted into one UTF-16 character, plus 2 bytes for the BOM
+-#if !QT_CONFIG(posix_libiconv)
++#if !QT_CONFIG(posix_libiconv) && !defined(Q_OS_WIN)
+     // GNU doesn't disagree with POSIX :/
+     const char *inBytes = chars;
+ #else
+@@ -279,7 +278,7 @@ static bool setByteOrder(iconv_t cd)
+     size_t outBytesLeft = sizeof buf;
+     size_t inBytesLeft = sizeof bom;
+ 
+-#if !QT_CONFIG(posix_libiconv)
++#if !QT_CONFIG(posix_libiconv) && !defined(Q_OS_WIN)
+     const char **inBytesPtr = const_cast<const char **>(&inBytes);
+ #else
+     char **inBytesPtr = &inBytes;
+@@ -301,7 +300,7 @@ QByteArray QIconvCodec::convertFromUnicode(const QChar *uc, int len, ConverterSt
+     char *outBytes;
+     size_t inBytesLeft;
+ 
+-#if !QT_CONFIG(posix_libiconv)
++#if !QT_CONFIG(posix_libiconv) && !defined(Q_OS_WIN)
+     const char **inBytesPtr = const_cast<const char **>(&inBytes);
+ #else
+     char **inBytesPtr = &inBytes;
+diff --git a/src/corelib/configure.json b/src/corelib/configure.json
+index b7eefb58c8..fef7ac57de 100644
+--- a/src/corelib/configure.json
++++ b/src/corelib/configure.json
+@@ -72,7 +72,7 @@
+             "test": {
+                 "main": [
+                     "iconv_t x = iconv_open(\"\", \"\");",
+-                    "const char *inp;",
++                    "char *inp;",
+                     "char *outp;",
+                     "size_t inbytes, outbytes;",
+                     "iconv(x, &inp, &inbytes, &outp, &outbytes);",
+@@ -632,9 +632,9 @@
+         },
+         "gnu-libiconv": {
+             "label": "GNU iconv",
+-            "enable": "input.iconv == 'gnu'",
++            "enable": "'enabling via -gnu-iconv fails' == 'enabling via -gnu-iconv fails'",
+             "disable": "input.iconv == 'posix' || input.iconv == 'sun' || input.iconv == 'no'",
+-            "condition": "!config.win32 && !config.qnx && !config.android && !config.darwin && !features.posix-libiconv && !features.sun-libiconv && libs.gnu_iconv",
++            "condition": "!config.qnx && !config.android && !config.darwin && !features.posix-libiconv && !features.sun-libiconv && libs.gnu_iconv",
+             "output": [ "privateFeature" ]
+         },
+         "icu": {
+-- 
+2.22.0
+

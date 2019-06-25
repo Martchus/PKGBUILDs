@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-From fc643d716b33387759d9be0eeff250deb624d5e9 Mon Sep 17 00:00:00 2001
-=======
-From f6f962530496138ad1f21e5d851603882de7ad1d Mon Sep 17 00:00:00 2001
->>>>>>> 21a7125... WIP: Android
+From 0b61b7828c156b0621342f0f4dd855b561b9f6f0 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 7 Apr 2019 09:54:49 +0200
-Subject: [PATCH 3/3] Support pkg-config under Android
+Subject: [PATCH 3/4] Support pkg-config under Android
 
 from https://aur.archlinux.org/cgit/aur.git/commit/?h=android-aarch64-qt5&id=d901da324b2ceea2ac99b48137cb82b2bd920c77
 ---
@@ -13,10 +9,10 @@ from https://aur.archlinux.org/cgit/aur.git/commit/?h=android-aarch64-qt5&id=d90
  1 file changed, 3 insertions(+)
 
 diff --git a/mkspecs/android-clang/qmake.conf b/mkspecs/android-clang/qmake.conf
-index 5cc6ee79e2..c731b4ef23 100644
+index 4ccde62cf0..d448291fe8 100644
 --- a/mkspecs/android-clang/qmake.conf
 +++ b/mkspecs/android-clang/qmake.conf
-@@ -57,3 +57,6 @@ else: \
+@@ -53,3 +53,6 @@ else: \
  QMAKE_CFLAGS_OPTIMIZE_SIZE = -Oz
  
  include(../common/android-base-tail.conf)
@@ -24,5 +20,5 @@ index 5cc6ee79e2..c731b4ef23 100644
 +QMAKE_PKG_CONFIG = $$[QT_INSTALL_PREFIX]
 +QMAKE_PKG_CONFIG = android-$$section(QMAKE_PKG_CONFIG, /, 3, 3)-pkg-config
 -- 
-2.21.0
+2.22.0
 

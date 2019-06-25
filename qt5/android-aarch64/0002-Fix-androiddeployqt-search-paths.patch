@@ -1,14 +1,14 @@
-From 2652e041beda3ded84f9c13424718587828389d7 Mon Sep 17 00:00:00 2001
+From 0c8762606483fc8ad571ebdd38e8b6c8f39ee0b4 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Dec 2018 14:31:30 +0100
-Subject: [PATCH 2/3] Fix androiddeployqt search paths
+Subject: [PATCH 2/4] Fix androiddeployqt search paths
 
 ---
  src/tools/androiddeployqt/main.cpp | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/tools/androiddeployqt/main.cpp b/src/tools/androiddeployqt/main.cpp
-index 20b1befc38..71ff5515bb 100644
+index 01c392f8f9..9600d657cb 100644
 --- a/src/tools/androiddeployqt/main.cpp
 +++ b/src/tools/androiddeployqt/main.cpp
 @@ -1721,7 +1721,7 @@ bool scanImports(Options *options, QSet<QString> *usedDependencies)
@@ -20,7 +20,7 @@ index 20b1befc38..71ff5515bb 100644
      importPaths += shellQuote(rootPath);
      for (const QString &qmlImportPath : qAsConst(options->qmlImportPaths))
          importPaths += shellQuote(qmlImportPath);
-@@ -1852,7 +1852,7 @@ bool readDependencies(Options *options)
+@@ -1857,7 +1857,7 @@ bool readDependencies(Options *options)
          return false;
  
      // Jam in the dependencies of the platform plugin, since the application will crash without it
@@ -30,5 +30,5 @@ index 20b1befc38..71ff5515bb 100644
  
      while (!remainingDependencies.isEmpty()) {
 -- 
-2.21.0
+2.22.0
 

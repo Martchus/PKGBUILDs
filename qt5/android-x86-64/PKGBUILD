@@ -1,0 +1,182 @@
+# PKGCONFIG for android-qt5
+# Maintainer in the AUR: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
+# Contributor: Jiaxi Hu <sftrytry _AT_ gmail _DOT_ com>
+# Contributor: jimmy00784 <jimmy00784@gmail.com>
+# Contributor: Ricardo (XenGi) Band <email@ricardo.band>
+# Contributor: Martchus <martchus@gmx.net>
+
+_pkg_arch=x86-64
+_android_arch=x86_64
+_android_platform=22
+
+pkgname=android-$_pkg_arch-qt5
+pkgver=5.13.0
+pkgrel=2
+pkgdesc="Qt 5 for Android"
+arch=('x86_64')
+url='https://www.qt.io'
+license=('GPL3' 'LGPL')
+makedepends=('libgl'
+             'sqlite'
+             'zlib'
+             'python2'
+             'python' # Qt Qml requires Python 3
+             'ruby'
+             'gperf'
+             'libxslt'
+             'fontconfig'
+             'java-environment-openjdk<=8'
+             'android-pkg-config'
+             "android-$_pkg_arch-openssl")
+depends=('java-runtime-headless-openjdk<=8'
+         'apache-ant'
+         'android-ndk'
+         "android-platform-$_android_platform"
+         'android-sdk'
+         'android-sdk-build-tools'
+         'android-sdk-platform-tools')
+groups=('android-qt5')
+conflicts=("android-qt5-${_android_arch}")
+replaces=("android-qt5-${_android_arch}")
+
+case "$_pkg_arch" in
+    aarch64)
+        optdepends=('android-google-apis-aarch64: AVD support'
+                    'android-aarch64-system-image: AVD support')
+        ;;
+    armv7a-eabi)
+        optdepends=('android-google-apis-armv7a-eabi: AVD support'
+                    'android-armv7a-eabi-system-image: AVD support')
+        ;;
+    x86)
+        optdepends=('android-google-apis-x86: AVD support'
+                    'android-x86-system-image: AVD support')
+        ;;
+    x86-64)
+        optdepends=('android-google-apis-x86-64: AVD support'
+                    'android-x86-64-system-image: AVD support')
+        ;;
+    *)
+        ;;
+esac
+optdepends+=("android-$_pkg_arch-openssl: SSL support for Qt Network")
+
+options=(!strip !buildflags staticlibs !emptydirs)
+_pkgfqn="qt-everywhere-src-${pkgver}"
+source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkgver}/single/${_pkgfqn}.tar.xz"
+        '0001-Fix-clang-libc-build-under-Android.patch'
+        '0002-Fix-androiddeployqt-search-paths.patch'
+        '0003-Support-pkg-config-under-Android.patch'
+        '0004-Android-Fix-build-with-NDKr20.patch'
+        '0001-Disable-mapboxgl.patch'
+        'android-env.sh')
+sha256sums=('2cba31e410e169bd5cdae159f839640e672532a4687ea0f265f686421e0e86d6'
+            'f38adf77126c692bf61bb90f31742539b942edc45975a375b87ff3a86a058adf'
+            '3f018a24adfc6567fff35605731f7c34fde456db071221941d1a3c6330601741'
+            'a79934eb95c131eba9b776c387339c8bf1b20ad3ac0eea629b3ee3470679ee61'
+            'c1c732f65fcb97c57969f76e1257caa6f6c2872b65b438447a92cc7a43b4182f'
+            'b4755f99e6f9ab1df2650e13fa395b9706ee248d21309fed4270e69d201521c1'
+            'c4bffe85aa675c1c1a76dda36c154154eccfcee353db6cafe2318c3848e23fb1')
+
+prepare() {
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
+    source android-env.sh ${_pkg_arch} ${_android_arch}
+
+    cd ${_pkgfqn}
+    	
+    pushd qtbase
+    patch -Np1 -i "../../0001-Fix-clang-libc-build-under-Android.patch"
+    #patch -Np1 -i "../../0002-Fix-androiddeployqt-search-paths.patch"
+    patch -Np1 -i "../../0003-Support-pkg-config-under-Android.patch"
+    patch -Np1 -i "../../0004-Android-Fix-build-with-NDKr20.patch"
+    popd
+
+    pushd qtlocation
+    # skip building mapboxgl as it increases compile time significantly and
+    # likely not a lot of people actually using it; if you need it, just remove the
+    # following line:
+    patch -Np1 -i "../../0001-Disable-mapboxgl.patch"
+    popd
+
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/mkspecs/features/android/sdk.prf
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/src/android/jar/jar.pro
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtgamepad/src/plugins/gamepads/android/jar/jar.pro
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/configure.pri
+}
+
+build() {
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
+    source android-env.sh  ${_pkg_arch} ${_android_arch}
+
+    unset CC CXX CFLAGS CXXFLAGS LDFLAGS CHOST QMAKESPEC QTDIR CARCH
+
+    export PKG_CONFIG=$ANDROID_PKGCONFIG
+    export PYTHON=/usr/bin/python2
+
+    cd ${_pkgfqn}
+
+    configue_opts="
+        -confirm-license
+        -opensource
+        -silent
+        -prefix ${ANDROID_LIBS}
+        -examplesdir ${ANDROID_LIBS}/share/qt5/examples
+        -testsdir ${ANDROID_LIBS}/share/qt5/tests
+        -xplatform android-clang
+        -nomake tests
+        -nomake examples
+        -android-ndk ${ANDROID_NDK_HOME}
+        -android-sdk ${ANDROID_HOME}
+        -android-ndk-host linux-x86_64
+        -android-toolchain-version 4.9
+        -skip qtserialport
+        -no-warnings-are-errors
+        -no-pkg-config
+        -qt-zlib
+        -qt-freetype
+        -openssl-runtime
+        -android-arch ${_android_arch}
+        -android-ndk-platform ${ANDROID_NDK_PLATFORM}
+        -I${ANDROID_LIBS}/include"
+
+    [[ $ANDROID_DEBUG_BUILD ]] \
+        && configue_opts+=' -debug-and-release' \
+        || configue_opts+=' -release'
+
+    # add architecture specific options
+    case "$_pkg_arch" in
+        x86*)
+             configue_opts+="
+                 -no-sql-mysql
+                 -no-sql-psql"
+            ;;
+        *)
+            ;;
+    esac
+
+    ./configure ${configue_opts}
+
+    make $MAKEFLAGS
+}
+
+package() {
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
+    source android-env.sh  ${_pkg_arch} ${_android_arch}
+
+    cd ${_pkgfqn}
+
+    make INSTALL_ROOT=${pkgdir} install
+
+    find ${pkgdir}/${ANDROID_LIBS}/bin -type f ! -name '*.pl' -exec strip {} \;
+    find ${pkgdir}/${ANDROID_LIBS}/lib -type f -name 'lib*.so' -exec ${ANDROID_STRIP} {} \;
+    find ${pkgdir}/${ANDROID_LIBS}/lib -type f \( -name 'lib*.a' ! -name 'libQt5Bootstrap.a' ! -name 'libQt5QmlDevTools.a' \) -exec ${ANDROID_STRIP} {} \;
+    find ${pkgdir}/${ANDROID_LIBS}/plugins -type f -name 'lib*.so' -exec ${ANDROID_STRIP} {} \;
+    find ${pkgdir}/${ANDROID_LIBS}/qml -type f -name 'lib*.so' -exec ${ANDROID_STRIP} {} \;
+
+    # fix plugin path in Android-specific dependency file
+    sed -i 's/\"plugins\//\"lib\/qt\/plugins\//g' ${pkgdir}/${ANDROID_LIBS}/lib/*-android-dependencies.xml
+
+    # drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find "${pkgdir}/" -type f -name '*.prl' \
+      -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+}

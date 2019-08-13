@@ -6,8 +6,8 @@
 _reponame=qtutilities
 pkgname=qtutilities-git
 _name=${pkgname%-git}
-pkgver=163.6078f1221a
-pkgrel=1
+pkgver=308.5cb0d80
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
 license=('GPL')

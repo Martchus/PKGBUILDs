@@ -2,10 +2,10 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
 pkgname=nginx-mod-substitutions-filter
-pkgver=0.6.4.108.bc58cb1
-pkgrel=4
+pkgver=0.6.4.110.b8a71ea
+pkgrel=1
 _dirname="$pkgname"
-_nginxver=1.16.0
+_nginxver=1.16.1
 
 pkgdesc='NGINX filter module which can do both regular expression and fixed string substitutions'
 arch=('x86_64')

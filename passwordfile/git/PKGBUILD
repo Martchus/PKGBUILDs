@@ -6,8 +6,8 @@
 _reponame=passwordfile
 pkgname=passwordfile-git
 _name=${pkgname%-git}
-pkgver=45.2b28fbcc66
-pkgrel=1
+pkgver=100.a3d104c
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
 license=('GPL')

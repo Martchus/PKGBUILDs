@@ -77,7 +77,6 @@ package_repoindex-gui() {
   arch=('any')
   pkgdesc="Repository browser for Arch Linux (provides an desktop app showing the web UI)"
   depends=('repoindex-web' 'qt5-webengine')
-  install=${_reponame}.install
   backup=()
 
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

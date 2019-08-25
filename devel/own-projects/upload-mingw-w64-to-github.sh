@@ -45,26 +45,30 @@ do
         for binary in ${binaries[@]}; do
             binary_name=${binary##*/}
             binary_name=${binary_name%-static.exe}-$version-$arch
-            echo "zipping $binary to $binary_name.zip"
+
+            # check whether upload already exists
+            zip_file="$binary_name.zip"
+            if github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
+                echo "auto-skipping $project/v$version; $zip_file already present"
+                continue
+            fi
+
+            # create zip file
+            echo "zipping $binary to $zip_file"
             mv "$binary" "$binary_name.exe"
-            bsdtar acf "$binary_name.zip" "$binary_name.exe"
-            zip_files+=("$binary_name.zip")
+            bsdtar acf "$zip_file" "$binary_name.exe"
+            zip_files+=("$zip_file")
         done
     done
 
     # upload created zip files
     if [[ ${#zip_files[@]} == 0 ]]; then
-        echo "no zip files for $project/v$version could be created"
+        echo "no zip files for $project/v$version could be created (either all skipped or no executables found)"
         continue
     fi
-    for zip_file in ${zip_files[@]}; do
-        # check whether upload already exists
-        if github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
-            echo "auto-skipping $project/v$version; $zip_file already present"
-            continue
-        fi
 
-        # upload file
+    # upload files
+    for zip_file in ${zip_files[@]}; do
         echo "uploading $project/v$version -> $zip_file"
         if github-release upload --user martchus --repo "$gh_name" --tag "v$version" --file "$zip_file" --name "$zip_file"; then
             echo "SUCCESS: uploaded $project/v$version -> $zip_file"

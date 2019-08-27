@@ -2,8 +2,8 @@
 # vim: ft=sh
 
 pkgname=baikal
-pkgver=0.4.6
-pkgrel=3
+pkgver=0.5.3
+pkgrel=1
 pkgdesc="Lightweight CalDAV+CardDAV server"
 url="http://sabre.io/baikal/"
 arch=('any')
@@ -11,26 +11,16 @@ license=('GPL')
 depends=('php')
 optdepends=('sqlite: Database' 'mariadb: Alternate database' 'php-sqlite: To use the sqlite backend')
 source=("https://github.com/fruux/Baikal/releases/download/$pkgver/baikal-$pkgver.zip"
-        'baikal.install'
-        'https://patch-diff.githubusercontent.com/raw/fruux/Baikal/pull/686.patch'
-        'foreach.patch::https://github.com/sabre-io/Baikal/commit/4a33ba6ca2cc19eeab484f1affb031e9d5273692.patch')
-sha1sums=('bc2850281223da9cc7471a157de754f8feb03783'
-          '60c547fdd6a3926213e8becf8f08db9c3a408e78'
-          '102cd0df5eaddc6860d5244a16b4594970e02740'
-          'c577c778ab8e5ddd7767e5953161ab44b2cafe1c')
+        'baikal.install')
+sha1sums=('01a3fd2c15a4adf3eb579e9d2aea414649a4db87'
+          'deb948e61c3cd8d6ad560321f78c0b288f7a6210')
 options=('!strip')
 install=baikal.install
-
-prepare() {
-  cd "${srcdir}/baikal"
-  patch -p1 -i "$srcdir/686.patch"
-  patch -p1 -i "$srcdir/foreach.patch"
-}
 
 package() {
   cd "${srcdir}/baikal"
   install -dm 755 "$pkgdir"/usr/share/{webapps,doc}"/$pkgname"
-  install -dm 700 "$pkgdir/var/lib/$pkgname"
+  install -dm 700 -o http -g http "$pkgdir/var/lib/$pkgname"
   cp -R Core html vendor "$pkgdir/usr/share/webapps/$pkgname"
   install -Dm644 CHANGELOG.md README.md "$pkgdir/usr/share/doc/$pkgname"
   ln -s "/var/lib/$pkgname" "$pkgdir/usr/share/webapps/$pkgname/Specific"

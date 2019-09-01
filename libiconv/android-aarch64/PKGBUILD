@@ -50,7 +50,7 @@ build() {
   export LDFLAGS="${LDFLAGS} -L${_android_sysroot}/usr/lib"
 
   # setup preprocessor (because the NDK doesn't provide a wrapper like for gcc and g++)
-  printf "#!/bin/bash\nexec \"$CXX\" -target ${_android_toolchain} -E \"\$@\"" > "$CPP"
+  printf "#!/bin/bash\nexec \"$CXX\" -target=${_android_toolchain} -E \"\$@\"" > "$CPP"
   chmod +x "$CPP"
 
   ./configure \

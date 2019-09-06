@@ -20,7 +20,7 @@ newversionbranch=$newversion-$newbranchsuffix
 branch_count=$(git branch | grep -- "$newversionbranch" | wc -l)
 if [[ $branch_count -ge 1 ]]; then
     msg2 "Branch for new version $newversionbranch already exists. Likely already rebased (otherwise, use continue-rebase-patches.sh)."
-    continue
+    [[ $in_loop ]] && continue || exit -1
 fi
 
 # determine branch from old version

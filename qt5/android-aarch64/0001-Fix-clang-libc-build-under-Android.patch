@@ -1,4 +1,4 @@
-From 5db5bdabc2587048072f3dbd98e9041905943d84 Mon Sep 17 00:00:00 2001
+From 2c8ca36b5f87ccfc039c0b669c80f21205769758 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Dec 2018 14:28:07 +0100
 Subject: [PATCH 1/4] Fix clang/libc++ build under Android
@@ -8,11 +8,11 @@ Subject: [PATCH 1/4] Fix clang/libc++ build under Android
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/mkspecs/android-clang/qmake.conf b/mkspecs/android-clang/qmake.conf
-index 20c6efee16..4ccde62cf0 100644
+index 05b7979142..83d030793b 100644
 --- a/mkspecs/android-clang/qmake.conf
 +++ b/mkspecs/android-clang/qmake.conf
 @@ -30,11 +30,12 @@ QMAKE_CFLAGS += -gcc-toolchain $$NDK_TOOLCHAIN_PATH -fno-limit-debug-info
- QMAKE_LINK    = $$QMAKE_CXX $$QMAKE_CFLAGS -Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libatomic.a
+ QMAKE_LINK    = $$QMAKE_CXX $$QMAKE_CFLAGS -Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libatomic.a -nostdlib++
  equals(ANDROID_TARGET_ARCH, armeabi-v7a): QMAKE_LINK += -Wl,--exclude-libs,libunwind.a
  
 -QMAKE_CFLAGS += -DANDROID_HAS_WSTRING --sysroot=$$NDK_ROOT/sysroot \
@@ -36,5 +36,5 @@ index 20c6efee16..4ccde62cf0 100644
      ANDROID_CXX_STL_LIBS = $$ANDROID_SOURCES_CXX_STL_LIBDIR/libc++.so.$$replace(ANDROID_PLATFORM, "android-", "")
  
 -- 
-2.22.0
+2.23.0
 

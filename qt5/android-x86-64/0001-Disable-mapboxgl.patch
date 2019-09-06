@@ -1,4 +1,4 @@
-From 398cf8a783a1886d998e91253080fdafd1b79e38 Mon Sep 17 00:00:00 2001
+From dbe68d96e7da8ba5e5484e6ad0bbd78c9b0a8eec Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Dec 2018 14:29:59 +0100
 Subject: [PATCH] Disable mapboxgl
@@ -25,5 +25,5 @@ index b81ad34a..98308c97 100644
 -    }
 -}
 -- 
-2.22.0
+2.23.0
 

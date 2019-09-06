@@ -1,4 +1,4 @@
-From 0b61b7828c156b0621342f0f4dd855b561b9f6f0 Mon Sep 17 00:00:00 2001
+From a71a1223328539ee403884a24d1dbc5a685d40dd Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 7 Apr 2019 09:54:49 +0200
 Subject: [PATCH 3/4] Support pkg-config under Android
@@ -9,7 +9,7 @@ from https://aur.archlinux.org/cgit/aur.git/commit/?h=android-aarch64-qt5&id=d90
  1 file changed, 3 insertions(+)
 
 diff --git a/mkspecs/android-clang/qmake.conf b/mkspecs/android-clang/qmake.conf
-index 4ccde62cf0..d448291fe8 100644
+index 83d030793b..8f145a2bb7 100644
 --- a/mkspecs/android-clang/qmake.conf
 +++ b/mkspecs/android-clang/qmake.conf
 @@ -53,3 +53,6 @@ else: \
@@ -20,5 +20,5 @@ index 4ccde62cf0..d448291fe8 100644
 +QMAKE_PKG_CONFIG = $$[QT_INSTALL_PREFIX]
 +QMAKE_PKG_CONFIG = android-$$section(QMAKE_PKG_CONFIG, /, 3, 3)-pkg-config
 -- 
-2.22.0
+2.23.0
 

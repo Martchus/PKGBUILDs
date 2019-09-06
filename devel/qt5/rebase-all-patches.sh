@@ -13,6 +13,6 @@ for r in "$QT_GIT_REPOS_DIR/qt"*; do
     [[ $repo == '5ct' || $repo == '5ct-code' || $repo == 'repotools' || $repo == 'webkit' ]] && continue
     pushd "$r" > /dev/null
     msg "Rebasing repository $repo ..."
-    "$scriptdir/rebase-patches.sh" "$@"
+    in_loop=1 "$scriptdir/rebase-patches.sh" "$@"
     popd > /dev/null
 done

@@ -75,7 +75,7 @@ package() {
     fi
 
     # replace library path in *.prl files so it points to the installed location and not the build directory
-      find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:$PWD/lib:/usr/$_arch/lib:g" {} \;
+    find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:$PWD/lib:/usr/$_arch/lib:g" {} \;
 
     # remove prl files for debug version
     if ! [[ $MINGW_W64_QT_DEBUG_BUILD ]]; then
@@ -83,6 +83,9 @@ package() {
         [ -f "${file%d*}${file##*d}" ] && rm "${file}";
       done
     fi
+
+    # remove '.static.prl' files
+    find "${pkgdir}/usr/${_arch}" -name '.static.prl' -delete
 
     find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name '*.dll' -delete
     [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \

@@ -5,10 +5,10 @@
 # you also find the URL of a binary repository.
 
 _pkgname=kirigami2
-_android_arch=armeabi-v7a
-_pkg_arch=armv7a-eabi
-_android_toolchain=arm-linux-androideabi
-_android_platform=21
+_android_arch=x86
+_pkg_arch=x86
+_android_toolchain=$_pkg_arch-linux-android
+_android_platform=22
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname

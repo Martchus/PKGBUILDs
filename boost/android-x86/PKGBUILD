@@ -4,16 +4,16 @@
 # you also find the URL of a binary repository.
 
 _pkgname=boost
-_pkg_arch=aarch64
-_android_arch=arm64-v8a
-_android_toolchain=$_pkg_arch-linux-android
-_android_platform=22
+_pkg_arch=x86
+_android_arch=x86
+_android_toolchain=x86_64-linux-android$_android_platform
+_android_platform=21 # https://developer.android.com/about/dashboards/
 _android_prefix=/opt/android-libs/$_pkg_arch
 _android_ndk_path=/opt/android-ndk
-_android_platform_arch=arch-arm64
+_android_platform_arch=arch-x86
 _android_platform_dir=android-$_android_platform/${_android_platform_arch}
-_boost_arch=arm
-_boost_address_model=64
+_boost_arch=x86
+_boost_address_model=32
 
 pkgname=android-$_pkg_arch-$_pkgname
 pkgver=1.71.0

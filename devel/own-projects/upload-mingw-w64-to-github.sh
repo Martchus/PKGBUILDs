@@ -3,6 +3,11 @@ set -e # abort on first error
 shopt -s nullglob
 source "$(dirname $0)/../versions.sh"
 
+if ! [[ $GITHUB_TOKEN ]]; then
+    echo "Don't forget to set \$GITHUB_TOKEN."
+    exit -2
+fi
+
 repo_dir=${PATH_REPO_OWNSTUFF}
 if ! [[ $repo_dir ]]; then
     echo "\$PATH_REPO_OWNSTUFF is empty."

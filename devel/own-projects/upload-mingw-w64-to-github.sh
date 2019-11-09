@@ -30,7 +30,8 @@ do
     echo "NEXT: $project/v$version"
 
     # determine file path of arch linux package
-    pkg_files=("$repo_dir/mingw-w64-$project-$version"-*-*.pkg.tar.xz)
+    pkg_name=mingw-w64-$project
+    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.xz)
     if [[ ${#pkg_files[@]} == 0 ]]; then
         echo "no mingw-w64 package for $project/v$version present"
         continue
@@ -41,15 +42,24 @@ do
     pkg_file_name=${latest_pkg_file##*/}
     temp_dir=$(mktemp -d -t "$pkg_file_name-XXXXXXXXXX")
     pushd "$temp_dir"
+    bsdtar xJf "$latest_pkg_file"
+
+    # locate the license file
+    license_file=usr/share/licenses/$pkg_name/LICENSES-windows-distribution.md
+    if [[ ! -f $license_file ]]; then
+        echo "the package $latest_pkg_file does not include the expected license file $license_file"
+        continue
+    fi
 
     # make a zip file for each statically linked binary
-    bsdtar xJf "$latest_pkg_file"
     zip_files=()
     for arch in i686-w64-mingw32 x86_64-w64-mingw32; do
         binaries=(usr/$arch/bin/*-static.exe)
         for binary in ${binaries[@]}; do
-            binary_name=${binary##*/}
-            binary_name=${binary_name%-static.exe}-$version-$arch
+            base_name=${binary##*/}
+            base_name=${base_name%-static.exe}
+            symlink_name=$base_name-$arch.exe
+            binary_name=$base_name-$version-$arch.exe
 
             # check whether upload already exists
             zip_file="$binary_name.zip"
@@ -60,8 +70,11 @@ do
 
             # create zip file
             echo "zipping $binary to $zip_file"
-            mv "$binary" "$binary_name.exe"
-            bsdtar acf "$zip_file" "$binary_name.exe"
+            mv "$binary" "$binary_name"
+            ln -s "$binary_name" "$symlink_name"
+            license_file_2=$project-$version-$arch-LICENSES.md
+            cp "$license_file" "$license_file_2"
+            bsdtar acf "$zip_file" "$binary_name" "$license_file_2"
             zip_files+=("$zip_file")
         done
     done

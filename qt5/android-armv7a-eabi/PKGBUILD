@@ -10,7 +10,7 @@ _android_arch=armeabi-v7a
 _android_platform=21
 
 pkgname=android-$_pkg_arch-qt5
-pkgver=5.13.1
+pkgver=5.13.2
 pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')

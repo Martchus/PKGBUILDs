@@ -12,7 +12,7 @@ declare -A versions=(
     [blackwidowcontrol]=1.0.1
     [dbus-soundrecorder]=1.2.3
     [geocoordinatecalculator]=1.1.3
-    [qt5]=5.13.1
+    [qt5]=5.13.2
 )
 declare -A github_names=(
     [c++utilities]=cpp-utilities

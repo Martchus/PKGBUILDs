@@ -14,7 +14,7 @@
 _name=SubtitleComposer
 pkgname=${_name,,}
 pkgver=0.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A KDE subtitle editor"
 arch=('i686' 'x86_64')
 url="https://github.com/maxrd2/${_name}"

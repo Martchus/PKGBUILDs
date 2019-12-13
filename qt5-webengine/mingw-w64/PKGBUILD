@@ -10,7 +10,7 @@
 
 _qt_module=qtwebengine
 pkgname=mingw-w64-qt5-webengine
-pkgver=5.13.2
+pkgver=5.14.0
 pkgrel=1
 arch=('any')
 pkgdesc='Provides support for web applications using the Chromium browser project (mingw-w64)'

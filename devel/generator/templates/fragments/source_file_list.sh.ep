@@ -1,0 +1,3 @@
+% for my $file ($relevant_files->each) {
+<%== "\n" %>        '<%== $file->basename %>'\
+% }

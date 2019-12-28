@@ -1,0 +1,11 @@
+  # make sure the executables don't conflict with their mingw-qt4 counterpart
+  for _arch in ${_architectures}; do
+    for exe_file in "${pkgdir}/usr/${_arch}/bin/"*.exe; do
+      [[ -f $exe_file ]] && mv "${exe_file}" "${exe_file%.exe}-qt5.exe"
+    done
+% if ($qt_module eq 'tools') {
+    # Fix the path to executables in cmake config files
+    sed -i "s|lib/qt/bin/qcollectiongenerator|bin/qcollectiongenerator-qt5.exe|g" "${pkgdir}"/usr/${_arch}/lib/cmake/Qt5Help/Qt5HelpConfigExtras.cmake
+    sed -i "s|lib/qt/bin/qhelpgenerator|bin/qhelpgenerator-qt5.exe|g" "${pkgdir}"/usr/${_arch}/lib/cmake/Qt5Help/Qt5HelpConfigExtras.cmake
+% }
+  done

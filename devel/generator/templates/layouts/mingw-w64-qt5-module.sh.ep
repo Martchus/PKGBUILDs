@@ -1,0 +1,132 @@
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# This file is created from PKGBUILD.sh.in contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
+% if ($patch_files->size) {
+
+# All patches are managed at https://github.com/Martchus/qt<%== $qt_module %>
+% }
+% if ($static_config && $shared_config) {
+
+# Includes dynamic and static versions; if only one version is requried, just
+# set $NO_STATIC_LIBS or $NO_SHARED_LIBS.
+% }
+
+<%== content_for 'comment_header' %>\
+_qt_module=qt<%== $qt_module %>
+pkgname=mingw-w64-qt5-<%== $qt_module %>
+<%== content %>\
+options=('!strip' '!buildflags' 'staticlibs')
+groups=('mingw-w64-qt5')
+url='https://www.qt.io/'
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+% if ($static_config) {
+[[ $NO_STATIC_LIBS ]] || \\
+  makedepends+=('mingw-w64-qt5-base-static') \\
+  optdepends+=('mingw-w64-qt5-base-static: use of static libraries') \\
+  _configurations+=('CONFIG+=no_smart_library_merge <%== content_for 'static_config' %>CONFIG+=static')
+% }
+% if ($shared_config) {
+[[ $NO_SHARED_LIBS ]] || \\
+  _configurations+=('CONFIG+=actually_a_shared_build <%== content_for 'shared_config' %>CONFIG+=shared')
+% }
+<%== content_for 'helper_functions' %>\
+
+% if ($patch_files->size || content_for('prepare')->size) {
+prepare() {
+  cd "${srcdir}/${_pkgfqn}"
+% if ($patch_files->size) {
+
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    patch -p1 -i "$patch"
+  done
+% }
+<%== content_for 'prepare' %>\
+}
+
+% }
+build() {
+  cd "${srcdir}/${_pkgfqn}"
+
+<%== content_for 'build_before_loop' %>\
+  for _arch in ${_architectures}; do
+    for _config in "${_configurations[@]}"; do
+      msg2 "Building ${_config##*=} version for ${_arch}"
+      mkdir -p build-${_arch}-${_config##*=} && pushd build-${_arch}-${_config##*=}
+<%== content_for 'build_config' %>\
+      ${_arch}-qmake-qt5 ../${_qt_module}.pro ${_config} ${_additional_qmake_args}
+<%== content_for 'build_config_before_make' %>\
+      make
+      popd
+    done
+  done
+<%== content_for 'build' %>\
+}
+
+package() {
+  cd "${srcdir}/${_pkgfqn}"
+
+  for _arch in ${_architectures}; do
+    for _config in "${_configurations[@]}"; do
+      pushd build-${_arch}-${_config##*=}
+
+      make INSTALL_ROOT="$pkgdir" install
+<%== content_for 'package_config_after_install' %>\
+
+      # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
+      if [[ -d 'lib' ]]; then
+        pushd 'lib'
+        find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
+        popd
+      fi
+      if [[ -d 'plugins' ]]; then
+        pushd 'plugins'
+        find -iname '*.static.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib/qt/plugins" --parents {} +
+        popd
+      fi
+
+      # replace library path in *.prl files so it points to the installed location and not the build directory
+      find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:$PWD/lib:/usr/$_arch/lib:g" {} \;
+
+      # remove prl files for debug version
+      if ! [[ $MINGW_W64_QT_DEBUG_BUILD ]]; then
+        for file in $(find "${pkgdir}/usr/${_arch}" -name '*d.prl' -o -name '*d.static.prl'); do
+          [ -f "${file%d*}${file##*d}" ] && rm "${file}";
+        done
+      fi
+
+      # remove '.static.prl' files
+      find "${pkgdir}/usr/${_arch}" -name '.static.prl' -delete
+
+      find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name '*.dll' -delete
+      [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \\
+        find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete || \\
+        find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
+      find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
+      find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;
+      [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \\
+        find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
+      find "${pkgdir}/usr/${_arch}/lib/" -iname "*.so.$pkgver" -exec strip --strip-unneeded {} \;
+<%== content_for 'package_config' %>\
+      popd
+    done
+<%== content_for 'package_arch' %>\
+
+    # drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+  done
+<%== content_for 'package' %>\
+}

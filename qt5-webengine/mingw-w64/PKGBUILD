@@ -1,12 +1,18 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
-# DOES NOT WORK YET (mingw-w64 currently not supported by Qt WebEngine)
-
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
+# This file is created from PKGBUILD.sh.in contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
+
+# All patches are managed at https://github.com/Martchus/qtwebengine
+
 # Includes dynamic and static versions; if only one version is requried, just
 # set $NO_STATIC_LIBS or $NO_SHARED_LIBS.
+
+# DOES NOT WORK YET (win32-g++ is currently not supported by Qt WebEngine)
 
 _qt_module=qtwebengine
 pkgname=mingw-w64-qt5-webengine
@@ -19,27 +25,31 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'git' 'python2' 'gperf' 'rub
 options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')
 license=('LGPL3' 'LGPL2.1' 'BSD')
+options=('!strip' '!buildflags' 'staticlibs')
+groups=('mingw-w64-qt5')
 url='https://www.qt.io/'
 _pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
-groups=('mingw-w64-qt5')
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         '0044-qt-5.4.0-win32-g++-enable-qtwebengine-build.patch')
-md5sums=('c90fba515fb33c091904fe2cadbb345a'
-         '27e0f474f66f05f3911c71621b24636d')
+sha256sums=('TODO'
+            '7d7a99ff45c6ae4f39be663d52bafc125970787f364e84593117e6a7d79f7eae')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
 [[ $NO_STATIC_LIBS ]] || \
   makedepends+=('mingw-w64-qt5-base-static') \
   optdepends+=('mingw-w64-qt5-base-static: use of static libraries') \
-  _configurations+=('CONFIG+=static')
+  _configurations+=('CONFIG+=no_smart_library_merge CONFIG+=static')
 [[ $NO_SHARED_LIBS ]] || \
   _configurations+=('CONFIG+=actually_a_shared_build CONFIG+=shared')
 
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
 
-  # allow building webengine with mingw-w64
-  patch -p2 -i ${srcdir}/0044-qt-5.4.0-win32-g++-enable-qtwebengine-build.patch
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    patch -p1 -i "$patch"
+  done
 
   # use python2 for Python 2.x
   find . -name '*.py' -exec sed -i \
@@ -52,14 +62,16 @@ prepare() {
 
 build() {
   cd "${srcdir}/${_pkgfqn}"
-  unset PKG_CONFIG_PATH
+
+
   # python2 workaround
   export PATH="${srcdir}/python2-path:$PATH"
+
   for _arch in ${_architectures}; do
     for _config in "${_configurations[@]}"; do
       msg2 "Building ${_config##*=} version for ${_arch}"
       mkdir -p build-${_arch}-${_config##*=} && pushd build-${_arch}-${_config##*=}
-      ${_arch}-qmake-qt5 ../${_qt_module}.pro ${_config}
+      ${_arch}-qmake-qt5 ../${_qt_module}.pro ${_config} ${_additional_qmake_args}
       make
       popd
     done

@@ -1,0 +1,17 @@
+% layout 'mingw-w64-qt5-module';
+\
+pkgver=5.12.3
+pkgrel=1
+arch=('any')
+pkgdesc="A JavaScript 3D rendering API for Qt Quick (mingw-w64)"
+depends=('mingw-w64-qt5-declarative')
+makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config')
+license=('GPL3' 'LGPL' 'FDL' 'custom')
+\
+% content_for package_config_after_install => begin
+
+      # ensure to get the import lib, too
+      [[ "${_config##*=}" == 'shared'  ]] &&
+        install -Dm755 qml/QtCanvas3D/*.dll -t "${pkgdir}/usr/${_arch}/bin" &&
+        install -Dm644 qml/QtCanvas3D/*.dll.a -t "${pkgdir}/usr/${_arch}/lib"
+% end

@@ -1,0 +1,47 @@
+% layout 'mingw-w64-qt5-module', static_config => 0;
+\
+% content_for additional_contributors => begin
+# Contributor: ant32 <antreimer@gmail.com>
+# Contributor: Filip Brcic <brcha@gna.org>
+% end
+\
+_additional_qmake_args+='QMAKE_CXXFLAGS+=-Wno-c++0x-compat QMAKE_CXXFLAGS+=-Wno-expansion-to-defined'
+
+pkgver=5.9.0
+pkgrel=1
+arch=('any')
+pkgdesc="Classes for a WebKit2 based implementation and a new QML API (mingw-w64)"
+depends=('mingw-w64-qt5-declarative' 'mingw-w64-qt5-sensors' 'mingw-w64-qt5-location' 'mingw-w64-qt5-multimedia'
+         'mingw-w64-angleproject' 'mingw-w64-fontconfig' 'mingw-w64-libpng' 'mingw-w64-libjpeg-turbo' 'mingw-w64-libxslt'
+         'mingw-w64-zlib' 'mingw-w64-icu' 'mingw-w64-sqlite' 'mingw-w64-libwebp')
+# These dependencies will enable further functionality
+#depends+=('mingw-w64-webchannel')
+#depends+=('mingw-w64-gst-plugins-base')
+#optdepends+=('mingw-w64-gst-plugins-good: Webm codec support')
+makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'python' 'gperf' 'ruby')
+options=('!strip' '!buildflags' 'staticlibs')
+groups=('mingw-w64-qt5')
+license=('GPL3' 'LGPL' 'FDL' 'custom')
+\
+% content_for prepare => begin
+
+  # make sure the bundled copy of the ANGLE libraries isn't used
+  rm -rf Source/ThirdParty/ANGLE
+% end
+\
+% content_for build_config => begin
+
+      # ensure files from system ANGLE can be included since "Source/ThirdParty/ANGLE" has been removed
+      export CPATH="${default_cpath}:/usr/$_arch/include:/usr/$_arch/include/GLSLANG"
+
+      _qt_module=WebKit
+% end
+\
+% content_for build_config_before_make => begin
+
+      # Search paths for host standard library (/usr/lib) and for Qt5Bootstrap (/usr/$_arch/lib) are not set correctly by qmake
+      # hence we need insert those paths manually
+      make qmake_all
+      find ./tools -type f -iname 'Makefile' -exec sed -i "s|-lQt5Bootstrap|-L/usr/$_arch/lib -lQt5Bootstrap|g" {} \;
+
+% end

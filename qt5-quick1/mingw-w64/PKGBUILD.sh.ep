@@ -1,0 +1,16 @@
+% layout 'mingw-w64-qt5-module';
+\
+% content_for additional_contributors => begin
+# Contributor: ant32 <antreimer@gmail.com>
+# Contributor: Filip Brcic <brcha@gna.org>
+% end
+\
+pkgver=5.5.1
+pkgrel=1
+arch=('any')
+pkgdesc="Qt Declarative is provided for Qt 4 compatibility (mingw-w64)"
+depends=('mingw-w64-qt5-base' 'mingw-w64-qt5-script' 'mingw-w64-qt5-tools')
+makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config')
+options=('!strip' '!buildflags' 'staticlibs')
+groups=('mingw-w64-qt5')
+license=('GPL3' 'LGPL')

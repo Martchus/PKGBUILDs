@@ -1,0 +1,4 @@
+% use Digest::file 'digest_file_hex';
+% for my $file ($relevant_files->each) {
+<%== "\n" %>            '<%== digest_file_hex($file, 'SHA-256') %>'\
+% }

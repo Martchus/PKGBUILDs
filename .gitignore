@@ -43,3 +43,6 @@ Makefile*
 
 # VIM swap
 *.swp
+
+# directory to store generator output when testing
+devel/generator/output

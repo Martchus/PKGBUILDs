@@ -1,0 +1,34 @@
+% layout 'mingw-w64-qt5-module';
+\
+% content_for comment_header => begin
+# DOES NOT WORK YET (win32-g++ is currently not supported by Qt WebEngine)
+
+% end
+\
+pkgver=5.14.0
+pkgrel=1
+arch=('any')
+pkgdesc='Provides support for web applications using the Chromium browser project (mingw-w64)'
+depends=('mingw-w64-qt5-webchannel' 'mingw-w64-qt5-location')
+makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'git' 'python2' 'gperf' 'ruby')
+options=('!strip' '!buildflags' 'staticlibs')
+groups=('mingw-w64-qt5')
+license=('LGPL3' 'LGPL2.1' 'BSD')
+\
+% content_for prepare => begin
+
+  # use python2 for Python 2.x
+  find . -name '*.py' -exec sed -i \\
+    's|#![ ]*/usr/bin/python$|&2|;s|#![ ]*/usr/bin/env python$|&2|' {} +
+
+  # in qtwebengine there are still a lot of relative calls which need a workaround
+  mkdir "${srcdir}"/python2-path
+  ln -s /usr/bin/python2 "${srcdir}"/python2-path/python
+% end
+\
+% content_for build_before_loop => begin
+
+  # python2 workaround
+  export PATH="${srcdir}/python2-path:$PATH"
+
+% end

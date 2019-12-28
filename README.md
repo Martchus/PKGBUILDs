@@ -54,6 +54,18 @@ where `default-pkg-name` is the default package name (eg. `qt5-base`) and `varia
 
 The repository does not contain `.SRCINFO` files.
 
+## Generated PKGBUILDs
+To avoid repetition some PKGBUILDs are generated. These PKGBUILDs are determined by the presence of the file
+`PKGBUILD.sh.ep` besides the actual `PKGBUILD` file. The `PKGBUILD` file is only present for read-only purposes in
+this case - do *not* edit it manually. Instead, edit the `PKGBUILD.sh.ep` file and invoke `devel/generator/generate.pl`.
+This requires the `perl-Mojolicious` package to be installed. Set the environment variable `LOG_LEVEL` to adjust the
+log level (e.g. `debug`/`info`/`warn`/`error`). Template layouts/fragments are stored within `generator/templates`.
+
+### Documentation about the used templating system
+* [Syntax](https://mojolicious.org/perldoc/Mojo/Template#SYNTAX)
+* [Helper](https://mojolicious.org/perldoc/Mojolicious/Plugin/DefaultHelpers)
+* [Utilities](https://mojolicious.org/perldoc/Mojo/Util)
+
 ## Contributing to patches
 Patches for most packages are managed in a fork of the project under my GitHub profile. For instance,
 patches for `mingw-w64-qt5-base` are managed at [github.com/Martchus/qtbase](https://github.com/Martchus/qtbase).

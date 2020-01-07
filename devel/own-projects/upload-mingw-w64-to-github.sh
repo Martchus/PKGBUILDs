@@ -31,7 +31,7 @@ do
 
     # determine file path of arch linux package
     pkg_name=mingw-w64-$project
-    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.xz)
+    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.*)
     if [[ ${#pkg_files[@]} == 0 ]]; then
         echo "no mingw-w64 package for $project/v$version present"
         continue

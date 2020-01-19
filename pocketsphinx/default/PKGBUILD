@@ -35,22 +35,21 @@ build() {
   ./configure --prefix=/usr
   make
 
-
   msg2 "Building python2 environment"
-	cd "../$pkgname-$pkgver-py2"
-	export PYTHON=/usr/bin/python2
+  cd "../$pkgname-$pkgver-py2"
+  export PYTHON=/usr/bin/python2
   ./configure --prefix=/usr
-	make
+  make
 }
 
 package() {
-	cd "$pkgname-$pkgver-py3"
+  cd "$pkgname-$pkgver-py3"
 
-	make DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" install
 
   cd "../$pkgname-$pkgver-py2/swig"
   make DESTDIR="$pkgdir" install
 
-	install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
-	install -D -m644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -D -m644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

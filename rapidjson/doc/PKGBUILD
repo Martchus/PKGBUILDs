@@ -1,0 +1,41 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# Maintainer of actual rapidjson package:  Jonathan Steel <jsteel at archlinux.org>
+# Contributor: Yunhui Fu <yhfudev@gmail.com>
+
+_pkgname=rapidjson
+pkgname=$_pkgname-doc
+pkgver=1.1.0
+pkgrel=1
+pkgdesc='A fast JSON parser/generator for C++ with both SAX/DOM style API (documentation)'
+arch=('any')
+url="https://github.com/miloyip/$_pkgname"
+license=('MIT')
+makedepends=('doxygen' 'cmake')
+source=($_pkgname-$pkgver.tar.gz::https://github.com/miloyip/$_pkgname/archive/v$pkgver.tar.gz)
+md5sums=('badd12c511e081fec6c89c43a7027bce')
+
+build () {
+  cd $_pkgname-$pkgver
+
+  mkdir -p build
+  cd build
+
+  cmake \
+      -DCMAKE_BUILD_TYPE=None \
+      -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+      -DRAPIDJSON_HAS_STDSTRING=ON \
+      -DRAPIDJSON_BUILD_CXX11=ON \
+      -DRAPIDJSON_ENABLE_INSTRUMENTATION_OPT=OFF \
+      -DDOC_INSTALL_DIR=/usr/share/doc/${_pkgname} \
+      ..
+
+  make doc
+}
+
+package() {
+  cd $_pkgname-$pkgver/build
+
+  DESTDIR="$pkgdir" cmake -DCOMPONENT="doc" -P cmake_install.cmake
+  rm "$pkgdir/usr/share/doc/${_pkgname}/readme.md"
+}

@@ -1,7 +1,8 @@
-From b94e25c8537fc12cb162dd7b5cac3bd43908c1d9 Mon Sep 17 00:00:00 2001
+From 67df270176cc41e18c8ce38df4dc7d756d8ac6e6 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 29 Dec 2019 00:39:46 +0100
-Subject: [PATCH 4/4] Fix case of header file for building with mingw-w64
+Subject: [PATCH 4/4] Fix case of header file includes for building with
+ mingw-w64
 
 Change-Id: Ie0e6599234c38c5e5a75b681a911f3728871861e
 ---
@@ -92,5 +93,5 @@ index c6f4e856..15ef6f0a 100644
  #include <QtCore/qfile.h>
  #include <QtCore/qdebug.h>
 -- 
-2.24.1
+2.25.0
 

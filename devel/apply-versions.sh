@@ -31,6 +31,10 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     source "$pkgbuild_file"
     [[ $version == $pkgver ]] && continue
 
+    # check if template exists and modify template instead
+    template=$pkgbuild_file.sh.ep
+    [[ -f $template ]] && pkgbuild_file=$template
+
     # apply new version
     sed -i -e "s/^pkgver=.*/pkgver=$version/" -e "s/pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
     chmod 644 "$pkgbuild_file"

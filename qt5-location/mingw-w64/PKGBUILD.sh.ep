@@ -12,7 +12,7 @@ _additional_qmake_args+='QT.global.disabled_features+=geoservices_mapboxgl'
 
 % end
 \
-pkgver=5.14.0
+pkgver=5.14.1
 pkgrel=1
 arch=('any')
 pkgdesc='Provides access to position, satellite and area monitoring classes (mingw-w64)'

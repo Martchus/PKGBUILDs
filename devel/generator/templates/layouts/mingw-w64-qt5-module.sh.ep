@@ -85,6 +85,7 @@ package() {
 
       make INSTALL_ROOT="$pkgdir" install
 <%== content_for 'package_config_after_install' %>\
+% unless ($no_libraries) {
 
       # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
       if [[ -d 'lib' ]]; then
@@ -120,13 +121,16 @@ package() {
       [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \\
         find "${pkgdir}/usr/${_arch}/lib/qt/bin/" -exec strip --strip-all {} \;
       find "${pkgdir}/usr/${_arch}/lib/" -iname "*.so.$pkgver" -exec strip --strip-unneeded {} \;
+% }
 <%== content_for 'package_config' %>\
       popd
     done
 <%== content_for 'package_arch' %>\
+% unless ($no_libraries) {
 
     # drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+% }
   done
 <%== content_for 'package' %>\
 }

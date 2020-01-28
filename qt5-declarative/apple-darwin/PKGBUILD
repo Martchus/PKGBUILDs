@@ -5,7 +5,7 @@
 
 _qt_module=qtdeclarative
 pkgname='apple-darwin-qt5-declarative'
-pkgver=5.14.0
+pkgver=5.14.1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Classes for QML and JavaScript languages (apple-darwin)"

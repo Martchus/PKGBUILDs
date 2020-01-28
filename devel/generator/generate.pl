@@ -85,6 +85,7 @@ for my $top_level_dir (@$top_level_dirs) {
                     qt_module_sha256 => $qt_module_sha256,
                     shared_config => 1,
                     static_config => 1,
+                    no_libraries => 0,
                 },
             ]
         });

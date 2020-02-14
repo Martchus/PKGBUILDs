@@ -1,0 +1,32 @@
+pkgname=github-release-gdm85-git
+_pkgname=github-release
+pkgver=0.7.2
+pkgrel=1
+pkgdesc='Command-line app to create and edit releases on GitHub (and upload artifacts)'
+arch=('i686' 'x86_64')
+url="https://github.com/gdm85/${_pkgname}"
+makedepends=('go')
+depends=('git')
+conflicts=("${_pkgname}-bin" "$_pkgname")
+license=('MIT')
+source=("${pkgname}::git+https://github.com/gdm85/github-release.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd $srcdir/$pkgname
+  last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+  echo "${last_tag#v}.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd $srcdir/$pkgname
+  GOROOT=/usr/lib/go GOPATH=$HOME/go PATH=$PATH:$GOROOT/bin make
+}
+
+package() {
+  cd $srcdir/$pkgname
+  install -dm755 "${pkgdir}/usr/bin"
+  install -dm755 "${pkgdir}/usr/share/licenses/${_pkgname}"
+  install -Dm755 "${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+  install -Dm755 LICENSE "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
+}

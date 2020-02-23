@@ -2,8 +2,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
 pkgname=nginx-mod-fancyindex
-pkgver=0.4.3
-pkgrel=5
+pkgver=0.4.4
+pkgrel=1
 _dirname="ngx-fancyindex-${pkgver}"
 _nginxver=1.16.1
 
@@ -20,7 +20,7 @@ source=(
 validpgpkeys=(B0F4253373F8F6F510D42178520A9993A1C052F8) # Maxim Dounin <mdounin@mdounin.ru>
 sha256sums=('f11c2a6dd1d3515736f0324857957db2de98be862461b5a542a3ac6188dbe32b'
             'SKIP'
-            '81698fb0c1ec9f906ce308c055d5d248085caf390f4b92516c1ec93f87c886d4')
+            '34e2bf332b9fa930914220c0187ca18d6f7a6abb88b81fdc9eb4779a1584f83a')
 
 prepare() {
   cd "$srcdir/$_dirname"

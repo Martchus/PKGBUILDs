@@ -9,7 +9,7 @@ _quick_gui=${PASSWORD_MANAGER_QUICK_GUI:-ON}
 _reponame=passwordmanager
 pkgname=passwordmanager-git
 _name=${pkgname%-git}
-pkgver=275.7ac57bb
+pkgver=281.c12f63d
 pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
@@ -39,6 +39,7 @@ build() {
   cmake \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+    -DCONFIGURATION_NAME:STRING='git' \
     -DCONFIGURATION_PACKAGE_SUFFIX:STRING='-git' \
     -DQUICK_GUI="$_quick_gui" .
   make

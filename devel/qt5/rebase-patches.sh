@@ -24,11 +24,15 @@ if [[ $branch_count -ge 1 ]]; then
 fi
 
 # determine branch from old version
+oldversionbranch=$oldversion-$oldbranchsuffix-fixes
+branch_count=$(git branch | grep -- "$oldversionbranch" | wc -l)
+if [[ $branch_count -lt 1 ]]; then
 oldversionbranch=$oldversion-$oldbranchsuffix
 branch_count=$(git branch | grep -- "$oldversionbranch" | wc -l)
 if [[ $branch_count -lt 1 ]]; then
     msg2 "Branch for old version $oldversionbranch doesn't exist. Likely we just don't need any patches for this repo :-)"
     exit 0
+fi
 fi
 if [[ -z $3 ]] && [[ $branch_count -gt 1 ]]; then
     msg 'Which of the following branches was the latest for the old version?'
@@ -36,6 +40,7 @@ if [[ -z $3 ]] && [[ $branch_count -gt 1 ]]; then
     msg2 'Please disambiguate by specifying the corresponding suffix as 3rd argument.'
     exit -1
 fi
+msg2 "Basing new version $newversionbranch on $oldversionbranch"
 
 # determine remote to push
 remote=

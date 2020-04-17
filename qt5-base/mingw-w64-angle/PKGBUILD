@@ -6,54 +6,36 @@
 # BEFORE COMMENTING OR REPORING ISSUES, PLEASE READ THE FILE `README.md` IN THIS REPOSITORY.
 # ALSO HAVE A LOOK AT THE COMMENTS IN THE AUR.
 
+# DOES NOT WORK YET, see comment in build() function
+
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
 # All patches are managed at https://github.com/Martchus/qtbase
 
-# define helper functions for the split builds
-isDefault() {
-  [[ $pkgname = 'mingw-w64-qt5-base' ]] || [[ $pkgname = 'mingw-w64-qt5-base-static' ]]
-}
-isStatic() {
-  [ "${pkgname##*-}" = 'static' ]
-}
-isOpenGL() {
-  isDefault || [[ $pkgname = 'mingw-w64-qt5-base-opengl' ]] || [[ $pkgname = 'mingw-w64-qt5-base-opengl-static' ]]
-}
-isANGLE() {
-  [[ $pkgname = 'mingw-w64-qt5-base-angle' ]] || [[ $pkgname = 'mingw-w64-qt5-base-angle-static' ]]
-}
-isDynamic() {
-  [[ $pkgname = 'mingw-w64-qt5-base-dynamic' ]] || [[ $pkgname = 'mingw-w64-qt5-base-dynamic-static' ]]
-}
-isNoOpenGL() {
-  [[ $pkgname = 'mingw-w64-qt5-base-noopengl' ]] || [[ $pkgname = 'mingw-w64-qt5-base-noopengl-static' ]]
-}
-
+_qt_module=qtbase
 pkgname=mingw-w64-qt5-base-angle
 pkgver=5.14.2
 pkgrel=1
-pkgdesc='A cross-platform application and UI framework (mingw-w64)'
-# The static variant doesn't contain any executables which need to be executed on the build machine
-isStatic && arch=('any') || arch=('i686' 'x86_64')
+pkgdesc='A cross-platform application and UI framework, ANGLE OpenGL backend (mingw-w64)'
+arch=('i686' 'x86_64')
 url='https://www.qt.io/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
 depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
          'mingw-w64-pcre2')
-groups=('mingw-w64-qt5')
 optdepends=('mingw-w64-mesa: use LLVMpipe software rasterizer for Qt Quick'
             'mingw-w64-postgresql: PostgreSQL support'
             'mingw-w64-mariadb-connector-c: MySQL support')
 makedepends=('mingw-w64-gcc' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c'
              'mingw-w64-vulkan-headers' 'mingw-w64-pkg-config' 'mingw-w64-environment')
-# For running fxc.exe WINE coulde be used:
-#if isANGLE || isDynamic; then
-#    makedepends+=('mingw-w64-wine')
-#fi
+# makedepends+=('mingw-w64-wine') # the dynamic/ANGLE version needs to run fxc.exe (not implemented yet)
+groups=('mingw-w64-qt5')
+provides+=('mingw-w64-qt5-base')
+conflicts+=('mingw-w64-qt5-base' 'mingw-w64-qt5-base-angle' 'mingw-w64-qt5-base-noopengl'
+            'mingw-w64-qt5-base-dynamic' 'mingw-w64-qt5-base-openql')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
-_pkgfqn="qtbase-everywhere-src-${pkgver}"
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Adjust-win32-g-profile-for-cross-compilation-with-mi.patch'
         '0002-Ensure-GLdouble-is-defined-when-using-dynamic-OpenGL.patch'
@@ -120,20 +102,6 @@ sha256sums=('48b9e79220941665a9dd827548c6428f7aa3052ccba8f4f7e039a94aa1d2b28a'
             '810255e443f940b57e90f4934e4317c050d3edf3593cd0a30c1e2b5a35cf7f68')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
-
-isStatic && depends+=(${pkgname%-static})
-
-if ! isDefault; then
-  if isStatic; then
-    provides+=('mingw-w64-qt5-base-static')
-    conflicts+=('mingw-w64-qt5-base-static' 'mingw-w64-qt5-base-angle-static' 'mingw-w64-qt5-base-noopengl-static'
-                'mingw-w64-qt5-base-dynamic-static' 'mingw-w64-qt5-base-openql-static')
-  else
-    provides+=('mingw-w64-qt5-base')
-    conflicts+=('mingw-w64-qt5-base' 'mingw-w64-qt5-base-angle' 'mingw-w64-qt5-base-noopengl'
-                'mingw-w64-qt5-base-dynamic' 'mingw-w64-qt5-base-openql')
-  fi
-fi
 
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
@@ -224,30 +192,13 @@ build() {
       || qt_configure_args+=' -release'
 
     # configure usage of ANGLE/OpenGL
-    if isOpenGL; then
-      msg2 'Using native OpenGL backend'
-      qt_configure_args+=' -opengl desktop'
-    elif isNoOpenGL; then
-      msg2 'Building without OpenGL support'
-      qt_configure_args+=' -no-opengl'
-    elif isANGLE; then
-      # FIXME: This is broken because we needed to invoke fxc.exe (Direct3D Shader Compiler)
-      #        during the build. Maybe start it with WINE?
-      msg2 'Using ANGLE as OpenGL backend'
-      qt_configure_args+=' -angle'
-      # enable declarations of GLES functions
-      # FIXME: Still required?
-      qt_configure_args+=' -DGL_GLEXT_PROTOTYPES'
-    elif isDynamic; then
-      # FIXME: This is broken because is requires enabling the (bundled) ANGLE which is
-      #        broken (see comment under isANGLE).
-      msg2 'Using dynamic OpenGL backend'
-      qt_configure_args+=' -opengl dynamic'
-      qt_configure_args+=' -angle'
-      # enable declarations of GLES functions
-      # FIXME: Still required?
-      qt_configure_args+=' -DGL_GLEXT_PROTOTYPES'
-    fi
+    # FIXME: This is broken because we needed to invoke fxc.exe (Direct3D Shader Compiler)
+    #        during the build. Maybe start it with WINE?
+    msg2 'Using ANGLE as OpenGL backend'
+    qt_configure_args+=' -angle'
+    # enable declarations of GLES functions
+    # FIXME: Still required?
+    qt_configure_args+=' -DGL_GLEXT_PROTOTYPES'
 
     # add include directory of MariaDB
     qt_configure_args+=" -I/usr/${_arch}/include/mariadb"
@@ -257,25 +208,16 @@ build() {
 
     msg2 'Configure and build qmake'
     mkdir -p ../build-${_arch} && pushd ../build-${_arch}
-    if isStatic; then
-      qt_configure_args+=' -static'
+    qt_configure_args+=' -shared'
 
-      # configure static version to use linked OpenSSL
-      qt_configure_args+=' -openssl-linked'
-      export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32 -ldnsapi -liphlpapi"
+    # configure shared version to load OpenSSL dynamically
+    qt_configure_args+=' -openssl-runtime'
 
-    else
-      qt_configure_args+=' -shared'
+    qt_configure_args+=' -device-option CROSS_COMPILE_CUSTOM_CONFIG=actually_a_shared_build'
 
-      # configure shared version to load OpenSSL dynamically
-      qt_configure_args+=' -openssl-runtime'
-
-      qt_configure_args+=' -device-option CROSS_COMPILE_CUSTOM_CONFIG=actually_a_shared_build'
-
-      # override LD_LIBRARY_PATH so libraries for native build tools like libQt5Bootstrap.so are found
-      #export LD_LIBRARY_PATH="$PWD/lib"
-      #export LDFLAGS="-L$PWD/lib"
-    fi
+    # override LD_LIBRARY_PATH so libraries for native build tools like libQt5Bootstrap.so are found
+    #export LD_LIBRARY_PATH="$PWD/lib"
+    #export LDFLAGS="-L$PWD/lib"
 
     msg2 'Build qmake and configure' && ../${_pkgfqn}/configure $qt_configure_args
     msg2 'Build Qt libraries'        && make
@@ -297,91 +239,21 @@ package() {
     find -iname '*.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib/qt/plugins" --parents {} +
     popd
 
-    if isStatic; then
-      # The static release contains only the static libs itself but relies on the
-      # shared release for Qt5Bootstrap library and tools (qmake, uic, ...).
+    # remove DLLs from libdir (DLLs are installed in both bindir and libdir, one copy is sufficient)
+    find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
 
-      # drop Qt5Bootstrap and libraries which are only provided as static lib
-      # and hence already present in shared build (such as Qt5OpenGLExtensions)
-      rm -f \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}qt5main* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5AccessibilitySupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5DeviceDiscoverySupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5EdidSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5EventDispatcherSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5FbSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5FontDatabaseSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5PlatformCompositorSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5ThemeSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5OpenGLExtensions* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5PlatformSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5WindowsUIAutomationSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5VulkanSupport* \
-        "${pkgdir}/usr/${_arch}/lib/"libQt5Bootstrap* \
-      rm -r \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5AccessibilitySupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5DeviceDiscoverySupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5EdidSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5EventDispatcherSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5FbSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5FontDatabaseSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5PlatformCompositorSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5ThemeSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5OpenGLExtensions*" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5WindowsUIAutomationSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5VulkanSupport" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5Bootstrap" \
-        "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5BootstrapDBus"
+    # install missing libQt5BootstrapDBus.a manually
+    cp --target-directory "${pkgdir}/usr/${_arch}/lib" "$srcdir/build-${_arch}/lib/libQt5BootstrapDBus.a"
 
-      # ensure config files don't conflict with shared version
-      pushd "${pkgdir}/usr/${_arch}/lib/cmake"
-      for cmake_dir in $(find . ! -path . -type d ! -name 'Static*'); do
-        mkdir -p "./Static${cmake_dir:2}";
-        mv "${cmake_dir}/"* "./Static${cmake_dir:2}";
-        rm -r "${cmake_dir}"
-      done
-      rm -r "./StaticQt5OpenGLExtensions"
-      popd
-      rm "${pkgdir}/usr/${_arch}/lib/pkgconfig/StaticQt5OpenGLExtensions.pc"
+    # create symlinks for tools
+    mkdir -p "${pkgdir}/usr/bin"
+    for tool in qmake moc rcc uic qdbuscpp2xml qdbusxml2cpp qdoc syncqt.pl; do
+      ln -s "../${_arch}/lib/qt/bin/${tool}" "${pkgdir}/usr/bin/${_arch}-${tool}-qt5"
+    done
 
-      # create links to static plugins in lib directory
-      pushd "${pkgdir}/usr/${_arch}/lib/" && ln -s "./qt/plugins/"*/*.a . && popd
-
-      # keep a couple pri files not found in base
-      mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/qdevice.static.pri" "${pkgdir}/usr/${_arch}"
-      mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules/qt_plugin_"*.pri "${pkgdir}/usr/${_arch}"
-
-      # fix bad library order for static CMake builds caused by Qt5Gui.static.prl
-      sed -i -e "s|-lfreetype;|-lfreetype;-lharfbuzz;-lfreetype;-lbz2;|" \
-             -e "s| -lz;| |" \
-                "${pkgdir}/usr/${_arch}/lib/Qt5Gui.static.prl"
-
-      # delete duplicate files that are in the base package
-      rm -fR "${pkgdir}/usr/${_arch}/"{include,share}
-      rm -fR "${pkgdir}/usr/${_arch}/lib/"{qt/bin,qt/mkspecs}
-
-      # move pri files back
-      mkdir -p "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
-      mv "${pkgdir}/usr/${_arch}/qdevice.static.pri" "${pkgdir}/usr/${_arch}/lib/qt/mkspecs"
-      mv "${pkgdir}/usr/${_arch}/"*.pri "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
-
-    else # shared version
-      # remove DLLs from libdir (DLLs are installed in both bindir and libdir, one copy is sufficient)
-      find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
-
-      # install missing libQt5BootstrapDBus.a manually
-      cp --target-directory "${pkgdir}/usr/${_arch}/lib" "$srcdir/build-${_arch}/lib/libQt5BootstrapDBus.a"
-
-      # create symlinks for tools
-      mkdir -p "${pkgdir}/usr/bin"
-      for tool in qmake moc rcc uic qdbuscpp2xml qdbusxml2cpp qdoc syncqt.pl; do
-        ln -s "../${_arch}/lib/qt/bin/${tool}" "${pkgdir}/usr/bin/${_arch}-${tool}-qt5"
-      done
-
-      # create qt.conf containing plugin path, see https://github.com/Martchus/PKGBUILDs/issues/109
-      echo "[Paths]
+    # create qt.conf containing plugin path, see https://github.com/Martchus/PKGBUILDs/issues/109
+    echo "[Paths]
 Plugins = /usr/${_arch}/lib/qt/plugins" > "${pkgdir}/usr/${_arch}/bin/qt.conf"
-    fi
 
     # drop QMAKE_PRL_BUILD_DIR because reference the build dir
     find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
@@ -403,16 +275,14 @@ Plugins = /usr/${_arch}/lib/qt/plugins" > "${pkgdir}/usr/${_arch}/bin/qt.conf"
     find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:${PWD%/*}/build-${_arch}/lib:/usr/${_arch}/lib:g" {} \;
 
     # strip binaries, remove unuseful files
-    if ! isStatic; then
-      strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"*[!.pl]
-      strip --strip-debug "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"*.a
-      #strip --strip-unneeded "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"{,DBus}.so.${pkgver}
-    fi
-    if isStatic || [[ $NO_EXECUTABLES ]]; then
+    strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"*[!.pl]
+    strip --strip-debug "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"*.a
+    if [[ $NO_EXECUTABLES ]]; then
       find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
     else
       find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
     fi
+
     find "${pkgdir}/usr/${_arch}" \( -name '*.bat' -o -name '*.def' -o -name '*.exp' \) -delete
     find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
     find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;

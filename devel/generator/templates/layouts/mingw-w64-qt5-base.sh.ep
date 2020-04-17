@@ -1,0 +1,359 @@
+% my $is_static      = $variant_suffix_part =~ qr/static/;
+% my $is_angle       = $variant_suffix_part =~ qr/angle/;
+% my $is_dynamic     = $variant_suffix_part =~ qr/dynamic/;
+% my $is_no_opengl   = $variant_suffix_part =~ qr/noopengl/;
+% my $is_default     = !$is_angle && !$is_dynamic && !$is_no_opengl;
+% my $is_opengl      = $is_default || $variant_suffix_part =~ qr/(?<!no)opengl/;
+% my $opengl_backend = $is_opengl ? 'native' : $is_angle ? 'ANGLE' : $is_dynamic ? 'dynamic' : 'no';
+%
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+# Contributor: ant32 <antreimer@gmail.com>
+# Contributor: Filip Brcic <brcha@gna.org>
+# Contributor: jellysheep <max.mail@dameweb.de>
+
+# BEFORE COMMENTING OR REPORING ISSUES, PLEASE READ THE FILE `README.md` IN THIS REPOSITORY.
+# ALSO HAVE A LOOK AT THE COMMENTS IN THE AUR.
+
+% if ($is_angle || $is_dynamic) {
+# DOES NOT WORK YET, see comment in build() function
+
+% }
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+% if ($patch_files->size) {
+
+# All patches are managed at https://github.com/Martchus/qt<%== $qt_module %>
+% }
+
+_qt_module=qt<%== $qt_module %>
+pkgname=<%= $package_name %>
+pkgver=5.14.2
+pkgrel=1
+pkgdesc='A cross-platform application and UI framework, <%= $opengl_backend %> OpenGL backend (mingw-w64)'
+% if ($is_static) {
+arch=('any')
+% } else {
+arch=('i686' 'x86_64')
+% }
+url='https://www.qt.io/'
+license=('GPL3' 'LGPL3' 'FDL' 'custom')
+depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
+         'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
+         'mingw-w64-pcre2')
+% if ($is_static) {
+depends+=(${pkgname%-static}) # the static version relies on the shared version for build tools and headers
+% }
+optdepends=('mingw-w64-mesa: use LLVMpipe software rasterizer for Qt Quick'
+            'mingw-w64-postgresql: PostgreSQL support'
+            'mingw-w64-mariadb-connector-c: MySQL support')
+makedepends=('mingw-w64-gcc' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c'
+             'mingw-w64-vulkan-headers' 'mingw-w64-pkg-config' 'mingw-w64-environment')
+% if ($is_angle || $is_dynamic) {
+# makedepends+=('mingw-w64-wine') # the dynamic/ANGLE version needs to run fxc.exe (not implemented yet)
+% }
+groups=('mingw-w64-qt5')
+% unless ($is_default) {
+%   if ($is_static) {
+provides+=('mingw-w64-qt5-base-static')
+conflicts+=('mingw-w64-qt5-base-static' 'mingw-w64-qt5-base-angle-static' 'mingw-w64-qt5-base-noopengl-static'
+            'mingw-w64-qt5-base-dynamic-static' 'mingw-w64-qt5-base-openql-static')
+%   } else {
+provides+=('mingw-w64-qt5-base')
+conflicts+=('mingw-w64-qt5-base' 'mingw-w64-qt5-base-angle' 'mingw-w64-qt5-base-noopengl'
+            'mingw-w64-qt5-base-dynamic' 'mingw-w64-qt5-base-openql')
+%   }
+% }
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+prepare() {
+  cd "${srcdir}/${_pkgfqn}"
+
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+
+  # make sure the Qt 5 build system uses our external PCRE library and zlib
+  rm -rf src/3rdparty/{pcre,zlib}
+
+  # clear buildflags ('!buildflags' only effects build() but not prepare())
+  unset CPPFLAGS CFLAGS CXXFLAGS LDFLAGS PKG_CONFIG_PATH
+
+  # build qmake using mingw-w64 {C,CXX,LD}FLAGS
+  # * This also sets default {C,CXX,LD}FLAGS for projects built using qmake.
+  source mingw-env
+  sed -i -e "s|^\(QMAKE_CFLAGS_RELEASE.*=\).*$|\1 ${CFLAGS}|" \\
+         -e "s|^\(QMAKE_CXXFLAGS_RELEASE.*=\).*$|\1 ${CXXFLAGS}|" \\
+         -e "s|^\(QMAKE_LFLAGS_RELEASE.*=\).*$|\1 ${LDFLAGS}|" \\
+    mkspecs/common/gcc-base.conf \\
+    mkspecs/common/g++-win32.conf
+  sed -i -e "s|^\(QMAKE_LFLAGS_RELEASE.*=\).*$|\1|" \\
+    mkspecs/common/g++-unix.conf
+}
+
+build() {
+  cd "${srcdir}/${_pkgfqn}"
+
+  for _arch in ${_architectures}; do
+    # define general configure arguments
+    local qt_configure_args="\\
+      -xplatform win32-g++ \\
+      -optimized-qmake \\
+      -verbose \\
+      -opensource \\
+      -confirm-license \\
+      -force-pkg-config \\
+      -force-debug-info \\
+      -system-zlib \\
+      -system-libpng \\
+      -system-libjpeg \\
+      -system-sqlite \\
+      -system-freetype \\
+      -system-harfbuzz \\
+      -system-pcre \\
+      -no-fontconfig \\
+      -sql-mysql \\
+      -sql-psql \\
+      -sql-sqlite \\
+      -dbus-linked \\
+      -no-glib \\
+      -no-icu \\
+      -iconv \\
+      -nomake examples \\
+      -make tools \\
+      -hostprefix /usr/${_arch} \\
+      -hostdatadir /usr/${_arch}/lib/qt \\
+      -hostbindir /usr/${_arch}/lib/qt/bin \\
+      -prefix /usr/${_arch} \\
+      -bindir /usr/${_arch}/bin \\
+      -archdatadir /usr/${_arch}/lib/qt \\
+      -datadir /usr/${_arch}/share/qt \\
+      -docdir /usr/${_arch}/share/doc/qt \\
+      -examplesdir /usr/${_arch}/share/qt/examples \\
+      -headerdir /usr/${_arch}/include/qt \\
+      -libdir /usr/${_arch}/lib \\
+      -plugindir /usr/${_arch}/lib/qt/plugins \\
+      -sysconfdir /usr/${_arch}/etc \\
+      -translationdir /usr/${_arch}/share/qt/translations \\
+      -device-option CROSS_COMPILE=${_arch}- \\
+      -device-option CROSS_COMPILE_PREFIX=/usr/${_arch}"
+
+    # allows using ccache despite the use of pre-compile header (sloppiness must be set to pch_defines,time_macros in ccache config for this)
+    qt_configure_args+=' -device-option CROSS_COMPILE_CFLAGS=-fpch-preprocess'
+    qt_configure_args+=' -device-option CROSS_COMPILE_CXXFLAGS=-fpch-preprocess'
+
+    # add include directory of freetype2 and dbus manually (pkg-config detection in qmake doesn't work which is currently ignored via a patch)
+    qt_configure_args+=" $(${_arch}-pkg-config --cflags-only-I freetype2 dbus-1 | sed -e "s/-I\/usr\/${_arch}\/include //g")"
+    # note: The sed is required to prevent -isystem /usr/${_arch}/include (qmake will turn -I into -isystem) which would lead to
+    #       the same issue as here: https://github.com/Martchus/tageditor/issues/22#issuecomment-330899141
+
+    # enable debug build if MINGW_W64_QT_DEBUG_BUILD is set (could be set in eg. /etc/makepkg.config if debug build is wanted)
+    [[ $MINGW_W64_QT_DEBUG_BUILD ]] \\
+      && qt_configure_args+=' -debug-and-release' \\
+      || qt_configure_args+=' -release'
+
+    # configure usage of ANGLE/OpenGL
+% if ($is_opengl) {
+    msg2 'Using native OpenGL backend'
+    qt_configure_args+=' -opengl desktop'
+% } elsif ($is_no_opengl) {
+    msg2 'Building without OpenGL support'
+    qt_configure_args+=' -no-opengl'
+% } elsif ($is_angle) {
+    # FIXME: This is broken because we needed to invoke fxc.exe (Direct3D Shader Compiler)
+    #        during the build. Maybe start it with WINE?
+    msg2 'Using ANGLE as OpenGL backend'
+    qt_configure_args+=' -angle'
+    # enable declarations of GLES functions
+    # FIXME: Still required?
+    qt_configure_args+=' -DGL_GLEXT_PROTOTYPES'
+% } elsif ($is_dynamic) {
+    # FIXME: This is broken because is requires enabling the (bundled) ANGLE which is
+    #        broken because we needed to invoke fxc.exe (Direct3D Shader Compiler)
+    #        during the build. Maybe start it with WINE?
+    msg2 'Using dynamic OpenGL backend'
+    qt_configure_args+=' -opengl dynamic'
+    qt_configure_args+=' -angle'
+    # enable declarations of GLES functions
+    # FIXME: Still required?
+    qt_configure_args+=' -DGL_GLEXT_PROTOTYPES'
+% }
+
+    # add include directory of MariaDB
+    qt_configure_args+=" -I/usr/${_arch}/include/mariadb"
+
+    # add include directory for Vulkan
+    export VULKAN_SDK=/usr/${_arch}
+
+    msg2 'Configure and build qmake'
+    mkdir -p ../build-${_arch} && pushd ../build-${_arch}
+% if ($is_static) {
+    qt_configure_args+=' -static'
+
+    # configure static version to use linked OpenSSL
+    qt_configure_args+=' -openssl-linked'
+    export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32 -ldnsapi -liphlpapi"
+% } else {
+    qt_configure_args+=' -shared'
+
+    # configure shared version to load OpenSSL dynamically
+    qt_configure_args+=' -openssl-runtime'
+
+    qt_configure_args+=' -device-option CROSS_COMPILE_CUSTOM_CONFIG=actually_a_shared_build'
+
+    # override LD_LIBRARY_PATH so libraries for native build tools like libQt5Bootstrap.so are found
+    #export LD_LIBRARY_PATH="$PWD/lib"
+    #export LDFLAGS="-L$PWD/lib"
+% }
+
+    msg2 'Build qmake and configure' && ../${_pkgfqn}/configure $qt_configure_args
+    msg2 'Build Qt libraries'        && make
+
+    popd
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "$srcdir/${_pkgfqn}"
+    make install -C ../build-${_arch} INSTALL_ROOT="${pkgdir}"
+
+    # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
+    pushd "$srcdir/build-${_arch}/lib"
+    find -iname '*.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib" --parents {} +
+    popd
+    pushd "$srcdir/build-${_arch}/plugins"
+    find -iname '*.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib/qt/plugins" --parents {} +
+    popd
+
+% if ($is_static) {
+    # The static release contains only the static libs itself but relies on the
+    # shared release for the bootstrap library and tools (qmake, uic, ...).
+
+    # drop Qt5Bootstrap and libraries which are only provided as static lib
+    # and hence already present in shared build (such as Qt5OpenGLExtensions)
+    rm -f \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}qt5main* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5AccessibilitySupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5DeviceDiscoverySupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5EdidSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5EventDispatcherSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5FbSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5FontDatabaseSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5PlatformCompositorSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5ThemeSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5OpenGLExtensions* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5PlatformSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5WindowsUIAutomationSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"{lib,}Qt5VulkanSupport* \\
+      "${pkgdir}/usr/${_arch}/lib/"libQt5Bootstrap* \\
+    rm -r \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5AccessibilitySupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5DeviceDiscoverySupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5EdidSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5EventDispatcherSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5FbSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5FontDatabaseSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5PlatformCompositorSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5ThemeSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5OpenGLExtensions*" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5WindowsUIAutomationSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5VulkanSupport" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5Bootstrap" \\
+      "${pkgdir}/usr/${_arch}/lib/cmake/StaticQt5BootstrapDBus"
+
+    # ensure config files don't conflict with shared version
+    pushd "${pkgdir}/usr/${_arch}/lib/cmake"
+    for cmake_dir in $(find . ! -path . -type d ! -name 'Static*'); do
+      mkdir -p "./Static${cmake_dir:2}";
+      mv "${cmake_dir}/"* "./Static${cmake_dir:2}";
+      rm -r "${cmake_dir}"
+    done
+    rm -r "./StaticQt5OpenGLExtensions"
+    popd
+    rm "${pkgdir}/usr/${_arch}/lib/pkgconfig/StaticQt5OpenGLExtensions.pc"
+
+    # create links to static plugins in lib directory
+    pushd "${pkgdir}/usr/${_arch}/lib/" && ln -s "./qt/plugins/"*/*.a . && popd
+
+    # keep a couple pri files not found in base
+    mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/qdevice.static.pri" "${pkgdir}/usr/${_arch}"
+    mv "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules/qt_plugin_"*.pri "${pkgdir}/usr/${_arch}"
+
+    # fix bad library order for static CMake builds caused by Qt5Gui.static.prl
+    sed -i -e "s|-lfreetype;|-lfreetype;-lharfbuzz;-lfreetype;-lbz2;|" \\
+            -e "s| -lz;| |" \\
+              "${pkgdir}/usr/${_arch}/lib/Qt5Gui.static.prl"
+
+    # delete duplicate files that are in the base package
+    rm -fR "${pkgdir}/usr/${_arch}/"{include,share}
+    rm -fR "${pkgdir}/usr/${_arch}/lib/"{qt/bin,qt/mkspecs}
+
+    # move pri files back
+    mkdir -p "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
+    mv "${pkgdir}/usr/${_arch}/qdevice.static.pri" "${pkgdir}/usr/${_arch}/lib/qt/mkspecs"
+    mv "${pkgdir}/usr/${_arch}/"*.pri "${pkgdir}/usr/${_arch}/lib/qt/mkspecs/modules"
+% } else { # shared version
+    # remove DLLs from libdir (DLLs are installed in both bindir and libdir, one copy is sufficient)
+    find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name "*.dll" -exec rm {} \;
+
+    # install missing libQt5BootstrapDBus.a manually
+    cp --target-directory "${pkgdir}/usr/${_arch}/lib" "$srcdir/build-${_arch}/lib/libQt5BootstrapDBus.a"
+
+    # create symlinks for tools
+    mkdir -p "${pkgdir}/usr/bin"
+    for tool in qmake moc rcc uic qdbuscpp2xml qdbusxml2cpp qdoc syncqt.pl; do
+      ln -s "../${_arch}/lib/qt/bin/${tool}" "${pkgdir}/usr/bin/${_arch}-${tool}-qt5"
+    done
+
+    # create qt.conf containing plugin path, see https://github.com/Martchus/PKGBUILDs/issues/109
+    echo "[Paths]
+Plugins = /usr/${_arch}/lib/qt/plugins" > "${pkgdir}/usr/${_arch}/bin/qt.conf"
+% }
+
+    # drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find "${pkgdir}/usr/${_arch}/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+    # remove doc
+    rm -rf "${pkgdir}/usr/${_arch}/share/doc"
+
+    # remove prl files for debug version
+    if ! [[ $MINGW_W64_QT_DEBUG_BUILD ]]; then
+      for file in $(find "${pkgdir}/usr/${_arch}" -name '*d.prl' -o -name '*d.static.prl'); do
+        [ -f "${file%d*}${file##*d}" ] && rm "${file}";
+      done
+    fi
+
+    # remove '.static.prl' files
+    find "${pkgdir}/usr/${_arch}" -name '.static.prl' -delete
+
+    # replace library path in *.prl files so it points to the installed location and not the build directory
+    find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:${PWD%/*}/build-${_arch}/lib:/usr/${_arch}/lib:g" {} \;
+
+    # strip binaries, remove unuseful files
+% if ($is_static) {
+    find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
+% } else {
+    strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"*[!.pl]
+    strip --strip-debug "${pkgdir}/usr/${_arch}/lib/libQt5Bootstrap"*.a
+    if [[ $NO_EXECUTABLES ]]; then
+      find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
+    else
+      find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
+    fi
+% }
+
+    find "${pkgdir}/usr/${_arch}" \( -name '*.bat' -o -name '*.def' -o -name '*.exp' \) -delete
+    find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;
+  done
+}

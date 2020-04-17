@@ -11,6 +11,11 @@ use warnings;
 use strict;
 use utf8;
 
+my @vcs_0_variant_suffixes = (qw(git svn hg));
+my @cfg_0_variant_suffixes = (qw(static));
+my @cfg_1_variant_suffixes = (qw(doc test cli angle dynamic opengl noopengl));
+my @variant_suffixes       = (\@vcs_0_variant_suffixes, \@cfg_0_variant_suffixes, \@cfg_1_variant_suffixes);
+
 sub is_outdated {
     my ($source_path, $target_path) = @_;
 
@@ -59,10 +64,11 @@ for my $top_level_dir (@$top_level_dirs) {
         if (!-f $template_file) {
             # print warning; all additional Qt repos for mingw-w64 should be converted to use templates now
             $log->warn("No template $template_file_name present for Qt module $qt_module and variant $variant")
-                if defined $qt_module && $qt_module ne 'base' && index($variant, 'mingw-w64') == 0;
+                if defined $qt_module && index($variant, 'mingw-w64') == 0 && $variant !~ qr/.*-test$/;
             next;
         }
 
+        # determine files
         my $files = $variant_dir->list;
         my $patch_files = $files->grep(qr/.*\.patch/);
         my $qt_module_sha256_file = defined $qt_module
@@ -71,14 +77,33 @@ for my $top_level_dir (@$top_level_dirs) {
         my $qt_module_sha256 = defined $qt_module_sha256_file && -f $qt_module_sha256_file
             ? Mojo::Util::trim($qt_module_sha256_file->slurp)
             : "$qt_module_sha256_file missing";
+
+        # determine variant parts
+        my $variant_prefix_part = $variant;
+        my $variant_suffix_part = '';
+        if ($variant) {
+            for my $variant_suffixes (@variant_suffixes) {
+                for my $variant_suffix (@$variant_suffixes) {
+                    next unless $variant =~ qr/.*-$variant_suffix$/;
+                    $variant_prefix_part = substr($variant, 0, length($variant) - length($variant_suffix) - 1);
+                    $variant_suffix_part = $variant_suffix_part ? "$variant_suffix-$variant_suffix_part" : $variant_suffix;
+                    last;
+                }
+            }
+        }
+        my $package_name_prefix = $variant_prefix_part ? "$variant_prefix_part-" : "";
+        my $package_name_suffix = $variant_suffix_part ? "-$variant_suffix_part" : "";
+
         push(@pages, {
                 install_path => "$default_package_name/$variant/PKGBUILD",
                 template_params => [
                 template => "$default_package_name/$variant/PKGBUILD",
                 stash_variables => {
                     variant => $variant,
+                    variant_prefix_part => $variant_prefix_part,
+                    variant_suffix_part => $variant_suffix_part,
                     default_package_name => $default_package_name,
-                    package_name => "$variant-$default_package_name",
+                    package_name => "$package_name_prefix$default_package_name$package_name_suffix",
                     files => $files,
                     patch_files => $patch_files,
                     qt_module => $qt_module,

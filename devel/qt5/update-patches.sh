@@ -88,6 +88,10 @@ if ! git checkout "${branch}"; then
     exit 0
 fi
 git format-patch "origin/${pkgver}" --output-directory "$dest"
+for other_variant_dir in "$dest/../$variant"?*; do
+    [[ -d $other_variant_dir ]] || continue
+    cp --target-directory="$other_variant_dir" "$dest/"*.patch
+done
 popd > /dev/null
 
 # skip if building all Qt modules in one package (currently used for Android target)

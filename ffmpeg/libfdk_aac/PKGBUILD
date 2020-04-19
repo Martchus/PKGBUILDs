@@ -79,6 +79,7 @@ makedepends=(
 optdepends=(
   'intel-media-sdk: Intel QuickSync support'
   'ladspa: LADSPA filters'
+  'nvidia-utils: Nvidia NVDEC/NVENC support'
 )
 provides=(
   libavcodec.so

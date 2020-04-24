@@ -3,25 +3,19 @@
 
 pkgname=nginx-mod-substitutions-filter
 pkgver=0.6.4.110.b8a71ea
-pkgrel=1
+pkgrel=2
 _dirname="$pkgname"
-_nginxver=1.16.1
+_nginxver=1.18.0
 
 pkgdesc='NGINX filter module which can do both regular expression and fixed string substitutions'
 arch=('x86_64')
 depends=("nginx=$_nginxver" "libutil-linux")
-makedepends=('git')
+makedepends=("nginx-src" "git")
 url='https://github.com/yaoweibin/ngx_http_substitutions_filter_module'
 license=('BSD')
 
-source=(
-  https://nginx.org/download/nginx-$_nginxver.tar.gz{,.asc}
-  "$pkgname::git+https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git#commit=${pkgver##*.}"
-)
-validpgpkeys=(B0F4253373F8F6F510D42178520A9993A1C052F8) # Maxim Dounin <mdounin@mdounin.ru>
-sha256sums=('f11c2a6dd1d3515736f0324857957db2de98be862461b5a542a3ac6188dbe32b'
-            'SKIP'
-            'SKIP')
+source=("$pkgname::git+https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git#commit=${pkgver##*.}")
+sha256sums=('SKIP')
 
 prepare() {
   cd "$srcdir/$_dirname"
@@ -35,14 +29,15 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir"/nginx-$_nginxver
+  cp -r /usr/src/nginx .
+  cd "$srcdir"/nginx
   ./configure --with-compat --add-dynamic-module="../$_dirname"
   make modules
 }
 
 package() {
   install -Dm755 "$srcdir/$_dirname/README" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" # license is part of the README
-  cd "$srcdir"/nginx-$_nginxver/objs
+  cd "$srcdir"/nginx/objs
   for mod in ngx_*.so; do
     install -Dm755 $mod "$pkgdir"/usr/lib/nginx/modules/$mod
   done

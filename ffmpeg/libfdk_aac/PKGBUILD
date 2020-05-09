@@ -10,7 +10,7 @@
 _name=ffmpeg
 pkgname=ffmpeg-libfdk_aac
 pkgver=4.2.2
-pkgrel=5
+pkgrel=6
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with libfdk-aac support)'
 arch=('x86_64')
@@ -64,6 +64,7 @@ depends=(
   opus
   sdl2
   speex
+  srt
   v4l-utils
   xz
   zlib
@@ -140,6 +141,7 @@ build() {
     --enable-libpulse \
     --enable-libsoxr \
     --enable-libspeex \
+    --enable-libsrt \
     --enable-libssh \
     --enable-libtheora \
     --enable-libv4l2 \

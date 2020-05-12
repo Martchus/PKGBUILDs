@@ -5,7 +5,7 @@
 
 pkgname=sphinxbase
 pkgver=5prealpha
-pkgrel=12
+pkgrel=11
 pkgdesc='Common library for sphinx speech recognition.'
 url='http://cmusphinx.sourceforge.net/'
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ source=("http://downloads.sourceforge.net/project/cmusphinx/${pkgname}/${pkgver}
         "sphinxbase-5prealpha-fix-doxy2swig.patch")
 
 sha256sums=('f72bdb59e50b558bed47cc2105777200d2b246a0f328e913de16a9b22f9a246f'
-	    '1cb485202f83dc517872f5ab41f59d18884af1b85799166d80e08860f7729919')
+            '1cb485202f83dc517872f5ab41f59d18884af1b85799166d80e08860f7729919')
 options=('!libtool')
 
 prepare() {

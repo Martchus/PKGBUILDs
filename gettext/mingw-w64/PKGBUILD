@@ -3,7 +3,7 @@
 
 pkgname=mingw-w64-gettext
 pkgver=0.19.8.1
-pkgrel=1
+pkgrel=3
 arch=('any')
 pkgdesc='GNU internationalization library (mingw-w64)'
 depends=('mingw-w64-termcap' 'mingw-w64-libunistring')
@@ -44,6 +44,7 @@ prepare() {
   patch -p0 -i ${srcdir}/08-vs-compatible.patch
   # prevents "Cannot export rpl_printf: symbol not found"
   patch -p0 -i ${srcdir}/09-gnulib-fix-underscore-cond.patch
+  autoreconf -i
 }
 
 build() {
@@ -57,6 +58,7 @@ build() {
     [[ ${_arch} == i686-w64-mingw32 ]] && underscore_flag='-DUSER_LABEL_PREFIX_UNDERSCORE'
     export CFLAGS="$underscore_flag"
     export CXXFLAGS="$underscore_flag"
+    export LDFLAGS="-lssp"
     ${_arch}-configure \
       --disable-java \
       --disable-native-java \

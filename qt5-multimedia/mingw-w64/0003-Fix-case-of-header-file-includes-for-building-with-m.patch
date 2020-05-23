@@ -1,7 +1,7 @@
-From 67df270176cc41e18c8ce38df4dc7d756d8ac6e6 Mon Sep 17 00:00:00 2001
+From b793997df8f734cb93d906b6f2ff194f70c38de1 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 29 Dec 2019 00:39:46 +0100
-Subject: [PATCH 4/4] Fix case of header file includes for building with
+Subject: [PATCH 3/4] Fix case of header file includes for building with
  mingw-w64
 
 Change-Id: Ie0e6599234c38c5e5a75b681a911f3728871861e
@@ -54,7 +54,7 @@ index ede3f6b0..98dd7c2f 100644
  #include <wrl.h>
  #include <windows.devices.enumeration.h>
 diff --git a/src/plugins/wmf/player/mfplayersession.cpp b/src/plugins/wmf/player/mfplayersession.cpp
-index 10ba2599..a4e37129 100644
+index 24bfda83..e91b842d 100644
 --- a/src/plugins/wmf/player/mfplayersession.cpp
 +++ b/src/plugins/wmf/player/mfplayersession.cpp
 @@ -56,7 +56,7 @@
@@ -93,5 +93,5 @@ index c6f4e856..15ef6f0a 100644
  #include <QtCore/qfile.h>
  #include <QtCore/qdebug.h>
 -- 
-2.26.0
+2.26.2
 

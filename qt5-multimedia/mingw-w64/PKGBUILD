@@ -29,13 +29,13 @@ _pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Recorder-includes-to-prevent-conflict-with-vsnprintf.patch'
         '0002-Fix-build-with-ANGLE.patch'
-        '0003-Link-directshow-plugin-against-libamstrmid.patch'
-        '0004-Fix-case-of-header-file-includes-for-building-with-m.patch')
+        '0003-Fix-case-of-header-file-includes-for-building-with-m.patch'
+        '0004-Workaround-multiple-definition-errors-with-amstrmid-.patch')
 sha256sums=('7acd8ede6835314206e407b35b668f0add67544577fb51fe67afb03137fb9fe9'
-            '99ef1ba681ad5db2e5f3ae3f83de7e25a63e6885befd236b0381f1940a464dab'
-            '72da977e5489d04fc5396cb25f3d56b0dd8bfd5b6ea543d06ba18bc1bb5bfdcb'
-            '9222eec2ae3f4d3e007c99ed6dfe5852cc98e797e1c7c78583ed1b2f9eab3919'
-            'ab81776ff0f05f45c8c265af92ef167aebd3e1ae3ee41a715163838e0f18523b')
+            '2afce1c070f69014ccabf205b1cabeee0e98ddee4dc97e05af987c56f007332f'
+            'c95c6f16e26ea658164ca0954b4dd047f81be8e1cab4f837d5ae0af893aa6902'
+            '141f3b3dfb96bb0f5762804730c3442b8c8de03ffb76220914c7ae6adbd4ebd1'
+            '6c43a5eb331b72497dd43e462fe99a61d44b5109ef0c44c52f8216f1b8cca94c')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

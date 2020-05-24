@@ -1,0 +1,20 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=plasma-wayland-session-no-dbus
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc='Plasma Wayland session without D-Bus'
+license=('BSD')
+depends=(plasma-workspace qt5-wayland kwayland-integration xorg-server-xwayland)
+url=
+source=('plasmawayland-no-dbus.desktop')
+sha512sums=('53beb361546467f5897e633742444a1f7820b6a873d1469c3c3796f5a3da4e9237bd0439c069719ad7375aecffdc167ec82fd6432019d87a60806c731ef6ec66')
+
+package() {
+  cd "$srcdir"
+  install -Dm644 plasmawayland-no-dbus.desktop "$pkgdir"/usr/share/wayland-sessions/plasmawayland-no-dbus.desktop
+}

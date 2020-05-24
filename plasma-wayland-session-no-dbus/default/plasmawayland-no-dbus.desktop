@@ -1,0 +1,4 @@
+[Desktop Entry]
+Exec=/usr/bin/startplasma-wayland
+DesktopNames=KDE
+Name=Plasma (Wayland, no D-Bus)

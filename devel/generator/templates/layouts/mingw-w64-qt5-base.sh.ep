@@ -28,8 +28,8 @@
 
 _qt_module=qt<%== $qt_module %>
 pkgname=<%= $package_name %>
-pkgver=5.14.2
-pkgrel=2
+pkgver=5.15.0
+pkgrel=1
 pkgdesc='A cross-platform application and UI framework, <%= $opengl_backend %> OpenGL backend (mingw-w64)'
 % if ($is_static) {
 arch=('any')
@@ -281,6 +281,7 @@ package() {
     rm -r "./StaticQt5OpenGLExtensions"
     popd
     rm "${pkgdir}/usr/${_arch}/lib/pkgconfig/StaticQt5OpenGLExtensions.pc"
+    rm "${pkgdir}/usr/${_arch}/lib/metatypes/"*
 
     # create links to static plugins in lib directory
     pushd "${pkgdir}/usr/${_arch}/lib/" && ln -s "./qt/plugins/"*/*.a . && popd

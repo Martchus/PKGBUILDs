@@ -1,7 +1,7 @@
-From cefa00dbb94efcbc8be4d28d4a2fafb837dc9146 Mon Sep 17 00:00:00 2001
+From 901bf854204cb2f9a4df9b9771183971f3c2f609 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 23 May 2020 15:43:20 +0200
-Subject: [PATCH 4/4] Workaround "multiple definition" errors with
+Subject: [PATCH 3/3] Workaround "multiple definition" errors with
  amstrmid/strmiids
 
 ---

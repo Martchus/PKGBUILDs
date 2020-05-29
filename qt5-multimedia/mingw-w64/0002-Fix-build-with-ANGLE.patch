@@ -1,7 +1,7 @@
-From 5ec9ce627f5c18775ea118c53108e931d33dfc52 Mon Sep 17 00:00:00 2001
+From 13781a67c9ee7ccaa861ebba110ac740446c6edc Mon Sep 17 00:00:00 2001
 From: Jose Santiago <jsantiago@haivision.com>
 Date: Thu, 3 Nov 2016 14:36:10 -0500
-Subject: [PATCH 2/4] Fix build with ANGLE
+Subject: [PATCH 2/3] Fix build with ANGLE
 
 ---
  src/plugins/common/evr/evrd3dpresentengine.cpp | 6 +++---

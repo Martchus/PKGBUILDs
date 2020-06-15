@@ -38,6 +38,11 @@ build() {
   make
 }
 
+check() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
+  make QT_QPA_PLATFORM=offscreen check
+}
+
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   make DESTDIR="${pkgdir}" install

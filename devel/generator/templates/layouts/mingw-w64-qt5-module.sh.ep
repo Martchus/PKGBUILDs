@@ -4,7 +4,7 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-# This file is created from PKGBUILD.sh.in contained by the mentioned repository.
+# This file is created from PKGBUILD.sh.ep contained by the mentioned repository.
 # Do not edit it manually! See README.md in the repository's root directory
 # for more information.
 % if ($patch_files->size) {
@@ -19,7 +19,7 @@
 
 <%== content_for 'comment_header' %>\
 _qt_module=qt<%== $qt_module %>
-pkgname=mingw-w64-qt5-<%== $qt_module %>
+pkgname=mingw-w64-qt5-<%== $qt_module %><%== $static_variant ? '-static' : '' %>
 <%== content %>\
 options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')
@@ -33,14 +33,23 @@ sha256sums=('<%== $qt_module_sha256 %>'\
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
 % if ($static_config) {
+% if ($static_variant) {
+depends+=(${pkgname%-static}) # the static version relies on the shared version for build tools and headers
+% }
+% else {
 [[ $NO_STATIC_LIBS ]] || \\
   makedepends+=('mingw-w64-qt5-base-static') \\
   optdepends+=('mingw-w64-qt5-base-static: use of static libraries') \\
-  _configurations+=('CONFIG+=no_smart_library_merge <%== content_for 'static_config' %>CONFIG+=static')
+  \
+% }
+_configurations+=('CONFIG+=no_smart_library_merge <%== content_for 'static_config' %>CONFIG+=static')
 % }
 % if ($shared_config) {
+% if ($shared_config && $static_config) {
 [[ $NO_SHARED_LIBS ]] || \\
-  _configurations+=('CONFIG+=actually_a_shared_build <%== content_for 'shared_config' %>CONFIG+=shared')
+  \
+% }
+_configurations+=('CONFIG+=actually_a_shared_build <%== content_for 'shared_config' %>CONFIG+=shared')
 % }
 <%== content_for 'helper_functions' %>\
 
@@ -112,10 +121,23 @@ package() {
       # remove '.static.prl' files
       find "${pkgdir}/usr/${_arch}" -name '.static.prl' -delete
 
+% if ($static_variant) {
+      # delete duplicate files that are in the shared package
+      find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
+      for shared_path in "${pkgdir}/usr/${_arch}/"{include,share} "${pkgdir}/usr/${_arch}/lib/"{qt/bin,qt/mkspecs}; do
+        [[ -d $shared_path ]] && rm -fR "$shared_path"
+      done
+      for file in $(find "$pkgdir/usr/$_arch/lib"); do
+        [[ -f "${file##$pkgdir}" ]] && rm "$file"
+      done
+
+% }
       find "${pkgdir}/usr/${_arch}/lib" -maxdepth 1 -name '*.dll' -delete
+% unless ($static_variant) {
       [ "$NO_STATIC_EXECUTABLES" -a "${_config##*=}" = static -o "$NO_EXECUTABLES" ] && \\
         find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete || \\
         find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip --strip-all {} \;
+% }
       find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
       find "${pkgdir}/usr/${_arch}" \( -name '*.a' -not -name 'libQt5QmlDevTools.a' -not -name 'libQt5Bootstrap.a' \) -exec ${_arch}-strip -g {} \;
       [[ -d "${pkgdir}/usr/${_arch}/lib/qt/bin/" ]] && \\

@@ -1,4 +1,3 @@
-% my $is_static      = $variant_suffix_part =~ qr/static/;
 % my $is_angle       = $variant_suffix_part =~ qr/angle/;
 % my $is_dynamic     = $variant_suffix_part =~ qr/dynamic/;
 % my $is_no_opengl   = $variant_suffix_part =~ qr/noopengl/;
@@ -21,6 +20,10 @@
 % }
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
+
+# This file is created from PKGBUILD.sh.ep contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
 % if ($patch_files->size) {
 
 # All patches are managed at https://github.com/Martchus/qt<%== $qt_module %>
@@ -31,17 +34,13 @@ pkgname=<%= $package_name %>
 pkgver=5.15.0
 pkgrel=1
 pkgdesc='A cross-platform application and UI framework, <%= $opengl_backend %> OpenGL backend (mingw-w64)'
-% if ($is_static) {
-arch=('any')
-% } else {
-arch=('i686' 'x86_64')
-% }
+arch=(<%== include 'fragments/mingw-w64-qt5-non_any_archs' %>)
 url='https://www.qt.io/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
 depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
          'mingw-w64-pcre2')
-% if ($is_static) {
+% if ($static_variant) {
 depends+=(${pkgname%-static}) # the static version relies on the shared version for build tools and headers
 % }
 optdepends=('mingw-w64-mesa: use LLVMpipe software rasterizer for Qt Quick'
@@ -54,7 +53,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector
 % }
 groups=('mingw-w64-qt5')
 % unless ($is_default) {
-%   if ($is_static) {
+%   if ($static_variant) {
 provides+=('mingw-w64-qt5-base-static')
 conflicts+=('mingw-w64-qt5-base-static' 'mingw-w64-qt5-base-angle-static' 'mingw-w64-qt5-base-noopengl-static'
             'mingw-w64-qt5-base-dynamic-static' 'mingw-w64-qt5-base-openql-static')
@@ -196,7 +195,7 @@ build() {
 
     msg2 'Configure and build qmake'
     mkdir -p ../build-${_arch} && pushd ../build-${_arch}
-% if ($is_static) {
+% if ($static_variant) {
     qt_configure_args+=' -static'
 
     # configure static version to use linked OpenSSL
@@ -235,7 +234,7 @@ package() {
     find -iname '*.prl' -exec cp --target-directory "${pkgdir}/usr/${_arch}/lib/qt/plugins" --parents {} +
     popd
 
-% if ($is_static) {
+% if ($static_variant) {
     # The static release contains only the static libs itself but relies on the
     # shared release for the bootstrap library and tools (qmake, uic, ...).
 
@@ -341,7 +340,7 @@ Plugins = /usr/${_arch}/lib/qt/plugins" > "${pkgdir}/usr/${_arch}/bin/qt.conf"
     find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "s:${PWD%/*}/build-${_arch}/lib:/usr/${_arch}/lib:g" {} \;
 
     # strip binaries, remove unuseful files
-% if ($is_static) {
+% if ($static_variant) {
     find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
 % } else {
     strip --strip-all "${pkgdir}/usr/${_arch}/lib/qt/bin/"*[!.pl]

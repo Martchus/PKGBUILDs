@@ -8,7 +8,7 @@ pkgver=5.15.0
 pkgrel=1
 arch=('any')
 pkgdesc="Network authentication module (mingw-w64)"
-depends=('mingw-w64-qt5-base')
+depends=(<%== qt5deps qw(base) %>)
 optdepends=()
 makedepends=('mingw-w64-gcc')
 license=('GPL3' 'LGPL3' 'FDL' 'custom')

@@ -41,6 +41,21 @@ unless (-d $install_directory) {
     exit(-1);
 }
 
+# add helper to render qt5 dependencies
+$mojolicious->helper(qt5deps => sub {
+    my $c = shift;
+    my $prefix = $c->stash('package_name_prefix');
+    my $suffix = $c->stash('package_name_suffix');
+    return join(' ', map { "'${prefix}qt5-${_}${suffix}'" } @_);
+});
+$mojolicious->helper(qt5optdeps => sub {
+    my $c = shift;
+    my %d = @_;
+    my $prefix = $c->stash('package_name_prefix');
+    my $suffix = $c->stash('package_name_suffix');
+    return join(' ', map { "'${prefix}qt5-${_}${suffix}: $d{$_}'" } sort keys %d);
+});
+
 # find templates; populate "pages" array
 my @pages;
 my $template_file_name = 'PKGBUILD.sh.ep';
@@ -93,6 +108,8 @@ for my $top_level_dir (@$top_level_dirs) {
         }
         my $package_name_prefix = $variant_prefix_part ? "$variant_prefix_part-" : "";
         my $package_name_suffix = $variant_suffix_part ? "-$variant_suffix_part" : "";
+        my $is_static_variant   = $variant_suffix_part =~ qr/static/;
+        my $has_static_variant  = $is_static_variant || -d "$default_package_name/$variant-static";
 
         push(@pages, {
                 install_path => "$default_package_name/$variant/PKGBUILD",
@@ -103,13 +120,18 @@ for my $top_level_dir (@$top_level_dirs) {
                     variant_prefix_part => $variant_prefix_part,
                     variant_suffix_part => $variant_suffix_part,
                     default_package_name => $default_package_name,
+                    package_name_prefix => $package_name_prefix,
+                    package_name_suffix => $package_name_suffix,
                     package_name => "$package_name_prefix$default_package_name$package_name_suffix",
                     files => $files,
                     patch_files => $patch_files,
                     qt_module => $qt_module,
                     qt_module_sha256 => $qt_module_sha256,
-                    shared_config => 1,
-                    static_config => 1,
+                    static_variant => $is_static_variant,
+                    static_deps => undef,
+                    static_makedeps => undef,
+                    shared_config => !$is_static_variant,
+                    static_config => $is_static_variant || !$has_static_variant,
                     no_libraries => 0,
                 },
             ]

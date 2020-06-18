@@ -4,7 +4,7 @@ pkgver=5.12.3
 pkgrel=1
 arch=('any')
 pkgdesc="A JavaScript 3D rendering API for Qt Quick (mingw-w64)"
-depends=('mingw-w64-qt5-declarative')
+depends=(<%== qt5deps qw(declarative) %>)
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config')
 license=('GPL3' 'LGPL' 'FDL' 'custom')
 \

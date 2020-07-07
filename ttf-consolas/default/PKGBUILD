@@ -2,10 +2,10 @@
 
 pkgname=ttf-consolas
 pkgver=1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Consolas font'
 arch=('any')
-depends=('fontconfig' 'xorg-fonts-encodings' 'xorg-font-utils')
+depends=('xorg-fonts-encodings')
 url="https://github.com/pensnarik/$pkgname"
 source=("https://github.com/pensnarik/consolas-font/raw/master/consolas-fonts-tts.tar.bz2")
 md5sums=('728dfa03f8d86ef82a31d145b42a32c7')

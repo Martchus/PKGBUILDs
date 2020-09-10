@@ -11,7 +11,7 @@ _android_platform=21
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=9.2.0
+pkgver=9.3.0
 pkgrel=1
 arch=('any')
 pkgdesc="C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska tags (Android, $_pkg_arch)"

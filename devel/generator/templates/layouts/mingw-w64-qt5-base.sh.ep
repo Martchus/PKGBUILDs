@@ -31,7 +31,7 @@
 
 _qt_module=qt<%== $qt_module %>
 pkgname=<%= $package_name %>
-pkgver=5.15.0
+pkgver=5.15.1
 pkgrel=1
 pkgdesc='A cross-platform application and UI framework, <%= $opengl_backend %> OpenGL backend (mingw-w64)'
 arch=(<%== include 'fragments/mingw-w64-qt5-non_any_archs' %>)

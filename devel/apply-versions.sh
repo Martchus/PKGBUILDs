@@ -30,7 +30,7 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     # skip if version doesn't differ
     source "$pkgbuild_file"
     [[ $version == $pkgver ]] && continue
-    pattern='(android|apple-darwin)-.*'
+    pattern='(apple-darwin-.*|android-.*-(c\+\+utilities|qtutilities|passwordfile|passwordmanager))'
     [[ $pkgname =~ $pattern ]] && continue
 
     # check if template exists and modify template instead

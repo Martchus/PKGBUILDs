@@ -12,7 +12,7 @@ arch=('any')
 pkgdesc='Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more (mingw-w64)'
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-c++utilities')
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('b37762f53fd6393d7e80490cb1b47305588319cdd286da947eb306acce80ad73')
@@ -44,14 +44,15 @@ build() {
       msg2 "${_arch}-${_cfg}"
       mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       ${_arch}-cmake \
+        -G Ninja \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
         -DCONFIGURATION_NAME:STRING="${_cfg}" \
         -DCONFIGURATION_PACKAGE_SUFFIX:STRING="-${_cfg}" \
-	-DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
+        -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
         ${_config_flags[$_cfg]} \
         ../
-      make
+      ninja
       popd
     done
   done
@@ -64,7 +65,7 @@ package() {
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
       pushd "build-${_arch}-${_cfg}"
-      make DESTDIR="${pkgdir}" install-mingw-w64-strip
+      DESTDIR="${pkgdir}" ninja install-mingw-w64-strip
       popd
     done
   done

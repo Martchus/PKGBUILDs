@@ -12,7 +12,7 @@ pkgdesc='Common C++ classes and routines such as argument parser, IO and convers
 license=('GPL')
 depends=('gcc-libs')
 optdepends=("$pkgname-doc: API documentation")
-makedepends=('cmake')
+makedepends=('cmake' 'ninja')
 checkdepends=('cppunit')
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -25,6 +25,7 @@ prepare() {
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
     -DBUILD_SHARED_LIBS:BOOL=ON \
@@ -39,5 +40,5 @@ check() {
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja install
 }

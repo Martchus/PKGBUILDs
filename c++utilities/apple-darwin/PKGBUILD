@@ -13,7 +13,7 @@ pkgdesc='Common C++ classes and routines such as argument parser, IO and convers
 license=('GPL')
 depends=('apple-darwin-osxcross')
 optdepends=("$_name-doc: API documentation")
-makedepends=('clang' 'cmake')
+makedepends=('clang' 'cmake' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('12330ad7b3f745f91bf37193dc872462fd1e14cc13018094a200d424bf346be6')
@@ -49,6 +49,7 @@ build() {
       msg2 "${_arch}-${_cfg}"
       mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       ${_arch}-cmake \
+        -G Ninja \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX:PATH="/opt/osxcross/${_arch}" \
         -DCONFIGURATION_NAME:STRING="${_cfg}" \
@@ -57,7 +58,7 @@ build() {
         -DENABLE_THREAD_LOCAL:BOOL=OFF \
         ${_config_flags[$_cfg]} \
         ../
-      make
+      ninja
       popd
     done
   done
@@ -73,8 +74,8 @@ package() {
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
       pushd "build-${_arch}-${_cfg}"
-      make DESTDIR="${pkgdir}" install
-      make DESTDIR="${pkgdir}" install-binary-strip
+      DESTDIR="${pkgdir}" ninja install
+      DESTDIR="${pkgdir}" ninja install-binary-strip
       popd
     done
   done

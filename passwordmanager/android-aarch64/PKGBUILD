@@ -19,7 +19,7 @@ pkgdesc="A simple password store using AES-256-CBC encryption via OpenSSL (Andro
 license=('GPL')
 depends=()
 makedepends=("android-$_pkg_arch-passwordfile" "android-$_pkg_arch-qtutilities" "android-$_pkg_arch-kirigami2"
-             'cmake' 'android-ndk' 'android-sdk' 'android-platform' 'jdk8-openjdk' 'breeze-icons')
+             'cmake' 'ninja' 'android-ndk' 'android-sdk' 'android-platform' 'jdk8-openjdk' 'breeze-icons')
 conflicts=("android-$_pkgname-$_android_arch")
 replaces=("android-$_pkgname-$_android_arch")
 url="https://github.com/Martchus/${_reponame}"
@@ -64,6 +64,7 @@ build() {
   cd build
 
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=$_android_platform \
@@ -87,8 +88,8 @@ build() {
     -DANDROID_APK_CXX_STANDARD_LIBRARY="$android_ndk_root/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so" \
     ..
 
-  make VERBOSE=1
-  make DESTDIR="${pkgdir}" passwordmanager_apk
+  ninja
+  DESTDIR="${pkgdir}" ninja passwordmanager_apk
 }
 
 package() {

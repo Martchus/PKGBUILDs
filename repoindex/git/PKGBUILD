@@ -12,7 +12,7 @@ arch=('i686' 'x86_64')
 pkgdesc='Repository browser for Arch Linux'
 license=('GPL')
 depends=('qt5-base' 'qt5-websockets' 'karchive' 'pacman' 'c++utilities-git')
-makedepends=('cmake' 'git' 'yuicompressor' 'qtutilities-git')
+makedepends=('cmake' 'ninja' 'git' 'yuicompressor' 'qtutilities-git')
 backup=("etc/${_reponame}.conf")
 #provides=("${_name}")
 #conflicts=("${_name}")
@@ -29,6 +29,7 @@ pkgver() {
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
     -DCONFIGURATION_NAME:STRING='git' \
@@ -36,7 +37,7 @@ build() {
     -DCONFIGURATION_TARGET_SUFFIX:STRING='git' \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     .
-  make
+  ninja
 }
 
 package_repoindex() {
@@ -48,7 +49,7 @@ package_repoindex() {
 
   # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make DESTDIR="${pkgdir}" install-binary install-service install-config install-bash-completion
+  DESTDIR="${pkgdir}" ninja install-binary install-service install-config install-bash-completion
 
   # make directories for cache and data
   mkdir -p "$pkgdir/var/cache/$_reponame"
@@ -70,7 +71,7 @@ package_repoindex-header() {
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make DESTDIR="${pkgdir}" install-header
+  DESTDIR="${pkgdir}" ninja install-header
 }
 
 package_repoindex-web() {
@@ -84,7 +85,7 @@ package_repoindex-web() {
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make DESTDIR="${pkgdir}" install-web
+  DESTDIR="${pkgdir}" ninja install-web
 }
 
 package_repoindex-gui() {
@@ -97,5 +98,5 @@ package_repoindex-gui() {
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/usr"
 
   # install files
-  make DESTDIR="${pkgdir}" install-binary-gui install-desktop
+  DESTDIR="${pkgdir}" ninja install-binary-gui install-desktop
 }

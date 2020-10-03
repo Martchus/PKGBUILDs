@@ -26,7 +26,7 @@ depends=('mingw-w64-crt' 'mingw-w64-qt5-svg' 'mingw-w64-qtutilities' 'mingw-w64-
 [[ $_webview_provider == webengine ]] && depends+=('mingw-w64-qt5-webengine')
 [[ $_js_provider == script ]] && depends+=('mingw-w64-qt5-script')
 [[ $_js_provider == qml ]] && depends+=('mingw-w64-qt5-declarative')
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'ffmpeg')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'ffmpeg' 'ninja')
 [[ $_enable_libsyncthing == ON ]] && makedepends+=('git' 'go')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -96,6 +96,7 @@ build() {
       msg2 "${_arch}-${_cfg}"
       mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       ${_arch}-cmake \
+        -G Ninja \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
         -DCONFIGURATION_NAME:STRING="${_cfg}" \
@@ -108,7 +109,7 @@ build() {
         -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
         ${_config_flags[$_cfg]} \
         ../
-      make
+      ninja
       popd
     done
   done
@@ -125,7 +126,7 @@ package() {
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
       pushd "build-${_arch}-${_cfg}"
-      make DESTDIR="${pkgdir}" install-mingw-w64-strip
+      DESTDIR="${pkgdir}" ninja install-mingw-w64-strip
       popd
     done
   done

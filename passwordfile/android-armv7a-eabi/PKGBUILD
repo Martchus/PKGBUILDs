@@ -18,7 +18,7 @@ pkgdesc="C++ library to read/write passwords from/to encrypted files using AES-2
 license=('GPL')
 depends=("android-$_pkg_arch-c++utilities" "android-$_pkg_arch-openssl")
 optdepends=("$_pkgname-doc: API documentation")
-makedepends=('cmake' 'android-ndk' 'android-sdk')
+makedepends=('cmake' 'ninja' 'android-ndk' 'android-sdk')
 checkdepends=("android-$_pkg_arch-cppunit")
 # FIXME: run tests with qemu
 #checkdepends+=('qemu-binfmt-arm' "android-$_pkg_arch-linker")
@@ -41,6 +41,7 @@ build() {
   local include_dir=$_prefix/include
 
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=$_android_platform \
@@ -54,14 +55,14 @@ build() {
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DNO_DOXYGEN:BOOL=ON \
     .
-  make VERBOSE=1
+  ninja
 }
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
 
   # can not run the tests so compile them at least
-  make tests VERBOSE=1
+  ninja tests
 
   # FIXME: run tests with qemu
   # * currently getting error
@@ -71,12 +72,12 @@ check() {
   #export QEMU_LD_PREFIX=$prefix
   # use libraries from build directory, prefix and Android NDK
   #export LD_LIBRARY_PATH=$PWD:$prefix/lib:$android_ndk_path/sources/cxx-stl/llvm-libc++/libs/arm64-v8a:$android_ndk_path/platforms/android-28/arch-arm64/usr/lib
-  #make check VERBOSE=1
+  #ninja check
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja install
 
   # add tests to the package for possibly executing them later under Android
   if [[ -f ${_pkgname}_tests ]]; then

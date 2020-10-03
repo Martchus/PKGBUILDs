@@ -21,7 +21,7 @@ optdepends=("$_pkgname-doc: API documentation")
 checkdepends=("android-$_pkg_arch-cppunit" "android-$_pkg_arch-openssl")
 # FIXME: run tests with qemu
 #checkdepends+=('qemu-binfmt-arm' "android-$_pkg_arch-linker")
-makedepends=('cmake' 'android-ndk' 'android-sdk')
+makedepends=('cmake' 'ninja' 'android-ndk' 'android-sdk')
 #conflicts=("android-$_pkgname-$_android_arch")
 #replaces=("android-$_pkgname-$_android_arch")
 url="https://github.com/Martchus/${_reponame}"
@@ -41,6 +41,7 @@ build() {
   local include_dir=$_prefix/include
 
   cmake \
+    -G Ninja \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
@@ -54,14 +55,14 @@ build() {
     -DNO_DOXYGEN=ON \
     -DBUILD_SHARED_LIBS:BOOL=ON \
     .
-  make VERBOSE=1
+  ninja
 }
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
 
   # can not run the tests so compile them at least
-  make tests VERBOSE=1
+  ninja tests
 
   # FIXME: see c++utilities
 
@@ -71,12 +72,12 @@ check() {
   #fi
 
   #export LD_LIBRARY_PATH=$PWD:$prefix/lib:$android_ndk_path/sources/cxx-stl/llvm-libc++/libs/arm64-v8a:$android_ndk_path/platforms/android-28/arch-arm64/usr/lib
-  #make check VERBOSE=1
+  #ninja check
 }
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja install
 
   # add tests to the package for possibly executing them later under Android
   if [[ -f ${_pkgname}_tests ]]; then

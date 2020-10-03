@@ -11,7 +11,7 @@ arch=('i686' 'x86_64')
 pkgdesc='Repository browser for Arch Linux'
 license=('GPL')
 depends=('qt5-websockets' 'qt5-webengine' 'karchive' 'c++utilities' 'qtutilities')
-makedepends=('cmake' 'yuicompressor' 'qtutilities')
+makedepends=('cmake' 'ninja' 'yuicompressor' 'qtutilities')
 backup=("etc/${_reponame}.conf")
 url="https://github.com/Martchus/${_reponame}"
 options=(emptydirs)
@@ -21,11 +21,12 @@ sha256sums=('SKIP')
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DWEBVIEW_PROVIDER=webengine \
     .
-  make
+  ninja
 }
 
 package_repoindex() {
@@ -37,7 +38,7 @@ package_repoindex() {
 
   # install files
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install-binary install-service install-config install-bash-completion
+  DESTDIR="${pkgdir}" ninja install-binary install-service install-config install-bash-completion
   rm "$pkgdir/usr/bin/repoindex-gui"
 
   # make directories for cache and data
@@ -58,7 +59,7 @@ package_repoindex-header() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
 
   # install files
-  make DESTDIR="${pkgdir}" install-header
+  DESTDIR="${pkgdir}" ninja install-header
 }
 
 package_repoindex-web() {
@@ -70,7 +71,7 @@ package_repoindex-web() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
 
   # install files
-  make DESTDIR="${pkgdir}" install-web
+  DESTDIR="${pkgdir}" ninja install-web
 }
 
 package_repoindex-gui() {
@@ -82,7 +83,7 @@ package_repoindex-gui() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
 
   # install files
-  make DESTDIR="${pkgdir}" install-binary install-desktop
+  DESTDIR="${pkgdir}" ninja install-binary install-desktop
   rm -r "$pkgdir/usr/lib"
   rm "$pkgdir/usr/bin/repoindex"
 }

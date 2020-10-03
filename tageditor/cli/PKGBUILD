@@ -17,7 +17,7 @@ arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='A tag editor with command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska (GUI disabled)'
 license=('GPL')
 depends=('c++utilities' 'tagparser')
-makedepends=('cmake')
+makedepends=('cmake' 'ninja')
 conflicts=("${pkgname%-cli}")
 provides=("${pkgname%-cli}")
 [[ $_json_export == ON ]] && makedepends+=('reflective-rapidjson')
@@ -29,6 +29,7 @@ sha256sums=('475ddab587ab7330d147d881c7020cb4dc09b1978af87bf606d714ea21929a8d')
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
     -DBUILD_SHARED_LIBS:BOOL=ON \
@@ -37,13 +38,13 @@ build() {
     -DENABLE_JSON_EXPORT="${_json_export}" \
     -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator' \
     .
-  make
+  ninja
 }
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   if [[ $TEST_FILE_PATH ]]; then
-    make check
+    ninja check
   else
     msg2 'Skipping execution of testsuite because the environment variable TEST_FILE_PATH is not set.'
   fi
@@ -51,5 +52,5 @@ check() {
 
 package() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="${pkgdir}" ninja install
 }

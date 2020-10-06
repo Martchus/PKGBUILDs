@@ -65,9 +65,10 @@ for my $top_level_dir (@$top_level_dirs) {
     next unless $top_level_dir ne 'devel';
 
     my $default_package_name = $top_level_dir->basename;
-    my $qt_module;
-    if ($default_package_name =~ qr/qt5-(.*)/) {
-        $qt_module = $1;
+    my ($qt_module, $qt_major_version);
+    if ($default_package_name =~ qr/qt(5|6)-(.*)/) {
+        $qt_major_version = $1;
+        $qt_module        = $2;
     }
 
     my $variant_dirs = $top_level_dir->list({dir => 1});
@@ -86,12 +87,13 @@ for my $top_level_dir (@$top_level_dirs) {
         # determine files
         my $files = $variant_dir->list;
         my $patch_files = $files->grep(qr/.*\.patch/);
+        my $qt_module_sha256_file_name = "qt$qt_module-sha256.txt";
         my $qt_module_sha256_file = defined $qt_module
-            ? $variant_dir->child("qt$qt_module-sha256.txt")
+            ? $variant_dir->child($qt_module_sha256_file_name)
             : undef;
         my $qt_module_sha256 = defined $qt_module_sha256_file && -f $qt_module_sha256_file
             ? Mojo::Util::trim($qt_module_sha256_file->slurp)
-            : "$qt_module_sha256_file missing";
+            : "$qt_module_sha256_file_name missing";
 
         # determine variant parts
         my $variant_prefix_part = $variant;
@@ -125,6 +127,7 @@ for my $top_level_dir (@$top_level_dirs) {
                     package_name => "$package_name_prefix$default_package_name$package_name_suffix",
                     files => $files,
                     patch_files => $patch_files,
+                    qt_major_version => $qt_major_version,
                     qt_module => $qt_module,
                     qt_module_sha256 => $qt_module_sha256,
                     static_variant => $is_static_variant,

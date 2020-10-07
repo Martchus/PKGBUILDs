@@ -65,6 +65,7 @@ build() {
   [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
 
   cmake \
+    -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
     -DCONFIGURATION_NAME:STRING='git' \
@@ -80,12 +81,12 @@ build() {
     -DSYSTEMD_SUPPORT=ON \
     $additional_args \
     .
-  make
+  ninja
 }
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  make SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 check
+  SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 ninja check
 }
 
 package() {

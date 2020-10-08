@@ -16,7 +16,7 @@
 pkgname=<%= $package_name %>
 _qtver=6.0.0-alpha
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -39,23 +39,26 @@ sha256sums=('<%== $qt_module_sha256 %>'\
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
+% if ($patch_files->size || content_for('prepare')->size) {
 prepare () {
   cd $_pkgfqn
 
+% if ($patch_files->size) {
   # apply patches; further descriptions can be found in patch files itself
   for patch in "$srcdir/"*.patch; do
     msg2 "Applying patch $patch"
     patch -p1 -i "$patch"
   done
+% }
+<%== content_for 'prepare' %>\
 }
 
+% }
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
     $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \\
       -DQT_HOST_PATH=/usr \\
-      -DQT_HOST_PATH=/usr \\
-      -DFEATURE_pkg_config=ON \\
       -DFEATURE_pkg_config=ON \\
       -DFEATURE_system_pcre2=ON \\
       -DFEATURE_system_freetype=ON \\
@@ -83,16 +86,23 @@ package() {
 
     install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/$_arch/share/licenses/$pkgname
 
-    # Symlinks for backwards compatibility
+    # Add symlinks of DLLs in usual bin directory
     mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/$_arch/bin"
     for dll in "$pkgdir"/usr/$_arch/lib/qt6/bin/*.dll; do
         ln -rs "$dll" "$pkgdir/usr/$_arch/bin/${dll##*/}"
     done
+
+    # Symlinks for backwards compatibility
     for qmake; do
         ln -rs "$pkgdir"/usr/$_arch/lib/qt6/bin/$_b "$pkgdir"/usr/bin/$_arch-$_b-qt6
     done
 
-    $_arch-strip --strip-unneeded "$pkgdir"/usr/$_arch/bin/*.dll
-    $_arch-strip -g "$pkgdir"/usr/$_arch/lib/*.a
+    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find "$pkgdir/usr/$_arch/lib" -type f -name '*.prl' \\
+      -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+    find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
+    find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;
+    find "$pkgdir/usr/$_arch" -iname '*.a'   -exec $_arch-strip -g {} \;
   done
 }

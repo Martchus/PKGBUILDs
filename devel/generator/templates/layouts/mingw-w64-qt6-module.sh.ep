@@ -1,0 +1,74 @@
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+<%== content_for 'comment_header' %>\
+pkgname=mingw-w64-qt6-<%== $qt_module %>
+<%== content %>\
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+groups=(mingw-w64-qt6)
+_pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
+source=("https://download.qt.io/development_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+
+% if ($patch_files->size || content_for('prepare')->size) {
+prepare () {
+  cd $_pkgfqn
+
+% if ($patch_files->size) {
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+% }
+<%== content_for 'prepare' %>\
+}
+
+% }
+build() {
+  for _arch in ${_architectures}; do
+    export PKG_CONFIG=/usr/bin/$_arch-pkg-config
+<%== content_for 'before_build_config' %>\
+    $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \\
+      -DQT_HOST_PATH=/usr \\
+      -DFEATURE_pkg_config=ON \\
+      -DVulkan_LIBRARY="/usr/$_arch/lib/libvulkan.dll.a" \\
+      -DVulkan_INCLUDE_DIR="/usr/$_arch/include"<%== content_for 'after_build_config' %>
+    cmake --build build-$_arch
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+<%== content_for 'before_package_install' %>\
+    DESTDIR="$pkgdir" cmake --install build-$_arch<%== content_for 'after_package_install' %>
+
+% unless (stash('no_libs')) {
+    # Add symlinks of DLLs in usual bin directory
+    mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/$_arch/bin"
+    for dll in "$pkgdir"/usr/$_arch/lib/qt6/bin/*.dll; do
+        ln -rs "$dll" "$pkgdir/usr/$_arch/bin/${dll##*/}"
+    done
+
+% }
+% unless (stash('no_libs')) {
+    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+    find "$pkgdir/usr/$_arch/lib" -type f -name '*.prl' \\
+      -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+% }
+    find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
+    find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;
+    find "$pkgdir/usr/$_arch" -iname '*.a'   -exec $_arch-strip -g {} \;
+  done
+
+  install -d "$pkgdir"/usr/share/licenses
+  ln -s /usr/share/licenses/mingw-w64-qt6-base "$pkgdir"/usr/share/licenses/mingw-w64-qt6-<%== $qt_module %>
+}

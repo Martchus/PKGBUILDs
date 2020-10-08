@@ -41,20 +41,23 @@ unless (-d $install_directory) {
     exit(-1);
 }
 
-# add helper to render qt5 dependencies
-$mojolicious->helper(qt5deps => sub {
-    my $c = shift;
-    my $prefix = $c->stash('package_name_prefix');
-    my $suffix = $c->stash('package_name_suffix');
-    return join(' ', map { "'${prefix}qt5-${_}${suffix}'" } @_);
-});
-$mojolicious->helper(qt5optdeps => sub {
-    my $c = shift;
-    my %d = @_;
-    my $prefix = $c->stash('package_name_prefix');
-    my $suffix = $c->stash('package_name_suffix');
-    return join(' ', map { "'${prefix}qt5-${_}${suffix}: $d{$_}'" } sort keys %d);
-});
+# add helper to render Qt dependencies
+sub _render_deps {
+    my ($package_prefix, $controller, @d) = @_;
+    my $prefix = $controller->stash('package_name_prefix');
+    my $suffix = $controller->stash('package_name_suffix');
+    return join(' ', map { "'${prefix}${package_prefix}-${_}${suffix}'" } @d);
+}
+sub _render_optdeps {
+    my ($package_prefix, $controller, %d) = @_;
+    my $prefix = $controller->stash('package_name_prefix');
+    my $suffix = $controller->stash('package_name_suffix');
+    return join(' ', map { "'${prefix}${package_prefix}-${_}${suffix}: $d{$_}'" } sort keys %d);
+}
+for my $qt_version (qw(qt5 qt6)) {
+    $mojolicious->helper("${qt_version}deps" => sub { _render_deps($qt_version, @_) });
+    $mojolicious->helper("${qt_version}optdeps" => sub { _render_optdeps($qt_version, @_) });
+}
 
 # find templates; populate "pages" array
 my @pages;

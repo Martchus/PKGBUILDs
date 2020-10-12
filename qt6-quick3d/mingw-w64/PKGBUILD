@@ -13,7 +13,7 @@ license=(GPL3 LGPL3 FDL custom)
 pkgdesc='Qt module and API for defining 3D content in Qt Quick (mingw-w64)'
 depends=('mingw-w64-qt6-declarative')
 makedepends=('mingw-w64-cmake' 'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-assimp'
-             'mingw-w64-qt6-shadertools' 'qt6-declarative' 'qt6-shadertools' 'ninja')
+             'mingw-w64-qt6-shadertools' 'qt6-quick3d' 'qt6-shadertools' 'ninja')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qtquick3d-everywhere-src-${_qtver}"

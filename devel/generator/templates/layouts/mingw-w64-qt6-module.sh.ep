@@ -10,9 +10,14 @@ pkgname=mingw-w64-qt6-<%== $qt_module %>
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
+% if (my $git_commit = stash('git_commit')) {
+source=("$_pkgfqn::git://code.qt.io/qt/qt<%== $qt_module %>.git#commit=<%== $git_commit %>"\
+% }
+% else {
 source=("https://download.qt.io/development_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+% }
 <%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
-sha256sums=('<%== $qt_module_sha256 %>'\
+sha256sums=('<%== stash('git_commit') ? 'SKIP' : $qt_module_sha256 %>'\
 <%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'

@@ -9,9 +9,14 @@ pkgname=qt6-<%== $qt_module %>
 <%== content %>\
 groups=(qt6)
 _pkgfqn="${pkgname/6-/}-everywhere-src-${_qtver}"
+% if (my $git_commit = stash('git_commit')) {
+source=("$_pkgfqn::git://code.qt.io/qt/qt<%== $qt_module %>.git#commit=<%== $git_commit %>"\
+% }
+% else {
 source=("https://download.qt.io/development_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+% }
 <%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
-sha256sums=('<%== $qt_module_sha256 %>'\
+sha256sums=('<%== stash('git_commit') ? 'SKIP' : $qt_module_sha256 %>'\
 <%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
 
 build() {

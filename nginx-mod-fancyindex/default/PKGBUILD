@@ -2,8 +2,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
 pkgname=nginx-mod-fancyindex
-pkgver=0.4.4
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 _dirname="ngx-fancyindex-${pkgver}"
 _nginxver=1.18.0
 
@@ -15,7 +15,7 @@ url='https://github.com/aperezdc/ngx-fancyindex'
 license=('CUSTOM')
 
 source=("$pkgname-$pkgver::https://github.com/aperezdc/ngx-fancyindex/archive/v${pkgver}.tar.gz")
-sha256sums=('34e2bf332b9fa930914220c0187ca18d6f7a6abb88b81fdc9eb4779a1584f83a')
+sha256sums=('4187ab26117f0886a971ae04705f0a60e33949ba2f85a4772179e9f29c6e7e91')
 
 prepare() {
   cd "$srcdir/$_dirname"

@@ -11,7 +11,7 @@ colorize
 
 if ! [[ $1 ]]; then
     echo 'No Qt repo specified - must be specified like eg. base or multimedia.'
-    echo "Usage: $0 repo [branch=\$pkgver-\$variant] [variant=mingw-w64]"
+    echo "Usage: $0 repo [branch=\$pkgver-\$variant] [variant=mingw-w64] [qtver=qt5]"
     echo "Note: DEFAULT_PKGBUILDS_DIR and QT_GIT_REPOS_DIR must point to directories containing PKGBUILDs and the Qt repos."
     exit -1
 fi
@@ -29,7 +29,8 @@ else
     pkgbuildsdirs+=("$PWD/pkgbuilds")
 fi
 
-pkg="qt5-$1"
+qtver="${4:-qt5}"
+pkg="$qtver-$1"
 repo="qt$1"
 branch="${2}"
 variant="${3:-mingw-w64}"
@@ -60,6 +61,7 @@ template=$pkgbuild_path.sh.ep has_template=
 [[ -f $template ]] && has_template=1
 
 source "$pkgbuild_path"
+tag=${tag:-origin/$pkgver}
 
 new_sources=()
 new_md5sums=()
@@ -87,7 +89,7 @@ if ! git checkout "${branch}"; then
     msg2 "No patches required for $1, skipping."
     exit 0
 fi
-git format-patch "origin/${pkgver}" --output-directory "$dest"
+git format-patch "$tag" --output-directory "$dest"
 for other_variant_dir in "$dest/../$variant"?*; do
     [[ -d $other_variant_dir ]] || continue
     cp --target-directory="$other_variant_dir" "$dest/"*.patch

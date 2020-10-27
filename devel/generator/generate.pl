@@ -35,7 +35,8 @@ $mojolicious->log($log);
 $renderer->paths(\@template_paths);
 $log->debug("Template paths:\n" . join("\n", @template_paths));
 
-my $install_directory = $ARGV[0] // $pkgbuilds_dir;
+my $filter_regex      = $ARGV[0];
+my $install_directory = $ARGV[1] // $pkgbuilds_dir;
 unless (-d $install_directory) {
     $log->error("Output directory '$install_directory' does not exist.");
     exit(-1);
@@ -115,6 +116,8 @@ for my $top_level_dir (@$top_level_dirs) {
         my $package_name_suffix = $variant_suffix_part ? "-$variant_suffix_part" : "";
         my $is_static_variant   = $variant_suffix_part =~ qr/static/;
         my $has_static_variant  = $is_static_variant || -d "$default_package_name/$variant-static";
+        my $package_name        = "$package_name_prefix$default_package_name$package_name_suffix";
+        next if defined $filter_regex && $package_name !~ $filter_regex;
 
         push(@pages, {
                 install_path => "$default_package_name/$variant/PKGBUILD",
@@ -127,7 +130,7 @@ for my $top_level_dir (@$top_level_dirs) {
                     default_package_name => $default_package_name,
                     package_name_prefix => $package_name_prefix,
                     package_name_suffix => $package_name_suffix,
-                    package_name => "$package_name_prefix$default_package_name$package_name_suffix",
+                    package_name => $package_name,
                     files => $files,
                     patch_files => $patch_files,
                     qt_major_version => $qt_major_version,

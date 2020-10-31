@@ -31,4 +31,11 @@ set (CMAKE_Fortran_COMPILER @TRIPLE@-gfortran)
 set (CMAKE_AR:FILEPATH @TRIPLE@-ar)
 set (CMAKE_RANLIB:FILEPATH @TRIPLE@-ranlib)
 
+# make sure Qt finds host tools
+set(QT_HOST_PATH "/usr" CACHE PATH "host path for Qt")
 
+# workaround limitations in CMake's find modules
+set(Vulkan_LIBRARY "/usr/@TRIPLE@/lib/libvulkan.dll.a" CACHE FILEPATH "Vulkan IDC library")
+set(Vulkan_INCLUDE_DIR "/usr/@TRIPLE@/include" CACHE PATH "Vulkan headers directory")
+set(MySQL_LIBRARIES "/usr/@TRIPLE@/lib/libmariadb.dll.a" CACHE INTERNAL "MariaDB client library")
+set(MySQL_INCLUDE_DIRS "/usr/@TRIPLE@/include/mariadb" CACHE INTERNAL "MariaDB client library")

@@ -5,7 +5,7 @@
 # you also find the URL of a binary repository.
 
 <%== content_for 'comment_header' %>\
-pkgname=mingw-w64-qt6-<%== $qt_module %>
+pkgname=mingw-w64-qt6-<%== $qt_module %><%== $static_variant ? '-static' : '' %>
 <%== content %>\
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
@@ -41,11 +41,11 @@ build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
 <%== content_for 'before_build_config' %>\
-    $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \\
-      -DQT_HOST_PATH=/usr \\
-      -DFEATURE_pkg_config=ON \\
-      -DVulkan_LIBRARY="/usr/$_arch/lib/libvulkan.dll.a" \\
-      -DVulkan_INCLUDE_DIR="/usr/$_arch/include"<%== content_for 'after_build_config' %>
+    $_arch-cmake<%== $static_variant ? '-static' : '' %> -G Ninja -B build-$_arch -S $_pkgfqn \\
+% if ($static_variant) {
+      -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
+% }
+      -DFEATURE_pkg_config=ON
     cmake --build build-$_arch
   done
 }
@@ -55,6 +55,7 @@ package() {
 <%== content_for 'before_package_install' %>\
     DESTDIR="$pkgdir" cmake --install build-$_arch<%== content_for 'after_package_install' %>
 
+% unless ($static_variant) {
 % unless (stash('no_libs')) {
     # Add symlinks of DLLs in usual bin directory
     mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/$_arch/bin"
@@ -68,6 +69,7 @@ package() {
     find "$pkgdir/usr/$_arch/lib" -type f -name '*.prl' \\
       -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
+% }
 % }
     find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
     find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;

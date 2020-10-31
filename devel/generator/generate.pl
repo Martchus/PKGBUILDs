@@ -60,6 +60,21 @@ for my $qt_version (qw(qt5 qt6)) {
     $mojolicious->helper("${qt_version}optdeps" => sub { _render_optdeps($qt_version, @_) });
 }
 
+# add helper to expand pkg-config style libraries into full paths for use with CMake
+# example: "-lfoo -lbar" => "/usr/lib/foo.a;/usr/lib/bar.a"
+$mojolicious->helper(expand_libs => sub {
+    my $controller = shift;
+    my $is_static  = $controller->stash('static_variant');
+    my $is_mingw   = $controller->stash('package_name_prefix') eq 'mingw-w64-';
+    my $prefix     = $is_mingw  ? '/usr/$_arch' : '/usr';
+    my $extension  = $is_static ? 'a' : ($is_mingw ? 'dll.a' : 'so');
+    return join(';', map {
+        my $library_name = $_;
+        $library_name = $1 if $library_name =~ qr/\w*-l(.*)\w*/;
+        "$prefix/lib/lib$library_name.$extension";
+    } @_);
+});
+
 # find templates; populate "pages" array
 my @pages;
 my $template_file_name = 'PKGBUILD.sh.ep';

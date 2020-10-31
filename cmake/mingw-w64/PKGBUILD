@@ -1,24 +1,30 @@
 
 pkgname=mingw-w64-cmake
 pkgver=1
-pkgrel=25.1
+pkgrel=35
 arch=('any')
 pkgdesc="CMake wrapper for MinGW (mingw-w64)"
-depends=('cmake' 'mingw-w64-gcc' 'mingw-w64-pkg-config')
+depends=('cmake' 'mingw-w64-gcc' 'mingw-w64-pkg-config' 'mingw-w64-environment')
 optdepends=('mingw-w64-wine: runtime support')
 license=("GPL")
 url="http://fedoraproject.org/wiki/MinGW"
-source=("mingw-cmake.sh"
-        "mingw-cmake-py.sh"
-        "toolchain-mingw.cmake")
-sha256sums=('SKIP' 'SKIP' "SKIP")
+source=(mingw-cmake{,-static}.sh
+        mingw-cmake-py.sh
+        toolchain-mingw{,-static}.cmake)
+sha256sums=('457f4bac0a21b280a27bab349f0d5d04371e97ba003e384806735f8e6762cc4e'
+            '1622b4899df8dbeb406ec3771fa48f65e30d58c2e1ab5add9ba190099bd2870f'
+            'c161a6d8d49599d3798fba6fb9f5d45f304acd29e7cf2b96315841adb06e42ae'
+            'ca46564e7c0e1525d1ec44da4781939f1791c70cd18acac5fc10d62d9d465dde'
+            'f0c3f65cf2ce802647f7c3b0e0884f00c2962d5a8cfb8fa8fee781f9551d4b86')
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
-_python_versions="27 35 36 37"
+_python_versions="27 36 37 38"
 
 build() {
   for _arch in ${_architectures}; do
-    sed "s|@TRIPLE@|${_arch}|g;s|@PROCESSOR@|${_arch::-12}|g" toolchain-mingw.cmake > toolchain-${_arch}.cmake
-    sed "s|@TRIPLE@|${_arch}|g" mingw-cmake.sh > ${_arch}-cmake
+    for _variant in '' '-static'; do
+      sed "s|@TRIPLE@|${_arch}|g;s|@PROCESSOR@|${_arch::-12}|g" toolchain-mingw${_variant}.cmake > toolchain-${_arch}${_variant}.cmake
+      sed "s|@TRIPLE@|${_arch}|g" mingw-cmake${_variant}.sh > ${_arch}-cmake${_variant}
+    done
     for _pyver in ${_python_versions}; do
       sed "s|@TRIPLE@|${_arch}|g;s|@PYMAJMIN@|${_pyver}|g" mingw-cmake-py.sh > ${_arch}-cmake-py${_pyver}
     done
@@ -29,8 +35,8 @@ package() {
   install -d "${pkgdir}"/usr/bin
   install -d "${pkgdir}"/usr/share/mingw
   for _arch in ${_architectures}; do
-    install -m 644 toolchain-${_arch}.cmake "${pkgdir}"/usr/share/mingw/
-    install -m 755 ${_arch}-cmake "${pkgdir}"/usr/bin/
+    install -m 644 toolchain-${_arch}{,-static}.cmake "${pkgdir}"/usr/share/mingw/
+    install -m 755 ${_arch}-cmake{,-static} "${pkgdir}"/usr/bin/
     for _pyver in ${_python_versions}; do
       install -m 755 ${_arch}-cmake-py${_pyver} "${pkgdir}"/usr/bin/
     done

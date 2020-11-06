@@ -24,7 +24,7 @@ pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
          'mingw-w64-brotli' 'mingw-w64-pcre2' 'mingw-w64-zstd')
-makedepends=('mingw-w64-cmake>=1-35' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c'
+makedepends=('mingw-w64-cmake<%= $static_suffix %>' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c'
              'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-pkg-config'
              'qt6-base' 'ninja')
 optdepends=('mingw-w64-postgresql: PostgreSQL driver'
@@ -58,7 +58,7 @@ prepare () {
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
-    $_arch-cmake<%== $static_variant ? '-static' : '' %> -G Ninja -B build-$_arch -S $_pkgfqn \\
+    $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
 % }

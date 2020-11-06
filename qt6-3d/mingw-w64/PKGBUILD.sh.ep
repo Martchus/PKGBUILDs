@@ -8,7 +8,7 @@ url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
 pkgdesc='C++ and QML APIs for easy inclusion of 3D graphics (mingw-w64)'
 depends=(<%== qt6deps qw(declarative) %>)
-makedepends=('mingw-w64-cmake' 'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-assimp'
+makedepends=('mingw-w64-cmake<%== $static_suffix %>' 'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-assimp'
              'qt6-shadertools' 'qt6-declarative' 'ninja')
 optdepends=('mingw-w64-assimp: Import from assimp'
             <%== qt6optdeps shadertools => 'RHI renderer' %>)

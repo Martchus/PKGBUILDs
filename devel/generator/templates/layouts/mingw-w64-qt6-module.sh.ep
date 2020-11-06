@@ -5,7 +5,7 @@
 # you also find the URL of a binary repository.
 
 <%== content_for 'comment_header' %>\
-pkgname=mingw-w64-qt6-<%== $qt_module %><%== $static_variant ? '-static' : '' %>
+pkgname=mingw-w64-qt6-<%== $qt_module %><%== $static_suffix %>
 <%== content %>\
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
@@ -41,7 +41,7 @@ build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
 <%== content_for 'before_build_config' %>\
-    $_arch-cmake<%== $static_variant ? '-static' : '' %> -G Ninja -B build-$_arch -S $_pkgfqn \\
+    $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
 % }
@@ -77,5 +77,6 @@ package() {
   done
 
   install -d "$pkgdir"/usr/share/licenses
-  ln -s /usr/share/licenses/mingw-w64-qt6-base "$pkgdir"/usr/share/licenses/mingw-w64-qt6-<%== $qt_module %>
+  ln -s /usr/share/licenses/mingw-w64-qt6-base<%== $static_variant ? '-static' : '' %> "$pkgdir"/usr/share/licenses/$pkgname
+
 }

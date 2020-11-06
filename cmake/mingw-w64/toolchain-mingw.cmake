@@ -18,6 +18,7 @@ set (CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 # Make sure Qt can be detected by CMake
 set (QT_BINARY_DIR /usr/@TRIPLE@/bin /usr/bin)
 set (QT_INCLUDE_DIRS_NO_SYSTEM ON)
+set (QT_HOST_PATH "/usr" CACHE PATH "host path for Qt")
 
 # set the resource compiler (RHBZ #652435)
 set (CMAKE_RC_COMPILER @TRIPLE@-windres)
@@ -31,9 +32,4 @@ set (CMAKE_Fortran_COMPILER @TRIPLE@-gfortran)
 set (CMAKE_AR:FILEPATH @TRIPLE@-ar)
 set (CMAKE_RANLIB:FILEPATH @TRIPLE@-ranlib)
 
-# make sure Qt finds host tools
-set(QT_HOST_PATH "/usr" CACHE PATH "host path for Qt")
 
-# workaround limitations in CMake's find modules
-set(MySQL_LIBRARIES "/usr/@TRIPLE@/lib/libmariadb.dll.a" CACHE INTERNAL "MariaDB client library")
-set(MySQL_INCLUDE_DIRS "/usr/@TRIPLE@/include/mariadb" CACHE INTERNAL "MariaDB client library")

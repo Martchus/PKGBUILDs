@@ -152,6 +152,7 @@ for my $top_level_dir (@$top_level_dirs) {
                     qt_module => $qt_module,
                     qt_module_sha256 => $qt_module_sha256,
                     static_variant => $is_static_variant,
+                    static_suffix => $is_static_variant ? '-static' : '',
                     static_deps => undef,
                     static_makedeps => undef,
                     shared_config => !$is_static_variant,

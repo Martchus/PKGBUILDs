@@ -6,7 +6,7 @@
 _reponame=videodownloader
 pkgname=videodownloader-git
 _name=${pkgname%-git}
-pkgver=109.29a80c0
+pkgver=116.5e42ba0
 pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='A video downloader with Qt GUI (currently only YouTube and Vimeo are maintained)'
@@ -33,6 +33,8 @@ build() {
     -DCONFIGURATION_NAME:STRING='git' \
     -DCONFIGURATION_PACKAGE_SUFFIX:STRING='-git' \
     -DBUILD_SHARED_LIBS:BOOL=ON \
+    -DBUILTIN_TRANSLATIONS:BOOL=ON \
+    -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=OFF \
     .
   ninja
 }

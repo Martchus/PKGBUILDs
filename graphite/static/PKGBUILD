@@ -1,0 +1,49 @@
+# Contributor: AndyRTR <andyrtr@archlinux.org>
+
+_pkgname=graphite
+pkgname=$_pkgname-static
+pkgver=1.3.14
+pkgrel=1
+epoch=1
+arch=('x86_64')
+url="https://github.com/silnrsi/graphite"
+pkgdesc='reimplementation of the SIL Graphite text processing engine'
+license=('LGPL' 'GPL' 'custom')
+depends=('gcc-libs')
+makedepends=('cmake' 'freetype2-static' 'python')
+options=(!emptydirs !docs staticlibs)
+# https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.sha256sum
+source=(https://github.com/silnrsi/graphite/releases/download/${pkgver}/graphite2-${pkgver}.tgz)
+sha256sums=('f99d1c13aa5fa296898a181dff9b82fb25f6cc0933dbaa7a475d8109bd54209d')
+
+build() {
+  mkdir build
+  export PKG_CONFIG_PATH=/usr/static/lib/pkgconfig:/usr/lib/pkgconfig
+  cd graphite2-${pkgver}
+  echo '' > doc/CMakeLists.txt
+  echo '' > tests/CMakeLists.txt # TODO: fix linking tests
+  cd ../build
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  cmake -G "Unix Makefiles" ../graphite2-${pkgver} \
+	-DCMAKE_C_FLAGS:STRING="${CFLAGS}" \
+	-DCMAKE_INSTALL_PREFIX=/usr/static \
+	-DCMAKE_BUILD_TYPE:STRING=Release \
+	-DGRAPHITE2_COMPARE_RENDERER=OFF \
+	-DBUILD_SHARED_LIBS=OFF \
+
+  # fix unwanted -O3 cflag (taken form Debian)
+  find . -type f ! -name "rules" ! -name "changelog" -exec sed -i -e 's/\-O3//g' {} \;
+
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="$pkgdir/" install
+
+  # licenses
+  mkdir -p "${pkgdir}"/usr/share/licenses/${pkgname}
+  install -m644 "${srcdir}"/graphite2-${pkgver}/COPYING "${pkgdir}"/usr/share/licenses/${pkgname}/
+}

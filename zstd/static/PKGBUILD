@@ -1,0 +1,36 @@
+# Contributor:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Andrzej Giniewicz <gginiu@gmail.com>
+# Contributor: Johan Förberg <johan@forberg.se>
+
+_pkgname=zstd
+pkgname=$_pkgname-static
+pkgver=1.4.8
+pkgrel=1
+pkgdesc='Zstandard - Fast real-time compression algorithm'
+arch=(x86_64)
+url='https://facebook.github.io/zstd/'
+license=(BSD GPL2)
+depends=(zlib xz-static lz4-static) # zlib contains static lib
+makedepends=(gtest)
+options=(!emptydirs staticlibs)
+source=(https://github.com/facebook/zstd/releases/download/v${pkgver}/zstd-${pkgver}.tar.zst)
+sha256sums=('c7ea10e20dd61b457220455e3cf553069987b968b7c63d1b9d46acbdb45623eb')
+
+build() {
+  cd $_pkgname-$pkgver
+  export PKG_CONFIG_PATH=/usr/static/lib/pkgconfig:/usr/lib/pkgconfig
+  make
+}
+
+check() {
+  cd $_pkgname-$pkgver
+  make check
+}
+
+package() {
+  cd $_pkgname-$pkgver
+  make PREFIX=/usr/static DESTDIR="$pkgdir/" install
+  rm -r "$pkgdir"/usr/static/{bin,share/man}
+  find "$pkgdir/usr/static" -iname '*.so*' -delete
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

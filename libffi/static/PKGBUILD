@@ -1,0 +1,47 @@
+# Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Stéphane Gaudreault <stephane@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libffi
+pkgname=$_pkgname-static
+pkgver=3.3
+pkgrel=4
+pkgdesc='Portable foreign function interface library'
+arch=('x86_64')
+url='https://sourceware.org/libffi/'
+license=('MIT')
+depends=('glibc')
+checkdepends=('dejagnu')
+options=(!emptydirs staticlibs)
+source=(https://sourceware.org/pub/libffi/libffi-$pkgver.tar.gz)
+sha256sums=('72fba7922703ddfa7a028d513ac15a85c8d54c8d67f55fa5a4802885dc652056')
+b2sums=('cddc40729a30a9bd34d675809f51f8d1b4ccaffa54bc6dd6f7e965f4e260edd34754719f9f6247c8957aeb7cf154d56ce1fe16a54c3f1ad39afbebdf41d23caa')
+
+prepare() {
+  cd $_pkgname-$pkgver
+  autoreconf -fiv
+}
+
+build() {
+  cd $_pkgname-$pkgver
+  ./configure \
+    --prefix=/usr/static \
+    --disable-shared \
+    --enable-static \
+    --enable-pax_emutramp
+  make
+}
+
+check() {
+  make -C $_pkgname-$pkgver check
+}
+
+package() {
+  cd $_pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+  rm -r "$pkgdir"/usr/static/share/{man,info}
+  install -Dm 644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+}
+
+# vim: ts=2 sw=2 et:

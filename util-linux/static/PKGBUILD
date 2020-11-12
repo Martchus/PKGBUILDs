@@ -1,0 +1,127 @@
+# Contributor: Tom Gundersen <teg@jklm.no>
+# Contributor: Dave Reisner <dreisner@archlinux.org>
+# Contributor: judd <jvinet@zeroflux.org>
+
+_pkgname=util-linux
+pkgname=$_pkgname-static
+_pkgmajor=2.36
+pkgver=${_pkgmajor}.1
+pkgrel=4
+pkgdesc='Miscellaneous system utilities for Linux'
+url='https://github.com/karelzak/util-linux'
+arch=('x86_64')
+makedepends=('systemd' 'python' 'libcap-ng' 'libxcrypt')
+license=('GPL2')
+options=('strip')
+validpgpkeys=('B0C64D14301CC6EFAEDF60E4E4B71D5EEC39C284')  # Karel Zak
+options=(staticlibs)
+source=("https://www.kernel.org/pub/linux/utils/util-linux/v$_pkgmajor/$_pkgname-$pkgver.tar."{xz,sign}
+        '0001-libmount-don-t-use-symfollow-for-helpers-on-user-mounts.patch')
+sha256sums=('09fac242172cd8ec27f0739d8d192402c69417617091d8c6e974841568f37eed'
+            'SKIP'
+            '91db684edd908dd89ce9b5f00c56789d0a0eeeb5249f1bb4578e6024491823b4')
+
+prepare() {
+  cd "$_pkgname-$pkgver"
+
+  patch -Np1 < ../0001-libmount-don-t-use-symfollow-for-helpers-on-user-mounts.patch
+}
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  # We ship Debian's hardlink in package 'hardlink', Fedora's hardlink was
+  # merged in util-linux. For now we disable the latter, but let's dicuss
+  # the details:
+  # https://bugs.archlinux.org/task/62896
+  # https://github.com/karelzak/util-linux/issues/808
+
+  ./configure \
+    --prefix=/usr/static \
+    --libdir=/usr/static/lib \
+    --bindir=/usr/static/bin \
+    --sbindir=/usr/static/bin \
+    --localstatedir=/var \
+    --disable-shared \
+    --enable-static \
+    --enable-usrdir-path \
+    --enable-libuuid-force-uuidd \
+    --enable-libblkid \
+    --enable-libmount \
+    --enable-libsmartcols \
+    --enable-libfdisk \
+    --disable-fdisks \
+    --disable-mount \
+    --disable-losetup \
+    --disable-zramctl \
+    --disable-fsck \
+    --disable-partx \
+    --disable-uuidd \
+    --disable-wipefs \
+    --disable-mountpoint \
+    --disable-fallocate \
+    --disable-unshare \
+    --disable-nsenter \
+    --disable-setpriv \
+    --disable-hardlink \
+    --disable-eject \
+    --disable-agetty \
+    --disable-plymouth_support \
+    --without-libmagic \
+    --disable-cramfs \
+    --disable-bfs \
+    --disable-minix \
+    --disable-fdformat \
+    --disable-hwclock \
+    --disable-hwclock-gplv3 \
+    --disable-lslogins \
+    --disable-wdctl \
+    --disable-cal \
+    --disable-logger \
+    --disable-whereis \
+    --disable-switch_root \
+    --disable-pivot_root \
+    --disable-lsmem \
+    --disable-chmem \
+    --disable-ipcrm \
+    --disable-ipcs \
+    --disable-irqtop \
+    --disable-lsirq \
+    --disable-rfkill \
+    --disable-tunelp \
+    --disable-kill \
+    --disable-last \
+    --disable-utmpdump \
+    --enable-line \
+    --disable-mesg \
+    --disable-raw \
+    --disable-rename \
+    --disable-vipw \
+    --disable-newgrp \
+    --disable-chfn-chsh \
+    --disable-login \
+    --disable-nologin \
+    --disable-sulogin \
+    --disable-su \
+    --disable-runuser \
+    --disable-ul \
+    --disable-more \
+    --disable-pg \
+    --disable-setterm \
+    --disable-schedutils \
+    --disable-wall \
+    --disable-write \
+    --without-systemd \
+    --without-python \
+    --disable-pylibmount
+
+  make
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+  rm -r "$pkgdir"/usr/static/{sbin,bin}
+  rm -r "$pkgdir"/usr/static/share/{locale,man,doc,bash-completion}
+}

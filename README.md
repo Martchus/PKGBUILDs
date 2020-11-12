@@ -5,9 +5,10 @@ Contains PKGBUILD files for creating Arch Linux packages:
   [Tag Editor](https://github.com/Martchus/tageditor), [Password Manager](https://github.com/Martchus/passwordmanager), ...
 * Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go):
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
-    * mingw-w64 packages which allow to build for Windows under Arch Linux, eg. FreeType 2, Qt 5 and Qt 6
-    * android packages which allow to build for Android under Arch Linux, eg. iconv, Boost, OpenSSL, CppUnit, Qt 5 and Kirigami
-    * apple-darwin packages which allow to build for MaxOS X under Arch Linux, eg. osxcross and Qt 5 (still experimental)
+    * `mingw-w64-*` packages which allow to build for Windows under Arch Linux, eg. FreeType 2, Qt 5 and Qt 6
+    * `*-static` packages containing static libraries
+    * `android-*` packages which allow to build for Android under Arch Linux, eg. iconv, Boost, OpenSSL, CppUnit, Qt 5 and Kirigami
+    * `apple-darwin-*` packages which allow to build for MaxOS X under Arch Linux, eg. osxcross and Qt 5 (still experimental)
 * Other packages imported from the AUR to build with slight modifications
 
 So if you like to improve one of my AUR packages, just create a PR here.
@@ -164,3 +165,20 @@ Here are neverthless some useful hints to run WINE manually:
 * It is possible to run apps in an headless environment but be aware that WINE is not designed for this. For instance, when an
   application crashes WINE still attempts to show the crash window and the application stays stuck in that state.
 * See https://wiki.winehq.org/Wine_User's_Guide for more information
+
+## Static GNU/Linux libraries
+This repository contains several `*-static` packages providing static libraries intended to distribute "self-contained"
+executables. These packages are still experimental and are not be regularily updated at this point.
+
+It would conceivable to build even Qt as a static library and make even a fully statically linked executable. However,
+it would not be possible to support OpenGL because glvnd and vendor provided OpenGL libraries are always dynamic libraries. It
+is also not clear whether it makes sense to link against libc and X11/Wayland client libraries statically. Maybe it makes sense
+to aim for a partially statically linked build instead where libc/OpenGL/X11/Wayland are assumed to be provided by the GNU/Linux
+system but other libraries like Qt are linked against statically. This would be similar to AppImage where a lot of libraries are
+bundled but certain "core libraries" are expected to be provided by the system.
+
+Note that I decided to let static libraries live within the subprefix `/usr/static` (in contrast to packages found in the
+AUR). The reason is that the version might not be kept 100 % in sync with the shared counterpart. Hence it makes sense to
+make the static packages independent with their own headers and configuration files to avoid problems due to mismatching
+versions. Besides, some projects (such as Qt) do not support installing shared and static libraries within the same prefix at
+the same time because the config files would clash.

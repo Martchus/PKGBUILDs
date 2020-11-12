@@ -1,0 +1,39 @@
+# Contributor: Sébastien Luttringer <seblu@archlinux.org>
+# Contributor: Tom Gundersen <teg@jklm.no>
+# Contributor: Joel Teichroeb <joel@teichroeb.net>
+
+_pkgname=wayland
+pkgname=$_pkgname-static
+pkgver=1.18.0
+pkgrel=2
+pkgdesc='A computer display server protocol'
+arch=('x86_64')
+url='https://wayland.freedesktop.org/'
+license=('MIT')
+depends=('glibc' 'libffi-static' 'expat-static')
+options=(!emptydirs staticlibs)
+makedepends=('meson' 'ninja' 'libxslt' 'xmlto' 'doxygen' 'graphviz' 'docbook-xsl')
+validpgpkeys=('C7223EBE4EF66513B892598911A30156E0E67611'  # Bryce Harrington
+              'C0066D7DB8E9AC6844D728715E54498E697F11D7'  # Derek Foreman
+              '34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48') # emersion <contact@emersion.fr>
+source=("https://wayland.freedesktop.org/releases/$_pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('4675a79f091020817a98fd0484e7208c8762242266967f55a67776936c2e294d'
+            'SKIP')
+
+build() {
+  export PKG_CONFIG_PATH=/usr/static/lib/pkgconfig:/usr/lib/pkgconfig
+  meson build $_pkgname-$pkgver --buildtype=release --prefix /usr/static --default-library static
+  ninja -C build
+}
+
+#check() {
+#  ninja -C build test
+#}
+
+package() {
+  DESTDIR="$pkgdir" ninja -C build install
+  rm -r "$pkgdir"/usr/static/share/{doc,man}
+  install -Dm 644 $_pkgname-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+
+# vim:set ts=2 sw=2 et:

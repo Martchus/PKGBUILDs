@@ -1,0 +1,33 @@
+# Contributor: Sébastien Luttringer
+
+_pkgname=lz4
+pkgname=$_pkgname-static
+epoch=1
+pkgver=1.9.3
+pkgrel=1
+pkgdesc='Extremely fast compression algorithm'
+arch=('x86_64')
+url='http://www.lz4.org/'
+license=('GPL2')
+makedepends=('git')
+depends=('glibc')
+options=(!emptydirs staticlibs)
+source=("git+https://github.com/lz4/lz4.git#tag=v$pkgver")
+md5sums=('SKIP')
+
+build() {
+  # do not use the main makefile, it calls sub make with -e
+  # exported CLFAGS by makepkg break the version. see FS#50071
+  cd $_pkgname
+  make -C lib PREFIX=/usr/static
+}
+
+package() {
+  cd $_pkgname
+  make install PREFIX=/usr/static DESTDIR="$pkgdir"
+  rm -r "$pkgdir"/usr/static/bin
+  rm -r "$pkgdir"/usr/static/share/man
+  find "$pkgdir" -iname '*.so*' -delete
+}
+
+# vim:set ts=2 sw=2 et:

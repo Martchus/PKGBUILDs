@@ -12,7 +12,7 @@ declare -A versions=(
     [blackwidowcontrol]=1.0.2
     [dbus-soundrecorder]=1.2.3
     [geocoordinatecalculator]=1.1.3
-    [qt5]=5.15.1
+    [qt5]=5.15.2
     [qt6]=6.0.0-beta4
 )
 declare -A github_names=(

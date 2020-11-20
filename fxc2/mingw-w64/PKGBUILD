@@ -1,0 +1,55 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=fxc2
+pkgname=mingw-w64-fxc2
+_name=${pkgname#mingw-w64-}
+pkgver=todo
+pkgrel=1
+arch=('any')
+pkgdesc='A wine-runnable version of Microsofts Shader Compiler fxc (mingw-w64)'
+license=('GPL')
+depends=('mingw-w64-crt' 'mingw-w64-wine')
+makedepends=('mingw-w64-gcc' 'mingw-w64-environment')
+provides=('mingw-w64-fxc')
+conflicts=('mingw-w64-fxc')
+url="https://github.com/mozilla/${_reponame}"
+source=("${_reponame}::git+https://github.com/mozilla/${_reponame}.git")
+sha256sums=('SKIP')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+
+build() {
+  cd "$srcdir/$_reponame}"
+
+  for _arch in "${_architectures[@]}"; do
+    mkdir build-$_arch
+    source env source mingw-env ${_arch}
+    "$CC" $CXXFLAGS $LDFLAGS fxc2.cpp -obuild-$_arch/fxc2.exe
+    echo '#!/usr/bin/bash
+args=()
+for orig_arg in "$@"; do
+  if [[ $orig_arg == "/nologo" ]]; then
+    args+=("-nologo")
+  elif [[ $orig_arg =~ /(T|E|D|V(i|n)|Fh) ]]; then
+    args+=("-${BASH_REMATCH[1]}")
+  else
+    args+=("$orig_arg")
+  fi
+done
+script_path=$(realpath "${BASH_SOURCE[0]}")
+'$_arch-wine' "${script_path%/*}/fxc2.exe" "${args[@]}"' > build-$_arch/fxc.exe
+  done
+}
+
+package() {
+  cd "$srcdir/{$_reponame}"
+
+  for _arch in "${_architectures[@]}"; do
+    install -Dm755 "$srcdir/$_reponame/build-$arch/fxc2.exe" "$pkgdir/usr/$_arch/bin/fxc2.exe"
+    install -Dm755 "$srcdir/$_reponame/build-$arch/fxc.exe" "$pkgdir/usr/$_arch/bin/fxc.exe"
+  done
+}

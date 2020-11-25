@@ -12,7 +12,7 @@ _android_api_platform=30
 _android_ndk_platform=$_android_min_platform
 
 pkgname=android-$_pkg_arch-qt5
-pkgver=5.15.1
+pkgver=5.15.2
 pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')

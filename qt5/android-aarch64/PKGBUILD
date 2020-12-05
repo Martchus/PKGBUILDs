@@ -7,12 +7,10 @@
 
 _pkg_arch=aarch64
 _android_arch=arm64-v8a
-_android_min_platform=24
-_android_api_platform=30
-_android_ndk_platform=$_android_min_platform
+_android_platform=22
 
 pkgname=android-$_pkg_arch-qt5
-pkgver=5.15.2
+pkgver=5.13.1
 pkgrel=1
 pkgdesc="Qt 5 for Android"
 arch=('x86_64')
@@ -27,23 +25,20 @@ makedepends=('libgl'
              'gperf'
              'libxslt'
              'fontconfig'
-             'ninja'
              'java-environment-openjdk<=8'
              'android-environment'
-             'android-pkg-config')
+             'android-pkg-config'
+             "android-$_pkg_arch-openssl")
 depends=('java-runtime-headless-openjdk<=8'
          'apache-ant'
          'android-ndk'
+         "android-platform-$_android_platform"
          'android-sdk'
          'android-sdk-build-tools'
          'android-sdk-platform-tools'
-         'android-platform'
-         "android-$_pkg_arch-libjpeg-turbo"
+         "android-$_pkg_arch-zlib"
          "android-$_pkg_arch-libpng"
-         "android-$_pkg_arch-libwebp"
-         "android-$_pkg_arch-libtiff"
-         "android-$_pkg_arch-openssl"
-         "android-$_pkg_arch-zlib")
+         "android-$_pkg_arch-libjpeg-turbo")
 groups=('android-qt5')
 conflicts=("android-qt5-${_android_arch}")
 replaces=("android-qt5-${_android_arch}")
@@ -73,47 +68,51 @@ optdepends+=("android-$_pkg_arch-openssl: SSL support for Qt Network")
 options=(!strip !buildflags staticlibs !emptydirs)
 _pkgfqn="qt-everywhere-src-${pkgver}"
 source=("http://download.qt-project.org/official_releases/qt/${pkgver:0:4}/${pkgver}/single/${_pkgfqn}.tar.xz"
-        '0001-Support-pkg-config-under-Android.patch'
-        '0002-Force-64-bit-atomics-usage.patch')
-sha256sums=('44da876057e21e1be42de31facd99be7d5f9f07893e1ea762359bcee0ef64ee9'
-            '435047d2f09baf2e706c86604c944686e71ab6d7678203b68e7d28af7beb5ce8'
-            '1f0aab5dcf7976285ffbb9069f127087f15d60a23485fadf17312090453d6784')
+        '0001-Fix-clang-libc-build-under-Android.patch'
+        '0002-Fix-androiddeployqt-search-paths.patch'
+        '0003-Support-pkg-config-under-Android.patch'
+	'0004-Use-pkg-config-to-find-libjpeg.patch'
+        '0001-Disable-mapboxgl.patch')
+sha256sums=('adf00266dc38352a166a9739f1a24a1e36f1be9c04bf72e16e142a256436974e'
+            '29bcb93f9c79ad4b0709efa42694ed917b6e4cfce69a805e79a7dc3144be7765'
+            '7a5520311ba2edee2ffcd546cd6e08248c8f73deed33bd8075649577f8cb1446'
+            '5c3f0725f3c27263661ff5ebb4b279e4483de8ed70dee4fe42a84d31b3f2e4a9'
+            '4f3ba22616040a2979bfdf840b44bf105374ea2fac866c42977ad7ec6e87ddcc'
+            '6151b784050f9d4ef3eec22dd33360d3f566d4834592f1171df91a10c95fab77')
 
 prepare() {
-    export ANDROID_MINIMUM_PLATFORM=$_android_min_platform
-    export ANDROID_API_VERSION=android-$_android_api_platform
-    export ANDROID_NDK_PLATFORM=android-$_android_ndk_platform
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
     source android-env ${_pkg_arch}
-
-    check_ndk_version_ge_than 18.0
-    check_android_platform
 
     cd ${_pkgfqn}
     	
     pushd qtbase
-    patch -Np1 -i "../../0001-Support-pkg-config-under-Android.patch"
-    case "$_android_arch" in
-        aarch64 | x86-64)
-            patch -Np1 -i "../../0002-Force-64-bit-atomics-usage.patch"
-            ;;
-        *)
-            ;;
-    esac 
+    patch -Np1 -i "../../0001-Fix-clang-libc-build-under-Android.patch"
+    #patch -Np1 -i "../../0002-Fix-androiddeployqt-search-paths.patch"
+    patch -Np1 -i "../../0003-Support-pkg-config-under-Android.patch"
+    patch -Np1 -i "../../0004-Use-pkg-config-to-find-libjpeg.patch"
     popd
 
-    sed -i "s/android-21/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/configure.pri
+    pushd qtlocation
+    # skip building mapboxgl as it increases compile time significantly and
+    # likely not a lot of people actually using it; if you need it, just remove the
+    # following line:
+    patch -Np1 -i "../../0001-Disable-mapboxgl.patch"
+    popd
+
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/mkspecs/features/android/sdk.prf
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/src/android/jar/jar.pro
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtgamepad/src/plugins/gamepads/android/jar/jar.pro
+    sed -i "s/android-16/android-$ANDROID_MINIMUM_PLATFORM/g" qtbase/configure.pri
 }
 
 build() {
-    export ANDROID_MINIMUM_PLATFORM=$_android_min_platform
-    export ANDROID_API_VERSION=android-$_android_api_platform
-    export ANDROID_NDK_PLATFORM=android-$_android_ndk_platform
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
     source android-env ${_pkg_arch}
 
     unset CC CXX CFLAGS CXXFLAGS LDFLAGS CHOST QMAKESPEC QTDIR CARCH
 
     export PKG_CONFIG=$ANDROID_PKGCONFIG
-    export ANDROID_TARGET_ARCH=${ANDROID_ABI}
     export PYTHON=/usr/bin/python2
 
     cd ${_pkgfqn}
@@ -127,29 +126,23 @@ build() {
         -xplatform android-clang
         -nomake tests
         -nomake examples
-        -android-sdk ${ANDROID_HOME}
         -android-ndk ${ANDROID_NDK_HOME}
+        -android-sdk ${ANDROID_HOME}
         -android-ndk-host linux-x86_64
-        -android-ndk-platform ${ANDROID_NDK_PLATFORM}
-        -android-abis ${ANDROID_ABI}
+        -android-toolchain-version 4.9
         -skip qtserialport
-        -skip qtwebengine
         -no-warnings-are-errors
         -pkg-config
         -system-zlib
         -system-libpng
         -system-libjpeg
-        -system-webp
-        -system-tiff
-        -no-feature-geoservices_mapbox
-        -no-feature-geoservices_mapboxgl
         -qt-freetype
         -openssl-runtime
-        -verbose
+        -android-arch ${ANDROID_ABI}
+        -android-ndk-platform ${ANDROID_NDK_PLATFORM}
+        -recheck-all
         -optimized-qmake
         -I${ANDROID_PREFIX}/include"
-
-    # note: use -recheck-all and/or -redo to continue
 
     [[ $ANDROID_DEBUG_BUILD ]] \
         && configue_opts+=' -debug-and-release' \
@@ -172,9 +165,7 @@ build() {
 }
 
 package() {
-    export ANDROID_MINIMUM_PLATFORM=$_android_min_platform
-    export ANDROID_API_VERSION=android-$_android_api_platform
-    export ANDROID_NDK_PLATFORM=android-$_android_ndk_platform
+    export ANDROID_MINIMUM_PLATFORM=${_android_platform}
     source android-env ${_pkg_arch}
 
     cd ${_pkgfqn}

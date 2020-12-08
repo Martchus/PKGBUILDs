@@ -17,7 +17,7 @@ optdepends=('assimp: assimp importer'
             'qt6-shadertools: RHI renderer')
 groups=(qt6)
 _pkgfqn="${pkgname/6-/}-everywhere-src-${_qtver}"
-source=("https://download.qt.io/development_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
 sha256sums=('3362d01c7542af0e902908d2d339374feda1a037552ea625b900278982375c27')
 
 build() {

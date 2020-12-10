@@ -3,10 +3,16 @@ set -e # abort on first error
 shopt -s nullglob
 source "$(dirname $0)/../versions.sh"
 
-if ! [[ $GITHUB_TOKEN ]]; then
+if ! [[ $DRY_RUN ]] && ! [[ $GITHUB_TOKEN ]]; then
     echo "Don't forget to set \$GITHUB_TOKEN."
     exit -2
 fi
+
+if [[ $DRY_RUN ]]; then
+    target=${DRY_RUN_TARGET:-$PWD} 
+fi
+
+projects=(${PROJECTS:-${!versions[@]}})
 
 repo_dir=${PATH_REPO_OWNSTUFF}
 if ! [[ $repo_dir ]]; then
@@ -20,7 +26,7 @@ if ! [[ -d $repo_dir ]]; then
 fi
 
 # upload latest static mingw-w64 package of my projects on GitHub (if not already present)
-for project in "${!versions[@]}"
+for project in "${projects[@]}"
 do
     version=${versions[$project]}
     gh_name=${github_names[$project]:-$project}
@@ -28,20 +34,24 @@ do
     [[ $version == 'none' ]] && continue
     echo '------------------------------------------------------------------------'
     echo "NEXT: $project/v$version"
+    temp_dir=$(mktemp -d -t "$project-XXXXXXXXXX")
+    zip_files=()
+    pushd "$temp_dir"
+
+    for variant in '' 'qt6'; do
+    [[ $variant ]] && variant_suffix=-$variant || variant_suffix=
 
     # determine file path of arch linux package
-    pkg_name=mingw-w64-$project
+    pkg_name=mingw-w64-$project$variant_suffix
     pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.*)
     if [[ ${#pkg_files[@]} == 0 ]]; then
-        echo "no mingw-w64 package for $project/v$version present"
+        echo "no mingw-w64$variant_suffix package for $project/v$version present"
         continue
     fi
     latest_pkg_file=${pkg_files[-1]}
 
     # extract arch linux package
     pkg_file_name=${latest_pkg_file##*/}
-    temp_dir=$(mktemp -d -t "$pkg_file_name-XXXXXXXXXX")
-    pushd "$temp_dir"
     bsdtar xJf "$latest_pkg_file"
 
     # locate the license file
@@ -52,7 +62,6 @@ do
     fi
 
     # make a zip file for each statically linked binary
-    zip_files=()
     for arch in i686-w64-mingw32 x86_64-w64-mingw32; do
         binaries=(usr/$arch/bin/*-static.exe)
         for binary in ${binaries[@]}; do
@@ -63,8 +72,11 @@ do
 
             # check whether upload already exists
             zip_file="$binary_name.zip"
-            if github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
+            if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
                 echo "auto-skipping $project/v$version; $zip_file already present"
+                continue
+            elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
+                echo "auto-skipping $project/v$version; $zip_file already present (dry-run)"
                 continue
             fi
 
@@ -78,6 +90,7 @@ do
             zip_files+=("$zip_file")
         done
     done
+    done
 
     # upload created zip files
     if [[ ${#zip_files[@]} == 0 ]]; then
@@ -88,6 +101,10 @@ do
     # upload files
     for zip_file in ${zip_files[@]}; do
         echo "uploading $project/v$version -> $zip_file"
+        if [[ $DRY_RUN ]]; then
+            mv --target-directory="$target" "$zip_file" 
+            continue
+        fi
         if github-release upload --user martchus --repo "$gh_name" --tag "v$version" --file "$zip_file" --name "$zip_file"; then
             echo "SUCCESS: uploaded $project/v$version -> $zip_file"
         else

@@ -5,7 +5,7 @@ Contains PKGBUILD files for creating Arch Linux packages:
   [Tag Editor](https://github.com/Martchus/tageditor), [Password Manager](https://github.com/Martchus/passwordmanager), ...
 * Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go):
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
-    * mingw-w64 packages which allow to build for Windows under Arch Linux, eg. FreeType 2 and Qt 5
+    * mingw-w64 packages which allow to build for Windows under Arch Linux, eg. FreeType 2, Qt 5 and Qt 6
     * android packages which allow to build for Android under Arch Linux, eg. iconv, Boost, OpenSSL, CppUnit, Qt 5 and Kirigami
     * apple-darwin packages which allow to build for MaxOS X under Arch Linux, eg. osxcross and Qt 5 (still experimental)
 * Other packages imported from the AUR to build with slight modifications
@@ -28,13 +28,16 @@ Server = https://martchus.no-ip.biz/repo/arch/$repo/os/$arch
 Server = https://ftp.f3l.de/~martchus/$repo/os/$arch
 ```
 
-The testing repository is required if you have also enabled the official testing repository. (Packages contained by ownstuff-testing
+The testing repository is required if you have the official testing repository enabled. (Packages contained by ownstuff-testing
 are linked against packages found in the official testing repository.)
 
 The repository is focusing on x86_64 but some packages are also provided for i686 and aarch64.
 
 Note that I can not assure that required rebuilds always happen fast enough (since the offical developers obviously don't wait for
 me before releasing their packages from staging).
+
+Requests regarding binary packages can be tracked on the issue tracker of this GitHub project as well, e.g. within the
+[general discussion issue](https://github.com/Martchus/PKGBUILDs/issues/94).
 
 ## Docker image
 Checkout the repository [docker-mingw-qt5](https://github.com/mdimura/docker-mingw-qt5).
@@ -91,13 +94,38 @@ workflow is quite simple:
       the environment variable `QT_GIT_REPOS_DIR` to be set
 2. Run `devel/qt5/update-patches.sh` or `devel/qt5/update-all-patches.sh` to update PKGBUILDs
 
-## Supported build and deployment tools for mingw-w64-qt5 packages
+## Brief documentation about mingw-w64-qt packages
+The Qt project does not support building Qt under GNU/Linux when targeting Windows. With Qt 6 they also stopped 32-bit
+builds. They also don't provide static builds for Windows. They are also relying a lot on their bundled libraries while
+my builds aim to build dependencies separately. So expect some rough edges when using my packaging.
+
+Neverthless it make sense to follow the official documentation. For concrete examples how to use this packaging with
+CMake, just checkout the mingw-w64 variants of e.g. `syncthingtray` within this repository. The Arch Wiki also has
+a [section about mingw-w64 packaging](https://wiki.archlinux.org/index.php/MinGW_package_guidelines).
+
+### Tested build and deployment tools for mingw-w64-qt5 packages
 Currently, I test with qmake and CMake. With both build systems it is possible to use either the shared or the
 static libraries. Please read the comments in the PKGBUILD file itself and the pinned comments in
 [the AUR](https://aur.archlinux.org/packages/mingw-w64-qt5-base) for futher information.
 
-There are also pkgconfig files, but those aren't really tested.
+There are also pkg-config files, but those aren't really tested.
 
-qbs and windeployqt currently don't work very well (see issues). Using mxedeployqt might be an alternative for
-windeployqt.
+qbs and windeployqt currently don't work very well (see issues). Using the static libraries or mxedeployqt might be an
+alternative for windeployqt.
+
+### Tested build and deployment tools for mingw-w64-qt6 packages
+In order to build a Qt-based project using mingw-w64-qt6 packages one also needs to install the regular `qt6-base` package
+for development tools such as moc. The packages `qt6-tools` and `qt6-declarative` contain also native packages which might
+be required by some projects.
+
+Currently, I test only CMake. It is possible to use either the shared or the static libraries. The static libraries
+are installed into a nested prefix (`/usr/i686-w64-mingw32/static` and `/usr/x86_64-w64-mingw32/static`) so this prefix
+needs to be prepended to `CMAKE_FIND_ROOT_PATH` for using the static libraries. To generally prefer static libraries
+one might use the helper scripts provided by the `mingw-w64-cmake-static` package.
+
+The build systems qbs and qmake are not tested. It looks like Qt's build system does not install pkg-config files
+anymore and so far no effort has been taken to enable them.
+
+Note that windeployqt needed to be enabled by the official/regular `qt6-tools` package but would likely not work very
+well anyways. Using the static libraries or mxdeployqt might be an alternative for windeployqt.
 

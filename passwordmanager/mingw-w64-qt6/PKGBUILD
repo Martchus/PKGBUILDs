@@ -40,7 +40,7 @@ build() {
         -DBUILTIN_ICON_THEMES:STRING=breeze;breeze-dark;Numix
         -DIMAGE_FORMAT_SUPPORT:STRING=Gif;ICO;Jpeg
         -DSVG_SUPPORT:BOOL=ON
-        -DSVG_ICON_SUPPORT:BOOL=0N
+        -DSVG_ICON_SUPPORT:BOOL=ON
     '
   )
   declare -A _cfg_suffix=(
@@ -65,7 +65,6 @@ build() {
         -DKF_PACKAGE_PREFIX:STRING=KF6 \
         -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
         -DQUICK_GUI:BOOL=OFF \
-        -DENABLE_QT_TRANSLATIONS:BOOL=OFF \
         ${_config_flags[$_cfg]} \
         ../
       VERBOSE=1 ninja

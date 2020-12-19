@@ -6,7 +6,8 @@
 _reponame=qtutilities
 pkgname=mingw-w64-qtutilities-qt6
 _name=${pkgname#mingw-w64-}
-pkgver=6.3.2
+_name=${_name%-qt6}
+pkgver=6.3.3
 pkgrel=1
 arch=('any')
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models (mingw-w64)'
@@ -16,26 +17,14 @@ optdepends=("$_name-doc: API documentation")
 checkdepends=('mingw-w64-wine')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-base' 'qt6-tools' 'clang' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
-        'Disable-auto-inclusion-of-QML-plugins.patch::https://github.com/Martchus/qtutilities/commit/7183ec501c90bfc38538fd7a810533b8a8a78cff.patch')
-sha256sums=('c367a445f6d8e273787e733f8701ebea001f9dea1fb1e317580e976a48b42df1'
-            'SKIP')
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('7f9054cdabdbf6e0afd7f27ae8ced59121349b5fcf15ce2638b5aa852d46ab4a')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 _architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
 _configurations=()
 [[ $NO_SHARED_LIBS ]] || _configurations+=('shared')
 [[ $NO_STATIC_LIBS ]] || _configurations+=('static') makedepends+=('mingw-w64-cmake-static' 'mingw-w64-qt6-base-static')
-
-prepare () {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
-  # apply patches; further descriptions can be found in patch files itself
-  for patch in "$srcdir/"*.patch; do
-    msg2 "Applying patch $patch"
-    patch -p1 -i "$patch"
-  done
-}
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
@@ -71,7 +60,6 @@ build() {
         -DQT_PACKAGE_PREFIX:STRING=Qt6 \
         -DKF_PACKAGE_PREFIX:STRING=KF6 \
         -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
-        -DENABLE_QT_TRANSLATIONS:BOOL=OFF \
         ${_config_flags[$_cfg]} \
         ../
       VERBOSE=1 ninja

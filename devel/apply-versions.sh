@@ -12,6 +12,9 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     # skip Git packages
     [ ${variant##*-} == 'git' ] && continue
 
+    # skip android packages (for now)
+    [ ${variant%%-*} == 'android' ] && continue
+
     # skip some of the packages
     [[    $project_name == 'qt5-quick1'         # removed from official releases
        || $project_name == 'qt5-webkit'         # even revived version is dead

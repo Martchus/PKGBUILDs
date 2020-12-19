@@ -129,3 +129,22 @@ anymore and so far no effort has been taken to enable them.
 Note that windeployqt needed to be enabled by the official/regular `qt6-tools` package but would likely not work very
 well anyways. Using the static libraries or mxdeployqt might be an alternative for windeployqt.
 
+## Running Windows executables built using mingw-w64 packages with WINE
+It is recommended to use the scripts `x86_64-w64-mingw32-wine` and `i686-w64-mingw32-wine` provided by the `mingw-w64-wine`
+package. These scripts are a wrapper around the regular `wine` binary ensuring all the DLLs provided by `mingw-w64-*`-packages
+of the relevant architecture can be located. It also uses a distinct `wine` prefix so your usual configuration (e.g. tailored
+to run certain games) does not go into the way and is also not messed with.
+
+Here are neverthless some useful hints to run WINE manually:
+* Set the environment variable `WINEPREFIX` to use a distinct WINE-prefix if wanted.
+* Set `WINEPATH` for the search directories of needed DLLs, e.g. `WINEPATH=$builds/libfoo;$builds/libbar;/usr/x86_64-w64-mingw32`.
+* Set `WINEARCH` to `win32` for a 32-bit environment (`win64` is the default which will get you a 64-bit environment)
+* Set `WINEDLLOVERRIDES` to control loading DLLs, e.g. `WINEDLLOVERRIDES=mscoree,mshtml=` disables the annoying Gecko popup.
+* To set environment variables like `PATH` or `QT_PLUGIN_PATH` for the Windows program itself use the following approach:
+    1. Open `regedit`
+    2. Go to `HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment`
+    3. Add/modify the variable, e.g. set `PATH=C:\windows\system32;C:\windows;Z:\usr\x86_64-w64-mingw32\bin` and
+       `QT_PLUGIN_PATH=Z:/usr/x86_64-w64-mingw32/lib/qt6/plugins`
+* It is possible to run apps in an headless environment but be aware that WINE is not designed for this. For instance, when an
+  application crashes WINE still attempts to show the crash window and the application stays stuck in that state.
+* See https://wiki.winehq.org/Wine_User's_Guide for more information

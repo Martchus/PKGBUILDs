@@ -103,6 +103,8 @@ Neverthless it make sense to follow the official documentation. For concrete exa
 CMake, just checkout the mingw-w64 variants of e.g. `syncthingtray` within this repository. The Arch Wiki also has
 a [section about mingw-w64 packaging](https://wiki.archlinux.org/index.php/MinGW_package_guidelines).
 
+Note that the ANGLE and "dynamic" variants of Qt 5 packages do not work because they would require `fxc.exe` to build.
+
 ### Tested build and deployment tools for mingw-w64-qt5 packages
 Currently, I test with qmake and CMake. With both build systems it is possible to use either the shared or the
 static libraries. Please read the comments in the PKGBUILD file itself and the pinned comments in
@@ -128,6 +130,20 @@ anymore and so far no effort has been taken to enable them.
 
 Note that windeployqt needed to be enabled by the official/regular `qt6-tools` package but would likely not work very
 well anyways. Using the static libraries or mxdeployqt might be an alternative for windeployqt.
+
+### Static plugins and CMake
+Qt 5 initially didn't support it so I added patches to make it work. After Qt 5 added support I still kept my own version
+because I didn't want to risk any regressions (which would be tedious to deal with). So the
+[official documentation](https://doc.qt.io/qt-5/qtcore-cmake-qt-import-plugins.html) does **not** apply to my packages.
+One simply has to link against the targets of the wanted static plugins manually.
+
+However, for Qt 6 I dropped my patches and the official documentation applies. I would still recommended to set the target
+property `QT_DEFAULT_PLUGINS` of relevant targets to `0` and link against wanted plugin targets manually. At least in my
+cases list of plugins selected by default seemed needlessly long. I would also recommended to set the CMake variable
+`QT_SKIP_AUTO_QML_PLUGIN_INCLUSION` to a falsy value because this pulls in a lot of dependencies which are likely not needed.
+
+### Further documentation
+The directory `qt5-base/mingw-w64` contains also a README with more Qt 5 specific information.
 
 ## Running Windows executables built using mingw-w64 packages with WINE
 It is recommended to use the scripts `x86_64-w64-mingw32-wine` and `i686-w64-mingw32-wine` provided by the `mingw-w64-wine`

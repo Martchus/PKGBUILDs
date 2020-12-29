@@ -39,7 +39,6 @@ depends=(
   libiec61883
   libmfx
   libmodplug
-  libomxil-bellagio
   libpulse
   librav1e.so
   libraw1394
@@ -84,12 +83,13 @@ depends=(
   vulkan-icd-loader
 )
 makedepends=(
+  amf-headers
   avisynthplus
+  clang
   ffnvcodec-headers
   git
   ladspa
   nasm
-  amf-headers
   vulkan-headers
   opencl-clhpp
   ocl-icd
@@ -168,7 +168,10 @@ build() {
     --disable-debug \
     --disable-static \
     --disable-stripping \
+    --enable-amf \
     --enable-avisynth \
+    --enable-cuda-llvm \
+    --enable-lto \
     --enable-fontconfig \
     --enable-gmp \
     --enable-gnutls \
@@ -218,7 +221,6 @@ build() {
     --enable-libsvtav1 \
     --enable-libsvthevc \
     --enable-libsvtvp9 \
-    --enable-amf \
     --enable-vaapi \
     --enable-vdpau \
     --enable-opencl \

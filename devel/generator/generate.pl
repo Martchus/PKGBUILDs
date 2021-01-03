@@ -64,10 +64,8 @@ for my $qt_version (qw(qt5 qt6)) {
 # example: "-lfoo -lbar" => "/usr/lib/foo.a;/usr/lib/bar.a"
 $mojolicious->helper(expand_libs => sub {
     my $controller = shift;
-    my $is_static  = $controller->stash('static_variant');
-    my $is_mingw   = $controller->stash('package_name_prefix') eq 'mingw-w64-';
-    my $prefix     = $is_mingw  ? '/usr/$_arch' : '/usr';
-    my $extension  = $is_static ? 'a' : ($is_mingw ? 'dll.a' : 'so');
+    my $prefix     = $controller->stash('install_prefix');
+    my $extension  = $controller->stash('library_extension');
     return join(';', map {
         my $library_name = $_;
         $library_name = $1 if $library_name =~ qr/\w*-l(.*)\w*/;
@@ -131,6 +129,7 @@ for my $top_level_dir (@$top_level_dirs) {
         my $package_name_suffix = $variant_suffix_part ? "-$variant_suffix_part" : "";
         my $is_static_variant   = $variant_suffix_part =~ qr/static/;
         my $has_static_variant  = $is_static_variant || -d "$default_package_name/$variant-static";
+        my $is_mingw            = $package_name_prefix eq 'mingw-w64-';
         my $package_name        = "$package_name_prefix$default_package_name$package_name_suffix";
         next if defined $filter_regex && $package_name !~ $filter_regex;
 
@@ -155,6 +154,9 @@ for my $top_level_dir (@$top_level_dirs) {
                     static_suffix => $is_static_variant ? '-static' : '',
                     static_deps => undef,
                     static_makedeps => undef,
+                    is_mingw => $is_mingw,
+                    library_extension => $is_static_variant ? 'a' : ($is_mingw ? 'dll.a' : 'so'),
+                    install_prefix => $is_mingw ? '/usr/$_arch' : '/usr',
                     shared_config => !$is_static_variant,
                     static_config => $is_static_variant || !$has_static_variant,
                     no_libraries => 0,

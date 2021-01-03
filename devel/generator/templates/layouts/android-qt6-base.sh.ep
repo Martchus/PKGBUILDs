@@ -1,0 +1,108 @@
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# This file is created from PKGBUILD.sh.ep contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
+% if ($patch_files->size) {
+
+# All patches are managed at https://github.com/Martchus/qt<%== $qt_module %>
+% }
+
+_android_arch=<%= $variant_prefix_part =~ s/android-// && $variant_prefix_part %>
+pkgname=<%= $package_name %>
+_qtver=6.0.0
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(any)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='A cross-platform application and UI framework (android)'
+depends=('java-runtime-headless-openjdk=8' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
+         'android-sdk-platform-tools' 'android-platform' "android-${_android_arch}-libjpeg-turbo"
+         "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib")
+makedepends=('android-cmake<%= $static_suffix %>' 'android-pkg-config'
+             'java-environment-openjdk=8' 'qt6-base' 'ninja')
+optdepends=('qt6-base: development tools')
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+groups=(android-${_android_arch}-qt6)
+_pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+% if ($patch_files->size || content_for('prepare')->size) {
+prepare () {
+  cd $_pkgfqn
+
+% if ($patch_files->size) {
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+% }
+<%== content_for 'prepare' %>\
+}
+
+% }
+build() {
+  source android-env ${_android_arch}
+  android-${_android_arch}-cmake<%== $static_suffix %> -G Ninja -B build-$_android_arch -S $_pkgfqn \\
+% if ($static_variant) {
+      -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}/static;${ANDROID_PREFIX}" \\
+      -DCMAKE_INSTALL_PREFIX:PATH="${ANDROID_PREFIX}/static" \\
+% }
+% else {
+      -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}" \\
+% }
+      -DQT_BINARY_DIR=${ANDROID_PREFIX_BIN} \\
+      -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \\
+      -DQT_HOST_PATH=/usr \\
+      -DANDROID_SDK_ROOT=${ANDROID_HOME} \\
+      -DANDROID_NDK_ROOT=${ANDROID_NDK_HOME} \\
+      -DANDROID_STL="c++_shared" \\
+      -DFEATURE_pkg_config=ON \\
+      -DFEATURE_system_pcre2=OFF \\
+      -DFEATURE_system_freetype=OFF \\
+      -DFEATURE_system_harfbuzz=OFF \\
+      -DFEATURE_system_sqlite=OFF \\
+      -DFEATURE_system_libjpeg=ON \\
+      -DFEATURE_system_libpng=ON \\
+      -DFEATURE_system_zlib=ON \\
+      -DINSTALL_DOCDIR=share/doc/qt6 \\
+      -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \\
+      -DINPUT_openssl=<%== $static_variant ? 'linked' : 'runtime' %>
+% if (0) {
+      -DINPUT_openssl=<%== $static_variant ? 'linked' : 'runtime' %> \\
+      -DOPENSSL_CRYPTO_LIBRARY:FILEPATH=${ANDROID_PREFIX_LIB}/libcrypto.so \\
+      -DOPENSSL_SSL_LIBRARY:PATH=${ANDROID_PREFIX_LIB}/libssl.so \\
+      -DOPENSSL_INCLUDE_DIR:FILEPATH=${ANDROID_PREFIX_INCLUDE} \\
+      -DJPEG_LIBRARY_RELEASE:PATH=${ANDROID_PREFIX_LIB}/libjpeg.so \\
+      -DJPEG_INCLUDE_DIR:FILEPATH=${ANDROID_PREFIX_INCLUDE} \\
+      -DPNG_LIBRARY_RELEASE:PATH=${ANDROID_PREFIX_LIB}/libpng.so \\
+      -DPNG_PNG_INCLUDE_DIR:FILEPATH=${ANDROID_PREFIX_INCLUDE}
+% }
+  VERBOSE=1 cmake --build build-$_android_arch
+
+  # note: Avoid using `-DINSTALL_` options like in the regular package to avoid any problems with androiddeployqt.
+}
+
+package() {
+  source android-env ${_android_arch}
+  DESTDIR="$pkgdir" cmake --install build-$_android_arch
+
+  install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgname
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/${ANDROID_PREFIX}/<%== $static_variant ? 'static/' : '' %>" -type f -name '*.prl' \\
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.so' -exec ${ANDROID_STRIP} -g --strip-unneeded {} \;
+  find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.a' -exec ${ANDROID_STRIP} -g {} \;
+  [[ -d "${pkgdir}/${ANDROID_PREFIX}/share/doc" ]] && rm -r "${pkgdir}/${ANDROID_PREFIX}/share/doc" || true
+}

@@ -1,4 +1,4 @@
-From 28e6e716d2a09f40720f3d213e82c1ff6e61a860 Mon Sep 17 00:00:00 2001
+From 563b073d12df9982f3ec75b95a6a9eeb2058c6bd Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 8 Nov 2020 00:34:09 +0100
 Subject: [PATCH 7/7] Allow overriding CMAKE_FIND_LIBRARY_SUFFIXES to prefer
@@ -33,5 +33,5 @@ index bb2de0a0c2..a2e8b37ba7 100644
      qt_enable_cmake_languages()
  
 -- 
-2.29.2
+2.30.0
 

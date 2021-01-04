@@ -61,6 +61,7 @@ build() {
     $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
+      -DFEATURE_static_runtime=ON \\
 % }
       -DFEATURE_pkg_config=ON \\
       -DFEATURE_system_pcre2=ON \\
@@ -83,7 +84,7 @@ package() {
   for _arch in ${_architectures}; do
     DESTDIR="$pkgdir" cmake --install build-$_arch
 
-    install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/$_arch/share/licenses/$pkgname
+    install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgname
 
 % unless ($static_variant) {
     # Add symlinks of DLLs in usual bin directory
@@ -105,5 +106,6 @@ package() {
     find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
     find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;
     find "$pkgdir/usr/$_arch" -iname '*.a'   -exec $_arch-strip -g {} \;
+    [[ -d "$pkgdir/usr/$_arch/share/doc" ]] && rm -r "$pkgdir/usr/$_arch/share/doc"
   done
 }

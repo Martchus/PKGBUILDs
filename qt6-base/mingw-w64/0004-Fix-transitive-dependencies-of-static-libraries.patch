@@ -1,4 +1,4 @@
-From f0176a1ae2e36b4ea89bda4a927bf387a4e20ead Mon Sep 17 00:00:00 2001
+From 10cb71bf97fe6f6ebe9aa4e3f7387df675f32471 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 5 Nov 2020 21:59:33 +0100
 Subject: [PATCH 4/7] Fix transitive dependencies (of static libraries)
@@ -9,15 +9,15 @@ dependencies by setting certain variables, e.g. within the toolchain file.
 
 Change-Id: I89da5ef519dd6dd3f86a94a01d3da7208a070bdb
 ---
- .../3rdparty/extra-cmake-modules/find-modules/FindGLIB2.cmake  | 2 +-
- cmake/FindMySQL.cmake                                          | 1 +
- cmake/FindWrapDBus1.cmake                                      | 3 ++-
- cmake/FindWrapOpenSSL.cmake                                    | 2 +-
- cmake/FindWrapSystemFreetype.cmake                             | 2 +-
- cmake/FindWrapSystemHarfbuzz.cmake                             | 2 +-
- cmake/FindWrapSystemPNG.cmake                                  | 2 +-
- src/plugins/sqldrivers/psql/CMakeLists.txt                     | 2 +-
- 8 files changed, 9 insertions(+), 7 deletions(-)
+ cmake/3rdparty/extra-cmake-modules/find-modules/FindGLIB2.cmake | 2 +-
+ cmake/FindMySQL.cmake                                           | 1 +
+ cmake/FindWrapDBus1.cmake                                       | 1 +
+ cmake/FindWrapOpenSSL.cmake                                     | 2 +-
+ cmake/FindWrapSystemFreetype.cmake                              | 2 +-
+ cmake/FindWrapSystemHarfbuzz.cmake                              | 2 +-
+ cmake/FindWrapSystemPNG.cmake                                   | 2 +-
+ src/plugins/sqldrivers/psql/CMakeLists.txt                      | 2 +-
+ 8 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/cmake/3rdparty/extra-cmake-modules/find-modules/FindGLIB2.cmake b/cmake/3rdparty/extra-cmake-modules/find-modules/FindGLIB2.cmake
 index 8f873c1b45..831ca8e624 100644
@@ -45,17 +45,15 @@ index 54c94b8a2f..7575386338 100644
  endif()
  
 diff --git a/cmake/FindWrapDBus1.cmake b/cmake/FindWrapDBus1.cmake
-index 4982e7c8ae..56d139c538 100644
+index bdbcab9eb3..06e9af49f6 100644
 --- a/cmake/FindWrapDBus1.cmake
 +++ b/cmake/FindWrapDBus1.cmake
-@@ -45,4 +45,5 @@ include(FindPackageHandleStandardArgs)
- find_package_handle_standard_args(WrapDBus1 REQUIRED_VARS
-                                             DBus1_LIBRARY DBus1_INCLUDE_DIR WrapDBus1_FOUND
+@@ -47,4 +47,5 @@ find_package_handle_standard_args(WrapDBus1 REQUIRED_VARS
                                              VERSION_VAR DBus1_VERSION)
--set_property(TARGET dbus-1 PROPERTY IMPORTED_IMPLIB ${DBus1_LIBRARY})
-\ No newline at end of file
-+set_property(TARGET dbus-1 PROPERTY IMPORTED_IMPLIB ${DBus1_LIBRARY})
-+set_property(TARGET dbus-1 PROPERTY INTERFACE_LINK_LIBRARIES "${DBUS1_DEPENDENCIES}")
+ if(TARGET dbus-1)
+     set_property(TARGET dbus-1 PROPERTY IMPORTED_IMPLIB ${DBus1_LIBRARY})
++    set_property(TARGET dbus-1 PROPERTY INTERFACE_LINK_LIBRARIES "${DBUS1_DEPENDENCIES}")
+ endif()
 diff --git a/cmake/FindWrapOpenSSL.cmake b/cmake/FindWrapOpenSSL.cmake
 index 6e80862258..47bea72aad 100644
 --- a/cmake/FindWrapOpenSSL.cmake
@@ -122,5 +120,5 @@ index 62e9619d16..939163bde7 100644
          Qt::CorePrivate
          Qt::SqlPrivate
 -- 
-2.29.2
+2.30.0
 

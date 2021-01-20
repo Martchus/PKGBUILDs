@@ -21,7 +21,7 @@ optdepends=("$_pkgname-doc: API documentation")
 checkdepends=("android-$_pkg_arch-cppunit" "android-$_pkg_arch-openssl")
 # FIXME: run tests with qemu
 #checkdepends+=('qemu-binfmt-arm' "android-$_pkg_arch-linker")
-makedepends=('cmake' 'ninja' 'android-ndk' 'android-sdk')
+makedepends=('cmake' 'ninja' 'iso-codes' 'android-ndk' 'android-sdk')
 #conflicts=("android-$_pkgname-$_android_arch")
 #replaces=("android-$_pkgname-$_android_arch")
 url="https://github.com/Martchus/${_reponame}"

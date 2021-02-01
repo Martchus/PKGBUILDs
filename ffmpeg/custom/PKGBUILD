@@ -73,6 +73,7 @@ depends=(
   xz
   zlib
 
+  ocl-icd
   libfdk-aac
   librsvg
   svt-av1
@@ -92,7 +93,6 @@ makedepends=(
   nasm
   vulkan-headers
   opencl-clhpp
-  ocl-icd
   openal
 )
 optdepends=(

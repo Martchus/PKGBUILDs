@@ -1,7 +1,7 @@
 #!/bin/bash
 declare -A versions=(
-    [syncthingtray]=1.1.1
-    [c++utilities]=5.10.0
+    [syncthingtray]=1.1.2
+    [c++utilities]=5.10.1
     [qtutilities]=6.3.3
     [tagparser]=9.4.0
     [tageditor]=3.3.10

@@ -61,7 +61,7 @@ template=$pkgbuild_path.sh.ep has_template=
 [[ -f $template ]] && has_template=1
 
 source "$pkgbuild_path"
-tag=${tag:-origin/$pkgver}
+tag=${tag:-v$pkgver}
 
 new_sources=()
 new_md5sums=()
@@ -89,10 +89,15 @@ if ! git checkout "${branch}"; then
     msg2 "No patches required for $1, skipping."
     exit 0
 fi
+msg2 "Exporting patches for branch '$branch' (based on '$tag')"
 git format-patch "$tag" --output-directory "$dest"
+new_patches=("$dest"/*.patch)
 for other_variant_dir in "$dest/../$variant"?*; do
     [[ -d $other_variant_dir ]] || continue
-    cp --target-directory="$other_variant_dir" "$dest/"*.patch
+    find "$other_variant_dir" -iname '*.patch' -delete
+    if [[ ${#new_patches[@]} -gt 0 ]]; then
+        ln --symbolic --relative --target-directory="$other_variant_dir" "${new_patches[@]}"
+    fi
 done
 popd > /dev/null
 
@@ -103,7 +108,6 @@ popd > /dev/null
 # system)
 [[ -f $has_template ]] && exit 0
 
-new_patches=("$dest"/*.patch)
 for patch in "${new_patches[@]}"; do
     new_sources+=("$patch")
     sum=$(sha256sum "$patch")

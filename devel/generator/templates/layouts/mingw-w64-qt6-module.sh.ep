@@ -10,15 +10,7 @@ pkgname=mingw-w64-qt6-<%== $qt_module %><%== $static_suffix %>
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
-% if (my $git_commit = stash('git_commit')) {
-source=("$_pkgfqn::git://code.qt.io/qt/qt<%== $qt_module %>.git#commit=<%== $git_commit %>"\
-% }
-% elsif (my $git_tag = stash('git_tag')) {
-source=("$_pkgfqn::git://code.qt.io/qt/qt<%== $qt_module %>.git#tag=<%== $git_tag %>"\
-% }
-% else {
-source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
-% }
+<%== include 'fragments/qt6-source' %>\
 <%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
 sha256sums=('<%== stash('git_commit') ? 'SKIP' : $qt_module_sha256 %>'\
 <%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
@@ -70,7 +62,7 @@ package() {
 % }
 % unless (stash('no_libs')) {
     # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
-    find "$pkgdir/usr/$_arch/lib" -type f -name '*.prl' \\
+    find "$pkgdir/usr/$_arch<%== $static_variant ? '/static' : '' %>/lib" -type f -name '*.prl' \\
       -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
 % }
@@ -78,7 +70,7 @@ package() {
     find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
     find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;
     find "$pkgdir/usr/$_arch" -iname '*.a'   -exec $_arch-strip -g {} \;
-    [[ -d "$pkgdir/usr/$_arch/share/doc" ]] && rm -r "$pkgdir/usr/$_arch/share/doc"
+    [[ -d "$pkgdir/usr/$_arch<%== $static_variant ? '/static' : '' %>/share/doc" ]] && rm -r "$pkgdir/usr/$_arch<%== $static_variant ? '/static' : '' %>/share/doc"
   done
 
   install -d "$pkgdir"/usr/share/licenses

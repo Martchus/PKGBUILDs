@@ -14,7 +14,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.0.0
+_qtver=6.0.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -106,6 +106,6 @@ package() {
     find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
     find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;
     find "$pkgdir/usr/$_arch" -iname '*.a'   -exec $_arch-strip -g {} \;
-    [[ -d "$pkgdir/usr/$_arch/share/doc" ]] && rm -r "$pkgdir/usr/$_arch/share/doc"
+    [[ -d "$pkgdir/usr/$_arch/<%== $static_variant ? 'static/' : '' %>share/doc" ]] && rm -r "$pkgdir/usr/$_arch/<%== $static_variant ? 'static/' : '' %>share/doc"
   done
 }

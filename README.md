@@ -88,12 +88,13 @@ This is always done by me. Please don't try to help here because it will only ca
 workflow is quite simple:
 
 1. Run `devel/qt5/rebase-patches.sh` on all Qt repository forks or just `devel/qt5/rebase-all-patches.sh`
-    * eg. `rebase-patches.sh 5.11.0 5.10.1 fixes` to create branch `5.11.0-mingw-w64` based on `5.10.1-mingw-w64-fixes`
+    * eg. `rebase-patches.sh 5.11.0 5.10.1 mingw-w64-fixes` to create branch `5.11.0-mingw-w64` based on `5.10.1-mingw-w64-fixes`
     * after fixing possible conflicts, run `devel/qt5/continue-rebase-patches.sh`
     * otherwise, that's it
     * all scripts need to run in the Git repository directory of the Qt module except `rebase-all-patches.sh` which needs
       the environment variable `QT_GIT_REPOS_DIR` to be set
 2. Run `devel/qt5/update-patches.sh` or `devel/qt5/update-all-patches.sh` to update PKGBUILDs
+    * eg. `devel/qt5/update-all-patches.sh "" mingw-w64 qt6` to consider all mingw-w64-qt6-\* packages
 
 ## Brief documentation about mingw-w64-qt packages
 The Qt project does not support building Qt under GNU/Linux when targeting Windows. With Qt 6 they also stopped 32-bit

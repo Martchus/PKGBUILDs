@@ -1,0 +1,12 @@
+% if (my $git_commit = stash('git_commit')) {
+source=("$_pkgfqn::git://code.qt.io/qt/qt<%== $qt_module %>.git#commit=<%== $git_commit %>"\
+% }
+% elsif (my $git_tag = stash('git_tag')) {
+source=("$_pkgfqn::git://code.qt.io/qt/qt<%== $qt_module %>.git#tag=<%== $git_tag %>"\
+% }
+% elsif (stash('additional_library')) {
+source=("https://download.qt.io/official_releases/additional_libraries/qt<%== $qt_module %>/${pkgver%.*}/${_qtver}/${_pkgfqn}.tar.xz"\
+% }
+% else {
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+% }

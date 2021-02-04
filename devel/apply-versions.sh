@@ -13,7 +13,9 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     [ ${variant##*-} == 'git' ] && continue
 
     # skip android packages (for now)
-    [ ${variant%%-*} == 'android' ] && continue
+    qt6_pattern='qt6-.*' is_qt6=
+    [[ $project_name =~ $qt6_pattern ]] && is_qt6=1 
+    [ ${variant%%-*} == 'android' ] && [[ ! $is_qt6 ]] && continue
 
     # skip some of the packages
     [[    $project_name == 'qt5-quick1'         # removed from official releases
@@ -23,6 +25,9 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
        || $project_name == 'qt6-3d'             # removed in beta1
        || $variant      == 'mingw-w64-test'     # just our own 'test' package (not used anymore)
     ]] && continue
+
+    # skip default qt6 packages (provided by Arch Linux itself)
+    [[ $is_qt6 ]] && [[ $variant == 'default' ]] && continue
 
     # treat all qt5-*/qt6-* packages as qt5/qt6
     start=${project_name%%-*}

@@ -1,4 +1,4 @@
-# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+# Maintainer of regular devtools package: Pierre Schmitz <pierre@archlinux.de>
 
 # ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
 #  - patches to fix issues with how we use the tools
@@ -8,7 +8,7 @@
 
 pkgname=devtools-custom
 _pkgname=devtools
-pkgver=20191227
+pkgver=20210202
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
@@ -16,8 +16,8 @@ license=('GPL')
 url='https://martchus.no-ip.biz/gitea/Martchus/devtools/src/branch/custom'
 conflicts=('devtools' 'devtools-alarm')
 provides=('devtools' 'devtools-alarm')
-depends=('namcap' 'openssh' 'subversion' 'rsync' 'arch-install-scripts'
-         'git' 'bzr' 'mercurial' 'diffutils')
+depends=('bash' 'openssh' 'subversion' 'rsync' 'arch-install-scripts'
+         'git' 'bzr' 'mercurial' 'diffutils' 'util-linux' 'awk')
 makedepends=('asciidoc')
 optdepends=('btrfs-progs: btrfs support')
 source=("git+https://martchus.no-ip.biz/gitea/Martchus/$_pkgname.git#branch=custom-$pkgver")

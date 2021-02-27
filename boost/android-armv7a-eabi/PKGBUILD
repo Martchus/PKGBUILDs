@@ -7,6 +7,7 @@ _pkgname=boost
 _pkg_arch=armv7a-eabi
 _android_arch=armeabi-v7a
 _android_toolchain=arm-linux-androideabi
+_andoird_toolchain_dir=$_android_toolchain
 _android_platform=24 # https://developer.android.com/about/dashboards/
 _android_target=armv7a-linux-androideabi$_android_platform
 _android_prefix=/opt/android-libs/$_pkg_arch
@@ -42,7 +43,7 @@ build() {
   local jobs="$(sed -e 's/.*\(-j *[0-9]\+\).*/\1/' <<< ${MAKEFLAGS})"
   local target_flags=" \
     --target=$_android_target \
-    --gcc-toolchain=$_android_ndk_path/toolchains/$_android_toolchain-4.9/prebuilt/linux-x86_64 \
+    --gcc-toolchain=$_android_ndk_path/toolchains/$_andoird_toolchain_dir-4.9/prebuilt/linux-x86_64 \
     --sysroot=$_android_ndk_path/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr"
   local common_flags=" \
     $target_flags \

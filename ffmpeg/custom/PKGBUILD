@@ -9,7 +9,7 @@
 
 _name=ffmpeg
 pkgname=ffmpeg-custom
-pkgver=4.3.1
+pkgver=4.3.2
 _svt_hevc_ver='1.5.0'
 _svt_av1_ver='0.8.4'
 _svt_vp9_ver='0.3.0'
@@ -62,6 +62,7 @@ depends=(
   libxml2
   libxv
   libxvidcore.so
+  libzimg.so
   opencore-amr
   openjpeg2
   opus
@@ -77,7 +78,7 @@ depends=(
   libfdk-aac
   librsvg
   svt-av1
-  glslang
+  #glslang - see note below
   svt-hevc
   svt-av1
   svt-vp9
@@ -115,11 +116,10 @@ provides=(
 )
 conflicts=("$_name")
 
-_tag=6b6b9e593dd4d3aaf75f48d40a13ef03bdef9fdb
+_tag=f719f869907764e6412a6af6e178c46e5f915d25
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
   'vmaf-model-path.patch'
-  '016-ffmpeg-srt-1.4.2-fix.patch'::'https://git.ffmpeg.org/gitweb/ffmpeg.git/patch/7c59e1b0f285cd7c7b35fcd71f49c5fd52cf9315'
   '017-ffmpeg-glslang-11.0-fix.patch'::'https://git.ffmpeg.org/gitweb/ffmpeg.git/patch/4dab04622a6cf2a31da26a51dedb60ec44ac89a4'
   "020-ffmpeg-add-svt-hevc-${_svt_hevc_ver}.patch"::"https://raw.githubusercontent.com/OpenVisualCloud/SVT-HEVC/v${_svt_hevc_ver}/ffmpeg_plugin/0001-lavc-svt_hevc-add-libsvt-hevc-encoder-wrapper.patch"
   "030-ffmpeg-add-svt-hevc-docs-${_svt_hevc_ver}.patch"::"https://raw.githubusercontent.com/OpenVisualCloud/SVT-HEVC/v${_svt_hevc_ver}/ffmpeg_plugin/0002-doc-Add-libsvt_hevc-encoder-docs.patch"
@@ -128,7 +128,6 @@ source=(
 )
 sha256sums=('SKIP'
             '8dff51f84a5f7460f8893f0514812f5d2bd668c3276ef7ab7713c99b71d7bd8d'
-            '960fd930955cd126e33c543eb5bf300fc050efdd4238626ee4aad2a50d353fa7'
             '5b6815fc088d4acdc046eb223350a964bc998b0759aef90acf0591f65e7c98cb'
             'b37d43d5d8692599347c6f1f316c13b9a9addc66d3ceb7e6e02341c494af7cdc'
             '1499e419dda72b1604dc5e3959668f3843292ff56bfba78734e31510ba576de0'
@@ -143,9 +142,6 @@ sha256sums=('SKIP'
 
 prepare() {
   cd ffmpeg
-
-  # fix compilation against libsrt 1.4.2
-  patch -Np1 -i "${srcdir}/016-ffmpeg-srt-1.4.2-fix.patch"
 
   # fix glslang
   patch -Np1 -i "${srcdir}/017-ffmpeg-glslang-11.0-fix.patch"
@@ -211,6 +207,7 @@ build() {
     --enable-libxcb \
     --enable-libxml2 \
     --enable-libxvid \
+    --enable-libzimg \
     --enable-nvdec \
     --enable-nvenc \
     --enable-omx \
@@ -225,9 +222,10 @@ build() {
     --enable-vdpau \
     --enable-opencl \
     --enable-openal \
-    --enable-libglslang \
     --enable-vulkan \
     --enable-nonfree
+
+  # note: removing --enable-libglslang for now due to "ERROR: libglslang not found"
 
   make
   make tools/qt-faststart

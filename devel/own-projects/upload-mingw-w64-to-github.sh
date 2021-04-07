@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
+shopt -s extglob
 source "$(dirname $0)/../versions.sh"
 
 if ! [[ $DRY_RUN ]] && ! [[ $GITHUB_TOKEN ]]; then
@@ -43,7 +44,7 @@ do
 
     # determine file path of arch linux package
     pkg_name=mingw-w64-$project$variant_suffix
-    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.*)
+    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.!(*.sig))
     if [[ ${#pkg_files[@]} == 0 ]]; then
         echo "no mingw-w64$variant_suffix package for $project/v$version present"
         continue

@@ -6,15 +6,16 @@ colorize
 
 if ! [[ $1 ]] || ! [[ $2 ]]; then
     echo 'No version specified, must specify the new and old version, eg. 5.9.2 5.9.1'
-    echo "Usage: $0 newversion oldversion [old-branch-suffix=mingw-w64] [new-branch-suffix=mingw-w64] [new-version-tag]"
+    echo "Usage: $0 newversion oldversion [old-branch-suffix=mingw-w64] [new-branch-suffix=mingw-w64] [new-version-tag] [old-version-tag]"
     echo "Note: supposed to be run within the Qt Git checkout"
     exit -1
 fi
-newversion="$1"
-oldversion="$2"
-oldbranchsuffix="${3:-mingw-w64}"
-newbranchsuffix="${4:-mingw-w64}"
-newversiontag="$5"
+newversion=$1
+oldversion=$2
+oldbranchsuffix=${3:-mingw-w64}
+newbranchsuffix=${4:-mingw-w64}
+newversiontag=$5
+oldversiontag=$6
 
 # check whether branch for new version already exists
 newversionbranch=$newversion-$newbranchsuffix
@@ -63,5 +64,5 @@ if [[ $newversiontag ]]; then
 else
     git checkout -b "$newversionbranch" "origin/$newversion" || git checkout -b "$newversionbranch" "v$newversion"
 fi
-git cherry-pick "v$oldversion..$oldversionbranch"
+git cherry-pick "${oldversiontag:-v$oldversion}..$oldversionbranch"
 git push -u $maybe_remote "$newversionbranch"

@@ -21,13 +21,27 @@
 _qt_module=qt<%== $qt_module %>
 pkgname=mingw-w64-qt5-<%== $qt_module %><%== $static_variant ? '-static' : '' %>
 <%== content %>\
+% if ($kde_fork_revision) {
+_commit=<%== $kde_fork_revision->[1] %>
+pkgver+=+kde+r<%== $kde_fork_revision->[0] %>
+makedepends+=('git')
+% }
 options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')
 url='https://www.qt.io/'
+% if ($kde_fork_revision) {
+_pkgfqn=${_qt_module}
+source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit\
+% } else {
 _pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"\
+% }
 <%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+% if ($kde_fork_revision) {
+sha256sums=('SKIP'\
+% } else {
 sha256sums=('<%== $qt_module_sha256 %>'\
+% }
 <%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
@@ -53,9 +67,20 @@ _configurations+=('CONFIG+=actually_a_shared_build <%== content_for 'shared_conf
 % }
 <%== content_for 'helper_functions' %>\
 
-% if ($patch_files->size || content_for('prepare')->size) {
+% if ($kde_fork_revision) {
+pkgver() {
+  cd $_pkgfqn
+  echo "5.15.2+kde+r"`git rev-list --count origin/5.15.2..$_commit`
+}
+
+% }
+% if ($patch_files->size || content_for('prepare')->size || $kde_fork_revision) {
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
+% if ($kde_fork_revision) {
+
+  git revert -n <%== $kde_fork_revision->[2] %> # Revert version bump
+% }
 % if ($patch_files->size) {
 
   # apply patches; further descriptions can be found in patch files itself

@@ -73,6 +73,15 @@ $mojolicious->helper(expand_libs => sub {
     } @_);
 });
 
+# define revisions of Qt modules from KDE fork
+my %kde_fork_revisions = (
+    base        => [172, 'cfa90a94f95510711e25920e7742b37faa2f4843', '6344955d17e17e2398720fe60c34cfc2a4a95208'],
+    declarative => [24,  'e203a185cfab199a89a33b903096d6d0023a8a88', '568763928a78b52373932b01be17e040f7c3fa50'],
+    tools       => [17,  '33693a928986006d79c1ee743733cde5966ac402', 'dbe0567470db2b369a9fdb28d9fbac38be3e2d60'],
+    svg         => [5,   '95990cbeebc0ab9959e2a925a93ad4897416bbb7', '9aac88424a1b76e0198b52437af58a6d94aff8e9'],
+    wayland     => [18,  '2f84a874da064069461284db1da36dc818949ec1', '30cb2a87fcc6265232cb5a3ffce9836da6e531d6'],
+);
+
 # find templates; populate "pages" array
 my @pages;
 my $template_file_name = 'PKGBUILD.sh.ep';
@@ -86,6 +95,11 @@ for my $top_level_dir (@$top_level_dirs) {
     if ($default_package_name =~ qr/qt(5|6)-(.*)/) {
         $qt_major_version = $1;
         $qt_module        = $2;
+    }
+
+    my $kde_fork_revision;
+    if ($qt_major_version && $qt_major_version eq '5' && $qt_module) {
+        $kde_fork_revision = $kde_fork_revisions{$qt_module};
     }
 
     my $variant_dirs = $top_level_dir->list({dir => 1});
@@ -150,6 +164,7 @@ for my $top_level_dir (@$top_level_dirs) {
                     qt_major_version => $qt_major_version,
                     qt_module => $qt_module,
                     qt_module_sha256 => $qt_module_sha256,
+                    kde_fork_revision => $kde_fork_revision,
                     static_variant => $is_static_variant,
                     static_suffix => $is_static_variant ? '-static' : '',
                     static_deps => undef,

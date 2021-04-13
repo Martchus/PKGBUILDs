@@ -11,7 +11,7 @@ colorize
 
 if ! [[ $1 ]]; then
     echo 'No Qt repo specified - must be specified like eg. base or multimedia.'
-    echo "Usage: $0 repo [branch=\$pkgver-\$variant] [variant=mingw-w64] [qtver=qt5]"
+    echo "Usage: $0 repo [branch=\$pkgver-\$variant] [variant=mingw-w64] [qtver=qt5] [tag=v\$pkgver]"
     echo "Note: DEFAULT_PKGBUILDS_DIR and QT_GIT_REPOS_DIR must point to directories containing PKGBUILDs and the Qt repos."
     exit -1
 fi
@@ -34,6 +34,7 @@ pkg="$qtver-$1"
 repo="qt$1"
 branch="${2}"
 variant="${3:-mingw-w64}"
+tag=$5
 
 # find dest dir
 pkgdir=
@@ -62,6 +63,7 @@ template=$pkgbuild_path.sh.ep has_template=
 
 source "$pkgbuild_path"
 tag=${tag:-v$pkgver}
+tag=${tag%+kde+*}
 
 new_sources=()
 new_md5sums=()

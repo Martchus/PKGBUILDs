@@ -3,9 +3,9 @@
 
 pkgname=nginx-mod-fancyindex
 pkgver=0.5.1
-pkgrel=1
+pkgrel=2
 _dirname="ngx-fancyindex-${pkgver}"
-_nginxver=1.18.0
+_nginxver=1.20.0
 
 pkgdesc='Fancy indexes module for the Nginx web server'
 arch=('x86_64')

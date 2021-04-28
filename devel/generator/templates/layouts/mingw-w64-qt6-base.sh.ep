@@ -14,7 +14,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.0.1
+_qtver=6.1.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -62,6 +62,7 @@ build() {
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
       -DFEATURE_static_runtime=ON \\
+      -DFEATURE_openssl_linked=ON \\
 % }
       -DFEATURE_pkg_config=ON \\
       -DFEATURE_system_pcre2=ON \\

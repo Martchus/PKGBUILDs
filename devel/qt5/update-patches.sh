@@ -94,7 +94,9 @@ fi
 msg2 "Exporting patches for branch '$branch' (based on '$tag')"
 git format-patch "$tag" --output-directory "$dest"
 new_patches=("$dest"/*.patch)
-for other_variant_dir in "$dest/../$variant"?*; do
+also_covered_variants=none # for sake of simplicity: use same set of patches also for android packages
+[[ $variant == mingw-w64 ]] && also_covered_variants=android-
+for other_variant_dir in "$dest/../$variant"?* "$dest/../$also_covered_variants"?*; do
     [[ -d $other_variant_dir ]] || continue
     find "$other_variant_dir" -iname '*.patch' -delete
     if [[ ${#new_patches[@]} -gt 0 ]]; then

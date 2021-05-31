@@ -75,8 +75,8 @@ $mojolicious->helper(expand_libs => sub {
 
 # define revisions of Qt modules from KDE fork
 my %kde_fork_revisions = (
-    base        => [194, 'dda9331d0ae5990ad8022876c3540398bdb5b004', '6344955d17e17e2398720fe60c34cfc2a4a95208'],
-    declarative => [24,  'e203a185cfab199a89a33b903096d6d0023a8a88', '568763928a78b52373932b01be17e040f7c3fa50'],
+    base        => [196, '2a2f3cd61f59ccec0eecb09e4a8795d7322edfcb', '6344955d17e17e2398720fe60c34cfc2a4a95208'],
+    declarative => [26,  '4f08a2da5b0da675cf6a75683a43a106f5a1e7b8', '568763928a78b52373932b01be17e040f7c3fa50'],
     tools       => [17,  '33693a928986006d79c1ee743733cde5966ac402', 'dbe0567470db2b369a9fdb28d9fbac38be3e2d60'],
     svg         => [7,   'cfc616978b52a396b2ef6900546f7fc086d7cab3', '9aac88424a1b76e0198b52437af58a6d94aff8e9'],
     wayland     => [23,  'fcc2f57cefa66339c8cb6632f45a47fbb99bb60d', '30cb2a87fcc6265232cb5a3ffce9836da6e531d6'],

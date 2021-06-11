@@ -6,8 +6,8 @@
 _reponame=arch-repo-manager
 pkgname=arch-repo-manager-git
 _name=${pkgname%-git}
-pkgver=259.663b31c
-pkgrel=1
+pkgver=78.d920368
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')

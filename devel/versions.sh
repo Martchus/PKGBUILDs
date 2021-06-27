@@ -1,12 +1,12 @@
 #!/bin/bash
 declare -A versions=(
-    [syncthingtray]=1.1.7
-    [c++utilities]=5.10.4
-    [qtutilities]=6.4.1
-    [tagparser]=10.0.0
-    [tageditor]=3.4.0
-    [passwordfile]=5.0.5
-    [passwordmanager]=4.1.7
+    [syncthingtray]=1.1.8
+    [c++utilities]=5.10.5
+    [qtutilities]=6.4.2
+    [tagparser]=10.0.1
+    [tageditor]=3.4.1
+    [passwordfile]=5.0.6
+    [passwordmanager]=4.1.8
     [videodownloader]=1.3.6
     [reflective-rapidjson]=0.0.15
     [blackwidowcontrol]=1.0.2

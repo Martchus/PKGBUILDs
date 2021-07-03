@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e # abort on first error
 shopt -s nullglob
-source "$(dirname $0)/versions.sh"
+bindir=$(dirname "$0")
+source "$bindir/versions.sh"
 
 for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     trimmed_path=${pkgbuild_file#${PKGBUILD_DIR:-.}/}
@@ -48,10 +49,17 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
 
     # check if template exists and modify template instead
     template=$pkgbuild_file.sh.ep
-    [[ -f $template ]] && pkgbuild_file=$template
+    layout=$bindir/generator/templates/layouts/$pkgname.sh.ep
+    if [[ -f $layout ]]; then
+        [[ $VERBOSE ]] && echo "Considering layout $pkgname.sh.ep for $trimmed_path"
+        pkgbuild_file=$layout
+    elif [[ -f $template ]]; then
+        [[ $VERBOSE ]] && echo "Considering template $trimmed_path.sh.ep for $trimmed_path"
+        pkgbuild_file=$template
+    fi
 
     # apply new version
-    sed -i -e "s/^\(_qtver\|pkgver\)=[^\$].*/\1=$version/" -e "s/pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
+    sed -i -e "s/^\(_qtver\|pkgver\)=[^\$][^<%]*/\1=$version/" -e "s/pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
     chmod 644 "$pkgbuild_file"
 
     echo "$trimmed_path -> $version"

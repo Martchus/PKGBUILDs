@@ -15,7 +15,7 @@ elif [[ ! -d $master ]]; then
 fi
 
 for dir in *; do
-  if [[ $dir != $master ]] && [[ -d $dir ]]; then
+  if [[ $dir != $master ]] && [[ -d $dir ]] && [[ $dir =~ mingw-w64-.* ]]; then
     rm "$dir/"* # clean first (files might have been remove in master)
     cp "$master/"* "$dir"
     sed -e '/pkgname=mingw-w64-freetype2/{c\pkgname=mingw-w64-freetype2'${dir#mingw-w64} -e ';d}' "$master/PKGBUILD" > "$dir/PKGBUILD"

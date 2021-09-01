@@ -58,6 +58,10 @@ if ! [[ -d $wd ]]; then
 fi
 
 pkgbuild_path=$dest/PKGBUILD
+if ! [[ -f $pkgbuild_path ]]; then
+    warning "PKGBUILD does not exist in \"$dest\" - skipping directory"
+    exit 0
+fi
 template=$pkgbuild_path.sh.ep has_template=
 [[ -f $template ]] && has_template=1
 

@@ -3,6 +3,11 @@ set -e # abort on first error
 shopt -s nullglob
 source "$(dirname $0)/../versions.sh"
 
+if ! [[ -d $OSC_DIR ]]; then
+    echo "\$OSC_DIR is set to \"$OSC_DIR\" which is not a directory."
+    exit 1
+fi
+
 for spec_file in "$OSC_DIR"/*/*/*.spec; do
     trimmed_path=${spec_file#$OSC_DIR/*/*/}
     project_name=${trimmed_path%*.spec}

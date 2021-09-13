@@ -3,6 +3,7 @@ declare -A versions=(
     [syncthingtray]=1.1.10
     [c++utilities]=5.11.1
     [qtutilities]=6.5.0
+    [qtforkawesome]=0.0.1
     [tagparser]=10.2.0
     [tageditor]=3.5.0
     [passwordfile]=5.0.6

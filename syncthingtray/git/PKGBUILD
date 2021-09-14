@@ -23,16 +23,14 @@ _enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID:-1}
 [[ $_enable_plasmoid == 0 ]] && _enable_plasmoid=
 
 _reponame=syncthingtray
-_reponame_forkawesome=Fork-Awesome-1.2.0
-_reponame_qtforkawesome=qtforkawesome
 pkgname=syncthingtray-git
 _name=${pkgname%-git}
-pkgver=1062.303cea3
-pkgrel=1
+pkgver=1117.1d239cc
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=('GPL')
-depends=('qtutilities-git' 'boost-libs' 'qt5-svg' 'openssl' 'desktop-file-utils' 'xdg-utils')
+depends=('qtutilities-git' 'qtforkawesome-git' 'boost-libs' 'qt5-svg' 'openssl' 'desktop-file-utils' 'xdg-utils')
 [[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && depends+=('qt5-base')
 [[ $_webview_provider == webkit ]] && depends+=('qt5-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('qt5-webengine')
@@ -40,16 +38,14 @@ depends=('qtutilities-git' 'boost-libs' 'qt5-svg' 'openssl' 'desktop-file-utils'
 [[ $_js_provider == qml ]] && depends+=('qt5-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('plasma-workspace: Plasmoid for Plasma 5 desktop')
-makedepends=('cmake' 'ninja' 'qt5-tools' 'git' 'mesa' 'boost' 'perl-yaml-libyaml')
+makedepends=('cmake' 'ninja' 'qt5-tools' 'git' 'mesa' 'boost')
 checkdepends=('cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('kio')
 [[ $_enable_plasmoid ]] && makedepends+=('plasma-framework' 'extra-cmake-modules')
 #provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git"
-        "${_reponame_qtforkawesome}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame_qtforkawesome}.git"
-        "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/1.2.0.tar.gz")
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git")
 sha256sums=('SKIP')
 
 ephemeral_port() {
@@ -86,10 +82,6 @@ build() {
     -DSYSTEMD_SUPPORT=ON \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=OFF \
-    -DBUNDLED_QT_FORK_AWESOME_PATH="$srcdir/${_reponame_qtforkawesome}" \
-    -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.woff2" \
-    -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml" \
-    -DQT_FORK_AWESOME_BUILD_SHARED_LIBS:BOOL=OFF \
     $additional_args \
     .
   ninja

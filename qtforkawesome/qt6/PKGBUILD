@@ -20,8 +20,8 @@ optdepends=("$_name-doc: API documentation")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
         "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz")
-sha256sums=('TODO'
-            'TODO')
+sha256sums=('683d8b730a033aec33177128f606f2fdc769df7a393e559be1855c74f7ee174d'
+            '23fba5f191f204e0414c547bf4c9b10fd7ca42c151260e8f64698449a75fbdb3')
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

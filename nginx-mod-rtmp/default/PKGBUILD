@@ -2,8 +2,8 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
 pkgname=nginx-mod-rtmp
-pkgver=1.2.1
-pkgrel=9
+pkgver=1.2.2
+pkgrel=1
 _dirname="nginx-rtmp-module-$pkgver"
 _nginxver=1.20.1
 
@@ -15,7 +15,7 @@ url='https://github.com/arut/nginx-rtmp-module'
 license=('BSD')
 
 source=("$pkgname-$pkgver::https://github.com/arut/nginx-rtmp-module/archive/v${pkgver}.tar.gz")
-sha256sums=('87aa597400b0b5a05274ee2d23d8cb8224e12686227a0abe31d783b3a645ea37')
+sha256sums=('07f19b7bffec5e357bb8820c63e5281debd45f5a2e6d46b1636d9202c3e09d78')
 
 prepare() {
   cd "$srcdir/$_dirname"

@@ -52,7 +52,7 @@ where `default-pkg-name` is the default package name (eg. `qt5-base`) and `varia
 
 * `default`: the regular package
 * `git`/`svn`/`hg`: the development version
-* `mingw-w64`: the Windows version (i686/SJLJ and x86_64/SEH)
+* `mingw-w64`: the Windows version (i686/dw2 and x86_64/SEH)
 * `android-{aarch64,armv7a-eabi,x86-64,x86}`: the Android version (currently only aarch64 actively maintained/tested)
 * `apple-darwin`: the MacOS X version (still experimental)
 
@@ -97,8 +97,8 @@ workflow is quite simple:
     * eg. `devel/qt5/update-all-patches.sh "" mingw-w64 qt6` to consider all mingw-w64-qt6-\* packages
 
 ## Brief documentation about mingw-w64-qt packages
-The Qt project does not support building Qt under GNU/Linux when targeting Windows. With Qt 6 they also stopped 32-bit
-builds. They also don't provide static builds for Windows. They are also relying a lot on their bundled libraries while
+The Qt project does not support building Qt under GNU/Linux when targeting mingw-w64. With Qt 6 they also stopped 32-bit
+builds. They also don't provide static builds the mingw-w64 target. They are also relying a lot on their bundled libraries while
 my builds aim to build dependencies separately. So expect some rough edges when using my packaging.
 
 Neverthless it make sense to follow the official documentation. For concrete examples how to use this packaging with
@@ -119,8 +119,12 @@ alternative for windeployqt.
 
 ### Tested build and deployment tools for mingw-w64-qt6 packages
 In order to build a Qt-based project using mingw-w64-qt6 packages one also needs to install the regular `qt6-base` package
-for development tools such as moc. The packages `qt6-tools` and `qt6-declarative` contain also native packages which might
-be required by some projects.
+for development tools such as moc. The packages `qt6-tools` and `qt6-declarative` contain also native binaries which might
+be required by some projects. At this point the setup can break if the version of regular packages and the versions of the
+mingw-w64 packages differ. I cannot do anything about it except trying to upgrade the mingw-w64 packages as fast as possible.
+There's actually a lengthy discussion about this topi on the
+[Qt development mailinglist](https://lists.qt-project.org/pipermail/development/2021-September/041732.html) so the situation
+might improve in the future.
 
 Currently, I test only CMake. It is possible to use either the shared or the static libraries. The static libraries
 are installed into a nested prefix (`/usr/i686-w64-mingw32/static` and `/usr/x86_64-w64-mingw32/static`) so this prefix
@@ -141,7 +145,7 @@ One simply has to link against the targets of the wanted static plugins manually
 
 However, for Qt 6 I dropped my patches and the official documentation applies. I would still recommended to set the target
 property `QT_DEFAULT_PLUGINS` of relevant targets to `0` and link against wanted plugin targets manually. At least in my
-cases list of plugins selected by default seemed needlessly long. I would also recommended to set the CMake variable
+cases the list of plugins selected by default seemed needlessly long. I would also recommended to set the CMake variable
 `QT_SKIP_AUTO_QML_PLUGIN_INCLUSION` to a falsy value because this pulls in a lot of dependencies which are likely not needed.
 
 ### Further documentation

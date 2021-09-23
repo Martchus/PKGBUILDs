@@ -1,0 +1,22 @@
+pkgname=cmake-static
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc='CMake wrapper for using static libraries and glibc compat header'
+depends=('cmake')
+license=("GPL")
+url='https://github.com/martchus/pkgbuilds'
+source=(cmake-static.sh
+        toolchain-static.cmake
+        glibc-2.17.h::https://raw.githubusercontent.com/billziss-gh/glibc-compat/master/glibc-2.17.h)
+sha256sums=('SKIP' 'SKIP' 'TODO')
+
+package() {
+  install -d "${pkgdir}"/usr/bin
+  install -d "${pkgdir}"/usr/share/cmake-static
+  install -d "${pkgdir}"/usr/static/{toolchain,include}
+  install -m 644 toolchain-static.cmake "${pkgdir}"/usr/static/toolchain
+  install -m 644 glibc-2.17.h "${pkgdir}"/usr/static/include
+  install -m 755 cmake-static "${pkgdir}"/usr/bin/cmake-static
+}
+

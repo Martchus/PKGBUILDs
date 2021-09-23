@@ -6,7 +6,7 @@
 
 _pkgname=libgcrypt
 pkgname=$_pkgname-static
-pkgver=1.8.7
+pkgver=1.9.4
 pkgrel=1
 pkgdesc="General purpose cryptographic library based on the code from GnuPG"
 arch=(x86_64)
@@ -16,7 +16,7 @@ depends=('libgpg-error-static')
 options=('!emptydirs' staticlibs)
 # https://www.gnupg.org/download/integrity_check.html
 source=(https://gnupg.org/ftp/gcrypt/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2{,.sig})
-sha1sums=('ea79a279b27bf25cb1564f96693128f8fc9f41d6'
+sha1sums=('1bccc8393482fa1953323ff429c6b5ba5676eb1a'
           'SKIP')
 validpgpkeys=('6DAA6E64A76D2840571B4902528897B826403ADA') # "Werner Koch (dist signing 2020)"
 
@@ -36,9 +36,9 @@ build() {
   cd "${_pkgname}"-${pkgver}
   export PKG_CONFIG_PATH=/usr/static/lib/pkgconfig:/usr/lib/pkgconfig
   ./configure --prefix=/usr/static \
-	--disable-shared \
-	--enable-static \
-	--disable-padlock-support
+    --disable-shared \
+    --enable-static \
+    --disable-padlock-support
   make
 }
 
@@ -50,5 +50,5 @@ check() {
 package() {
   cd "${_pkgname}"-${pkgver}
   make DESTDIR="${pkgdir}" install
-  rm -r "$pkgdir"/usr/share/{man,info}
+  rm -r "$pkgdir"/usr/static/share/{man,info}
 }

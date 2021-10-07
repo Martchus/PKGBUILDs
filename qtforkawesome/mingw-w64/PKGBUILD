@@ -8,15 +8,18 @@ _pkgver_forkawesome=1.2.0
 _reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
 pkgname=mingw-w64-qtforkawesome
 _name=${pkgname#mingw-w64-}
-pkgver=0.0.1
+pkgver=0.0.2
 pkgrel=1
 arch=('any')
 pkgdesc='Library that bundles ForkAwesome for use within Qt applications (mingw-w64)'
 license=('GPL')
 depends=('mingw-w64-crt' 'mingw-w64-qt5-base')
-optdepends=("$_name-doc: API documentation")
+optdepends=(
+  'mingw-w64-qt5-declarative: Qt Quick integration'
+  "$_name-doc: API documentation"
+)
 checkdepends=('mingw-w64-wine')
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qtutilities' 'ninja' 'perl-yaml-libyaml')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qtutilities' 'mingw-w64-qt5-declarative' 'ninja' 'perl-yaml-libyaml')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
         "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz")

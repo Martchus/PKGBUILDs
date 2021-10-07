@@ -8,12 +8,12 @@ _reponame=$_name
 _pkgver_forkawesome=1.2.0
 _reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
 pkgname=$_name-doc
-pkgver=0.0.1
+pkgver=0.0.2
 pkgrel=1
 arch=('any')
 pkgdesc='Library that bundles ForkAwesome for use within Qt applications (API documentation)'
 license=('GPL')
-makedepends=('cmake' 'ninja' 'doxygen' 'dia' 'graphviz' 'qtutilities' 'mesa')
+makedepends=('cmake' 'ninja' 'doxygen' 'dia' 'graphviz' 'qtutilities' 'mesa' 'qt5-declarative')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
         "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz")

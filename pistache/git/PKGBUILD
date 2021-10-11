@@ -17,7 +17,7 @@ provides=("${_name}")
 conflicts=("${_name}")
 options=(staticlibs)
 url="https://github.com/pistacheio/${_name}"
-source=("https://github.com/pistacheio/${_name}.git")
+source=("git+https://github.com/pistacheio/${_name}.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -33,8 +33,7 @@ build() {
     -DPISTACHE_USE_SSL=true \
     -DPISTACHE_BUILD_EXAMPLES=true \
     -DPISTACHE_BUILD_TESTS=true \
-    -DPISTACHE_BUILD_DOCS=false \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DPISTACHE_BUILD_DOCS=false
   meson compile -C build
 }
 

@@ -49,7 +49,9 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
 
     # check if template exists and modify template instead
     template=$pkgbuild_file.sh.ep
-    layout=$bindir/generator/templates/layouts/$pkgname.sh.ep
+    layoutname=$pkgname
+    [[ $layoutname =~ android-aarch64-.* ]] && layoutname=android-${pkgname##android-aarch64-}
+    layout=$bindir/generator/templates/layouts/$layoutname.sh.ep
     if [[ -f $layout ]]; then
         [[ $VERBOSE ]] && echo "Considering layout $pkgname.sh.ep for $trimmed_path"
         pkgbuild_file=$layout

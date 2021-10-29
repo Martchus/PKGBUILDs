@@ -160,7 +160,10 @@ cannot do anything about it except trying to upgrade the mingw-w64 packages as
 fast as possible. There's actually a lengthy discussion about this topi on the
 [Qt development
 mailinglist](https://lists.qt-project.org/pipermail/development/2021-September/
-041732.html) so the situation might improve in the future.
+041732.html) so the situation might improve in the future. Note that as of
+qtbase commit `5ffc744b791a114a3180a425dd26e298f7399955` (requires Qt > 6.2.1)
+one can specify `-DQT_NO_PACKAGE_VERSION_CHECK=TRUE` to ignore the strict
+versioning check.
 
 Currently, I test only CMake. It is possible to use either the shared or the
 static libraries. The static libraries are installed into a nested prefix

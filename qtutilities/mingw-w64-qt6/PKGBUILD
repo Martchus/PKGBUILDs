@@ -18,7 +18,7 @@ checkdepends=('mingw-w64-wine')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-base' 'qt6-tools' 'clang' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('a0bb997e9ea8b53c4ba7ae40affd945d015c757f43d7a313b575a8a425bea180')
+sha256sums=('01afcb59312615129de29d339255224ca09c5fee050659b7896ea880483bd311')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 _architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')

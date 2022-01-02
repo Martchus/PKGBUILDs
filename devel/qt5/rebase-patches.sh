@@ -64,5 +64,6 @@ if [[ $newversiontag ]]; then
 else
     git checkout -b "$newversionbranch" "origin/$newversion" || git checkout -b "$newversionbranch" "v$newversion"
 fi
+echo "Picking range: ${oldversiontag:-v$oldversion}..$oldversionbranch"
 git cherry-pick "${oldversiontag:-v$oldversion}..$oldversionbranch"
 git push -u $maybe_remote "$newversionbranch"

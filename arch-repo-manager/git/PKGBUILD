@@ -6,19 +6,20 @@
 _reponame=arch-repo-manager
 pkgname=arch-repo-manager-git
 _name=${pkgname%-git}
-pkgver=78.d920368
-pkgrel=2
+pkgver=150.43552dc
+pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('c++utilities-git' 'boost-libs' 'libarchive')
+depends=('c++utilities-git' 'boost-libs' 'libarchive' 'lmdb')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
             "$_name-doc: API documentation")
-makedepends=('cmake' 'git' 'ninja' 'boost' 'rapidjson-git' 'reflective-rapidjson-git')
+makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')
 checkdepends=('cppunit')
 options=(!strip)
 url="https://github.com/Martchus/${_reponame}"
-source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX_PRIVATE:-git://github.com/Martchus}/${_reponame}.git"
+source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git"
+        "lmdb-safe::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/lmdb-safe.git"
         'tabulate::git://github.com/p-ranav/tabulate.git')
 sha256sums=('SKIP' 'SKIP')
 
@@ -30,8 +31,10 @@ pkgver() {
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
 
-  rm -r 3rdparty/tabulate
-  ln -sr ../tabulate 3rdparty/tabulate
+  for submodule in tabulate lmdb-safe ; do
+    rm -r 3rdparty/$submodule
+    ln -sr ../$submodule 3rdparty/$submodule
+  done
 }
 
 build() {

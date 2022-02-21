@@ -11,7 +11,7 @@ pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('c++utilities-git' 'boost-libs' 'libarchive' 'lmdb')
+depends=('c++utilities-git' 'boost-libs' 'libarchive' 'lmdb' 'liburing')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
             "$_name-doc: API documentation")
 makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')
@@ -49,6 +49,7 @@ build() {
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DDUMMY_BUILD_ACTION_ENABLED:BOOL=ON \
     -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator-git' \
+    -DBOOST_ASIO_IO_URING:BOOL=ON \
     .
   VERBOSE=1 ninja
 }

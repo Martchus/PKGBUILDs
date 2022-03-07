@@ -23,7 +23,10 @@ pkgname=mingw-w64-qt5-<%== $qt_module %><%== $static_variant ? '-static' : '' %>
 <%== content %>\
 % if ($kde_fork_revision) {
 _commit=<%== $kde_fork_revision->[1] %>
+_basever=$pkgver
 pkgver+=+kde+r<%== $kde_fork_revision->[0] %>
+makedepends+=('git')
+% } elsif (stash('is_lts')) {
 makedepends+=('git')
 % }
 options=('!strip' '!buildflags' 'staticlibs')
@@ -32,12 +35,15 @@ url='https://www.qt.io/'
 % if ($kde_fork_revision) {
 _pkgfqn=${_qt_module}
 source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit\
+% } elsif (stash('is_lts')) {
+_pkgfqn=${_qt_module}
+source=(git+https://code.qt.io/qt/$_pkgfqn.git#tag=v${pkgver}-lts\
 % } else {
 _pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"\
 % }
 <%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
-% if ($kde_fork_revision) {
+% if ($kde_fork_revision || stash('is_lts')) {
 sha256sums=('SKIP'\
 % } else {
 sha256sums=('<%== $qt_module_sha256 %>'\
@@ -70,14 +76,14 @@ _configurations+=('CONFIG+=actually_a_shared_build <%== content_for 'shared_conf
 % if ($kde_fork_revision) {
 pkgver() {
   cd $_pkgfqn
-  echo "5.15.2+kde+r"`git rev-list --count origin/5.15.2..$_commit`
+  echo "$_basever+kde+r"`git rev-list --count v$_basever-lts-lgpl..$_commit`
 }
 
 % }
 % if ($patch_files->size || content_for('prepare')->size || $kde_fork_revision) {
 prepare() {
   cd "${srcdir}/${_pkgfqn}"
-% if ($kde_fork_revision) {
+% if ($kde_fork_revision && defined $kde_fork_revision->[2]) {
 
   git revert -n <%== $kde_fork_revision->[2] %> # Revert version bump
 % }

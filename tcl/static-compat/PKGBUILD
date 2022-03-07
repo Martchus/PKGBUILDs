@@ -1,0 +1,67 @@
+# Contributor: Eric Bélanger <eric@archlinux.org>
+
+_pkgname=tcl
+pkgname=static-compat-$_pkgname
+pkgver=8.6.12
+pkgrel=3
+pkgdesc="Powerful, easy-to-learn dynamic programming language"
+arch=('x86_64')
+url="http://tcl.sourceforge.net/"
+license=('custom')
+depends=('static-compat-zlib')
+makedepends=('static-compat-configure')
+options=('staticlibs' '!lto')
+source=(https://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz)
+sha256sums=('26c995dd0f167e48b11961d891ee555f680c175f7173ff8cb829f4ebcde4c1a6')
+
+prepare() {
+  cd tcl${pkgver}
+  # we build the tcl sqlite interface in sqlite-tcl package
+  rm -rf pkgs/sqlite3*
+}
+
+build() {
+  source static-compat-environment
+  cd tcl${pkgver}/unix
+  static-compat-configure --disable-shared --disable-rpath --mandir="$static_compat_prefix"/share/man --enable-threads --enable-64bit
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd tcl${pkgver}/unix
+  make test
+}
+
+package() {
+  source static-compat-environment
+  cd tcl${pkgver}/unix
+  make INSTALL_ROOT="${pkgdir}" install install-private-headers
+  ln -sf tclsh${pkgver%.*} "${pkgdir}/$static_compat_prefix/bin/tclsh"
+  #ln -sf libtcl${pkgver%.*}.so "${pkgdir}/usr/lib/libtcl.so"
+  install -Dm644 ../license.terms "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 tcl.m4 -t "$pkgdir/$static_compat_prefix"/share/aclocal
+  chmod 644 "$pkgdir/$static_compat_prefix/lib/libtclstub8.6.a"
+
+  # remove buildroot traces
+  _tclver=8.6
+  sed -e "s#${srcdir}/tcl${pkgver}/unix#/usr/lib#" \
+      -e "s#${srcdir}/tcl${pkgver}#/usr/include#" \
+      -e "s#'{/usr/lib} '#'/usr/lib/tcl$_tclver'#" \
+      -i "${pkgdir}/$static_compat_prefix/lib/tclConfig.sh"
+
+  tdbcver=tdbc1.1.3
+  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$tdbcver#$static_compat_prefix/lib/$tdbcver#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/generic#$static_compat_prefix/include#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/library#$static_compat_prefix/lib/tcl${pkgver%.*}#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver#$static_compat_prefix/include#" \
+      -i "${pkgdir}/$static_compat_prefix/lib/$tdbcver/tdbcConfig.sh"
+
+  itclver=itcl4.2.2
+  sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$itclver#$static_compat_prefix/lib/$itclver#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver/generic#$static_compat_prefix/include#" \
+      -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver#$static_compat_prefix/include#" \
+      -i "${pkgdir}/$static_compat_prefix/lib/$itclver/itclConfig.sh"
+
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+}

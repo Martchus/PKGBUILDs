@@ -1,0 +1,31 @@
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libsm
+pkgname=static-compat-$_pkgname
+pkgver=1.2.3
+pkgrel=2
+pkgdesc="X11 Session Management library"
+arch=('x86_64')
+license=('custom')
+url="https://xorg.freedesktop.org/"
+depends=('static-compat-libice' 'static-compat-util-linux')
+makedepends=('xorg-util-macros' 'static-compat-xtrans' 'static-compat-xorgproto' 'static-compat-configure')
+options=(!emptydirs staticlibs)
+source=(${url}/releases/individual/lib/libSM-${pkgver}.tar.bz2)
+sha512sums=('74c42e27029db78475e62025b4711dbac5e22d2f8e8a24be98a1c31b03c0fc4afe859928f851800ea0b76854f12147900dc4f27bbfd3d8ea45daaaf24b70a903')
+
+build() {
+  source static-compat-environment
+  cd libSM-${pkgver}
+  static-compat-configure --disable-shared --enable-static --sysconfdir=/etc
+  make
+}
+
+package() {
+  source static-compat-environment
+  cd libSM-${pkgver}
+  make DESTDIR="${pkgdir}" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/doc
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

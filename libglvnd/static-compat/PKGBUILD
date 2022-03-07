@@ -1,0 +1,37 @@
+# Note that this is still a dynamic library, see https://gitlab.freedesktop.org/glvnd/libglvnd/-/issues/212
+
+_pkgname=libglvnd
+pkgname=static-compat-$_pkgname
+pkgver=1.4.0
+pkgrel=1
+pkgdesc="The GL Vendor-Neutral Dispatch library"
+arch=('x86_64')
+url="https://github.com/NVIDIA/libglvnd"
+license=('custom:BSD-like')
+depends=('static-compat-libxext' 'mesa' 'opengl-driver')
+makedepends=('static-compat-libx11' 'static-compat-xorgproto' 'python' 'static-compat-meson')
+options=(staticlibs)
+source=("$_pkgname-$pkgver.tar.gz::https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v${pkgver}/libglvnd-v${pkgver}.tar.gz"
+        LICENSE)
+sha512sums=('ca741bdd7ac2fba919f1f85e685e92396bc1cdc436e77bca921d87738bb273a6d48f77650e2781593ce9084dcec6b1fa8f78dc84534a225629e7f61d92df8d89'
+            'bf0f4a7e04220a407400f89226ecc1f798cc43035f2538cc8860e5088e1f84140baf0d4b0b28f66e4b802d4d6925769a1297c24e1ba39c1c093902b2931781a5')
+
+build() {
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  export LDFLAGS+=" $static_compat_prefix/lib/libX11.a $static_compat_prefix/lib/libXau.a $static_compat_prefix/lib/libxcb.a $static_compat_prefix/lib/libXau.a $static_compat_prefix/lib/libXdmcp.a -ldl"
+  export LD=$GCC
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  static-compat-meson $_pkgname-v$pkgver build \
+    -D gles1=false
+
+  ninja -v -C build
+}
+
+package() {
+  source static-compat-environment
+  # libglvnd needs mesa for indirect rendering
+  DESTDIR="$pkgdir" ninja -C build install
+  
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

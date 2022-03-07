@@ -1,0 +1,47 @@
+# Contributor: Evangelos Foutras <evangelos@foutrelis.com>
+
+_pkgname=libgudev
+pkgname=static-compat-$_pkgname
+pkgver=237
+pkgrel=1
+pkgdesc="GObject bindings for libudev"
+url="https://wiki.gnome.org/Projects/libgudev"
+arch=(x86_64)
+license=(LGPL2.1)
+depends=(static-compat-systemd-libs static-compat-glib2)
+makedepends=(git umockdev vala static-compat-meson)
+_commit=dff7a794e55d6ad7a10e8edacd73aa047593e74c  # tags/237^0
+source=("git+https://gitlab.gnome.org/GNOME/libgudev.git#commit=$_commit")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+  cd $_pkgname
+
+  # Use a locale with "," decimal separator that we
+  # actually have available in the build environments
+  sed -e 's/fr_FR\.UTF-8/de_DE.UTF-8/g' \
+      -i tests/meson.build tests/test-double.c
+}
+
+build() {
+  source static-compat-environment
+  static-compat-meson $_pkgname build -D gtk_doc=false
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  source static-compat-environment
+  meson install -C build --destdir "$pkgdir"
+}
+
+# vim:set ts=2 sw=2 et:

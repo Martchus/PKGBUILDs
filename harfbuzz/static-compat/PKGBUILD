@@ -1,0 +1,62 @@
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=harfbuzz
+pkgname=static-compat-$_pkgname
+pkgver=4.2.0
+pkgrel=1
+pkgdesc="OpenType text shaping engine"
+url="https://www.freedesktop.org/wiki/Software/HarfBuzz"
+arch=(x86_64)
+license=(MIT)
+depends=(static-compat-glib2 static-compat-freetype2 static-compat-graphite)
+makedepends=(gobject-introspection ragel git python static-compat-meson)
+checkdepends=(python-fonttools python-setuptools)
+options=(!emptydirs !docs staticlibs)
+_commit=9d5730b958974bc9db95e46e6bad52e9e9cd6e1c  # tags/4.2.0^0
+source=("git+https://github.com/harfbuzz/harfbuzz#commit=$_commit")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd harfbuzz
+  git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+  cd harfbuzz
+}
+
+build() {
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  # disable tools (and related tests)
+  echo '' > harfbuzz/util/meson.build
+  echo '' > harfbuzz/test/shape/meson.build
+  echo '' > harfbuzz/test/subset/meson.build
+  static-compat-meson harfbuzz build \
+    -Dgraphite=enabled \
+    -Dcairo=disabled \
+    -Dintrospection=disabled \
+    -Dicu=disabled \
+    -Ddocs=disabled
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  mkdir -p tmp
+  TMPDIR="$PWD/tmp" meson test -C build --print-errorlogs
+  rm -r tmp
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" meson install -C build
+
+  # remove CMake config as it is broken for a static build (the pkgconfig file alone should be good enough)
+  rm -r "$pkgdir/$static_compat_prefix"/lib/cmake/harfbuzz/harfbuzz-config.cmake
+
+  install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 harfbuzz/COPYING
+}

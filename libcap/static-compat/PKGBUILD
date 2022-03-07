@@ -1,0 +1,43 @@
+# Contributor:  David Runge <dvzrv@archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Hugo Doria <hugo@archlinux.org>
+
+_pkgname=libcap
+pkgname=static-compat-$_pkgname
+pkgver=2.63
+pkgrel=2
+pkgdesc="POSIX 1003.1e capabilities"
+arch=(x86_64)
+url="https://sites.google.com/site/fullycapable/"
+license=(GPL2)
+depends=(glibc-static-compat)
+makedepends=(static-compat-environment)
+options=(staticlibs)
+source=("https://kernel.org/pub/linux/libs/security/linux-privs/${_pkgname}2/${_pkgname}-$pkgver.tar."{xz,sign}
+)
+sha512sums=('832842b71ca32db8f53ca5f1a3010f14e7f42693f62f29632e9948c860f990899bb094165c37307ce8b9e5bc5eb1c833e780ebca98442df3e6d900e4b238834b'
+            'SKIP')
+b2sums=('a49a628f5b9ddf5a3d077428544a53b9cdedf62053ff296a0aa7d61e12ca05f9ba7597f20ee16a3843736bee2417a3d1585ad6b336651fcb3e4ee29b108cfa0f'
+        'SKIP')
+validpgpkeys=(38A644698C69787344E954CE29EE848AE2CCF3F4) # Andrew G. Morgan <morgan@kernel.org>
+
+build() {
+  source static-compat-environment
+  export DYNAMIC=no PAM_CAP=no KERNEL_HEADERS=$static_compat_prefix/include lib=lib
+  make prefix=$static_compat_prefix sbindir=bin -C $_pkgname-$pkgver
+}
+
+check() {
+  source static-compat-environment
+  export DYNAMIC=no PAM_CAP=no KERNEL_HEADERS=$static_compat_prefix/include lib=lib
+  make test -k -C $_pkgname-$pkgver
+}
+
+package() {
+  source static-compat-environment
+  export DYNAMIC=no PAM_CAP=no KERNEL_HEADERS=$static_compat_prefix/include lib=lib
+  make DESTDIR="$pkgdir" RAISE_SETFCAP=no lib=lib prefix=$static_compat_prefix sbindir=bin install -C $_pkgname-$pkgver
+  find "$pkgdir" -iname '*.so*' -delete
+  rm -r "$pkgdir/$static_compat_prefix"/share
+}

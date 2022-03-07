@@ -1,0 +1,46 @@
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Alexander Baldeck <alexander@archlinux.org>
+
+_pkgname=libxcb
+pkgname=static-compat-$_pkgname
+pkgver=1.14
+pkgrel=1
+pkgdesc="X11 client-side library"
+arch=('x86_64')
+url="https://xcb.freedesktop.org/"
+depends=('static-compat-xcb-proto' 'static-compat-libxdmcp' 'static-compat-libxau')
+makedepends=('libxslt' 'python' 'xorg-util-macros' 'static-compat-xorgproto' 'static-compat-configure')
+license=('custom')
+options=(!emptydirs staticlibs)
+source=(https://xorg.freedesktop.org/archive/individual/lib/$_pkgname-$pkgver.tar.xz{,.sig})
+sha512sums=('b90a23204b0d2c29d8b115577edb01df0465e02d6a8876550fecd62375d24a5d5f872ddd5946772ddba077cadce75b12c7a6d218469dc30b5b92bc82188e8bc6'
+            'SKIP')
+validpgpkeys=('A66D805F7C9329B4C5D82767CCC4F07FAC641EFF') # "Daniel Stone <daniels@collabora.com>"
+validpgpkeys+=('3BB639E56F861FA2E86505690FDD682D974CA72A') # "Matt Turner <mattst88@gmail.com>"
+
+build() {
+  source static-compat-environment
+  cd "$_pkgname-$pkgver"
+  static-compat-configure \
+    --enable-xinput \
+    --enable-xkb \
+    --disable-shared \
+    --enable-static
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make -k check
+}
+
+package() {
+  source static-compat-environment
+  cd "$_pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+  rm -r "${pkgdir}/$static_compat_prefix"/share/{doc,man}
+  install -m755 -d "$pkgdir/usr/share/licenses/$pkgname"
+  install -m644 COPYING "$pkgdir/usr/share/licenses/$pkgname"
+}

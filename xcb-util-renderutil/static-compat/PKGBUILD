@@ -1,0 +1,40 @@
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
+_pkgname=xcb-util-renderutil
+pkgname=static-compat-$_pkgname
+pkgver=0.3.9
+pkgrel=3
+pkgdesc="Utility libraries for XC Binding - Convenience functions for the Render extension"
+arch=('x86_64')
+url="https://xcb.freedesktop.org"
+license=('custom')
+depends=('static-compat-libxcb>=1.7')
+makedepends=('xorg-util-macros' 'static-compat-xorgproto' 'static-compat-configure')
+options=(staticlibs)
+source=("https://xcb.freedesktop.org/dist/${_pkgname}-${pkgver}.tar.bz2"
+        'LICENSE')
+sha512sums=('24b567992ecde7e69a406efd0ffb62266610d73b4dc0e5c71093221090fa134c14b850680d1d28dc1f8f4a6f497b4118491e1894ec7c73d2c6ce959d106771cc'
+            '62f83468f9d9503a5a8c1ebaac78cbaefe3c485f8bfd7192817ec59254872fe2914ed66ae8b9e7f7a6ef5af283048c11390f44eb8f0f70b1c136ef5c75282e8c')
+
+build() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  static-compat-configure --disable-shared --enable-static
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make check
+}
+
+package() { 
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+
+  install -D -m644 "${srcdir}/LICENSE" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

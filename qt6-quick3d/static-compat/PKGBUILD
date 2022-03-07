@@ -1,0 +1,50 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=static-compat-qt6-quick3d
+_qtver=6.3.0
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='Qt module and API for defining 3D content in Qt Quick'
+depends=(static-compat-qt6-declarative)
+makedepends=(static-compat-cmake static-compat-vulkan-headers
+             static-compat-qt6-shadertools ninja)
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="qtquick3d-everywhere-src-${_qtver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
+sha256sums=('0ad05bd1ee1f784b18220a2d2625ee8de91662c88fdc7b798662953d86eb327e')
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  static-compat-cmake -G Ninja -B build -S $_pkgfqn \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DGLIB2_USE_PKG_CONFIG=ON \
+    -DQT_FEATURE_static_runtime=ON \
+    -DFEATURE_pkg_config=ON \
+      -DFEATURE_quick3d_assimp=OFF
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/$static_compat_prefix/lib" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  install -d "$pkgdir"/usr/share/licenses
+  ln -s /usr/share/licenses/static-compat-qt6-base "$pkgdir"/usr/share/licenses/$pkgname
+}

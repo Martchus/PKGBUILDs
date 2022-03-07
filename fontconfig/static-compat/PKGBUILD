@@ -1,0 +1,50 @@
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=fontconfig
+pkgname=static-compat-$_pkgname
+pkgver=2.14.0
+pkgrel=1
+epoch=2
+pkgdesc="Library for configuring and customizing font access"
+url="https://www.freedesktop.org/wiki/Software/fontconfig/"
+arch=(x86_64)
+license=(custom)
+depends=(static-compat-expat static-compat-freetype2)
+makedepends=(static-compat-meson git autoconf-archive gperf python-lxml python-six docbook-utils)
+checkdepends=(unzip)
+_commit=fcb042028126d79ea5a5fa015b2b034b98656e73  # master
+options=(!emptydirs !docs staticlibs)
+_commit=911b19f19f1334d51c452756f9ce222c1101097b  # tags/2.14.0^0
+source=("git+https://gitlab.freedesktop.org/fontconfig/fontconfig.git#commit=$_commit")
+b2sums=('SKIP')
+
+# a nice page to test font matching:
+# http://zipcon.net/~swhite/docs/computers/browsers/fonttest.html
+# http://getemoji.com/
+
+pkgver() {
+  cd fontconfig
+  git describe --tags | sed 's/-/+/g'
+}
+
+build() {
+  export CFLAGS+=' -lstdc++' # for __gxx_personality_v0 required by harfbuzz.a
+  source static-compat-environment
+  static-compat-meson $_pkgname build -Ddoc=disabled
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  source static-compat-environment
+  meson install -C build --destdir="$pkgdir"
+
+  install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 $_pkgname/COPYING
+}
+
+# vim:set sw=2 et:

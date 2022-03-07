@@ -38,16 +38,20 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0005-Fix-libjpeg-workaround-for-conflict-with-rpcndr.h.patch'
         '0006-Support-finding-static-MariaDB-client-library.patch'
         '0007-Allow-overriding-CMAKE_FIND_LIBRARY_SUFFIXES-to-pref.patch'
-        '0008-Fix-crashes-in-rasterization-code-using-setjmp.patch')
+        '0008-Fix-crashes-in-rasterization-code-using-setjmp.patch'
+        '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
+        '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch')
 sha256sums=('b865aae43357f792b3b0a162899d9bf6a1393a55c4e5e4ede5316b157b1a0f99'
-            'bff8b8af7b4eec0961890190bc1d31d98c2270985698a8071b5ee1434a12f13a'
-            'bdc4834c7c88176113770356e24104040622c30779a770da3292e487d0b451c8'
-            '08647a0b4f3beef39a2308cea4ed7b63887e58ef7b8f53294ba8d136eaf32109'
-            'e1f619607afca17031c3eebdc01a95a7de4296b8ce01b15c9797475a4e7918f1'
-            '1994ab8f69ac4146c9332aff1bbaacecb87fcfc1d2c521ddfa0f6fd7e3b1aa63'
-            'e9170a6b158b500e34913b0ee78641bf95fcfb5f84d27934a8a7c08b7a45e345'
-            '45a0bf8e485d0c21e916c8260ebbf4a1869d9902f4d749a41804535f05ef54b4'
-            'a018bb72f3424c30c04f1f72429d891dd6b615566c98642d55a9a72e6110fd76')
+            '51385552296c9619edb47092db5923b13e8c52a2b2bbd94c6d723cb507548e90'
+            'd6ec35f546d1fc62e918915a4eeb499dfdcb7247d94d0f0e3a9cdd1fa8f47f79'
+            '93d7bfe745df2052e5ac03b8120146df4b9aa0ce5ac48ebfdea9f8f12328cc6d'
+            '0a55d56e8b9bd8872f318b63e93c72c093e723c4de2c812f1190de84eeed19a7'
+            'a8aa5645301e691b3f8fc2cdd98904824398059bdd8702ecfc4713d407ef2f3f'
+            'ae7694ac78749a7359b20eabc61ddaae680e7dce0b7c1ed14b87af7ebef3c358'
+            'c209e6ada57740385a800837df5c68d808c64f2071225bec415a9cb1f67f9858'
+            '0b021f6518a0191f960ace699adea2a6869e426859e8b3bb5bb6b60efced5692'
+            '1dab76d9f9f7307266cd1d5cc7ed6a854a6b715cb962126f80f575282110b819'
+            '66d3d03686594ae49087e46db40f2d3b9d996e33e6094e9ef7571b2f1aababc1')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

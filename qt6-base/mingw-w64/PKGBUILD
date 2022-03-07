@@ -38,16 +38,22 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0005-Fix-libjpeg-workaround-for-conflict-with-rpcndr.h.patch'
         '0006-Support-finding-static-MariaDB-client-library.patch'
         '0007-Allow-overriding-CMAKE_FIND_LIBRARY_SUFFIXES-to-pref.patch'
-        '0008-Fix-crashes-in-rasterization-code-using-setjmp.patch')
+        '0008-Fix-crashes-in-rasterization-code-using-setjmp.patch'
+        '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
+        '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
+        '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch')
 sha256sums=('b865aae43357f792b3b0a162899d9bf6a1393a55c4e5e4ede5316b157b1a0f99'
-            'bff8b8af7b4eec0961890190bc1d31d98c2270985698a8071b5ee1434a12f13a'
-            'bdc4834c7c88176113770356e24104040622c30779a770da3292e487d0b451c8'
-            '08647a0b4f3beef39a2308cea4ed7b63887e58ef7b8f53294ba8d136eaf32109'
-            'e1f619607afca17031c3eebdc01a95a7de4296b8ce01b15c9797475a4e7918f1'
-            '1994ab8f69ac4146c9332aff1bbaacecb87fcfc1d2c521ddfa0f6fd7e3b1aa63'
-            'e9170a6b158b500e34913b0ee78641bf95fcfb5f84d27934a8a7c08b7a45e345'
-            '45a0bf8e485d0c21e916c8260ebbf4a1869d9902f4d749a41804535f05ef54b4'
-            'a018bb72f3424c30c04f1f72429d891dd6b615566c98642d55a9a72e6110fd76')
+            'c570a73b499f2b7c6d24da37bcfbaef900d5cde131c1d78ef871e8def0043395'
+            '2ccf9394c8d9eebbef1ce21bd854b995240084defafc9f1ff72a5cb6859f4da3'
+            '4fa0d685cee2b918e7bbfe9e870a707eca6dcd74a53a3c95c032d9bd91fa21bf'
+            '8f520ef33be9cf2d9b1b9f99deae3608770837ba587039c7bd534bded4a919dd'
+            '482d48e8f0462e85155d1d02a64e7372b6d852a45d74e677f33d3726d01d3ab4'
+            '30ab970e33d7ceaec711ec20aeeb2d9d4c84615cfca92e657d3fb72f83e1e6a5'
+            '414413e6882746457259e7d2c2d332566fa818b0fb8396c0344b2931d106c7c3'
+            '6d48fa790e14af053eb2dd0146688bc7334bb9123b7575d4229e2a030f0f5a75'
+            '909e94ac3566475a858302f92bcc2c5297721ec49f1598bf1708389761c15f05'
+            'dc4dfcb55e1de9e9f7d2d16fca3d743f03f35418989e908b39a533b22375c099'
+            '50a2d5ee429e9fc9994175a5cb8f205ad4b252e35e800d3508c1d49382adcf85')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

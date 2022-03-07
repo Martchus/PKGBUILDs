@@ -1,0 +1,25 @@
+pkgname=static-compat-cmake
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc="CMake wrapper to use gcc-static-compat"
+depends=('cmake' 'static-compat-environment')
+license=('GPL')
+url="https://github.com/Martchus/PKGBUILDs"
+source=("static-compat-cmake.sh")
+#        "toolchain-static-compat.cmake")
+sha256sums=('SKIP' 'SKIP')
+
+build() {
+  source static-compat-environment
+  #sed "s|@PREFIX@|$static_compat_prefix|g;s|@PROCESSOR@|$CARCH|g" toolchain-static-compat.cmake > "toolchain-static-compat-#$CARCH.cmake"
+}
+
+package() {
+  source static-compat-environment
+  install -d "${pkgdir}"/usr/bin
+  #install -d "${pkgdir}/$static_compat_prefix"/share/cmake-toolchain
+  #install -m 644 "toolchain-static-compat-$CARCH.cmake" "${pkgdir}/$static_compat_prefix"/share/cmake-toolchain
+  install -m 755 "static-compat-cmake.sh" "${pkgdir}"/usr/bin/static-compat-cmake
+}
+

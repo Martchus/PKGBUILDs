@@ -1,0 +1,45 @@
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: dorphell <dorphell@archlinux.org>
+# Contributor: Travis Willard <travis@archlinux.org>
+# Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
+
+_pkgname=libpng
+pkgname=static-compat-$_pkgname
+pkgver=1.6.37
+pkgrel=3
+pkgdesc="A collection of routines used to create PNG format graphics files"
+arch=('x86_64')
+url="http://www.libpng.org/pub/png/libpng.html"
+license=('custom')
+depends=('static-compat-zlib' 'sh')
+makedepends=('static-compat-configure')
+options=(!emptydirs staticlibs)
+validpgpkeys=('8048643BA2C840F4F92A195FF54984BFA16C640F') # Glenn Randers-Pehrson (mozilla) <glennrp@gmail.com>
+source=("https://downloads.sourceforge.net/sourceforge/$_pkgname/$_pkgname-$pkgver.tar.xz")
+sha256sums=('505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca')
+
+build() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  static-compat-configure \
+    --disable-shared \
+    --enable-static
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+
+  make check
+}
+
+package() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+
+  make DESTDIR="$pkgdir" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+
+  install -D -m0644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

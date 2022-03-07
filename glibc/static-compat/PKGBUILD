@@ -1,0 +1,194 @@
+# $Id$
+# Maintainer:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Allan McRae <allan@archlinux.org>
+
+# toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
+# NOTE: valgrind requires rebuilt with each major glibc version
+
+pkgbase=glibc-static-compat
+pkgname=(glibc-static-compat lib32-glibc-static-compat)
+pkgver=2.26
+pkgrel=3
+arch=(x86_64)
+url='http://www.gnu.org/software/libc'
+license=(GPL LGPL)
+makedepends=(git gd lib32-gcc-libs linux-api-headers-static-compat)
+options=(!strip staticlibs)
+#_commit=23158b08a0908f381459f273a984c6fd328363cb
+_commit=de51f431ed6226ec68ca76e578f2cbd55b6262cb
+source=(git+https://sourceware.org/git/glibc.git#commit=$_commit
+#source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz{,.sig}
+        bz20338.patch)
+validpgpkeys=(7273542B39962DF7B299931416792B4EA25340F8) # Carlos O'Donell
+md5sums=('898cd5656519ffbc3a03fe811dd89e82'
+         'SKIP'
+         '07ac979b6ab5eeb778d55f041529d623'
+         '476e9113489f93b348b21e144b6a8fcf'
+         '6e052f1cb693d5d3203f50f9d4e8c33b'
+         'dc0d3ad59aeaaf591b085a77de6e03e9')
+
+_prefix=/usr/static-compat
+
+prepare() {
+  mkdir -p glibc-build lib32-glibc-build
+
+  [[ -d glibc-$pkgver ]] && ln -s glibc-$pkgver glibc 
+  cd glibc
+
+  local i; for i in ${source[@]}; do
+    case ${i%::*} in
+      *.patch)
+        msg2 "Applying ${i}"
+        patch -p1 -i "$srcdir/${i}"
+        ;;
+    esac
+  done
+}
+
+build() {
+  local _configure_flags=(
+      --prefix=/
+      --with-headers=$_prefix/include
+      --with-bugurl=https://github.com/Martchus/PKGBUILDs/issues
+      --enable-add-ons
+      --enable-bind-now
+      --enable-lock-elision
+      --enable-kernel=4.4
+      --enable-multi-arch
+      --enable-obsolete-nsl
+      --enable-obsolete-rpc
+      --enable-stack-protector=strong
+      --enable-stackguard-randomization
+      --disable-profile
+      --disable-crypt
+      --disable-werror
+  )
+
+  cd "$srcdir/glibc-build"
+
+  echo "slibdir=/lib" >> configparms
+  echo "rtlddir=/lib" >> configparms
+  echo "sbindir=/bin" >> configparms
+  echo "rootsbindir=/bin" >> configparms
+
+  # remove fortify for building libraries
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+
+  "$srcdir/glibc/configure" \
+      --libdir=/lib \
+      --libexecdir=/lib \
+      ${_configure_flags[@]}
+#
+  # build libraries with fortify disabled
+  echo "build-programs=no" >> configparms
+  make
+
+  # re-enable fortify for programs
+  sed -i "/build-programs=/s#no#yes#" configparms
+
+  echo "CC += -D_FORTIFY_SOURCE=2" >> configparms
+  echo "CXX += -D_FORTIFY_SOURCE=2" >> configparms
+  echo "building programs"
+  make
+
+  cd "$srcdir/lib32-glibc-build"
+  export CC="gcc -m32 -mstackrealign"
+  export CXX="g++ -m32 -mstackrealign"
+
+  echo "slibdir=/lib32" >> configparms
+  echo "rtlddir=/lib32" >> configparms
+  echo "sbindir=/bin" >> configparms
+  echo "rootsbindir=/bin" >> configparms
+
+  # remove fortify for building libraries
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+  CFLAGS=${CFLAGS/-fno-plt/}
+  CXXFLAGS=${CXXFLAGS/-fno-plt/}
+
+  "$srcdir/glibc/configure" \
+      --host=i686-pc-linux-gnu \
+      --libdir=/lib32 \
+      --libexecdir=/lib32 \
+      ${_configure_flags[@]}
+
+  # build libraries with fortify disabled
+  echo "build-programs=no" >> configparms
+  make
+
+  # re-enable fortify for programs
+  sed -i "/build-programs=/s#no#yes#" configparms
+
+  echo "CC += -D_FORTIFY_SOURCE=2" >> configparms
+  echo "CXX += -D_FORTIFY_SOURCE=2" >> configparms
+  make
+
+}
+
+check() {
+  cd glibc-build
+
+  # remove fortify in preparation to run test-suite
+  sed -i '/FORTIFY/d' configparms
+
+  # some failures are "expected"
+  make check || true
+}
+
+package_glibc-static-compat() {
+  pkgdesc='GNU C Library'
+  depends=('linux-api-headers-static-compat>=4.10' tzdata filesystem)
+  optdepends=('gd: for memusagestat')
+
+  make -C glibc-build install_root="$pkgdir$_prefix" install
+  rm -rf "$pkgdir"$_prefix/{etc,sbin,var}
+
+  cd glibc
+
+  install -dm755 "$pkgdir"$_prefix/lib/{locale,systemd/system,tmpfiles.d}
+  install -m644 nscd/nscd.service "$pkgdir$_prefix/lib/systemd/system"
+  install -m644 nscd/nscd.tmpfiles "$pkgdir$_prefix/lib/tmpfiles.d/nscd.conf"
+
+  if check_option 'debug' n; then
+    find "$pkgdir"$_prefix/bin -type f -executable -exec strip $STRIP_BINARIES {} + 2> /dev/null || true
+    find "$pkgdir"$_prefix/lib -name '*.a' -type f -exec strip $STRIP_STATIC {} + 2> /dev/null || true
+
+    # Do not strip these for gdb and valgrind functionality, but strip the rest
+    find "$pkgdir"$_prefix/lib \
+      -not -name 'ld-*.so' \
+      -not -name 'libc-*.so' \
+      -not -name 'libpthread-*.so' \
+      -not -name 'libthread_db-*.so' \
+      -name '*-*.so' -type f -exec strip $STRIP_SHARED {} + 2> /dev/null || true
+  fi
+}
+
+package_lib32-glibc-static-compat() {
+  pkgdesc='GNU C Library (32-bit)'
+  depends=("glibc-static-compat=$pkgver")
+
+  cd lib32-glibc-build
+
+  make install_root="$pkgdir$_prefix" install
+  rm -rf "$pkgdir"$_prefix/{etc,sbin,var}
+  rm -rf "$pkgdir"$_prefix/{bin,sbin,share}
+
+  # We need to keep 32 bit specific header files
+  find "$pkgdir$_prefix/include" -type f -not -name '*-32.h' -delete
+
+  # Dynamic linker
+  install -d "$pkgdir$_prefix/lib"
+  ln -s ../lib32/ld-linux.so.2 "$pkgdir$_prefix/lib/"
+
+  # Symlink /usr/lib32/locale to /usr/lib/locale
+  ln -s ../lib/locale "$pkgdir$_prefix/lib32/locale"
+
+  if check_option 'debug' n; then
+    find "$pkgdir"$_prefix/lib32 -name '*.a' -type f -exec strip $STRIP_STATIC {} + 2> /dev/null || true
+    find "$pkgdir"$_prefix/lib32 \
+      -not -name 'ld-*.so' \
+      -not -name 'libc-*.so' \
+      -not -name 'libpthread-*.so' \
+      -not -name 'libthread_db-*.so' \
+      -name '*-*.so' -type f -exec strip $STRIP_SHARED {} + 2> /dev/null || true
+  fi
+}

@@ -1,0 +1,29 @@
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+
+_pkgname=md4c
+pkgname=static-compat-$_pkgname
+pkgver=0.4.8
+pkgrel=1
+pkgdesc='C Markdown parser'
+arch=(x86_64)
+url='https://github.com/mity/md4c'
+license=(MIT)
+depends=(glibc-static-compat)
+makedepends=(static-compat-cmake)
+options=(staticlibs !emptydirs)
+source=($_pkgname-$pkgver.tar.gz::"https://github.com/mity/md4c/archive/release-$pkgver.tar.gz")
+sha256sums=('4a457df853425b6bb6e3457aa1d1a13bccec587a04c38c622b1013a0da41439f')
+
+build() {
+  source static-compat-environment
+  static-compat-cmake -B build -S $_pkgname-release-$pkgver
+  cmake --build build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+
+  install -Dm644 $_pkgname-release-$pkgver/LICENSE.md -t "$pkgdir"/usr/share/licenses/$pkgname/
+}

@@ -1,0 +1,53 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_reponame=tagparser
+pkgname=static-compat-tagparser
+_name=${pkgname#static-compat-}
+pkgver=11.1.0
+pkgrel=1
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+pkgdesc='C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska tags'
+license=('GPL')
+depends=('static-compat-c++utilities' 'static-compat-zlib')
+makedepends=('static-compat-cmake' 'ninja' 'iso-codes')
+checkdepends=('static-compat-cppunit' 'static-compat-openssl')
+optdepends=("$_name-doc: API documentation")
+url="https://github.com/Martchus/${_reponame}"
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('dc3bd56ee7ddd3220062d2637b89dffc27747c3027c4b223a4697d693e55e2f1')
+
+prepare() {
+  [[ -d tagparser ]] || ln -s "${PROJECT_DIR_NAME:-$_reponame-$pkgver}" tagparser
+}
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  static-compat-cmake \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    .
+  ninja
+}
+
+check() {
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  if [[ $TEST_FILE_PATH ]]; then
+    ninja check
+  else
+    msg2 'Skipping execution of testsuite because the environment variable TEST_FILE_PATH is not set.'
+  fi
+}
+
+package() {
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  DESTDIR="${pkgdir}" ninja install
+}

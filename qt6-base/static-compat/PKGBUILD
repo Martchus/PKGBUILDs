@@ -1,0 +1,120 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# This file is created from PKGBUILD.sh.ep contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
+
+# All patches are managed at https://github.com/Martchus/qtbase
+
+pkgname=static-compat-qt6-base
+_qtver=6.3.0
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='A cross-platform application and UI framework'
+depends=(shared-mime-info
+         static-compat-brotli static-compat-dbus static-compat-double-conversion
+         static-compat-fontconfig static-compat-libb2 static-compat-libglvnd
+         static-compat-libice static-compat-libinput static-compat-libjpeg-turbo
+         static-compat-libxdamage static-compat-libxkbcommon static-compat-libxmu
+         static-compat-libxxf86vm static-compat-md4c static-compat-pcre2
+         static-compat-sqlite static-compat-xcb-util-image static-compat-xcb-util-keysyms
+         static-compat-xcb-util-renderutil static-compat-vulkan-headers
+         static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans)
+makedepends=(static-compat-cmake xdg-utils ninja)
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="qtbase-everywhere-src-${_qtver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
+        '0001-Use-CMake-s-default-import-library-suffix.patch'
+        '0002-Fix-finding-D-Bus.patch'
+        '0003-Fix-using-static-PCRE2-and-DBus-1.patch'
+        '0004-Fix-transitive-dependencies-of-static-libraries.patch'
+        '0005-Fix-libjpeg-workaround-for-conflict-with-rpcndr.h.patch'
+        '0006-Support-finding-static-MariaDB-client-library.patch'
+        '0007-Allow-overriding-CMAKE_FIND_LIBRARY_SUFFIXES-to-pref.patch'
+        '0008-Fix-crashes-in-rasterization-code-using-setjmp.patch'
+        '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
+        '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
+        '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch')
+sha256sums=('b865aae43357f792b3b0a162899d9bf6a1393a55c4e5e4ede5316b157b1a0f99'
+            'c570a73b499f2b7c6d24da37bcfbaef900d5cde131c1d78ef871e8def0043395'
+            '2ccf9394c8d9eebbef1ce21bd854b995240084defafc9f1ff72a5cb6859f4da3'
+            '4fa0d685cee2b918e7bbfe9e870a707eca6dcd74a53a3c95c032d9bd91fa21bf'
+            '8f520ef33be9cf2d9b1b9f99deae3608770837ba587039c7bd534bded4a919dd'
+            '482d48e8f0462e85155d1d02a64e7372b6d852a45d74e677f33d3726d01d3ab4'
+            '30ab970e33d7ceaec711ec20aeeb2d9d4c84615cfca92e657d3fb72f83e1e6a5'
+            '414413e6882746457259e7d2c2d332566fa818b0fb8396c0344b2931d106c7c3'
+            '6d48fa790e14af053eb2dd0146688bc7334bb9123b7575d4229e2a030f0f5a75'
+            '909e94ac3566475a858302f92bcc2c5297721ec49f1598bf1708389761c15f05'
+            'dc4dfcb55e1de9e9f7d2d16fca3d743f03f35418989e908b39a533b22375c099'
+            '50a2d5ee429e9fc9994175a5cb8f205ad4b252e35e800d3508c1d49382adcf85')
+
+prepare () {
+  cd $_pkgfqn
+
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+}
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  static-compat-cmake -G Ninja -B build -S $_pkgfqn \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DINSTALL_BINDIR=lib/qt6/bin \
+    -DINSTALL_DOCDIR=share/doc/qt6 \
+    -DINSTALL_ARCHDATADIR=lib/qt6 \
+    -DINSTALL_DATADIR=share/qt6 \
+    -DINSTALL_INCLUDEDIR=include/qt6 \
+    -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \
+    -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
+    -DINPUT_openssl=linked \
+    -DQT_FEATURE_openssl_linked=ON \
+    -DQT_FEATURE_static_runtime=ON \
+    -DQT_FEATURE_system_sqlite=ON \
+    -DQT_FEATURE_system_xcb_xinput=ON \
+    -DQT_FEATURE_xcb=ON \
+    -DQT_FEATURE_xcb_sm=ON \
+    -DQT_FEATURE_icu=OFF \
+    -DQT_FEATURE_kms=OFF \
+    -DQT_FEATURE_eglfs=OFF \
+    -DQT_FEATURE_gbm=OFF \
+    -DQT_FEATURE_linuxfb=OFF \
+    -DQT_FEATURE_gssapi=OFF \
+    -DQT_FEATURE_fontconfig=ON \
+    -DGLIB2_USE_PKG_CONFIG=ON \
+    -DCMAKE_INSTALL_OLDINCLUDEDIR=$static_compat_prefix/include \
+    -DGSSAPI_INCLUDE_DIRS=$static_compat_prefix/include \
+    -DICU_INCLUDE_DIR=$static_compat_prefix/include \
+    -DLibdrm_INCLUDE_DIR=$static_compat_prefix/include \
+    -Dgbm_INCLUDE_DIR=$static_compat_prefix/include
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgname
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  rm -r "$pkgdir/$static_compat_prefix"/share/doc
+}

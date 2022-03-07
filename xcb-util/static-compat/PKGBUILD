@@ -1,0 +1,39 @@
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+_pkgname=xcb-util
+pkgname=static-compat-$_pkgname
+pkgver=0.4.0
+pkgrel=3
+pkgdesc="Utility libraries for XC Binding"
+arch=('x86_64')
+url="https://xcb.freedesktop.org"
+license=('custom')
+depends=('static-compat-libxcb>=1.7')
+makedepends=('gperf' 'xorg-util-macros' 'static-compat-xorgproto' 'static-compat-configure')
+options=(staticlibs)
+source=("https://xcb.freedesktop.org/dist/${_pkgname}-${pkgver}.tar.bz2")
+sha512sums=('e60aaa6f582eacd05896c5fd7c8417938318a1288146f3a5b339f77eed24e211c6099963f8813daa621c94173d2934228936b491c0ed79b09a8a67d835867d0e')
+
+build() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  static-compat-configure --prefix="$static_compat_prefix" --disable-shared --enable-static
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make check
+}
+
+package() { 
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+
+  install -D -m644 COPYING \
+    "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

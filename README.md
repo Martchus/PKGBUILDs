@@ -9,7 +9,8 @@ Contains PKGBUILD files for creating Arch Linux packages:
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
     * `mingw-w64-*` packages which allow to build for Windows under Arch Linux,
       eg. FreeType 2, Qt 5 and Qt 6
-    * `*-static` packages containing static libraries
+    * `static-compat-*` packages containing static libraries to build self-contained
+      applications running on older GNU/Linux distributions under Arch Linux
     * `android-*` packages which allow to build for Android under Arch Linux,
       eg. iconv, Boost, OpenSSL, CppUnit, Qt 5 and Kirigami
     * `apple-darwin-*` packages which allow to build for MaxOS X under Arch
@@ -232,28 +233,43 @@ Here are neverthless some useful hints to run WINE manually:
 * See https://wiki.winehq.org/Wine_User's_Guide for more information
 
 ## Static GNU/Linux libraries
-This repository contains several `*-static` packages providing static libraries
-intended to distribute "self-contained" executables. These packages are still
-experimental and are not be regularily updated at this point.
+This repository contains several `static-compat-*` packages providing static
+libraries intended to distribute "self-contained" executables. These libraries
+are built against and older version of glibc to be able to run on older
+distributions without having to link against glibc statically. The resulting
+binaries should run on distributions with glibc 2.26 or newer (or Linux 4.4 or
+newer when linking against glibc statically), e.g. openSUSE Leap 15.0, Fedora
+27, Debian 10 and Ubuntu 18.04. The packages might not be updated as regularily
+as their normal counterparts but the idea is to provide an environment with a
+recent version of GCC/libstdc++ and other libraries such as Qt and Boost but
+still be able to run the resulting executables on older distributions. Note that
+these packages are still experimental at this point.
 
-It would conceivable to build even Qt as a static library and make even a fully
-statically linked executable. However, it would not be possible to support
-OpenGL because glvnd and vendor provided OpenGL libraries are always dynamic
-libraries. It is also not clear whether it makes sense to link against libc and
-X11/Wayland client libraries statically. Maybe it makes sense to aim for a
-partially statically linked build instead where libc/OpenGL/X11/Wayland are
-assumed to be provided by the GNU/Linux system but other libraries like Qt are
-linked against statically. This would be similar to AppImage where a lot of
-libraries are bundled but certain "core libraries" are expected to be provided
-by the system.
+To use the packages, simply invoke `/usr/static-compat/bin/g++` instead of
+`/usr/bin/g++`. The package `static-compat-environment` provide a script to set
+a few environment variables to make this easier. There are also packages
+providing build system wrappers such as `static-compat-cmake`.
+
+It would be conceivable to make fully statically linked executables. However, it
+would not be possible to support OpenGL because glvnd and vendor provided OpenGL
+libraries are always dynamic libraries. It makes also no sense to link against
+glibc (and possibly other core libraries) statically as they might use `dlopen`.
+Therefore this setup aims for a partially statically linked build instead, where
+stable core libraries like glibc/pthreads/OpenGL/… are assumed to be provided by
+the GNU/Linux system but other libraries like libstdc++, Boost and Qt are linked
+against statically. This is similar to AppImage where a lot of libraries are
+bundled but certain core libraries are expected to be provided by the system.
 
 Note that I decided to let static libraries live within the subprefix
-`/usr/static` (in contrast to packages found in the AUR). The reason is that the
-version might not be kept 100 % in sync with the shared counterpart. Hence it
-makes sense to make the static packages independent with their own headers and
-configuration files to avoid problems due to mismatching versions. Besides, some
-projects (such as Qt) do not support installing shared and static libraries
-within the same prefix at the same time because the config files would clash.
+`/usr/static-compat` (in contrast to `-static` packages found in the AUR). The
+main reason is that my packaging requires a custom glibc/GCC build for
+compatibility and I suppose that simply needs to live within its own prefix.
+Besides, the version might not be kept 100 % in sync with the shared
+counterpart. Hence it makes sense to make the static packages independent with
+their own headers and configuration files to avoid problems due to mismatching
+versions. Additionally, some projects (such as Qt) do not support installing
+shared and static libraries within the same prefix at the same time because the
+config files would clash.
 
 ## Copyright notice and license
 Copyright © 2015-2022 Marius Kittler

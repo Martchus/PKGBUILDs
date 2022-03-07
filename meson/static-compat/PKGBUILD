@@ -1,0 +1,16 @@
+pkgname=static-compat-meson
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc="Meson wrapper to use gcc-static-compat"
+depends=('meson' 'static-compat-environment')
+license=('GPL')
+url="https://github.com/Martchus/PKGBUILDs"
+source=("meson-static-compat-wrapper")
+sha256sums=('SKIP')
+
+package() {
+  source static-compat-environment
+  install -d "${pkgdir}"/usr/bin
+  install -m 755 "${srcdir}/meson-static-compat-wrapper" "$pkgdir"/usr/bin/$pkgname
+}

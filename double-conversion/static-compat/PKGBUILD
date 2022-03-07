@@ -1,0 +1,30 @@
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Anatol Pomozov <anatol.pomozov@gmail.com>
+# Contributor: Joel Teichroeb <joel@teichroeb.net>
+# Contributor: Jonas Heinrich <onny@project-insanity.org>
+
+_pkgname=double-conversion
+pkgname=static-compat-$_pkgname
+pkgver=3.2.0
+pkgrel=1
+pkgdesc='Binary-decimal and decimal-binary routines for IEEE doubles'
+arch=(x86_64)
+url='https://github.com/google/double-conversion'
+license=(BSD)
+depends=(gcc-libs-static-compat)
+makedepends=(static-compat-cmake)
+source=(https://github.com/google/double-conversion/archive/v$pkgver/$_pkgname-$pkgver.tar.gz)
+sha256sums=('3dbcdf186ad092a8b71228a5962009b5c96abde9a315257a3452eb988414ea3b')
+
+build() {
+  source static-compat-environment
+  static-compat-cmake -B build -S $_pkgname-$pkgver
+  cmake --build build
+}
+
+package () {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 $_pkgname-$pkgver/LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+}

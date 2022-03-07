@@ -1,0 +1,53 @@
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
+_pkgname=libinput
+pkgname=static-compat-$_pkgname
+pkgver=1.20.0
+pkgrel=2
+pkgdesc="Input device management and event handling library"
+url="https://gitlab.freedesktop.org/libinput"
+arch=(x86_64)
+license=(custom:X11)
+depends=('static-compat-mtdev' 'static-compat-systemd-libs' 'static-compat-libevdev' 'static-compat-libwacom')
+# upstream doesn't recommend building docs
+makedepends=('static-compat-meson' 'static-compat-wayland') # 'check' 'doxygen' 'graphviz' 'python-sphinx' 'python-recommonmark'
+options=(staticlibs !emptydirs)
+source=(https://gitlab.freedesktop.org/libinput/libinput/-/archive/$pkgver/$_pkgname-$pkgver.tar.bz2)
+sha512sums=('145b0e0760929137ab442b2030b4b42f6df54a3ae61c47c929e1a74857a170f0f2a56bb7522b7d1d9c0943028ac54c7728cf8d66a0c384f6118f31d6625ab44c')
+#source=(https://freedesktop.org/software/$_pkgname/$_pkgname-$pkgver.tar.xz{,.sig})
+#sha512sums=('f4b776d0da78c687ba21b430a04941ac6b43f68970c82ec9f7360358fdea5ed6a873948ce66a25bcdd64d4b95fa4bf705cc24dbc25c7c0f5fd2d0efbd763f298'
+#            'SKIP')
+#validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
+
+prepare() {
+  sed -i 's|shared_library|library|g' $_pkgname-$pkgver/meson.build
+}
+
+build() {
+  export LDFLAGS+=' -lrt -pthread'
+  source static-compat-environment
+  static-compat-meson $_pkgname-$pkgver build \
+    -D udev-dir="$static_compat_prefix"/lib/udev \
+    -D documentation=false \
+    -D debug-gui=false \
+    -D tests=false # requires check
+
+  # Print config
+  meson configure build
+
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  source static-compat-environment
+  meson install -C build --destdir "$pkgdir"
+
+  install -Dvm644 $_pkgname-$pkgver/COPYING \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  rm -r "$pkgdir/$static_compat_prefix"/share/{man,zsh}
+}

@@ -12,7 +12,7 @@ use strict;
 use utf8;
 
 my @vcs_0_variant_suffixes = (qw(git svn hg));
-my @cfg_0_variant_suffixes = (qw(static));
+my @cfg_0_variant_suffixes = (qw(static static-compat));
 my @cfg_1_variant_suffixes = (qw(doc test cli angle dynamic opengl noopengl));
 my @variant_suffixes       = (\@vcs_0_variant_suffixes, \@cfg_0_variant_suffixes, \@cfg_1_variant_suffixes);
 
@@ -47,7 +47,8 @@ sub _render_deps {
     my ($package_prefix, $controller, @d) = @_;
     my $prefix = $controller->stash('package_name_prefix');
     my $suffix = $controller->stash('package_name_suffix');
-    return join(' ', map { "'${prefix}${package_prefix}-${_}${suffix}'" } @d);
+    my $quote  = $prefix =~ qr/^(mingw-w64|android)/ ? "'" : '';
+    return join(' ', map { "${quote}${prefix}${package_prefix}-${_}${suffix}${quote}" } @d);
 }
 sub _render_optdeps {
     my ($package_prefix, $controller, %d) = @_;

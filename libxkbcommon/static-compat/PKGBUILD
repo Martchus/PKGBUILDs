@@ -1,0 +1,51 @@
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Daniel Micay <danielmicay@gmail.com>
+# Contributor: Mladen Pejakovic <pejakm@gmail.com>
+
+_pkgname=libxkbcommon
+pkgname=static-compat-$_pkgname
+pkgver=1.4.0
+pkgrel=1
+pkgdesc="Keymap handling library for toolkits and window systems"
+url="https://xkbcommon.org/"
+arch=(x86_64)
+license=(custom)
+depends=(static-compat-libxcb xkeyboard-config static-compat-libxml2 static-compat-wayland)
+makedepends=(xkeyboard-config wayland-protocols doxygen git static-compat-meson)
+checkdepends=(xorg-server-xvfb libgl)
+options=(!emptydirs !docs staticlibs)
+_commit=c60b77ea512bef92e481be38972b58dd71a34180  # tags/xkbcommon-1.0.3^0
+source=("git+https://github.com/xkbcommon/libxkbcommon#commit=$_commit")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  git describe --tags | sed 's/^xkbcommon-//;s/-/+/g'
+}
+
+prepare() {
+  cd $_pkgname
+}
+
+build() {
+  source static-compat-environment
+  export PKG_CONFIG_PATH=$static_compat_prefix/lib/pkgconfig:/usr/share/pkgconfig
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  static-compat-meson $_pkgname build \
+    -Denable-docs=false
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  xvfb-run -s '-nolisten local' meson test -C build --print-errorlogs
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" meson install -C build
+  rm -r "$pkgdir/$static_compat_prefix"/share
+  install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 $_pkgname/LICENSE
+}

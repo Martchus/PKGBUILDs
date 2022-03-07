@@ -1,0 +1,34 @@
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libxcomposite
+pkgname=static-compat-$_pkgname
+pkgver=0.4.5
+pkgrel=3
+pkgdesc="X11 Composite extension library"
+arch=('x86_64')
+url="https://xorg.freedesktop.org/"
+license=('custom')
+depends=('static-compat-libxfixes')
+makedepends=('static-compat-configure' 'static-compat-xorgproto')
+options=(staticlibs !docs !emptydirs)
+source=("${url}/releases/individual/lib/libXcomposite-${pkgver}.tar.bz2"{,.sig})
+sha512sums=('502fd51fd9097bb3ca72174ac5b25b9d3b1ff240d32c4765199df03d89337d94b4ddea49e90b177b370862430089d966ce9c38988337156352cfeae911c2d3d5'
+            'SKIP')
+validpgpkeys=('4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E') # "Alan Coopersmith <alan.coopersmith@oracle.com>"
+
+build() {
+  source static-compat-environment
+  cd libXcomposite-${pkgver}
+  static-compat-configure --enable-static --disable-shared
+  make
+}
+
+package() {
+  source static-compat-environment
+  cd libXcomposite-${pkgver}
+  make DESTDIR="${pkgdir}" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

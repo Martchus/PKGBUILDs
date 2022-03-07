@@ -1,0 +1,122 @@
+# Contributor: Tom Gundersen <teg@jklm.no>
+# Contributor: Dave Reisner <dreisner@archlinux.org>
+# Contributor: judd <jvinet@zeroflux.org>
+
+_pkgname=util-linux
+pkgname=static-compat-$_pkgname
+_pkgmajor=2.38
+_realver=${_pkgmajor}
+pkgver=${_realver/-/}
+pkgrel=1
+pkgdesc='Miscellaneous system utilities for Linux'
+url='https://github.com/karelzak/util-linux'
+arch=('x86_64')
+depends=('glibc-static-compat')
+makedepends=('systemd' 'python' 'libcap-ng' 'libxcrypt' 'static-compat-configure')
+license=('GPL2')
+options=(!emptydirs staticlibs strip)
+validpgpkeys=('B0C64D14301CC6EFAEDF60E4E4B71D5EEC39C284')  # Karel Zak
+options=(staticlibs)
+source=("https://www.kernel.org/pub/linux/utils/util-linux/v${_pkgmajor}/${_pkgname}-${_realver}.tar."{xz,sign})
+sha256sums=('6d111cbe4d55b336db2f1fbeffbc65b89908704c01136371d32aa9bec373eb64'
+            'SKIP')
+
+build() {
+  source static-compat-environment
+  cd "$_pkgname-$pkgver"
+
+  # We ship Debian's hardlink in package 'hardlink', Fedora's hardlink was
+  # merged in util-linux. For now we disable the latter, but let's dicuss
+  # the details:
+  # https://bugs.archlinux.org/task/62896
+  # https://github.com/karelzak/util-linux/issues/808
+
+  static-compat-configure \
+    --libdir="$static_compat_prefix"/lib \
+    --bindir="$static_compat_prefix"/bin \
+    --sbindir="$static_compat_prefix"/bin \
+    --localstatedir=/var \
+    --disable-shared \
+    --enable-static \
+    --enable-usrdir-path \
+    --enable-libuuid-force-uuidd \
+    --enable-libblkid \
+    --enable-libmount \
+    --enable-libsmartcols \
+    --enable-libfdisk \
+    --disable-fdisks \
+    --disable-mount \
+    --disable-losetup \
+    --disable-zramctl \
+    --disable-fsck \
+    --disable-partx \
+    --disable-uuidd \
+    --disable-wipefs \
+    --disable-mountpoint \
+    --disable-fallocate \
+    --disable-unshare \
+    --disable-nsenter \
+    --disable-setpriv \
+    --disable-hardlink \
+    --disable-eject \
+    --disable-agetty \
+    --disable-plymouth_support \
+    --without-libmagic \
+    --disable-cramfs \
+    --disable-bfs \
+    --disable-minix \
+    --disable-fdformat \
+    --disable-hwclock \
+    --disable-hwclock-gplv3 \
+    --disable-lslogins \
+    --disable-wdctl \
+    --disable-cal \
+    --disable-logger \
+    --disable-whereis \
+    --disable-switch_root \
+    --disable-pivot_root \
+    --disable-lsmem \
+    --disable-chmem \
+    --disable-ipcrm \
+    --disable-ipcs \
+    --disable-irqtop \
+    --disable-lsirq \
+    --disable-rfkill \
+    --disable-tunelp \
+    --disable-kill \
+    --disable-last \
+    --disable-utmpdump \
+    --enable-line \
+    --disable-mesg \
+    --disable-raw \
+    --disable-rename \
+    --disable-vipw \
+    --disable-newgrp \
+    --disable-chfn-chsh \
+    --disable-login \
+    --disable-nologin \
+    --disable-sulogin \
+    --disable-su \
+    --disable-runuser \
+    --disable-ul \
+    --disable-more \
+    --disable-pg \
+    --disable-setterm \
+    --disable-schedutils \
+    --disable-wall \
+    --disable-write \
+    --without-systemd \
+    --without-python \
+    --disable-pylibmount
+
+  make
+}
+
+package() {
+  source static-compat-environment
+  cd "$_pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+  rm -r "$pkgdir/$static_compat_prefix"/{sbin,bin}
+  rm -r "$pkgdir/$static_compat_prefix"/share/{locale,man,doc,bash-completion}
+}

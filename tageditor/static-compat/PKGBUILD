@@ -1,0 +1,76 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# set the web view provider: either webkit, webengine, auto or none
+_webview_provider=${TAGEDITOR_WEBVIEW_PROVIDER:-none}
+
+# set the JavaScript provider: either script, qml, auto or none
+_js_provider=${TAGEDITOR_JS_PROVIDER:-none}
+
+# whether the Qt GUI is enabled: ON or OFF
+_qt_gui=${TAGEDITOR_QT_GUI:-OFF}
+
+# whether the experimental JSON export is enabled: ON or OFF
+_json_export=${TAGEDITOR_JSON_EXPORT:-OFF}
+
+_reponame=tageditor
+pkgname=static-compat-tageditor
+_name=${pkgname#static-compat}
+pkgver=3.7.0
+pkgrel=1
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+pkgdesc='A tag editor with Qt GUI and command-line interface supporting MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska'
+license=('GPL')
+[[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && [[ $_qt_gui == ON ]] && depends+=('static-compat-qt6-base')
+[[ $_webview_provider == webkit ]] && depends+=('static-compat-qt6-webkit')
+[[ $_webview_provider == webengine ]] && depends+=('static-compat-qt6-webengine')
+[[ $_js_provider == script ]] && depends+=('static-compat-qt6-script')
+[[ $_js_provider == qml ]] && depends+=('qt6-declarative')
+makedepends=('static-compat-cmake'  'static-compat-tagparser' 'ninja')
+[[ $_json_export == ON ]] && makedepends+=('reflective-rapidjson')
+[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-xdg-utils' 'static-compat-qt6-tools' 'clang' 'mesa')
+checkdepends=('static-compat-cppunit' 'jq')
+url="https://github.com/Martchus/${_reponame}"
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('e3814efdb9ca9bc386b51c602f8f4f507e8698ecdaf39a5849ed1795ddaa5c38')
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  static-compat-cmake \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DBUILTIN_TRANSLATIONS:BOOL=ON \
+    -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
+    -DWEBVIEW_PROVIDER="${_webview_provider}" \
+    -DWIDGETS_GUI="${_qt_gui}" \
+    -DQUICK_GUI=OFF \
+    -DJS_PROVIDER="${_js_provider}" \
+    -DENABLE_JSON_EXPORT="${_json_export}" \
+    -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator' \
+    -DSTATIC_LINKAGE:BOOL=ON \
+    -DNO_STATIC_ENFORCE:BOOL=ON \
+    .
+  ninja
+}
+
+check() {
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  if [[ $TEST_FILE_PATH ]]; then
+    ninja check
+  else
+    msg2 'Skipping execution of testsuite because the environment variable TEST_FILE_PATH is not set.'
+  fi
+}
+
+package() {
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  DESTDIR="${pkgdir}" ninja install
+}

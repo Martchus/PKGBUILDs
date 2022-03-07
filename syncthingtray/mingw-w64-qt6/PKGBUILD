@@ -10,7 +10,7 @@ _webview_provider=${MINGW_W64_SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
 _js_provider=${MINGW_W64_SYNCTHING_TRAY_JS_PROVIDER:-qml}
 
 # set whether libsyncthing should be enabled: either ON or OFF
-_enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_JS_PROVIDER:-ON}
+_enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
 
 _reponame=syncthingtray
 pkgname=mingw-w64-syncthingtray-qt6

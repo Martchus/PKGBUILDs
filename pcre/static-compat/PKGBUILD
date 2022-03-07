@@ -1,0 +1,66 @@
+# Contributor: Sébastien "Seblu" Luttringer
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Eric Belanger <eric@archlinux.org>
+# Contributor: John Proctor <jproctor@prium.net>
+
+_pkgname=pcre
+pkgname=static-compat-$_pkgname
+pkgver=8.45
+pkgrel=1
+pkgdesc='A library that implements Perl 5-style regular expressions'
+arch=('x86_64')
+url='https://www.pcre.org/'
+license=('BSD')
+depends=('gcc-libs-static-compat')
+makedepends=('static-compat-configure')
+options=(!emptydirs staticlibs)
+validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8') # Philip Hazel
+source=("https://ftp.pcre.org/pub/pcre/$_pkgname-$pkgver.tar.bz2"{,.sig})
+sha512sums=('91bff52eed4a2dfc3f3bfdc9c672b88e7e2ffcf3c4b121540af8a4ae8c1ce05178430aa6b8000658b9bb7b4252239357250890e20ceb84b79cdfcde05154061a'
+            'SKIP')
+
+prepare() {
+  cd $_pkgname-$pkgver
+  # apply patch from the source array (should be a pacman feature)
+  local filename
+  for filename in "${source[@]}"; do
+    if [[ "$filename" =~ \.patch$ ]]; then
+      msg2 "Applying patch ${filename##*/}"
+      patch -p1 -N -i "$srcdir/${filename##*/}"
+    fi
+  done
+  :
+}
+
+build() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  static-compat-configure \
+    --disable-shared \
+    --enable-static \
+    --enable-unicode-properties \
+    --enable-pcre16 \
+    --enable-pcre32 \
+    --enable-jit \
+    --disable-pcregrep-libz \
+    --disable-pcregrep-libbz2 \
+    --disable-pcretest-libreadline
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make -j1 check
+}
+
+package() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/{doc,man}
+
+  install -Dm644 LICENCE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

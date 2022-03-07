@@ -1,0 +1,63 @@
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+<%== content_for 'comment_header' %>\
+pkgname=static-compat-qt6-<%== $qt_module %>
+<%== content %>\
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
+<%== include 'fragments/qt6-source' %>\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== stash('git_commit') ? 'SKIP' : $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+% if ($patch_files->size || content_for('prepare')->size) {
+prepare () {
+  cd $_pkgfqn
+
+% if ($patch_files->size) {
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+% }
+<%== content_for 'prepare' %>\
+}
+
+% }
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+<%== content_for 'before_build_config' %>\
+  static-compat-cmake -G Ninja -B build -S $_pkgfqn \\
+    $ccache_args \\
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \\
+    -DGLIB2_USE_PKG_CONFIG=ON \\
+    -DQT_FEATURE_static_runtime=ON \\
+    -DFEATURE_pkg_config=ON<%== content_for 'additional_cmake_args' %>
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  source static-compat-environment
+<%== content_for 'before_package_install' %>\
+  DESTDIR="$pkgdir" cmake --install build
+
+% unless (stash('no_libs')) {
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/$static_compat_prefix/lib" -type f -name '*.prl' \\
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+% }
+  install -d "$pkgdir"/usr/share/licenses
+  ln -s /usr/share/licenses/static-compat-qt6-base "$pkgdir"/usr/share/licenses/$pkgname
+}

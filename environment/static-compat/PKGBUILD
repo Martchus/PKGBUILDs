@@ -1,0 +1,15 @@
+pkgname=static-compat-environment
+pkgver=1
+pkgrel=1
+arch=('any')
+pkgdesc="Script providing common environment variables to use gcc-static-compat"
+license=('GPL')
+depends=('gcc-static-compat')
+url="https://github.com/Martchus/PKGBUILDs"
+source=("static-compat-environment.sh")
+sha256sums=('SKIP')
+
+package() {
+  install -d "${pkgdir}"/usr/bin
+  install -m 755 static-compat-environment.sh "${pkgdir}"/usr/bin/static-compat-environment
+}

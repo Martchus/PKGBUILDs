@@ -1,0 +1,198 @@
+# Contributor: Christian Hesse <mail@eworm.de>
+# Contributor: Dave Reisner <dreisner@archlinux.org>
+# Contributor: Tom Gundersen <teg@jklm.no>
+
+_pkgname=systemd
+pkgname=static-compat-$_pkgname-libs
+_tag='5aba21f1561d48fdcf7f4670263ba109c25c1ea6' # git rev-parse v${_tag_name}
+_tag_name=250.4
+pkgver="${_tag_name/-/}"
+pkgrel=2
+arch=('x86_64')
+url='https://www.github.com/systemd/systemd'
+pkgdesc='systemd client libraries'
+license=('LGPL2.1')
+depends=('glibc-static-compat' 'static-compat-libgcrypt' 'static-compat-lz4' 'static-compat-xz' 'static-compat-zstd'
+         'static-compat-util-linux' 'static-compat-openssl' 'static-compat-libcap')
+makedepends=('static-compat-meson' 'git' 'python-jinja' 'gperf' 'static-compat-pcre2')
+options=('strip' 'staticlibs')
+validpgpkeys=('63CDA1E5D3FC22B998D20DD6327F26951A015CC4'  # Lennart Poettering <lennart@poettering.net>
+              'A9EA9081724FFAE0484C35A1A81CEA22BC8C7E2E'  # Luca Boccassi <luca.boccassi@gmail.com>
+              '5C251B5FC54EB2F80F407AAAC54CA336CFEB557E') # Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl>
+source=("git+https://github.com/systemd/systemd-stable#tag=${_tag}?signed"
+        "git+https://github.com/systemd/systemd#tag=v${_tag_name%.*}?signed"
+        '0001-Use-Arch-Linux-device-access-groups.patch'
+        '0001-Strip-down-build-script.patch')
+sha512sums=('SKIP'
+            'SKIP'
+            'cc0c2ffb5f7c3a7176cd68f3dddd85ca000dcc4cdf3044746a20147234adb6811800fd28a4713faa6a59bf8c02be9fd43c2d6aa6695fd1dbf03ae773a91d090c'
+            'c7a91d2d26ee79a147c582941c4eb111093a1e4e2e9cbcdb9c1c70f65996bd935f684222d6b745fd9b81fc916b96153955ce76424ecdbf4c6ef983900bf639da')
+
+_backports=(
+  # bus: Use OrderedSet for introspection
+  'acac88340ace3cd631126eebb6d0390cd54e8231'
+  # resolved: DoT fixes (https://github.com/systemd/systemd-stable/pull/187)
+  '88b4e8f74ed981000ded8e23ead930a6f68eebc8~..6d3e2f0188f8a10412c56dc987198104a4dfff0f'
+)
+
+_reverts=(
+)
+
+prepare() {
+  cd "$_pkgname-stable"
+
+  # add upstream repository for cherry-picking
+  git remote add -f upstream ../systemd
+
+  local _c
+  for _c in "${_backports[@]}"; do
+    if [[ $_c == *..* ]]; then
+      git log --oneline --reverse "${_c}"
+    else
+      git log --oneline -1 "${_c}"
+    fi
+    git cherry-pick -n "${_c}"
+  done
+  for _c in "${_reverts[@]}"; do
+    git log --oneline -1 "${_c}"
+    git revert -n "${_c}"
+  done
+
+  # Replace cdrom/dialout/tape groups with optical/uucp/storage
+  patch -Np1 -i ../0001-Use-Arch-Linux-device-access-groups.patch
+
+  # Strip down build script to avoid running into errors despite the minimal/static setup
+  patch -Np1 -i ../0001-Strip-down-build-script.patch
+
+  # Fix symbol clash with libmount
+  find \( -iname '*.c' -o -iname '*.h' \) -exec \
+    sed -E -i -e 's|(((\$\|[^\w_])parse_)(size\|range))\(|\1_2\(|g' {} \;
+}
+
+build() {
+  export CFLAGS+=" -lgpg-error -lcrypt -lpthread -ldl -lrt"
+  source static-compat-environment
+
+  # Add $static_compat_prefix to runtime path for libcrypt.so.1 which unfortunately gets
+  # linked against dynamically
+  export LD_LIBRARY_PATH=/usr/lib:$static_compat_prefix/lib
+
+  # Invoke pkg-config with --stativc
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+
+  local _timeservers=({0..3}.arch.pool.ntp.org)
+  local _nameservers=(
+    # We use these public name services, ordered by their privacy policy (hopefully):
+    #  * Cloudflare (https://1.1.1.1/)
+    #  * Quad9 (https://www.quad9.net/)
+    #  * Google (https://developers.google.com/speed/public-dns/)
+    '1.1.1.1#cloudflare-dns.com'
+    '9.9.9.9#dns.quad9.net'
+    '8.8.8.8#dns.google'
+    '2606:4700:4700::1111#cloudflare-dns.com'
+    '2620:fe::9#dns.quad9.net'
+    '2001:4860:4860::8888#dns.google'
+  )
+
+  local _meson_options=(
+    -Drootprefix=$static_compat_prefix
+
+    # internal version comparison is incompatible with pacman:
+    #   249~rc1 < 249 < 249.1 < 249rc
+    -Dversion-tag="${_tag_name/-/\~}-${pkgrel}-arch"
+    -Dmode=release
+
+    -Dgnu-efi=true
+    -Dima=false
+    -Dlibidn2=true
+    -Dlz4=true
+    -Dman=false
+
+    # We disable DNSSEC by default, it still causes trouble:
+    # https://github.com/systemd/systemd/issues/10579
+    
+    -Ddbuspolicydir=$static_compat_prefix/share/dbus-1/system.d
+    -Ddefault-dnssec=no
+    -Ddefault-hierarchy=unified
+    -Ddefault-kill-user-processes=false
+    -Ddefault-locale=C
+    -Dlocalegen-path=$static_compat_prefix/bin/locale-gen
+    -Ddns-over-tls=openssl
+    -Dfallback-hostname='archlinux'
+    -Dnologin-path=/usr/bin/nologin
+    -Dntp-servers="${_timeservers[*]}"
+    -Ddns-servers="${_nameservers[*]}"
+    -Drpmmacrosdir=no
+    -Dsysvinit-path=
+    -Dsysvrcnd-path=
+
+    # Enable static libs
+    -Dlink-udev-shared=false
+    -Dstatic-libsystemd=true
+    -Dstatic-libudev=true
+
+    # Disable most of the features, we're only interested in libs
+    -Dman=false
+    -Dhtml=false
+    -Dbpf-framework=false
+    -Dlibidn2=false
+    -Dlibidn=false
+    -Dlogind=false
+    -Dcoredump=false
+    -Dpstore=false
+    -Dtmpfiles=false
+    -Dstandalone-binaries=false
+    -Dacl=false
+    -Dpam=false
+    -Doomd=false
+    -Dhostnamed=false
+    -Dlocaled=false
+    -Dmachined=false
+    -Dportabled=false
+    -Dsysext=false
+    -Duserdb=false
+    -Dhomed=false
+    -Dnetworkd=false
+    -Dtimedated=false
+    -Dtimesyncd=false
+    -Dremote=false
+    -Dnss-myhostname=false
+    -Dnss-mymachines=false
+    -Dnss-resolve=false
+    -Dnss-systemd=false
+    -Dfirstboot=false
+    -Dquotacheck=false
+    -Dsysusers=false
+    -Dimportd=false
+    -Drfkill=false
+    -Dxdg-autostart=false
+    -Dgnu-efi=false
+
+    -Dsbat-distro='arch'
+    -Dsbat-distro-summary='Static compat environment'
+    -Dsbat-distro-pkgname="${pkgname}"
+    -Dsbat-distro-version="${pkgver}"
+    -Dsbat-distro-url="https://github.com/Martchus/PKGBUILDs"
+  )
+
+  static-compat-meson "$_pkgname-stable" build "${_meson_options[@]}"
+  meson compile --verbose -C build
+}
+
+check() {
+  source static-compat-environment
+  export LD_LIBRARY_PATH=/usr/lib:$static_compat_prefix/lib
+  meson test -C build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" meson install -C build
+  find "$pkgdir/$static_compat_prefix" -iname '*.so*' -delete
+  rm -r "$pkgdir/$static_compat_prefix"/share/{bash-completion,doc,factory,zsh}
+  rm -r "$pkgdir/$static_compat_prefix"/var
+}
+
+# vim:ft=sh syn=sh et sw=2:

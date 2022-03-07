@@ -1,0 +1,1 @@
+../mingw-w64/qtbase-sha256.txt

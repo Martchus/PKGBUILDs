@@ -1,0 +1,47 @@
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
+_pkgname=libevdev
+pkgname=static-compat-$_pkgname
+pkgver=1.12.1
+pkgrel=1
+pkgdesc="Wrapper library for evdev devices"
+arch=(x86_64)
+url="https://www.freedesktop.org/wiki/Software/libevdev/"
+license=(custom:MIT)
+depends=('glibc-static-compat')
+# 'static-compat-check'
+makedepends=('python' 'valgrind' 'doxygen' 'static-compat-meson')
+options=(staticlibs)
+source=(https://freedesktop.org/software/$_pkgname/$_pkgname-$pkgver.tar.xz{,.sig}
+        0001_install_the_mouse-dpi-tool_man_page.diff)
+sha512sums=('eefce287a665e4f89eb2e0437dfefd45ecf8925c7dac35a1bdd46158541f77f2032c6146900a30a01321751d55a9b537bd1d61777cca9cfa02c39a6e31c97be4'
+            'SKIP'
+            '5bfdb686c1ed1b936d199babae5d9294c3ee158ab4849930a358ad1ae17a50011bd7132ff18614326af0ed73ce5bb887da28c41143daa8f61b74d3d6d047b7d8')
+validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
+
+prepare() {
+  cd $_pkgname-$pkgver
+  patch -Np1 -i ../0001_install_the_mouse-dpi-tool_man_page.diff
+}
+
+build() {
+  source static-compat-environment
+  static-compat-meson $_pkgname-$pkgver build \
+    -D documentation=disabled \
+    -D tests=disabled
+  meson compile -C build
+}
+
+#check() {
+#  source static-compat-environment
+#  meson test -C build
+#}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" meson install -C build
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+
+  install -Dm644 $_pkgname-$pkgver/COPYING \
+    "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

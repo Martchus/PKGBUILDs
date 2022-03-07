@@ -1,0 +1,67 @@
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=glib2
+pkgname=static-compat-$_pkgname
+pkgver=2.72.0
+pkgrel=2
+pkgdesc="Low level core library"
+url="https://wiki.gnome.org/Projects/GLib"
+license=(LGPL)
+arch=(x86_64)
+depends=(static-compat-pcre static-compat-libffi static-compat-util-linux static-compat-zlib)
+makedepends=(gettext shared-mime-info python libelf git static-compat-meson)
+checkdepends=(desktop-file-utils)
+options=(!strip !emptydirs staticlibs)
+_commit=bacbec652d356895ec493f3de2f2f6f4c7dafde0  # tags/2.66.4^0
+source=("git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
+        0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch)
+sha256sums=('SKIP'
+            'edb5e34ac0a77431978cab55b98e39754d73455e28a38f5003424e943bbe5fff')
+
+pkgver() {
+  cd glib
+  git describe --tags | sed 's/-/+/g'
+}
+
+prepare() {
+  cd glib
+
+  # Suppress noise from glib-compile-schemas.hook
+  git apply -3 ../0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
+}
+
+build() {
+  export CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
+  export LDFLAGS+=" -lblkid"
+  source static-compat-environment
+  static-compat-meson glib build \
+    -D selinux=disabled \
+    -Dsysprof=disabled \
+    -D man=false \
+    -D gtk_doc=false \
+    -Dinternal_pcre=false
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  meson test -C build --no-suite flaky --print-errorlogs
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" meson install -C build
+
+  # Strip messes up the LTO-enabled archive's index so strip libs manually and then run ranlib again
+  find "$pkgdir" -name '*.a' -exec strip $STRIP_STATIC {} \;
+  find "$pkgdir" -name '*.a' -exec ranlib {} \;
+
+  export PYTHONHASHSEED=0
+  python -m compileall -d "$static_compat_prefix"/share/glib-2.0/codegen \
+    "$pkgdir/$static_compat_prefix/share/glib-2.0/codegen"
+  python -O -m compileall -d "$static_compat_prefix"/share/glib-2.0/codegen \
+    "$pkgdir/$static_compat_prefix/share/glib-2.0/codegen"
+}
+
+# vim:set sw=2 et:

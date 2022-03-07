@@ -1,0 +1,108 @@
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# This file is created from PKGBUILD.sh.ep contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
+% if ($patch_files->size) {
+
+# All patches are managed at https://github.com/Martchus/qt<%== $qt_module %>
+% }
+
+pkgname=<%= $package_name %>
+_qtver=6.3.0
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='A cross-platform application and UI framework'
+depends=(shared-mime-info
+         static-compat-brotli static-compat-dbus static-compat-double-conversion
+         static-compat-fontconfig static-compat-libb2 static-compat-libglvnd
+         static-compat-libice static-compat-libinput static-compat-libjpeg-turbo
+         static-compat-libxdamage static-compat-libxkbcommon static-compat-libxmu
+         static-compat-libxxf86vm static-compat-md4c static-compat-pcre2
+         static-compat-sqlite static-compat-xcb-util-image static-compat-xcb-util-keysyms
+         static-compat-xcb-util-renderutil static-compat-vulkan-headers
+         static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans)
+makedepends=(static-compat-cmake xdg-utils ninja)
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+% if ($patch_files->size || content_for('prepare')->size) {
+prepare () {
+  cd $_pkgfqn
+
+% if ($patch_files->size) {
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+% }
+<%== content_for 'prepare' %>\
+}
+
+% }
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  static-compat-cmake<%== $static_suffix %> -G Ninja -B build -S $_pkgfqn \\
+    $ccache_args \\
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \\
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \\
+    -DINSTALL_BINDIR=lib/qt6/bin \\
+    -DINSTALL_DOCDIR=share/doc/qt6 \\
+    -DINSTALL_ARCHDATADIR=lib/qt6 \\
+    -DINSTALL_DATADIR=share/qt6 \\
+    -DINSTALL_INCLUDEDIR=include/qt6 \\
+    -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \\
+    -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \\
+    -DINPUT_openssl=linked \\
+    -DQT_FEATURE_openssl_linked=ON \\
+    -DQT_FEATURE_static_runtime=ON \\
+    -DQT_FEATURE_system_sqlite=ON \\
+    -DQT_FEATURE_system_xcb_xinput=ON \\
+    -DQT_FEATURE_xcb=ON \\
+    -DQT_FEATURE_xcb_sm=ON \\
+    -DQT_FEATURE_icu=OFF \\
+    -DQT_FEATURE_kms=OFF \\
+    -DQT_FEATURE_eglfs=OFF \\
+    -DQT_FEATURE_gbm=OFF \\
+    -DQT_FEATURE_linuxfb=OFF \\
+    -DQT_FEATURE_gssapi=OFF \\
+    -DQT_FEATURE_fontconfig=ON \\
+    -DGLIB2_USE_PKG_CONFIG=ON \\
+    -DCMAKE_INSTALL_OLDINCLUDEDIR=$static_compat_prefix/include \\
+    -DGSSAPI_INCLUDE_DIRS=$static_compat_prefix/include \\
+    -DICU_INCLUDE_DIR=$static_compat_prefix/include \\
+    -DLibdrm_INCLUDE_DIR=$static_compat_prefix/include \\
+    -Dgbm_INCLUDE_DIR=$static_compat_prefix/include
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgname
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir" -type f -name '*.prl' \\
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  rm -r "$pkgdir/$static_compat_prefix"/share/doc
+}

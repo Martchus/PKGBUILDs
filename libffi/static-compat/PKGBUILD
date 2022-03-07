@@ -1,0 +1,51 @@
+# Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Stéphane Gaudreault <stephane@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libffi
+pkgname=static-compat-$_pkgname
+pkgver=3.4.2
+pkgrel=1
+pkgdesc='Portable foreign function interface library'
+arch=('x86_64')
+url='https://sourceware.org/libffi/'
+license=('MIT')
+depends=('glibc-static-compat')
+makedepends=('static-compat-configure')
+checkdepends=('dejagnu')
+options=(!emptydirs staticlibs)
+source=(https://github.com/libffi/libffi/releases/download/v${pkgver}/libffi-${pkgver}.tar.gz)
+sha256sums=('540fb721619a6aba3bdeef7d940d8e9e0e6d2c193595bc243241b77ff9e93620')
+b2sums=('a8137bc895b819f949fd7705e405be627219c6d1fdef280253330f7407d4a548bb057d7bb0e9225d1767d42f9bf5f0ab3c455db1c3470d7cc876bb7b7d55d308')
+
+prepare() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  autoreconf -fiv
+}
+
+build() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  static-compat-configure \
+    --disable-shared \
+    --enable-static \
+    --enable-pax_emutramp
+  make
+}
+
+check() {
+  source static-compat-environment
+  make -C $_pkgname-$pkgver check
+}
+
+package() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/{man,info}
+  install -Dm 644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+}
+
+# vim: ts=2 sw=2 et:

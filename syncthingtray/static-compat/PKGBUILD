@@ -1,0 +1,126 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# if tests fail due to timeout, you can try to increase the timeout
+# by setting SYNCTHING_TEST_TIMEOUT_FACTOR
+
+# set the web view provider: either webkit, webengine, auto or none
+_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
+
+# set the JavaScript provider: either script, qml, auto or none
+_js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
+
+# set to non-empty string to enable KIO plugin to show Syncthing actions in
+# Dolphin file browser
+_enable_kio_plugin=${SYNCTHING_TRAY_ENABLE_KIO_PLUGIN:-0}
+
+# set to non-empty string to enable Plasmoid for Plasma 5 desktop
+_enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID:-0}
+
+# set whether libsyncthing should be enabled: either ON or OFF
+_enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
+
+[[ $_enable_kio_plugin == 0 ]] && _enable_kio_plugin=
+[[ $_enable_plasmoid == 0 ]] && _enable_plasmoid=
+
+_reponame=syncthingtray
+pkgname=static-compat-syncthingtray
+_name=${pkgname#static-compat-}
+pkgver=1.1.17
+pkgrel=1
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+pkgdesc='Tray application for Syncthing'
+license=('GPL')
+depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compat-boost' 'static-compat-qt6-svg' 'static-compat-openssl')
+[[ $_webview_provider == none ]] && depends+=('static-compat-qt6-base')
+[[ $_webview_provider == webkit ]] && depends+=('static-compat-qt6-webkit')
+[[ $_webview_provider == webengine ]] && depends+=('static-compat-qt6-webengine')
+[[ $_js_provider == script ]] && depends+=('static-compat-qt6-script')
+[[ $_js_provider == qml ]] && depends+=('static-compat-qt6-declarative')
+[[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
+[[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'clang')
+[[ $_enable_libsyncthing == ON ]] && makedepends+=('git' 'go')
+checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
+[[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
+[[ $_enable_plasmoid ]] && makedepends+=('static-compat-plasma-framework' 'extra-cmake-modules')
+url="https://github.com/Martchus/${_reponame}"
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+[[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
+sha256sums=('11cdc8fdc3f5109af0bff0359ecb12f254348abf55c64c790c487d2c9b0af973'
+            'SKIP')
+
+[[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON
+
+ephemeral_port() {
+  comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1
+}
+
+prepare() {
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  [[ $_enable_libsyncthing == ON ]] || return 0
+
+  # ensure path where the libsyncthing Git submodule would be cloned into exists
+  mkdir -p 'libsyncthing/go/src/github.com/syncthing'
+  pushd 'libsyncthing/go/src/github.com/syncthing'
+
+  # delete empty sub directory of the Git submodule present in the archive from GitHub
+  [[ -d syncthing ]] && rm -r syncthing
+
+  # link libsyncthing repo where the Git submodule would have been cloned into
+  ln -sf "$srcdir/syncthing" .
+
+  popd
+}
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  export CXXFLAGS+=' -static-libgcc -static-libstdc++'
+  export LDFLAGS+=' -static-libgcc -static-libstdc++'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  local additional_args=
+  [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
+  [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
+
+  static-compat-cmake \
+    -G Ninja \
+    -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DBUILTIN_TRANSLATIONS:BOOL=ON \
+    -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
+    -DWEBVIEW_PROVIDER="${_webview_provider}" \
+    -DJS_PROVIDER="${_js_provider}" \
+    -DSYSTEMD_SUPPORT=ON \
+    -DBoost_USE_STATIC_RUNTIME:BOOL=ON \
+    -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
+    -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
+    $additional_args \
+    .
+  ninja
+}
+
+check() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  export CXXFLAGS+=' -static-libgcc -static-libstdc++'
+  export LDFLAGS+=' -static-libgcc -static-libstdc++'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 ninja check
+}
+
+package() {
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  DESTDIR="${pkgdir}" ninja install
+}

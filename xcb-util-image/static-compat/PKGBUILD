@@ -1,0 +1,46 @@
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+
+_pkgname=xcb-util-image
+pkgname=static-compat-$_pkgname
+pkgver=0.4.0
+pkgrel=3
+pkgdesc="Utility libraries for XC Binding - Port of Xlib's XImage and XShmImage functions"
+arch=('x86_64')
+url="https://xcb.freedesktop.org"
+license=('custom')
+depends=('static-compat-xcb-util')
+makedepends=('xorg-util-macros' 'static-compat-xorgproto' 'static-compat-configure')
+options=(staticlibs)
+source=("https://xcb.freedesktop.org/dist/${_pkgname}-${pkgver}.tar.bz2")
+sha512sums=('9b7202c054e1160f9ca97a86be1210d9fb47f2119f89ca85f15f20909cca884bfe0cb88e3e71c75b65e1a0a72b980066ccac810e41a91db895c74dde77440d4f')
+
+build() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  static-compat-configure --disable-shared --enable-static
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make check
+}
+
+package() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+
+  # avoid linker error
+  # /usr/bin/ld: /usr/static-compat/lib/libxcb-image.a(xcb_image.o): in function `xcb_create_pixmap_from_bitmap_data':
+  # (.text+0x14b7): undefined reference to `xcb_aux_create_gc'
+  sed -i 's|Requires:.*|\0 xcb-util|g' "$pkgdir/$static_compat_prefix"/lib/pkgconfig/xcb-image.pc
+
+  install -D -m644 COPYING \
+    "${pkgdir}"/usr/share/licenses/${pkgname}/COPYING
+}

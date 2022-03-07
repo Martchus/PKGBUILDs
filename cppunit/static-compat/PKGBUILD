@@ -1,0 +1,33 @@
+_pkgname=cppunit
+pkgname=static-compat-$_pkgname
+pkgver=1.15.1
+pkgrel=1
+pkgdesc="A C++ unit testing framework"
+arch=('x86_64')
+url="https://www.freedesktop.org/wiki/Software/cppunit"
+license=('LGPL')
+depends=('sh' 'gcc-libs-static-compat')
+makedepends=('static-compat-configure')
+options=('!emptydirs' 'staticlibs')
+source=(https://dev-www.libreoffice.org/src/${_pkgname}-${pkgver}.tar.gz)
+sha256sums=('89c5c6665337f56fd2db36bc3805a5619709d51fb136e51937072f63fcc717a7')
+
+build() {
+   source static-compat-environment
+   cd ${_pkgname}-${pkgver}
+   static-compat-configure --disable-shared
+   make
+}
+
+check() {
+  source static-compat-environment
+  cd ${_pkgname}-${pkgver}
+  make check
+}
+
+package() {
+   source static-compat-environment
+   cd ${_pkgname}-${pkgver}
+   make DESTDIR="${pkgdir}" install
+   rm -r "$pkgdir/$static_compat_prefix/share"
+}

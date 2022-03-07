@@ -1,0 +1,42 @@
+# Contributor:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Andrzej Giniewicz <gginiu@gmail.com>
+# Contributor: Johan Förberg <johan@forberg.se>
+
+_pkgname=zstd
+pkgname=static-compat-$_pkgname
+pkgver=1.5.2
+pkgrel=1
+pkgdesc='Zstandard - Fast real-time compression algorithm'
+arch=(x86_64)
+url='https://facebook.github.io/zstd/'
+license=(BSD GPL2)
+depends=(static-compat-{zlib,xz,lz4})
+makedepends=(gtest static-compat-environment)
+options=(!emptydirs staticlibs)
+source=(https://github.com/facebook/zstd/releases/download/v${pkgver}/zstd-${pkgver}.tar.zst{,.sig})
+sha256sums=('3ea06164971edec7caa2045a1932d757c1815858e4c2b68c7ef812647535c23f'
+            'SKIP')
+b2sums=('513e4526a92bcb59416b3457d186a30e554f9e0cf21d7114eb3e9fbcbd9d662c8d95cf0b06237f6fe3f756862c63de0aa146d6a23cb4111c16e6459608d115f1'
+        'SKIP')
+validpgpkeys=(4EF4AC63455FC9F4545D9B7DEF8FE99528B52FFD)
+
+build() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make check
+}
+
+package() {
+  source static-compat-environment
+  cd $_pkgname-$pkgver
+  make PREFIX="$static_compat_prefix" DESTDIR="$pkgdir/" install
+  rm -r "$pkgdir/$static_compat_prefix"/{bin,share/man}
+  find "$pkgdir/$static_compat_prefix" -iname '*.so*' -delete
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

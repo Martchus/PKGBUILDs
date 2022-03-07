@@ -1,0 +1,35 @@
+# Contributor: AndyRTR <andyrtr@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libxxf86vm
+pkgname=static-compat-$_pkgname
+pkgver=1.1.4
+pkgrel=4
+pkgdesc="X11 XFree86 video mode extension library"
+arch=('x86_64')
+license=('custom')
+url="https://xorg.freedesktop.org/"
+depends=('static-compat-libxext')
+makedepends=('static-compat-configure' 'static-compat-xorgproto')
+options=(staticlibs !emptydirs)
+source=(${url}/releases/individual/lib/libXxf86vm-${pkgver}.tar.bz2{,.sig})
+sha512sums=('c5f92d86e143db02ebb36bcd25618acaa2cb2831f5a23800a06dd431cd73b6702d95de8fe7407ce626336bf614c288d5256f4d87ea7781fad2ab6c517cbf09e0'
+            'SKIP')
+validpgpkeys=('4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E') # Alan Coopersmith <alan.coopersmith@oracle.com>
+
+build() {
+  source static-compat-environment
+  cd libXxf86vm-${pkgver}
+  static-compat-configure --disable-shared --enable-static
+  make
+}
+
+package()
+{
+  source static-compat-environment
+  cd libXxf86vm-${pkgver}
+  make DESTDIR="${pkgdir}" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

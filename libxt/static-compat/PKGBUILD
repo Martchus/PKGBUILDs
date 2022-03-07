@@ -1,0 +1,37 @@
+# Contributor: AndyRTR <andyrtr@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libxt
+pkgname=static-compat-$_pkgname
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="X11 toolkit intrinsics library"
+arch=('x86_64')
+url="https://xorg.freedesktop.org/"
+license=('custom')
+depends=('static-compat-libsm' 'static-compat-libx11')
+makedepends=('static-compat-configure' 'static-compat-xorgproto')
+options=(staticlibs !emptydirs)
+source=(${url}/releases/individual/lib/libXt-${pkgver}.tar.bz2{,.sig})
+sha512sums=('6877af61ba91eeed6b6f80471b84f354ad0ec0827249c7ee0a00c13508063fe8d2696dd400a4bdbc6ca2ff67cbe1317ad5ac24522fd96099dc56535e33ca052c'
+            'SKIP')
+validpgpkeys=('4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E') #Alan Coopersmith <alan.coopersmith@oracle.com>
+validpgpkeys+=('C52048C0C0748FEE227D47A2702353E0F7E48EDB') # "Thomas Dickey <dickey@invisible-island.net>"
+validpgpkeys+=('3BB639E56F861FA2E86505690FDD682D974CA72A') #"Matt Turner <mattst88@gmail.com>"
+
+build() {
+  source static-compat-environment
+  cd libXt-${pkgver}
+  static-compat-configure --disable-shared --enable-static
+  make
+}
+
+package() {
+  source static-compat-environment
+  cd libXt-${pkgver}
+  make DESTDIR="${pkgdir}" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/{man,doc}
+
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

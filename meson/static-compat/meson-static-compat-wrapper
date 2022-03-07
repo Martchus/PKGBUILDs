@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source static-compat-environment
+meson setup \
+  --prefix         "$static_compat_prefix" \
+  --libdir         "$static_compat_prefix"/lib \
+  --libexecdir     "$static_compat_prefix"/lib \
+  --bindir         "$static_compat_prefix"/bin \
+  --sbindir        "$static_compat_prefix"/bin \
+  --includedir     "$static_compat_prefix"/include \
+  --datadir        "$static_compat_prefix"/share \
+  --mandir         "$static_compat_prefix"/share/man \
+  --infodir        "$static_compat_prefix"/share/info \
+  --localedir      "$static_compat_prefix"/share/locale \
+  --sysconfdir     "$static_compat_prefix"/etc \
+  --localstatedir  "$static_compat_prefix"/var \
+  --sharedstatedir "$static_compat_prefix"/var/lib \
+  --buildtype      release \
+  --wrap-mode      nofallback \
+  --strip \
+  --default-library static \
+  "$@"

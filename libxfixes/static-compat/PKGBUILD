@@ -1,0 +1,37 @@
+# Contributor: Andreas Radke <andyrtr@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+_pkgname=libxfixes
+pkgname=static-compat-$_pkgname
+pkgver=6.0.0
+pkgrel=1
+pkgdesc="X11 miscellaneous 'fixes' extension library"
+arch=('x86_64')
+url="https://xorg.freedesktop.org/"
+license=('custom')
+depends=('static-compat-libx11')
+makedepends=('static-compat-xorgproto' 'static-compat-configure')
+options=(staticlibs !emptydirs)
+source=(${url}/releases/individual/lib/libXfixes-${pkgver}.tar.bz2{,.sig})
+sha512sums=('1985ef156f382e9a7e1cc7e044e0f626de1e4c82557a511cbcf6431994c0ac25b1f8b3a0293bd3089331593db8ce01d3a71ddec68f19b5fe6029d5082fb6885d'
+            'SKIP')
+
+validpgpkeys=('C41C985FDCF1E5364576638B687393EE37D128F8') # Matthieu Herrb <matthieu.herrb@laas.fr>
+validpgpkeys+=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
+
+build() {
+  source static-compat-environment
+  cd "libXfixes-${pkgver}"
+  static-compat-configure --disable-shared --enable-static
+  make
+}
+
+package() {
+  source static-compat-environment
+  cd "libXfixes-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  rm -r "$pkgdir/$static_compat_prefix"/share/man
+
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

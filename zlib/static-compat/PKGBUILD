@@ -1,0 +1,73 @@
+pkgbase=zlib-static-compat
+pkgname=(static-compat-zlib static-compat-minizip)
+epoch=1
+pkgver=1.2.12
+pkgrel=1
+arch=('x86_64')
+license=('custom')
+url="https://www.zlib.net/"
+makedepends=('static-compat-configure')
+options=('staticlibs')
+source=("https://zlib.net/zlib-${pkgver}.tar.gz"{,.asc})
+sha256sums=('91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9'
+            'SKIP')
+validpgpkeys=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA')
+
+prepare() {
+	cd "${srcdir}/zlib-$pkgver"
+	grep -A 24 '^  Copyright' zlib.h > LICENSE
+}
+
+build() {
+	source static-compat-environment
+
+	cd "${srcdir}/zlib-$pkgver"
+
+	static-compat-configure
+	make
+
+	cd contrib/minizip
+	cp Makefile Makefile.orig
+	cp ../README.contrib readme.txt
+	autoreconf --install
+	static-compat-configure
+	make
+}
+
+check() {
+	source static-compat-environment
+
+	cd "${srcdir}/zlib-$pkgver"
+	make test
+
+	cd contrib/minizip
+	make -f Makefile.orig test
+}
+
+package_static-compat-zlib() {
+	pkgdesc='Compression library implementing the deflate compression method found in gzip and PKZIP'
+	depends=('gcc-libs-static-compat')
+
+	source static-compat-environment
+
+	cd "${srcdir}/zlib-$pkgver"
+	make install DESTDIR="${pkgdir}"
+	rm -r "${pkgdir}/$static_compat_prefix/share/man"
+	rm "${pkgdir}/$static_compat_prefix/lib"/*.so*
+	install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/static-compat-zlib/LICENSE"
+}
+
+package_static-compat-minizip() {
+	pkgdesc='Mini zip and unzip based on zlib'
+	depends=('zlib-static-compat')
+
+	source static-compat-environment
+
+	cd "${srcdir}/zlib-$pkgver/contrib/minizip"
+	make install DESTDIR="${pkgdir}"
+	rm "${pkgdir}/$static_compat_prefix/lib"/*.so*
+	install -D -m644 "${srcdir}/zlib-$pkgver/LICENSE" "${pkgdir}/usr/share/licenses/static-compat-minizip/LICENSE"
+
+	# https://github.com/madler/zlib/pull/229
+	rm "${pkgdir}/$static_compat_prefix/include/minizip/crypt.h"
+}

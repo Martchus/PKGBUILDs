@@ -1,0 +1,78 @@
+# Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+# Contributor: Tom Gundersen <teg@jklm.no>
+# Contributor: John Proctor <jproctor@prium.net>
+
+_pkgname=libxml2
+pkgname=static-compat-$_pkgname
+pkgver=2.9.13
+pkgrel=8
+pkgdesc='XML parsing library, version 2'
+url='http://www.xmlsoft.org/'
+arch=(x86_64)
+license=(MIT)
+depends=(static-compat-zlib static-compat-xz)
+makedepends=(git)
+options=(!emptydirs staticlibs)
+_commit=41a34e1f4ffae2ce401600dbb5fe43f8fe402641  # tags/v2.9.10^0
+source=("git+https://gitlab.gnome.org/GNOME/libxml2.git#commit=$_commit"
+        libxml2-2.9.8-python3-unicode-errors.patch
+        no-fuzz.diff
+        https://www.w3.org/XML/Test/xmlts20130923.tar.gz)
+sha256sums=('SKIP'
+            '37eb81a8ec6929eed1514e891bff2dd05b450bcf0c712153880c485b7366c17c'
+            '3fc010d8c42b93e6d6f1fca6b598a561e9d2c8780ff3ca0c76a31efabaea404f'
+            '9b61db9f5dbffa545f4b8d78422167083a8568c59bd1129f94138f936cf6fc1f')
+
+pkgver() {
+  cd libxml2
+  git describe --tags | sed 's/-rc/rc/;s/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  source static-compat-environment
+  cd libxml2
+
+  mkdir build
+
+  # Use xmlconf from conformance test suite
+  ln -s xmlconf build/xmlconf
+
+  # https://src.fedoraproject.org/rpms/libxml2/tree/rawhide
+  git apply -3 ../libxml2-2.9.8-python3-unicode-errors.patch
+
+  # Do not run fuzzing tests
+  git apply -3 ../no-fuzz.diff
+
+  autoreconf -fiv
+}
+
+build() (
+  source static-compat-environment
+  cd libxml2/build
+
+  static-compat-configure \
+    --disable-shared \
+    --enable-static \
+    --with-threads \
+    --without-history \
+    --without-icu \
+    --without-docbook \
+    --without-html
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' libtool
+  make
+)
+
+#check() {
+#  source static-compat-environment
+#  make -C libxml2/build check
+#}
+
+package() {
+  source static-compat-environment
+  make -C libxml2/build DESTDIR="$pkgdir" install
+  rm -r "$pkgdir/$static_compat_prefix"/{bin,share/man,share/doc,share/gtk-doc}
+  install -Dm 644 libxml2/COPYING -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+# vim: ts=2 sw=2 et:

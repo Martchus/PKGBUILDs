@@ -49,7 +49,7 @@ build() {
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DDUMMY_BUILD_ACTION_ENABLED:BOOL=ON \
     -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator-git' \
-    -DBOOST_ASIO_IO_URING:BOOL=ON \
+    -DBOOST_ASIO_IO_URING:BOOL=OFF \
     .
   VERBOSE=1 ninja
 }

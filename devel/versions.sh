@@ -14,7 +14,7 @@ declare -A versions=(
     [dbus-soundrecorder]=1.2.3
     [geocoordinatecalculator]=1.1.3
     [qt5]=5.15.3
-    [qt6]=6.2.3
+    [qt6]=6.2.4
 )
 declare -A github_names=(
     [c++utilities]=cpp-utilities

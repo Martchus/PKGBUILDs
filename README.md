@@ -254,3 +254,6 @@ makes sense to make the static packages independent with their own headers and
 configuration files to avoid problems due to mismatching versions. Besides, some
 projects (such as Qt) do not support installing shared and static libraries
 within the same prefix at the same time because the config files would clash.
+
+## License
+All code is licensed under [GPL-2-or-later](LICENSE).

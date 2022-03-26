@@ -12,7 +12,7 @@ makedepends=('git')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install="$pkgname.install"
-source=("git://github.com/Martchus/${_pkgname}.git#branch=adjustments")
+source=("git+https://github.com/Martchus/${_pkgname}.git#branch=adjustments")
 md5sums=('SKIP')
 
 pkgver() {

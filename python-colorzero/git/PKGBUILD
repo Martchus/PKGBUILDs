@@ -14,7 +14,7 @@ depends=('python')
 makedepends=('git' 'python-setuptools')
 provides=("${_name}")
 conflicts=("${_name}")
-source=("git://github.com/waveform80/${_name2}.git")
+source=("git+https://github.com/waveform80/${_name2}.git")
 sha256sums=('SKIP')
 
 pkgver() {

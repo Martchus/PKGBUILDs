@@ -20,7 +20,7 @@ options=(!strip)
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git"
         "lmdb-safe::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/lmdb-safe.git"
-        'tabulate::git://github.com/p-ranav/tabulate.git')
+        'tabulate::git+https://github.com/p-ranav/tabulate.git')
 sha256sums=('SKIP' 'SKIP')
 
 pkgver() {

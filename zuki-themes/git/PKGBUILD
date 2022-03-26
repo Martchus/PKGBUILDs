@@ -12,7 +12,7 @@ optdepends=('gnome-themes-standard: required for the GTK3 theme')
 makedepends=('git')
 provides=('zukitwo-themes')
 conflicts=('zukitwo-themes')
-source=("$pkgname::git://github.com/lassekongo83/zuki-themes")
+source=("$pkgname::git+https://github.com/lassekongo83/zuki-themes")
 md5sums=('SKIP')
 
 pkgver() {

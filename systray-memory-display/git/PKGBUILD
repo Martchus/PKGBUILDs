@@ -16,7 +16,7 @@ makedepends=('qt5-base' 'git')
 provides=("${_name}")
 conflicts=("${_name}")
 url="https://github.com/doublejim/${_reponame}"
-source=("${_reponame}::git://github.com/doublejim/${_reponame}.git")
+source=("${_reponame}::git+https://github.com/doublejim/${_reponame}.git")
 sha256sums=('SKIP')
 
 pkgver() {

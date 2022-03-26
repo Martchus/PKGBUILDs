@@ -15,7 +15,7 @@ depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo' 'qt5
 makedepends=('boost' 'ruby' 'git')
 provides=('mkvtoolnix' 'mkvtoolnix-cli' 'mkvtoolnix-gui')
 conflicts=('mkvtoolnix')
-source=("${pkgname}::git://github.com/mbunkus/mkvtoolnix.git")
+source=("${pkgname}::git+https://github.com/mbunkus/mkvtoolnix.git")
 md5sums=('SKIP')
 
 pkgver() {

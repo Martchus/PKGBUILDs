@@ -255,5 +255,7 @@ configuration files to avoid problems due to mismatching versions. Besides, some
 projects (such as Qt) do not support installing shared and static libraries
 within the same prefix at the same time because the config files would clash.
 
-## License
+## Copyright notice and license
+Copyright © 2015-2022 Marius Kittler
+
 All code is licensed under [GPL-2-or-later](LICENSE).

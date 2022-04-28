@@ -148,20 +148,20 @@ information.
 
 There are also pkg-config files, but those aren't really tested.
 
-qbs and windeployqt currently don't work very well (see issues). Using the
-static libraries or mxedeployqt might be an alternative for windeployqt.
+`qbs` and `windeployqt` currently don't work very well (see issues). Using the
+static libraries or mxedeployqt might be an alternative to windeployqt.
 
 ### Tested build and deployment tools for mingw-w64-qt6 packages
 In order to build a Qt-based project using mingw-w64-qt6 packages one also needs
-to install the regular `qt6-base` package for development tools such as moc. The
-packages `qt6-tools` and `qt6-declarative` contain also native binaries which
-might be required by some projects. At this point the setup can break if the
-version of regular packages and the versions of the mingw-w64 packages differ. I
-cannot do anything about it except trying to upgrade the mingw-w64 packages as
-fast as possible. There's actually a lengthy discussion about this topi on the
-[Qt development
-mailinglist](https://lists.qt-project.org/pipermail/development/2021-September/
-041732.html) so the situation might improve in the future. Note that as of
+to install the regular `qt6-base` package for development tools such as `moc`.
+The packages `qt6-tools`, `qt6-declarative` and `qt6-shadertools` contain also
+native binaries which might be required by some projects. At this point the
+setup can break if the version of regular packages and the versions of the
+mingw-w64 packages differ. I cannot do anything about it except trying to
+upgrade the mingw-w64 packages as fast as possible. There's actually a lengthy
+discussion about this topi on the
+[Qt development mailinglist](https://lists.qt-project.org/pipermail/development/2021-September/041732.html)
+so the situation might improve in the future. Note that as of
 qtbase commit `5ffc744b791a114a3180a425dd26e298f7399955` (requires Qt > 6.2.1)
 one can specify `-DQT_NO_PACKAGE_VERSION_CHECK=TRUE` to ignore the strict
 versioning check.

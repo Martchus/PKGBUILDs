@@ -2,36 +2,41 @@
 
 _pkgname=libglvnd
 pkgname=static-compat-$_pkgname
-pkgver=1.4.0
+pkgver=1.0.0  # intentionally outdated for compatibility
 pkgrel=1
 pkgdesc="The GL Vendor-Neutral Dispatch library"
 arch=('x86_64')
 url="https://github.com/NVIDIA/libglvnd"
 license=('custom:BSD-like')
 depends=('static-compat-libxext' 'mesa' 'opengl-driver')
-makedepends=('static-compat-libx11' 'static-compat-xorgproto' 'python' 'static-compat-meson')
+makedepends=('static-compat-libx11' 'static-compat-xorgproto' 'python' 'static-compat-configure')
 options=(staticlibs)
 source=("$_pkgname-$pkgver.tar.gz::https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v${pkgver}/libglvnd-v${pkgver}.tar.gz"
         LICENSE)
-sha512sums=('ca741bdd7ac2fba919f1f85e685e92396bc1cdc436e77bca921d87738bb273a6d48f77650e2781593ce9084dcec6b1fa8f78dc84534a225629e7f61d92df8d89'
+sha512sums=('c6040b0a508a6b74d7113f8e375fcaf93ec6f2875504953f30e2882e58e22f954bd4027a7d9ab8ac41abef266039e5834fdaf4ce2a69d5d98acf3bbdd54f04b6'
             'bf0f4a7e04220a407400f89226ecc1f798cc43035f2538cc8860e5088e1f84140baf0d4b0b28f66e4b802d4d6925769a1297c24e1ba39c1c093902b2931781a5')
 
 build() {
   source static-compat-environment
   export PATH=$PWD:$PATH
+  export CFLAGS+=' -Wno-error=array-parameter'
   export LDFLAGS+=" $static_compat_prefix/lib/libX11.a $static_compat_prefix/lib/libXau.a $static_compat_prefix/lib/libxcb.a $static_compat_prefix/lib/libXau.a $static_compat_prefix/lib/libXdmcp.a -ldl"
   export LD=$GCC
   printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
-  static-compat-meson $_pkgname-v$pkgver build \
-    -D gles1=false
-
-  ninja -v -C build
+  cd $_pkgname-v$pkgver
+  ./autogen.sh
+  static-compat-configure
+  make
 }
 
 package() {
   source static-compat-environment
-  # libglvnd needs mesa for indirect rendering
-  DESTDIR="$pkgdir" ninja -C build install
+  cd $_pkgname-v$pkgver
+  mkdir -p "$pkgdir/$static_compat_prefix/include"
+  DESTDIR="$pkgdir" make install
+  # install missing headers manually
+  cp -r --target-directory="$pkgdir/$static_compat_prefix/include" include/{EGL,GL,GLES,KHR}
   
+  cd ..
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }

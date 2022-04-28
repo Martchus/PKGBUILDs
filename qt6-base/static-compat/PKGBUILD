@@ -97,6 +97,8 @@ build() {
     -DQT_FEATURE_linuxfb=OFF \
     -DQT_FEATURE_gssapi=OFF \
     -DQT_FEATURE_fontconfig=ON \
+    -DQT_FEATURE_dynamicgl=OFF \
+    -DQT_FEATURE_opengl_dynamic=OFF \
     -DGLIB2_USE_PKG_CONFIG=ON \
     -DCMAKE_INSTALL_OLDINCLUDEDIR=$static_compat_prefix/include \
     -DGSSAPI_INCLUDE_DIRS=$static_compat_prefix/include \

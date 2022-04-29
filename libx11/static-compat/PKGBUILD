@@ -3,8 +3,8 @@
 
 _pkgname=libx11
 pkgname=static-compat-$_pkgname
-pkgver=1.7.5
-pkgrel=3
+pkgver=1.6.12  # intentionally outdated for compatibility
+pkgrel=1
 pkgdesc="X11 client-side library"
 arch=(x86_64)
 url="https://xorg.freedesktop.org/"
@@ -12,19 +12,22 @@ depends=('static-compat-libxcb')
 makedepends=('static-compat-configure' 'xorg-util-macros' 'static-compat-xtrans' 'static-compat-xorgproto')
 license=('custom')
 options=(!emptydirs staticlibs)
-source=(${url}/releases/individual/lib/libX11-${pkgver}.tar.xz{,.sig})
-sha512sums=('ef33e2f631226cab27657f46e1fd4cfc928f62f928d8297474e7b993017c8f92b60272eed6515990cdf3a9d34581837b7a3896e584f3546dd26f3790034df347'
+source=(${url}/releases/individual/lib/libX11-${pkgver}.tar.bz2{,.sig})
+sha512sums=('79df7d61d9009b0dd3b65f67a62189aa0a43799c01026b3d2d534092596a0b67f246af5e398a89eb1ccc61a27335f81be8262b8a39768a76f62d862cd7415a47'
             'SKIP')
-#validpgpkeys=('4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E') # Alan Coopersmith <alanc@freedesktop.org>
-#validpgpkeys=('C41C985FDCF1E5364576638B687393EE37D128F8') # Matthieu Herrb <matthieu.herrb@laas.fr>
-validpgpkeys=('3BB639E56F861FA2E86505690FDD682D974CA72A') # Matt Turner <mattst88@gmail.com>
-#validpgpkeys=('995ED5C8A6138EB0961F18474C09DD83CAAA50B2') # Adam Jackson <ajax@nwnk.net>
+validpgpkeys=('4A193C06D35E7C670FA4EF0BA2FB9E081F2D130E') # Alan Coopersmith <alanc@freedesktop.org>
+validpgpkeys+=('C41C985FDCF1E5364576638B687393EE37D128F8') # Matthieu Herrb <matthieu.herrb@laas.fr>
+validpgpkeys+=('3BB639E56F861FA2E86505690FDD682D974CA72A') # Matt Turner <mattst88@gmail.com>
+validpgpkeys+=('995ED5C8A6138EB0961F18474C09DD83CAAA50B2') # Adam Jackson <ajax@nwnk.net>
 #validpgpkeys=('C383B778255613DFDB409D91DB221A6900000011') # "Keith Packard <keithp@keithp.com>"
 
 build() {
   source static-compat-environment
   cd libX11-${pkgver}
-  static-compat-configure --disable-shared --enable-static --disable-xf86bigfont
+  # build the shared version here as well; if we want GLX (which must be shared) then libX11 also
+  # needs to be shared to avoid having two copies of the lib in the apps address space which would
+  # cause crashes (libX11 should be stable enough to avoid bundling it anyways)
+  static-compat-configure --enable-shared --enable-static --disable-xf86bigfont
   make
 }
 

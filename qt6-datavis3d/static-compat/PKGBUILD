@@ -31,6 +31,8 @@ build() {
     $ccache_args \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DGLIB2_USE_PKG_CONFIG=ON \
+    -DWAYLAND_USE_PKG_CONFIG=ON \
+    -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     -DQT_FEATURE_static_runtime=ON \
     -DFEATURE_pkg_config=ON
   VERBOSE=1 cmake --build build

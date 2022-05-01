@@ -41,19 +41,21 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0008-Fix-crashes-in-rasterization-code-using-setjmp.patch'
         '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
         '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
-        '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch')
+        '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch'
+        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch')
 sha256sums=('b865aae43357f792b3b0a162899d9bf6a1393a55c4e5e4ede5316b157b1a0f99'
-            'c570a73b499f2b7c6d24da37bcfbaef900d5cde131c1d78ef871e8def0043395'
-            '2ccf9394c8d9eebbef1ce21bd854b995240084defafc9f1ff72a5cb6859f4da3'
-            '4fa0d685cee2b918e7bbfe9e870a707eca6dcd74a53a3c95c032d9bd91fa21bf'
-            '8f520ef33be9cf2d9b1b9f99deae3608770837ba587039c7bd534bded4a919dd'
-            '482d48e8f0462e85155d1d02a64e7372b6d852a45d74e677f33d3726d01d3ab4'
-            '30ab970e33d7ceaec711ec20aeeb2d9d4c84615cfca92e657d3fb72f83e1e6a5'
-            '414413e6882746457259e7d2c2d332566fa818b0fb8396c0344b2931d106c7c3'
-            '6d48fa790e14af053eb2dd0146688bc7334bb9123b7575d4229e2a030f0f5a75'
-            '909e94ac3566475a858302f92bcc2c5297721ec49f1598bf1708389761c15f05'
-            'dc4dfcb55e1de9e9f7d2d16fca3d743f03f35418989e908b39a533b22375c099'
-            '50a2d5ee429e9fc9994175a5cb8f205ad4b252e35e800d3508c1d49382adcf85')
+            '3bd925d113a0ae1d3db5e6e001fb745ec0625d3212686aeaf9a0b121a48afc51'
+            'f68fa8937d59579ef60d769f7ca0b308216ab360552aae6fd63e86d6140ff04f'
+            'c0ce8ffcbc56e502604346d71b81d5fc8bdf625525b6330ba9ab64e10f2d7d5a'
+            '4af1a6c2f75cd979ff9ed07c4e78da638668523a54370884978934ac1bbaffd7'
+            '44dd65f1fac710cfa1e3fc36606026b8f2d5513ec346fc177231ab98a1cc06fa'
+            '393bc8ad824198a9f94d46bb4553f1f4b644ff156da522d1be387518dcf69f8b'
+            '0fc110150906fc6af37ad9549e92258923f0c6922dc3fca163fb200eb54df940'
+            '5a88e320849fe4625687a8e3e2239f59635b02852d2e0c42f7f532a7cb459889'
+            '85495ac317f403f8b406e5d85afd106cacc855190b351f6ee97a14598024c9d1'
+            '179d7e3bf2c25a5f098a9fb5ed22f659dd094588a5a418989e11a2afb165428b'
+            '80a5839cc2b60d3cd68e6abb365997c70770b8aa19fbbc8b80f82bac562e2c11'
+            'ce926322642daaae84094801da24b10fb832d5b9ac46c3fc1d591d2a111bcc36')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

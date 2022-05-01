@@ -33,7 +33,7 @@ pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=('GPL')
-depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compat-boost' 'static-compat-qt6-svg' 'static-compat-openssl')
+depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compat-boost' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-openssl')
 [[ $_webview_provider == none ]] && depends+=('static-compat-qt6-base')
 [[ $_webview_provider == webkit ]] && depends+=('static-compat-qt6-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('static-compat-qt6-webengine')
@@ -41,7 +41,7 @@ depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compa
 [[ $_js_provider == qml ]] && depends+=('static-compat-qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
-makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'clang')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'numix-icon-theme-git' 'clang')
 [[ $_enable_libsyncthing == ON ]] && makedepends+=('git' 'go')
 checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
@@ -91,15 +91,23 @@ build() {
   [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
   [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
 
-  static-compat-cmake \
-    -G Ninja \
+  static-compat-cmake -G Ninja \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DQT_PACKAGE_PREFIX:STRING='Qt6' \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
     -DJS_PROVIDER="${_js_provider}" \
     -DSYSTEMD_SUPPORT=ON \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
+    -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
+    -DSVG_SUPPORT:BOOL=ON \
+    -DSVG_ICON_SUPPORT:BOOL=ON \
     -DBoost_USE_STATIC_RUNTIME:BOOL=ON \
+    -DGLIB2_USE_PKG_CONFIG:BOOL=ON \
+    -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
+    -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
     -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
     $additional_args \

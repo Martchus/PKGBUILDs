@@ -1,7 +1,7 @@
 From 3a7e6c01e86ff8b4ffaec5a7690d680198d59f57 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 26 Jun 2021 22:24:12 +0200
-Subject: [PATCH 08/11] Fix crashes in rasterization code using setjmp
+Subject: [PATCH 08/12] Fix crashes in rasterization code using setjmp
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

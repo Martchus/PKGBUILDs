@@ -92,6 +92,50 @@ do
         done
     done
     done
+    pkg_name=static-compat-$project
+    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.!(*.sig))
+    if [[ ${#pkg_files[@]} == 0 ]]; then
+        echo "no static-compat package for $project/v$version present"
+    else
+        latest_pkg_file=${pkg_files[-1]}
+
+        # extract arch linux package
+        pkg_file_name=${latest_pkg_file##*/}
+        bsdtar xJf "$latest_pkg_file"
+
+        # locate the license file
+        license_file=usr/share/licenses/$pkg_name/LICENSES-linux-distribution.md
+        if [[ ! -f $license_file ]]; then
+            echo "the package $latest_pkg_file does not include the expected license file $license_file"
+        fi
+
+        binaries=(usr/static-compat/bin/*)
+        arch=x86_64-pc-linux-gnu
+        for binary in ${binaries[@]}; do
+            base_name=${binary##*/}
+            symlink_name=$base_name-$arch
+            binary_name=$base_name-$version-$arch
+
+            # check whether upload already exists
+            zip_file="$binary_name.tar.xz"
+            if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
+                echo "auto-skipping $project/v$version; $zip_file already present"
+                continue
+            elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
+                echo "auto-skipping $project/v$version; $zip_file already present (dry-run)"
+                continue
+            fi
+
+            # create zip file
+            echo "zipping $binary to $zip_file"
+            mv "$binary" "$binary_name"
+            ln -s "$binary_name" "$symlink_name"
+            #license_file_2=$project-$version-$arch-LICENSES.md
+            #cp "$license_file" "$license_file_2"
+            bsdtar acf "$zip_file" "$binary_name" "$symlink_name"
+            zip_files+=("$zip_file")
+        done
+    fi
 
     # upload created zip files
     if [[ ${#zip_files[@]} == 0 ]]; then

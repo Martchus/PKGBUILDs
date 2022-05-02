@@ -7,17 +7,17 @@
 _webview_provider=${TAGEDITOR_WEBVIEW_PROVIDER:-none}
 
 # set the JavaScript provider: either script, qml, auto or none
-_js_provider=${TAGEDITOR_JS_PROVIDER:-none}
+_js_provider=${TAGEDITOR_JS_PROVIDER:-qml}
 
 # whether the Qt GUI is enabled: ON or OFF
-_qt_gui=${TAGEDITOR_QT_GUI:-OFF}
+_qt_gui=${TAGEDITOR_QT_GUI:-ON}
 
 # whether the experimental JSON export is enabled: ON or OFF
 _json_export=${TAGEDITOR_JSON_EXPORT:-OFF}
 
 _reponame=tageditor
 pkgname=static-compat-tageditor
-_name=${pkgname#static-compat}
+_name=${pkgname#static-compat-}
 pkgver=3.7.0
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -30,7 +30,7 @@ license=('GPL')
 [[ $_js_provider == qml ]] && depends+=('qt6-declarative')
 makedepends=('static-compat-cmake'  'static-compat-tagparser' 'ninja')
 [[ $_json_export == ON ]] && makedepends+=('reflective-rapidjson')
-[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-xdg-utils' 'static-compat-qt6-tools' 'clang' 'mesa')
+[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'numix-icon-theme-git' 'clang')
 checkdepends=('static-compat-cppunit' 'jq')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -40,21 +40,30 @@ build() {
   check_buildoption ccache y && ccache_args='
     -DCMAKE_C_COMPILER_LAUNCHER=ccache
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  export CXXFLAGS+=' -static-libgcc -static-libstdc++'
+  export LDFLAGS+=' -static-libgcc -static-libstdc++'
   source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  static-compat-cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
+
+  static-compat-cmake -G Ninja \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DQT_PACKAGE_PREFIX:STRING='Qt6' \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
-    -DWIDGETS_GUI="${_qt_gui}" \
-    -DQUICK_GUI=OFF \
     -DJS_PROVIDER="${_js_provider}" \
-    -DENABLE_JSON_EXPORT="${_json_export}" \
-    -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator' \
-    -DSTATIC_LINKAGE:BOOL=ON \
-    -DNO_STATIC_ENFORCE:BOOL=ON \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
+    -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
+    -DSVG_SUPPORT:BOOL=ON \
+    -DSVG_ICON_SUPPORT:BOOL=ON \
+    -DBoost_USE_STATIC_RUNTIME:BOOL=ON \
+    -DGLIB2_USE_PKG_CONFIG:BOOL=ON \
+    -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
+    -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     .
   ninja
 }

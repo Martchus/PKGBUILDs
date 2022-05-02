@@ -1,0 +1,65 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# set whether the Qt Quick GUI should be enabled: set to either ON or OFF
+_quick_gui=${PASSWORD_MANAGER_QUICK_GUI:-OFF}
+
+_reponame=passwordmanager
+pkgname=static-compat-passwordmanager
+_name=${pkgname#static-compat-}
+pkgver=4.1.9
+pkgrel=1
+arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
+license=('GPL')
+depends=('static-compat-qt6-base' 'static-compat-qtutilities' 'static-compat-passwordfile')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'numix-icon-theme-git' 'clang')
+url="https://github.com/Martchus/${_reponame}"
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('c2ad78bd57308a7424c4c856e7404f4bb3cdf23b83d98a7b0e6c03beaf008875')
+
+# add further dependencies for the Qt Quick GUI (only kirigami2 is "pluggable")
+if [[ $_quick_gui == ON ]]; then
+    depends+=('static-compat-qt6-declarative' 'static-compat-kirigami2')
+fi
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  export CXXFLAGS+=' -static-libgcc -static-libstdc++'
+  export LDFLAGS+=' -static-libgcc -static-libstdc++'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  static-compat-cmake -G Ninja \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DBUILTIN_TRANSLATIONS:BOOL=ON \
+    -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
+    -DWEBVIEW_PROVIDER="${_webview_provider}" \
+    -DJS_PROVIDER="${_js_provider}" \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
+    -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
+    -DSVG_SUPPORT:BOOL=ON \
+    -DSVG_ICON_SUPPORT:BOOL=ON \
+    -DBoost_USE_STATIC_RUNTIME:BOOL=ON \
+    -DGLIB2_USE_PKG_CONFIG:BOOL=ON \
+    -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
+    -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
+    -DQUICK_GUI="$_quick_gui" \
+    .
+  ninja
+}
+
+package() {
+  source static-compat-environment
+  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  DESTDIR="${pkgdir}" ninja install
+}

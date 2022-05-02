@@ -4,38 +4,43 @@
 # you also find the URL of a binary repository.
 
 _reponame=passwordfile
-pkgname=passwordfile
+pkgname=static-compat-passwordfile
+_name=${pkgname#static-compat-}
 pkgver=5.0.7
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
 license=('GPL')
-depends=('c++utilities' 'openssl' 'zlib')
-optdepends=("$pkgname-doc: API documentation")
-makedepends=('cmake' 'ninja')
-checkdepends=('cppunit')
+depends=('static-compat-c++utilities' 'static-compat-openssl' 'static-compat-zlib')
+optdepends=("$_name-doc: API documentation")
+makedepends=('static-compat-cmake' 'ninja')
+checkdepends=('static-compat-cppunit')
 install=
 url="https://github.com/Martchus/${_reponame}"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('03a0ced7ecfce18ec35104dedb73eec457875ff72859290c11616b36b2da0bbb')
 
 build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake \
+  static-compat-cmake \
     -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
     .
   ninja
 }
 
 check() {
+  source static-compat-environment
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   ninja check
 }
 
 package() {
+  source static-compat-environment
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   DESTDIR="${pkgdir}" ninja install
 }

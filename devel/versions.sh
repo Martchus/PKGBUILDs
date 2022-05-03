@@ -1,11 +1,11 @@
 #!/bin/bash
 declare -A versions=(
-    [syncthingtray]=1.1.17
+    [syncthingtray]=1.1.18
     [c++utilities]=5.14.0
-    [qtutilities]=6.6.0
-    [qtforkawesome]=0.0.3
-    [tagparser]=11.1.0
-    [tageditor]=3.7.0
+    [qtutilities]=6.6.1
+    [qtforkawesome]=0.0.4
+    [tagparser]=11.2.0
+    [tageditor]=3.7.1
     [passwordfile]=5.0.7
     [passwordmanager]=4.1.9
     [videodownloader]=1.3.6

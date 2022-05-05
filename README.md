@@ -126,7 +126,7 @@ cause conflicts. However, the workflow is quite simple:
 ## Brief documentation about mingw-w64-qt packages
 The Qt project does not support building Qt under GNU/Linux when targeting
 mingw-w64. With Qt 6 they also stopped 32-bit builds. They also don't provide
-static builds the mingw-w64 target. They are also relying a lot on their bundled
+static builds targeting mingw-w64. They are also relying a lot on their bundled
 libraries while my builds aim to build dependencies separately. So expect some
 rough edges when using my packaging.
 

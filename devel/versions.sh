@@ -1,6 +1,6 @@
 #!/bin/bash
 declare -A versions=(
-    [syncthingtray]=1.1.18
+    [syncthingtray]=1.1.19
     [c++utilities]=5.14.0
     [qtutilities]=6.6.1
     [qtforkawesome]=0.0.4

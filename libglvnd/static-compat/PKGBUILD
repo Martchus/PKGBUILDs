@@ -3,13 +3,13 @@
 _pkgname=libglvnd
 pkgname=static-compat-$_pkgname
 pkgver=1.0.0  # intentionally outdated for compatibility
-pkgrel=1
+pkgrel=2
 pkgdesc="The GL Vendor-Neutral Dispatch library"
 arch=('x86_64')
 url="https://github.com/NVIDIA/libglvnd"
 license=('custom:BSD-like')
 depends=('static-compat-libxext' 'mesa' 'opengl-driver')
-makedepends=('static-compat-libx11' 'static-compat-xorgproto' 'python' 'static-compat-configure')
+makedepends=('static-compat-libx11' 'static-compat-xorgproto' 'python' 'static-compat-configure' 'patchelf')
 options=(staticlibs)
 source=("$_pkgname-$pkgver.tar.gz::https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v${pkgver}/libglvnd-v${pkgver}.tar.gz"
         LICENSE)
@@ -34,9 +34,27 @@ package() {
   cd $_pkgname-v$pkgver
   mkdir -p "$pkgdir/$static_compat_prefix/include"
   DESTDIR="$pkgdir" make install
+
   # install missing headers manually
   cp -r --target-directory="$pkgdir/$static_compat_prefix/include" include/{EGL,GL,GLES,KHR}
-  
+
+  # make shared libs explicitly depend on "our" libGLdispatch.so.0 and libdl.so.2 as otherwise
+  # apparently sometimes the version from /usr/lib is used which leads to linker errors:
+  # g++ test.cpp -lGLX -lOpenGL
+  # /usr/bin/ld: /usr/static-compat/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../lib/libGLX.so: undefined reference to `dlsym@GLIBC_2.2.5'
+  # /usr/bin/ld: /usr/static-compat/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../lib/libGLX.so: undefined reference to `dlclose@GLIBC_2.2.5'
+  # /usr/bin/ld: /usr/static-compat/lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../lib/libGLX.so: undefined reference to `dlopen@GLIBC_2.2.5'
+  # /usr/bin/ld: /usr/lib/libGLdispatch.so.0: undefined reference to `dlsym@GLIBC_2.34'
+  # collect2: error: ld returned 1 exit status
+  # note: This problem occurred when the normal libglvnd was updated to 1.4.0-2 for adding the debug option (1.4.0-1 still worked). Note
+  #       that the update removed `libdl.so.2` as needed shared library from those libs. Maybe that changed the linker behavior.
+  for lib in "$pkgdir/$static_compat_prefix"/lib/lib*.so; do
+    patchelf \
+      --add-needed "$static_compat_prefix"/lib/libdl.so.2 \
+      --replace-needed libGLdispatch.so.0 "$static_compat_prefix"/lib/libGLdispatch.so.0 \
+      "$lib"
+  done
+
   cd ..
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }

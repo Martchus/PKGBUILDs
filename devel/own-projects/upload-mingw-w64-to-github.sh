@@ -69,6 +69,12 @@ do
             base_name=${binary##*/}
             base_name=${base_name%-static.exe}
             symlink_name=$base_name-$arch.exe
+            # consider Qt 6 the suffixless default and use suffix for Qt 5 version instead
+            if  [[ $base_name =~ .*-qt6 ]]; then
+                base_name=${base_name%-qt6}
+            else
+                base_name=${base_name}-qt5
+            fi
             binary_name=$base_name-$version-$arch.exe
 
             # check whether upload already exists

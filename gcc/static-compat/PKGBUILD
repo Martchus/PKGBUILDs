@@ -1,7 +1,7 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->glibc->binutils->gcc
 # NOTE: libtool requires rebuilt with each new gcc version
 
-pkgname=({gcc,gcc-libs,lib32-gcc-libs,gcc-fortran,gcc-ada,gcc-d}-static-compat)
+pkgname=({gcc,gcc-libs,lib32-gcc-libs,gcc-fortran,gcc-ada}-static-compat)
 pkgver=12.1.0
 _majorver=${pkgver%%.*}
 _islver=0.24
@@ -37,7 +37,6 @@ _libdir=usr/static-compat/lib/gcc/$CHOST/${pkgver%%+*}
 # source=(git://gcc.gnu.org/git/gcc.git#commit=$_commit
 source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz{,.sig}
         c89 c99
-        gdc_phobos_path.patch
         gcc-ada-repro.patch
 )
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
@@ -48,7 +47,6 @@ sha256sums=('62fd634889f31c02b64af2c468f064b47ad1ca78411c45abe6ac4b5f8dd19c7b'
             'SKIP'
             'de48736f6e4153f03d0a5d38ceb6c6fdb7f054e8f47ddd6af0a3dbf14f27b931'
             '2513c6d9984dd0a2058557bf00f06d8d5181734e41dcfe07be7ed86f2959622a'
-            'c86372c207d174c0918d4aedf1cb79f7fc093649eb1ad8d9450dccc46849d308'
             '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f')
 
 prepare() {
@@ -62,9 +60,6 @@ prepare() {
   sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
   sed -i 's|MULTILIB_DIRNAMES .*|MULTILIB_DIRNAMES = 64 32|' gcc/config/i386/t-linux64
   sed -i 's|m32=.*|m32=../lib32\$\(call if_multiarch,:i386-linux-gnu\)|' gcc/config/i386/t-linux64
-
-  # D hacks
-  patch -Np1 -i "$srcdir/gdc_phobos_path.patch"
 
   # Reproducible gcc-ada
   patch -Np0 < "$srcdir/gcc-ada-repro.patch"
@@ -104,8 +99,7 @@ build() {
       --disable-libstdcxx-pch \
       --disable-werror \
       --with-build-config=bootstrap-lto \
-      --enable-link-serialization=1 \
-      gdc_include_dir=$_prefix/include/dlang/gdc"
+      --enable-link-serialization=1"
 
   cd gcc-build
 
@@ -116,7 +110,7 @@ build() {
   CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
 
   "$srcdir/gcc/configure" \
-    --enable-languages=c,c++,ada,fortran,lto,d \
+    --enable-languages=c,c++,ada,fortran,lto \
     $_confflags
   make
 }
@@ -152,10 +146,9 @@ package_gcc-libs-static-compat() {
     make -C $CHOST/$lib DESTDIR="$pkgdir" install-toolexeclibLTLIBRARIES
   done
 
-  make -C $CHOST/libobjc DESTDIR="$pkgdir" install-libs
+  #make -C $CHOST/libobjc DESTDIR="$pkgdir" install-libs
   make -C $CHOST/libstdc++-v3/po DESTDIR="$pkgdir" install
 
-  make -C $CHOST/libphobos DESTDIR="$pkgdir" install
   rm -rf "$pkgdir"/$_libdir/include/d/
   rm -f "$pkgdir"$_prefix/lib/libgphobos.spec
 
@@ -228,8 +221,8 @@ package_gcc-static-compat() {
   make -C $CHOST/32/libsanitizer/asan DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
 
   make -C gcc DESTDIR="$pkgdir" install-man install-info
-  rm "$pkgdir"$_prefix/share/man/man1/{gfortran,gdc}.1
-  rm "$pkgdir"$_prefix/share/info/{gfortran,gnat-style,gnat_rm,gnat_ugn,gdc}.info
+  rm "$pkgdir"$_prefix/share/man/man1/gfortran.1
+  rm "$pkgdir"$_prefix/share/info/{gfortran,gnat-style,gnat_rm,gnat_ugn}.info
   rm -r "$pkgdir"$_prefix/share/info/dir
 
   make -C libcpp DESTDIR="$pkgdir" install
@@ -339,9 +332,8 @@ package_lib32-gcc-libs-static-compat() {
     make -C $CHOST/32/$lib DESTDIR="$pkgdir" install-toolexeclibLTLIBRARIES
   done
 
-  make -C $CHOST/32/libobjc DESTDIR="$pkgdir" install-libs
+  #make -C $CHOST/32/libobjc DESTDIR="$pkgdir" install-libs
 
-  make -C $CHOST/libphobos DESTDIR="$pkgdir" install
   rm -f "$pkgdir"$_prefix/lib32/libgphobos.spec
 
   # remove files provided by gcc-libs
@@ -350,29 +342,4 @@ package_lib32-gcc-libs-static-compat() {
   # Install Runtime Library Exception
   install -Dm644 "$srcdir/gcc/COPYING.RUNTIME" \
     "$pkgdir$_prefix/share/licenses/lib32-gcc-libs/RUNTIME.LIBRARY.EXCEPTION"
-}
-
-package_gcc-d-static-compat() {
-  pkgdesc="D frontend for GCC"
-  depends=("gcc-static-compat=$pkgver-$pkgrel" libisl.so)
-  options=(staticlibs debug)
-
-  cd gcc-build
-  make -C gcc DESTDIR="$pkgdir" d.install-{common,man,info}
-
-  install -Dm755 gcc/gdc "$pkgdir"$_prefix/bin/gdc
-  install -Dm755 gcc/d21 "$pkgdir"/"$_libdir"/d21
-
-  make -C $CHOST/libphobos DESTDIR="$pkgdir" install
-  rm -f "$pkgdir$_prefix/lib/"lib{gphobos,gdruntime}.so*
-  rm -f "$pkgdir$_prefix/lib32/"lib{gphobos,gdruntime}.so*
-  rm -r "$pkgdir"$_prefix/share/info/dir
-
-  install -d "$pkgdir"$_prefix/include/dlang
-  ln -s /"${_libdir}"/include/d "$pkgdir"$_prefix/include/dlang/gdc
-
-  # Install Runtime Library Exception
-  install -d "$pkgdir$_prefix/share/licenses/$pkgname/"
-  ln -s $_prefix/share/licenses/gcc-libs/RUNTIME.LIBRARY.EXCEPTION \
-    "$pkgdir$_prefix/share/licenses/$pkgname/"
 }

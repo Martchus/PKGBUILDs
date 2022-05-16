@@ -5,7 +5,7 @@
 
 % end
 \
-pkgver=5.15.3
+pkgver=5.15.4
 pkgrel=1
 arch=('any')
 pkgdesc='Provides support for web applications using the Chromium browser project (mingw-w64)'

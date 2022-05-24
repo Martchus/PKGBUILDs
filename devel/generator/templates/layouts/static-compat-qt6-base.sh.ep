@@ -15,7 +15,7 @@
 pkgname=<%= $package_name %>
 _qtver=6.3.0
 pkgver=${_qtver/-/}
-pkgrel=3
+pkgrel=4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -63,7 +63,6 @@ build() {
   static-compat-cmake<%== $static_suffix %> -G Ninja -B build -S $_pkgfqn \\
     $ccache_args \\
     -DCMAKE_SKIP_INSTALL_RPATH=ON \\
-    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \\
     -DINSTALL_BINDIR=lib/qt6/bin \\
     -DINSTALL_DOCDIR=share/doc/qt6 \\
     -DINSTALL_ARCHDATADIR=lib/qt6 \\

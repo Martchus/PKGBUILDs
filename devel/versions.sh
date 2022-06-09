@@ -2,7 +2,7 @@
 declare -A versions=(
     [syncthingtray]=1.2.0
     [c++utilities]=5.16.0
-    [qtutilities]=6.6.1
+    [qtutilities]=6.6.2
     [qtforkawesome]=0.0.4
     [tagparser]=11.2.1
     [tageditor]=3.7.2

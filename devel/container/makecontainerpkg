@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+# load "containerbuild" script
+bindir=$(dirname "$0")
+script=$(cat "$bindir/containerbuild")
+
+# parse arguments
+cre_args=(--workdir "/startdir" -v "$PWD":/startdir --rm)
+script_args= read_script_args=
+for arg in "$@"; do
+    if [[ $read_script_args ]]; then
+        script_args+=" '$arg'"
+    else
+        if [[ $arg == '--' ]]; then
+            read_script_args=1
+        else
+            cre_args+=("$arg")
+        fi
+    fi
+done
+
+# allow one to prevent the container from stopping via DEBUG variable
+if [[ $DEBUG ]]; then
+    script_args+=' ; sleep infinity'
+fi
+
+"${CRE:-docker}" run "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}" bash -c "$script $script_args"

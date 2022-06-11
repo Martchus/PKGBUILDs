@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+bindir=$(dirname "$0")
+"${CRE:-docker}" image build --tag "${CRE_IMAGE:-archlinux-base-devel}" "$bindir/base-devel"

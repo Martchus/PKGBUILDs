@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+source PKGBUILD
+pacman -Syu --noconfirm --needed "${depends[@]}" "${makedepends[@]}" "${checkdepends[@]}"
+export LOGDEST=$PWD SRCPKGDEST=$PWD SRCDEST=$PWD PKGDEST=$PWD BUILDDIR=/build
+export BUILDTOOL=makecontainerbuild BUILDTOOLVER="0.0.1"
+chown builduser:builduser "$PWD"
+sudo --preserve-env=LOGDEST,SRCPKGDEST,SRCDEST,PKGDEST,BUILDDIR,BUILDTOOL,BUILDTOOLVER --user builduser makepkg

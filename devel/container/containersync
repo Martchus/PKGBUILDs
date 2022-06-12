@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+for config_file in {makepkg,pacman}.conf; do
+    [[ -f $config_file ]] && cp --target-directory=/etc "$config_file"
+done
+source PKGBUILD
+pacman -Syu --noconfirm --needed "${depends[@]}" "${makedepends[@]}" "${checkdepends[@]}"

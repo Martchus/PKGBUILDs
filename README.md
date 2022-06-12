@@ -51,9 +51,40 @@ Requests regarding binary packages can be tracked on the issue tracker of this
 GitHub project as well, e.g. within the [general discussion
 issue](https://github.com/Martchus/PKGBUILDs/issues/94).
 
-## Docker image
-Checkout the repository
-[docker-mingw-qt5](https://github.com/mdimura/docker-mingw-qt5).
+## Container image, building packages within a container
+The directory `devel/container` contains a script to build a container image
+suitable to run Arch Linux's `makepkg` script so you can build from PKGBUILDs on
+any environment where Docker, Podman or any other suitable container runtime is
+available.
+
+It also contains a script called `makecontainerpkg` which behaves like
+`makechrootpkg` from Arch Linux's devtools but uses the previously mentioned
+container image. Therefore it does *not* require devtools, a chroot setup and
+systemd-nsapwn. Instead, any container runtime should be sufficient (tested with
+Docker).
+
+The usage of `makecontainerpkg` is very similar to `makechrootpkg`. Simply run
+the script in a directory containing a `PKGBUILD` file. If the directory
+contains a file called `pacman.conf` and/or `makepkg.conf` those files are
+configured to be used during the build. The call syntax is the following:
+```
+makecontainerpkg [cre args] --- [makepkg args]
+```
+
+Example where the host pacman cache and ccache directories are mounted into the
+container and a package rebuild is forced via `makepkg`'s flag `-f`:
+```
+makecontainerpkg -v /var/cache/pacman/pkg/ -v /run/media/devel/ccache:/ccache -- -f CCACHE_DIR=/ccache
+```
+
+Set the environment variable `CRE` to the container runtime executable (by
+default `docker`) and set `CRE_IMAGE` to use a different container image.
+
+---
+
+There's also the 3rdparty repository
+[docker-mingw-qt5](https://github.com/mdimura/docker-mingw-qt5) which contains
+an image with many mingw-w64 package pre-installed.
 
 ## Structure
 Each package is in its own subdirectoy:

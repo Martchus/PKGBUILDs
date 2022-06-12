@@ -1,15 +1,14 @@
 #!/bin/bash
 set -e
 
-# load "containerbuild" script
-bindir=$(dirname "$0")
-script=$(cat "$bindir/containerbuild")
-
 # parse arguments
 cre_args=(--workdir "/startdir" -v "$PWD":/startdir --rm)
-script_args= read_script_args=
+script_args= read_script_args= no_sync=
 for arg in "$@"; do
     if [[ $read_script_args ]]; then
+        if [[ $arg == '--nodeps' ]] || [[ $arg == '-d' ]]; then
+            no_sync=1
+        fi
         script_args+=" '$arg'"
     else
         if [[ $arg == '--' ]]; then
@@ -20,9 +19,16 @@ for arg in "$@"; do
     fi
 done
 
+# load "containerbuild" and "containersync" script
+bindir=$(dirname "$0")
+script=$(cat "$bindir/containerbuild")
+if ! [[ $no_sync ]]; then
+    script_sync=$(cat "$bindir/containersync")
+fi
+
 # allow one to prevent the container from stopping via DEBUG variable
 if [[ $DEBUG ]]; then
     script_args+=' ; sleep infinity'
 fi
 
-"${CRE:-docker}" run "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}" bash -c "$script $script_args"
+${CRE:-docker} run "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}" bash -c "$script_sync $script $script_args"

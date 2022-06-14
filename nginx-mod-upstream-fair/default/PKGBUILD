@@ -9,7 +9,7 @@ _nginxver=1.22.0 # FIXME: fix build against NGINX 1.20.0
 
 pkgdesc='Fair load balancer module for nginx'
 arch=('x86_64')
-depends=("nginx=$_nginxver" "libutil-linux")
+depends=("nginx=$_nginxver")
 makedepends=("nginx-src")
 url='https://github.com/itoffshore/nginx-upstream-fair'
 license=('unknown')

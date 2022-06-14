@@ -5,13 +5,13 @@
 _pkgname=zstd
 pkgname=static-compat-$_pkgname
 pkgver=1.5.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Zstandard - Fast real-time compression algorithm'
 arch=(x86_64)
 url='https://facebook.github.io/zstd/'
 license=(BSD GPL2)
 depends=(static-compat-{zlib,xz,lz4})
-makedepends=(gtest static-compat-environment)
+makedepends=(gtest static-compat-cmake ninja)
 options=(!emptydirs staticlibs)
 source=(https://github.com/facebook/zstd/releases/download/v${pkgver}/zstd-${pkgver}.tar.zst{,.sig})
 sha256sums=('3ea06164971edec7caa2045a1932d757c1815858e4c2b68c7ef812647535c23f'
@@ -22,21 +22,23 @@ validpgpkeys=(4EF4AC63455FC9F4545D9B7DEF8FE99528B52FFD)
 
 build() {
   source static-compat-environment
-  cd $_pkgname-$pkgver
-  make
+  static-compat-cmake -S ${_pkgname}-${pkgver}/build/cmake -B build -G Ninja \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DZSTD_BUILD_CONTRIB=ON \
+    -DZSTD_BUILD_TESTS=ON \
+    -DZSTD_BUILD_SHARED=OFF \
+    -DZSTD_BUILD_STATIC=ON
+  cmake --build build
 }
 
 check() {
-  source static-compat-environment
-  cd $_pkgname-$pkgver
-  make check
+  cd build/tests
+  ctest
 }
 
 package() {
   source static-compat-environment
-  cd $_pkgname-$pkgver
-  make PREFIX="$static_compat_prefix" DESTDIR="$pkgdir/" install
+  DESTDIR="${pkgdir}" cmake --install build
+  install -Dm 644 ${_pkgname}-${pkgver}/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
   rm -r "$pkgdir/$static_compat_prefix"/{bin,share/man}
-  find "$pkgdir/$static_compat_prefix" -iname '*.so*' -delete
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

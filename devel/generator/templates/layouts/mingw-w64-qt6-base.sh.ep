@@ -14,7 +14,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.3.0
+_qtver=6.3.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)

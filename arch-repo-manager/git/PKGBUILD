@@ -6,12 +6,12 @@
 _reponame=arch-repo-manager
 pkgname=arch-repo-manager-git
 _name=${pkgname%-git}
-pkgver=150.43552dc
-pkgrel=1
+pkgver=297.1ae8604
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('c++utilities-git' 'boost-libs' 'libarchive' 'lmdb' 'liburing')
+depends=('c++utilities-git' 'libboost_filesystem.so' 'libarchive' 'lmdb' 'liburing')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
             "$_name-doc: API documentation")
 makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')
@@ -21,7 +21,7 @@ url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git"
         "lmdb-safe::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/lmdb-safe.git"
         'tabulate::git+https://github.com/p-ranav/tabulate.git')
-sha256sums=('SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP')
 
 pkgver() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"

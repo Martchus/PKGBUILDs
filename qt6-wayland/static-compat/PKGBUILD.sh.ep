@@ -9,3 +9,6 @@ license=(GPL3 LGPL3 FDL custom)
 pkgdesc='Provides APIs for Wayland'
 depends=(<%== qt6deps qw(declarative) %> static-compat-libxcomposite)
 makedepends=(static-compat-cmake static-compat-vulkan-headers ninja)
+% content_for before_build_config => begin
+  export CXXFLAGS+=' -DQT_EGL_NO_X11'
+% end

@@ -26,6 +26,7 @@ build() {
   export PATH=$PWD:$PATH
   printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
   chmod +x pkg-config
+  export CXXFLAGS+=' -DQT_EGL_NO_X11'
   static-compat-cmake -G Ninja -B build -S $_pkgfqn \
     $ccache_args \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \

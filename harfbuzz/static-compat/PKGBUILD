@@ -3,7 +3,7 @@
 
 _pkgname=harfbuzz
 pkgname=static-compat-$_pkgname
-pkgver=4.2.0
+pkgver=4.3.0
 pkgrel=1
 pkgdesc="OpenType text shaping engine"
 url="https://www.freedesktop.org/wiki/Software/HarfBuzz"
@@ -13,7 +13,7 @@ depends=(static-compat-glib2 static-compat-freetype2 static-compat-graphite)
 makedepends=(gobject-introspection ragel git python static-compat-meson)
 checkdepends=(python-fonttools python-setuptools)
 options=(!emptydirs !docs staticlibs)
-_commit=9d5730b958974bc9db95e46e6bad52e9e9cd6e1c  # tags/4.2.0^0
+_commit=aee123fc83388b8f5acfb301d87bd92eccc5b843  # tags/4.3.0^0
 source=("git+https://github.com/harfbuzz/harfbuzz#commit=$_commit")
 sha256sums=('SKIP')
 

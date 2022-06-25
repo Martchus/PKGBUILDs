@@ -4,7 +4,7 @@
 
 _pkgname=libxkbcommon
 pkgname=static-compat-$_pkgname
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc="Keymap handling library for toolkits and window systems"
 url="https://xkbcommon.org/"
@@ -14,7 +14,7 @@ depends=(static-compat-libxcb xkeyboard-config static-compat-libxml2 static-comp
 makedepends=(xkeyboard-config wayland-protocols doxygen git static-compat-meson)
 checkdepends=(xorg-server-xvfb libgl)
 options=(!emptydirs !docs staticlibs)
-_commit=c60b77ea512bef92e481be38972b58dd71a34180  # tags/xkbcommon-1.0.3^0
+_commit=57af9cb71f19f37394399b549f7cb7b0d9fe3988  # tags/xkbcommon-1.4.1^0
 source=("git+https://github.com/xkbcommon/libxkbcommon#commit=$_commit")
 sha256sums=('SKIP')
 

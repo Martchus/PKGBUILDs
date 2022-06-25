@@ -3,8 +3,8 @@
 
 _pkgname=libgpg-error
 pkgname=static-compat-$_pkgname
-pkgver=1.44
-pkgrel=1
+pkgver=1.45
+pkgrel=2
 pkgdesc="Support library for libgcrypt"
 arch=(x86_64)
 url="https://www.gnupg.org"
@@ -14,11 +14,10 @@ makedepends=('static-compat-configure')
 options=(staticlibs)
 source=(https://www.gnupg.org/ftp/gcrypt/libgpg-error/${_pkgname}-${pkgver}.tar.bz2{,.sig})
 # https://www.gnupg.org/download/integrity_check.html
-sha1sums=('c16ab473d1e558ba1712c77ace38bd03e467cbb0'
+sha1sums=('fe724ed37b4935964059a47b7c64d5f8246659d8'
           'SKIP')
-validpgpkeys=('D8692123C4065DEA5E0F3AB5249B39D24F25E3B6'  # Werner Koch
-              '031EC2536E580D8EA286A9F22071B08A33BD3F06'  # NIIBE Yutaka (GnuPG Release Key) <gniibe@fsij.org>
-              '6DAA6E64A76D2840571B4902528897B826403ADA') # "Werner Koch (dist signing 2020)"
+validpgpkeys=('6DAA6E64A76D2840571B4902528897B826403ADA') # Werner Koch (dist signing 2020)
+validpgpkeys+=('AC8E115BF73E2D8D47FA9908E98E9B2D19C6C8BD') # Niibe Yutaka (GnuPG Release Key)
 
 prepare() {
   source static-compat-environment

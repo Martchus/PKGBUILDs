@@ -44,7 +44,7 @@ The repository is focusing on x86_64 but some packages are also provided for
 i686 and aarch64.
 
 Note that I can not assure that required rebuilds always happen fast enough
-(since the offical developers obviously don't wait for me before releasing their
+(since the official developers obviously don't wait for me before releasing their
 packages from staging).
 
 Requests regarding binary packages can be tracked on the issue tracker of this
@@ -161,7 +161,7 @@ static builds targeting mingw-w64. They are also relying a lot on their bundled
 libraries while my builds aim to build dependencies separately. So expect some
 rough edges when using my packaging.
 
-Neverthless it make sense to follow the official documentation. For concrete
+Nevertheless it make sense to follow the official documentation. For concrete
 examples how to use this packaging with CMake, just checkout the mingw-w64
 variants of e.g. `syncthingtray` within this repository. The Arch Wiki also has
 a [section about mingw-w64
@@ -174,7 +174,7 @@ they would require `fxc.exe` to build.
 Currently, I test with qmake and CMake. With both build systems it is possible
 to use either the shared or the static libraries. Please read the comments in
 the PKGBUILD file itself and the pinned comments in [the
-AUR](https://aur.archlinux.org/packages/mingw-w64-qt5-base) for futher
+AUR](https://aur.archlinux.org/packages/mingw-w64-qt5-base) for further
 information.
 
 There are also pkg-config files, but those aren't really tested.
@@ -240,7 +240,7 @@ are a wrapper around the regular `wine` binary ensuring all the DLLs provided by
 a distinct `wine` prefix so your usual configuration (e.g. tailored to run
 certain games) does not go into the way and is also not messed with.
 
-Here are neverthless some useful hints to run WINE manually:
+Here are nevertheless some useful hints to run WINE manually:
 
 * Set the environment variable `WINEPREFIX` to use a distinct WINE-prefix if
   wanted.
@@ -268,9 +268,9 @@ This repository contains several `static-compat-*` packages providing static
 libraries intended to distribute "self-contained" executables. These libraries
 are built against and older version of glibc to be able to run on older
 distributions without having to link against glibc statically. The resulting
-binaries should run on distributions with glibc 2.26 or newer (or Linux 4.4 or
+binaries should run on distributions with glibc 2.26 or newer (or Linux 4.4 and
 newer when linking against glibc statically), e.g. openSUSE Leap 15.0, Fedora
-27, Debian 10 and Ubuntu 18.04. The packages might not be updated as regularily
+27, Debian 10 and Ubuntu 18.04. The packages might not be updated as regularly
 as their normal counterparts but the idea is to provide an environment with a
 recent version of GCC/libstdc++ and other libraries such as Qt and Boost but
 still be able to run the resulting executables on older distributions. Note that

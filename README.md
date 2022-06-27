@@ -291,6 +291,12 @@ the GNU/Linux system but other libraries like libstdc++, Boost and Qt are linked
 against statically. This is similar to AppImage where a lot of libraries are
 bundled but certain core libraries are expected to be provided by the system.
 
+Examples for resulting binaries can be found in the release sections of my
+projects [Tag Editor](https://github.com/Martchus/tageditor/releases) and
+[Syncthing Tray](https://github.com/Martchus/syncthingtray/releases). Those are
+Qt 6 applications and the resulting binaries run on the mentioned platforms
+supporting X11 and Wayland natively.
+
 Note that I decided to let static libraries live within the subprefix
 `/usr/static-compat` (in contrast to `-static` packages found in the AUR). The
 main reason is that my packaging requires a custom glibc/GCC build for

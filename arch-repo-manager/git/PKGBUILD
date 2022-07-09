@@ -11,11 +11,12 @@ pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('c++utilities-git' 'libboost_filesystem.so' 'libarchive' 'lmdb' 'liburing')
+depends=('libc++utilities-git.so' 'libboost_filesystem.so' 'libarchive.so' 'lmdb' 'liburing')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
             "$_name-doc: API documentation")
 makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')
 checkdepends=('cppunit')
+provides=(libpkg-git.so librepomgr-git.so)
 options=(!strip)
 url="https://github.com/Martchus/${_reponame}"
 source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git"

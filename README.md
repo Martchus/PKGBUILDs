@@ -103,6 +103,12 @@ where `default-pkg-name` is the default package name (eg. `qt5-base`) and
 
 The repository does not contain `.SRCINFO` files.
 
+---
+
+The subdirectoy `devel` contains additional files, mainly for development
+purposes. The subdirectoy `devel/archive` contains old packages that are no
+longer updated (at least not via this repository).
+
 ## Generated PKGBUILDs
 To avoid repetition some PKGBUILDs are generated. These PKGBUILDs are determined
 by the presence of the file `PKGBUILD.sh.ep` besides the actual `PKGBUILD` file.

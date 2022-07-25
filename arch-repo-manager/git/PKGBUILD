@@ -11,7 +11,7 @@ pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('libc++utilities-git.so' 'libboost_filesystem.so' 'libarchive.so' 'lmdb' 'liburing')
+depends=('libc++utilities-git.so' 'libpasswordfile-git.so' 'libboost_filesystem.so' 'libarchive.so' 'lmdb' 'liburing')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
             "$_name-doc: API documentation")
 makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')

@@ -6,8 +6,8 @@
 _reponame=cpp-utilities
 pkgname=mingw-w64-c++utilities
 _name=${pkgname#mingw-w64-}
-pkgver=5.17.0
-pkgrel=2
+pkgver=5.18.0
+pkgrel=1
 arch=('any')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities (mingw-w64)'
 license=('GPL')
@@ -16,22 +16,14 @@ optdepends=("$_name-doc: API documentation")
 checkdepends=('mingw-w64-cppunit' 'mingw-w64-wine')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
-        'https://github.com/Martchus/cpp-utilities/commit/fe6ad813409b42b2e303e35f02e036497cc81141.patch')
-sha256sums=('05663fa9ca188cd7be44dc06f1257cfb39b0721443b158a5bbfdaf6400e66505'
-            '97a5893c91479cb5a2a27fdaa1d957f7e7d4dfc596df6caa2f6c5f085cf223be')
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+sha256sums=('6c2c10bc6610f19adbe12b7e4f256ff9e787903831827f0a23eb476b6a5ea029')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 _architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
 _configurations=()
 [[ $NO_SHARED_LIBS ]] || _configurations+=('shared')
 [[ $NO_STATIC_LIBS ]] || _configurations+=('static')
-
-prepare() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
-  patch -p1 -i "$srcdir"/fe6ad813409b42b2e303e35f02e036497cc81141.patch
-}
 
 build() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

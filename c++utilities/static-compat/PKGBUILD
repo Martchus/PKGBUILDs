@@ -6,7 +6,7 @@
 _reponame=cpp-utilities
 pkgname=static-compat-c++utilities
 _name=${pkgname#static-compat-}
-pkgver=5.18.0
+pkgver=5.19.0
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
@@ -17,7 +17,7 @@ makedepends=('ninja' 'static-compat-cmake')
 checkdepends=('static-compat-cppunit')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('6c2c10bc6610f19adbe12b7e4f256ff9e787903831827f0a23eb476b6a5ea029')
+sha256sums=('845362bd91d3e1ecb6bf3fc18492dda1d48458f35380dd79351ea7bb36804be0')
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"

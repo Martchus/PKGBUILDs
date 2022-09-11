@@ -1,8 +1,8 @@
 % layout 'static-compat-qt6-module', has_binaries => 1;
 \
-_qtver=6.3.1
+_qtver=6.3.2
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)

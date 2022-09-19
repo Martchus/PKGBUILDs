@@ -11,7 +11,7 @@
 
 _pkgname=boost
 pkgname=static-compat-$_pkgname
-pkgver=1.79.0
+pkgver=1.80.0
 pkgrel=1
 _srcname=boost_${pkgver//./_}
 pkgdesc="Free peer-reviewed portable C++ source libraries"
@@ -21,9 +21,9 @@ license=('custom')
 options=('staticlibs')
 depends=('static-compat-zlib' 'static-compat-zstd' 'static-compat-bzip2')
 makedepends=('static-compat-environment')
-source=(https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.gz
+source=(https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.bz2
         $_pkgname-ublas-c++20-iterator.patch::https://github.com/boostorg/ublas/commit/a31e5cffa85f.patch)
-sha256sums=('273f1be93238a068aba4f9735a4a2b003019af067b9c183ed227780b8f36062c'
+sha256sums=('1e19565d82e43bc59209a168f5ac899d3ba471d55c7610c677d4ccf2c9c500c0'
             'aa38addb40d5f44b4a8472029b475e7e6aef1c460509eb7d8edf03491dc1b5ee')
 
 prepare() {
@@ -74,7 +74,7 @@ package() {
   install -d "$pkgdir/$static_compat_prefix"/lib
   cp -a fakeinstall/lib/*.a "$pkgdir/$static_compat_prefix"/lib/
   cp -a fakeinstall/lib/cmake "$pkgdir/$static_compat_prefix"/lib/
-  cp -a fakeinstall/{bin,include,share/boost-build} "$pkgdir/$static_compat_prefix"/
+  cp -a fakeinstall/{bin,include} "$pkgdir/$static_compat_prefix"/
 
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" $_srcname/LICENSE_1_0.txt
 }

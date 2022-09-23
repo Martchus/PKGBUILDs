@@ -13,7 +13,7 @@ pkgrel=1
 arch=('any')
 pkgdesc='Library that bundles ForkAwesome for use within Qt applications (API documentation)'
 license=('GPL')
-makedepends=('cmake' 'ninja' 'doxygen' 'dia' 'graphviz' 'qtutilities' 'mesa' 'qt5-declarative')
+makedepends=('cmake' 'ninja' 'doxygen' 'graphviz' 'qtutilities' 'mesa' 'qt5-declarative')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
         "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz")

@@ -14,7 +14,7 @@
 
 _android_arch=<%= $variant_prefix_part =~ s/android-// && $variant_prefix_part %>
 pkgname=<%= $package_name %>
-_qtver=6.3.2
+_qtver=6.4.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -96,7 +96,7 @@ package() {
   source android-env ${_android_arch}
   DESTDIR="$pkgdir" cmake --install build-$_android_arch
 
-  install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgname
+  install -Dm644 $_pkgfqn/LICENSES/* -t "$pkgdir"/usr/share/licenses/$pkgname
 
   # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
   find "$pkgdir/${ANDROID_PREFIX}/<%== $static_variant ? 'static/' : '' %>" -type f -name '*.prl' \\

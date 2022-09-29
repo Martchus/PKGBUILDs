@@ -13,7 +13,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.3.2
+_qtver=6.4.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -102,7 +102,7 @@ package() {
   source static-compat-environment
   DESTDIR="$pkgdir" cmake --install build
 
-  install -Dm644 $_pkgfqn/LICENSE* -t "$pkgdir"/usr/share/licenses/$pkgname
+  install -Dm644 $_pkgfqn/LICENSES/* -t "$pkgdir"/usr/share/licenses/$pkgname
 
   # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
   find "$pkgdir" -type f -name '*.prl' \\

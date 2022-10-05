@@ -272,15 +272,14 @@ Here are nevertheless some useful hints to run WINE manually:
 ## Static GNU/Linux libraries
 This repository contains several `static-compat-*` packages providing static
 libraries intended to distribute "self-contained" executables. These libraries
-are built against and older version of glibc to be able to run on older
+are built against an older version of glibc to be able to run on older
 distributions without having to link against glibc statically. The resulting
 binaries should run on distributions with glibc 2.26 or newer (or Linux 4.4 and
 newer when linking against glibc statically), e.g. openSUSE Leap 15.0, Fedora
 27, Debian 10 and Ubuntu 18.04. The packages might not be updated as regularly
 as their normal counterparts but the idea is to provide an environment with a
 recent version of GCC/libstdc++ and other libraries such as Qt and Boost but
-still be able to run the resulting executables on older distributions. Note that
-these packages are still experimental at this point.
+still be able to run the resulting executables on older distributions.
 
 To use the packages, simply invoke `/usr/static-compat/bin/g++` instead of
 `/usr/bin/g++`. The package `static-compat-environment` provide a script to set

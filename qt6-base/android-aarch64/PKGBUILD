@@ -40,7 +40,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
         '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch'
         '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch')
-sha256sums=('0a64421d9c2469c2c48490a032ab91d547017c9cc171f3f8070bc31888f24e03'
+sha256sums=('cb6475a0bd8567c49f7ffbb072a05516ee6671171bed55db75b22b94ead9b37d'
             '500986910d9a17eb189458c55e1930c264673597b85079b8289c5190f818f093'
             '3e72ad7c7dba0d5bce851378d37df627322a8cee00e6048223ab6719b309a5d8'
             '9b888e9ea827dd218f79b3d0828a61a43ead41744bac4513224030a7990e02f2'

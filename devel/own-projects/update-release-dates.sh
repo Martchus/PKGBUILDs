@@ -3,11 +3,6 @@ set -e # abort on first error
 shopt -s nullglob
 source "$(dirname $0)/../versions.sh"
 
-if ! [[ $GITHUB_TOKEN ]]; then
-    echo "Don't forget to set \$GITHUB_TOKEN."
-    exit -2
-fi
-
 gh_user=Martchus
 new_release_date=$(date --iso-8601)
 old_release_date_regex='set\(META_RELEASE_DATE "([^\)]*)"\)'

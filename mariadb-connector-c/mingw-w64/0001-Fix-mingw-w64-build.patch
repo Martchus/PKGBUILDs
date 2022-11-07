@@ -1,4 +1,4 @@
-From 16d52c5ed320dcd7912d4e23c538608a42f32d04 Mon Sep 17 00:00:00 2001
+From 7ff32466724a28981aefe5270647adba8f20f606 Mon Sep 17 00:00:00 2001
 From: Tilmann Meyer <allescrafterx@gmail.com>
 Date: Fri, 17 Apr 2020 02:12:23 +0200
 Subject: [PATCH 1/2] Fix mingw-w64 build
@@ -16,7 +16,7 @@ Subject: [PATCH 1/2] Fix mingw-w64 build
  9 files changed, 46 insertions(+), 47 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2584e93..6c67324 100644
+index 6903604..f620818 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,6 +3,9 @@
@@ -55,7 +55,7 @@ index 2584e93..6c67324 100644
  ###############
  
  INCLUDE(${CC_SOURCE_DIR}/cmake/misc.cmake)
-@@ -251,14 +250,20 @@ IF(UNIX)
+@@ -254,14 +253,20 @@ IF(UNIX)
    SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${LIBNSL} ${LIBBIND} ${LIBICONV} ${ZLIB_LIBRARY} 
        ${LIBSOCKET} ${CMAKE_DL_LIBS} ${LIBM} ${LIBPTHREAD})
    SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBNSL} ${LIBBIND} ${LIBICONV} 
@@ -116,19 +116,19 @@ index c1c883d..cdca6dc 100644
    ADD_CUSTOM_COMMAND(
      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${symlink_name}
 diff --git a/include/ma_global.h b/include/ma_global.h
-index d6077f3..d68f921 100644
+index b8ef7e1..408a1b8 100644
 --- a/include/ma_global.h
 +++ b/include/ma_global.h
-@@ -34,7 +34,7 @@
- #define snprintf _snprintf
+@@ -35,7 +35,7 @@
  #endif
+ #define strerror_r(errno,buf,len) strerror_s(buf,len,errno)
  #endif
 -#define STDCALL __stdcall 
 +#define STDCALL
  #endif
  
  #include <ma_config.h>
-@@ -440,7 +440,7 @@ typedef SOCKET_SIZE_TYPE size_socket;
+@@ -441,7 +441,7 @@ typedef SOCKET_SIZE_TYPE size_socket;
  #define NO_PISAM		/* Not needed anymore */
  #define NO_MISAM		/* Not needed anymore */
  #define NO_HASH			/* Not needed anymore */
@@ -138,7 +138,7 @@ index d6077f3..d68f921 100644
  #define USE_MY_STAT_STRUCT	/* For my_lib */
  #ifdef _MSC_VER
 diff --git a/include/mysql.h b/include/mysql.h
-index 8a3884c..a2bc3cd 100644
+index ba3063d..a5bdab7 100644
 --- a/include/mysql.h
 +++ b/include/mysql.h
 @@ -39,11 +39,7 @@ extern "C" {
@@ -153,7 +153,7 @@ index 8a3884c..a2bc3cd 100644
  
  #ifndef my_socket_defined
  #define my_socket_defined
-@@ -471,7 +467,7 @@ struct st_mysql_client_plugin
+@@ -473,7 +469,7 @@ struct st_mysql_client_plugin
    MYSQL_CLIENT_PLUGIN_HEADER
  };
  
@@ -176,10 +176,10 @@ index 262fd4a..9a0e1e6 100644
                    int argc, ...);
  
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 7faf827..43ab846 100644
+index 070fdc9..f0a2f56 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -405,7 +405,7 @@ ENDIF()
+@@ -426,7 +426,7 @@ ENDIF()
  FILE(WRITE ${CC_BINARY_DIR}/manpages.list "${MARIADB_LIB_SYMBOLS};${MYSQL_LIB_SYMBOLS}")
  
  IF(WIN32)
@@ -188,7 +188,7 @@ index 7faf827..43ab846 100644
                     "FILE_TYPE:VFT_DLL"
                     "SOURCE_FILE:libmariadb/libmariadb.c"
                     "ORIGINAL_FILE_NAME:libmariadb.dll"
-@@ -417,30 +417,28 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
+@@ -438,30 +438,28 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
  TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
  
  IF(UNIX)
@@ -228,7 +228,7 @@ index 7faf827..43ab846 100644
  
  #
  # Installation
-@@ -452,8 +450,8 @@ INCLUDE(${CC_SOURCE_DIR}/cmake/symlink.cmake)
+@@ -473,8 +471,8 @@ INCLUDE(${CC_SOURCE_DIR}/cmake/symlink.cmake)
  # use mariadb client library we provide libmysql symlinks
  
  IF(WITH_MYSQLCOMPAT)
@@ -239,7 +239,7 @@ index 7faf827..43ab846 100644
    IF(NOT CMAKE_SYSTEM_NAME MATCHES AIX)
      create_symlink(libmysqlclient${CMAKE_STATIC_LIBRARY_SUFFIX} mariadbclient ${INSTALL_LIBDIR})
      create_symlink(libmysqlclient_r${CMAKE_STATIC_LIBRARY_SUFFIX} mariadbclient ${INSTALL_LIBDIR})
-@@ -462,7 +460,7 @@ ENDIF()
+@@ -483,7 +481,7 @@ ENDIF()
  
  create_symlink(libmariadb${CMAKE_STATIC_LIBRARY_SUFFIX} mariadbclient ${INSTALL_LIBDIR})
  
@@ -248,7 +248,7 @@ index 7faf827..43ab846 100644
   ${CPACK_PACKAGE_VERSION_MAJOR}
   SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR})
  
-@@ -479,18 +477,18 @@ INSTALL(TARGETS libmariadb
+@@ -500,18 +498,18 @@ INSTALL(TARGETS libmariadb
          DESTINATION ${INSTALL_LIBDIR})
  ELSE()
  # in cmake 3.12+ we can use
@@ -272,7 +272,7 @@ index 7faf827..43ab846 100644
             COMPONENT Development)
  ENDIF()
 diff --git a/plugins/auth/CMakeLists.txt b/plugins/auth/CMakeLists.txt
-index e5448f8..ae2cf27 100644
+index 0612f08..0672b3b 100644
 --- a/plugins/auth/CMakeLists.txt
 +++ b/plugins/auth/CMakeLists.txt
 @@ -4,7 +4,7 @@ INCLUDE_DIRECTORIES(${AUTH_DIR})
@@ -297,5 +297,5 @@ index 8c304c9..e2e9c5a 100644
    ENDIF()
  ENDIF()
 -- 
-2.37.1
+2.38.1
 

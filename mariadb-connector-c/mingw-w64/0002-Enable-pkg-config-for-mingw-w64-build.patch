@@ -1,31 +1,17 @@
-From b975245b5d845d38b95a970afbf2bb1fc9ac1695 Mon Sep 17 00:00:00 2001
+From 871e5ed7064768383025271669e7d0cded12ca6c Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 12 Sep 2020 20:30:49 +0200
 Subject: [PATCH 2/2] Enable pkg-config for mingw-w64 build
 
 ---
- CMakeLists.txt            |  2 +-
  libmariadb/CMakeLists.txt | 13 ++++---------
- 2 files changed, 5 insertions(+), 10 deletions(-)
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c67324..c7af878 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -424,7 +424,7 @@ ENDIF()
- INCLUDE(${CC_SOURCE_DIR}/plugins/CMakeLists.txt)
- ADD_SUBDIRECTORY(include)
- ADD_SUBDIRECTORY(libmariadb)
--IF(NOT WIN32)
-+IF(NOT WIN32 OR MINGW)
-   ADD_SUBDIRECTORY(mariadb_config)
- ENDIF()
- 
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 43ab846..9114e89 100644
+index f0a2f56..a0d2e2c 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -471,19 +471,14 @@ ENDIF()
+@@ -492,19 +492,14 @@ ENDIF()
  INSTALL(TARGETS mariadbclient
            COMPONENT Development
            DESTINATION ${INSTALL_LIBDIR})
@@ -50,5 +36,5 @@ index 43ab846..9114e89 100644
  
  IF(MSVC)
 -- 
-2.37.1
+2.38.1
 

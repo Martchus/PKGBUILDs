@@ -1,20 +1,77 @@
-From 1cae5feb791183394dd700fdc9284be154362e2b Mon Sep 17 00:00:00 2001
+From 52447e9973b7fa6c7f96560840b94baa97e70339 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 14 Apr 2022 22:28:31 +0200
 Subject: [PATCH] Strip down build script
 
 ---
- meson.build                | 1711 ------------------------------------
+ meson.build                | 1757 +-----------------------------------
  src/libsystemd/meson.build |  134 ---
+ src/shared/meson.build     |   14 +-
  src/test/meson.build       |  616 -------------
  src/udev/meson.build       |    6 -
- 4 files changed, 2467 deletions(-)
+ 5 files changed, 4 insertions(+), 2523 deletions(-)
 
 diff --git a/meson.build b/meson.build
-index cb9936ee8b..e94665cf94 100644
+index cb9936ee8b..17732dde55 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -1902,1633 +1902,9 @@ if conf.get('HAVE_LIBCRYPTSETUP_PLUGINS') == 1
+@@ -1771,25 +1771,6 @@ subdir('src/udev')
+ subdir('src/libudev')
+ subdir('src/cryptsetup/cryptsetup-tokens')
+ 
+-libsystemd = shared_library(
+-        'systemd',
+-        disable_mempool_c,
+-        version : libsystemd_version,
+-        include_directories : libsystemd_includes,
+-        link_args : ['-shared',
+-                     '-Wl,--version-script=' + libsystemd_sym_path],
+-        link_with : [libbasic,
+-                     libbasic_gcrypt],
+-        link_whole : [libsystemd_static],
+-        dependencies : [threads,
+-                        librt,
+-                        libxz,
+-                        libzstd,
+-                        liblz4],
+-        link_depends : libsystemd_sym,
+-        install : true,
+-        install_dir : rootlibdir)
+-
+ install_libsystemd_static = static_library(
+         'systemd',
+         libsystemd_sources,
+@@ -1815,19 +1796,7 @@ install_libsystemd_static = static_library(
+                         libopenssl],
+         c_args : libsystemd_c_args + (static_libsystemd_pic ? [] : ['-fno-PIC']))
+ 
+-libudev = shared_library(
+-        'udev',
+-        disable_mempool_c,
+-        version : libudev_version,
+-        include_directories : includes,
+-        link_args : ['-shared',
+-                     '-Wl,--version-script=' + libudev_sym_path],
+-        link_with : [libsystemd_static, libshared_static],
+-        link_whole : libudev_basic,
+-        dependencies : [threads],
+-        link_depends : libudev_sym,
+-        install : true,
+-        install_dir : rootlibdir)
++libsystemd = install_libsystemd_static
+ 
+ install_libudev_static = static_library(
+         'udev',
+@@ -1846,6 +1815,8 @@ install_libudev_static = static_library(
+         c_args : static_libudev_pic ? [] : ['-fno-PIC'],
+         pic : static_libudev_pic)
+ 
++libudev = install_libudev_static
++
+ if conf.get('HAVE_LIBCRYPTSETUP_PLUGINS') == 1
+         if conf.get('HAVE_TPM2') == 1
+                 cryptsetup_token_systemd_tpm2 = shared_library(
+@@ -1902,1633 +1873,9 @@ if conf.get('HAVE_LIBCRYPTSETUP_PLUGINS') == 1
          endif
  endif
  
@@ -1648,7 +1705,7 @@ index cb9936ee8b..e94665cf94 100644
  
  ############################################################
  
-@@ -3686,34 +2062,12 @@ foreach tuple : fuzzers
+@@ -3686,34 +2033,12 @@ foreach tuple : fuzzers
                  build_by_default : fuzzer_build)
          fuzzer_exes += exe
  
@@ -1683,7 +1740,7 @@ index cb9936ee8b..e94665cf94 100644
  subdir('man')
  subdir('shell-completion/bash')
  subdir('shell-completion/zsh')
-@@ -3775,62 +2129,6 @@ foreach exec : public_programs
+@@ -3775,62 +2100,6 @@ foreach exec : public_programs
          endif
  endforeach
  
@@ -1746,10 +1803,19 @@ index cb9936ee8b..e94665cf94 100644
  ############################################################
  
  if git.found()
-@@ -3889,15 +2187,6 @@ run_target(
- alias_target('update-dbus-docs', update_dbus_docs)
- alias_target('update-man-rules', update_man_rules)
+@@ -3880,26 +2149,6 @@ endif
  
+ ############################################################
+ 
+-check_api_docs_sh = find_program('tools/check-api-docs.sh')
+-run_target(
+-        'check-api-docs',
+-        depends : [man, libsystemd, libudev],
+-        command : [check_api_docs_sh, libsystemd.full_path(), libudev.full_path()])
+-
+-alias_target('update-dbus-docs', update_dbus_docs)
+-alias_target('update-man-rules', update_man_rules)
+-
 -if not meson.is_cross_build()
 -        custom_target(
 -                'export-dbus-interfaces',
@@ -1759,9 +1825,11 @@ index cb9936ee8b..e94665cf94 100644
 -                command : [export_dbus_interfaces_py, '@OUTPUT@', dbus_programs])
 -endif
 -
- ############################################################
- 
+-############################################################
+-
  alt_time_epoch = run_command('date', '-Is', '-u', '-d', '@@0@'.format(time_epoch),
+                              check : true).stdout().strip()
+ 
 diff --git a/src/libsystemd/meson.build b/src/libsystemd/meson.build
 index c21841258b..e9716833d8 100644
 --- a/src/libsystemd/meson.build
@@ -1904,6 +1972,28 @@ index c21841258b..e9716833d8 100644
 -
 -        [['src/libsystemd/sd-bus/fuzz-bus-match.c']],
 -]
+diff --git a/src/shared/meson.build b/src/shared/meson.build
+index 1e4fcbf116..1aa540e774 100644
+--- a/src/shared/meson.build
++++ b/src/shared/meson.build
+@@ -465,16 +465,4 @@ libshared_static = static_library(
+         c_args : ['-fvisibility=default'],
+         build_by_default : false)
+ 
+-libshared = shared_library(
+-        libshared_name,
+-        include_directories : includes,
+-        link_args : ['-shared',
+-                     '-Wl,--version-script=' + libshared_sym_path],
+-        link_whole : [libshared_static,
+-                      libbasic,
+-                      libbasic_gcrypt,
+-                      libsystemd_static],
+-        c_args : ['-fvisibility=default'],
+-        dependencies : libshared_deps,
+-        install : true,
+-        install_dir : rootlibexecdir)
++libshared = libshared_static
 diff --git a/src/test/meson.build b/src/test/meson.build
 index 42d34a209e..29203a1bb5 100644
 --- a/src/test/meson.build
@@ -2557,5 +2647,5 @@ index d55e9073ae..335ac9f984 100644
           [libudevd_core,
            libshared],
 -- 
-2.35.2
+2.38.1
 

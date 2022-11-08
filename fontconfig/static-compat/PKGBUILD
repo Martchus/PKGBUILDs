@@ -3,7 +3,7 @@
 
 _pkgname=fontconfig
 pkgname=static-compat-$_pkgname
-pkgver=2.14.0
+pkgver=2.14.1
 pkgrel=1
 epoch=2
 pkgdesc="Library for configuring and customizing font access"
@@ -13,9 +13,8 @@ license=(custom)
 depends=(static-compat-expat static-compat-freetype2)
 makedepends=(static-compat-meson git autoconf-archive gperf python-lxml python-six docbook-utils)
 checkdepends=(unzip)
-_commit=fcb042028126d79ea5a5fa015b2b034b98656e73  # master
 options=(!emptydirs !docs staticlibs)
-_commit=911b19f19f1334d51c452756f9ce222c1101097b  # tags/2.14.0^0
+_commit=c45e09df1ef235d653d56aef05012f6a3cc57979  # tags/2.14.1^0
 source=("git+https://gitlab.freedesktop.org/fontconfig/fontconfig.git#commit=$_commit")
 b2sums=('SKIP')
 
@@ -29,8 +28,16 @@ pkgver() {
 }
 
 build() {
-  export CFLAGS+=' -lstdc++' # for __gxx_personality_v0 required by harfbuzz.a
   source static-compat-environment
+
+  # Link against libstdc++ for __gxx_personality_v0 required by harfbuzz.a
+  export CFLAGS+=" $static_compat_prefix/lib/libstdc++.a"
+
+  # Invoke pkg-config with --static
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+
   static-compat-meson $_pkgname build -Ddoc=disabled
   meson compile -C build
 }

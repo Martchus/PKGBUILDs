@@ -7,7 +7,7 @@ pkgname=static-compat-$_pkgname-libs
 _tag='5aba21f1561d48fdcf7f4670263ba109c25c1ea6' # git rev-parse v${_tag_name}
 _tag_name=250.4
 pkgver="${_tag_name/-/}"
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='https://www.github.com/systemd/systemd'
 pkgdesc='systemd client libraries'
@@ -19,14 +19,14 @@ options=('strip' 'staticlibs')
 validpgpkeys=('63CDA1E5D3FC22B998D20DD6327F26951A015CC4'  # Lennart Poettering <lennart@poettering.net>
               'A9EA9081724FFAE0484C35A1A81CEA22BC8C7E2E'  # Luca Boccassi <luca.boccassi@gmail.com>
               '5C251B5FC54EB2F80F407AAAC54CA336CFEB557E') # Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl>
-source=("git+https://github.com/systemd/systemd-stable#tag=${_tag}?signed"
-        "git+https://github.com/systemd/systemd#tag=v${_tag_name%.*}?signed"
+source=("git+https://github.com/systemd/systemd-stable#tag=${_tag}"
+        "git+https://github.com/systemd/systemd#tag=v${_tag_name%.*}"
         '0001-Use-Arch-Linux-device-access-groups.patch'
         '0001-Strip-down-build-script.patch')
 sha512sums=('SKIP'
             'SKIP'
             'cc0c2ffb5f7c3a7176cd68f3dddd85ca000dcc4cdf3044746a20147234adb6811800fd28a4713faa6a59bf8c02be9fd43c2d6aa6695fd1dbf03ae773a91d090c'
-            'c7a91d2d26ee79a147c582941c4eb111093a1e4e2e9cbcdb9c1c70f65996bd935f684222d6b745fd9b81fc916b96153955ce76424ecdbf4c6ef983900bf639da')
+            '27d53f4bd6034f209f5a8010818b7210ebcd89e6a1bbe582eaa13327891ac554251e608b3594baa901f8a5ae5b4d2a283e6b1e1f441244eb644d0fceab42380f')
 
 _backports=(
   # bus: Use OrderedSet for introspection
@@ -77,7 +77,7 @@ build() {
   # linked against dynamically
   export LD_LIBRARY_PATH=/usr/lib:$static_compat_prefix/lib
 
-  # Invoke pkg-config with --stativc
+  # Invoke pkg-config with --static
   export PATH=$PWD:$PATH
   printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
   chmod +x pkg-config
@@ -169,6 +169,7 @@ build() {
     -Drfkill=false
     -Dxdg-autostart=false
     -Dgnu-efi=false
+    -Dtests=false
 
     -Dsbat-distro='arch'
     -Dsbat-distro-summary='Static compat environment'
@@ -179,12 +180,6 @@ build() {
 
   static-compat-meson "$_pkgname-stable" build "${_meson_options[@]}"
   meson compile --verbose -C build
-}
-
-check() {
-  source static-compat-environment
-  export LD_LIBRARY_PATH=/usr/lib:$static_compat_prefix/lib
-  meson test -C build
 }
 
 package() {

@@ -1,8 +1,8 @@
-pkgbase=zlib-static-compat
+pkgbase=static-compat-zlib
 pkgname=(static-compat-zlib static-compat-minizip)
 epoch=1
 pkgver=1.2.13
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('custom')
 url="https://www.zlib.net/"
@@ -59,7 +59,7 @@ package_static-compat-zlib() {
 
 package_static-compat-minizip() {
 	pkgdesc='Mini zip and unzip based on zlib'
-	depends=('zlib-static-compat')
+	depends=('static-compat-zlib')
 
 	source static-compat-environment
 

@@ -2,8 +2,8 @@
 
 _pkgname=libinput
 pkgname=static-compat-$_pkgname
-pkgver=1.21.0
-pkgrel=2
+pkgver=1.22.0
+pkgrel=1
 pkgdesc="Input device management and event handling library"
 url="https://gitlab.freedesktop.org/libinput"
 arch=(x86_64)
@@ -13,7 +13,7 @@ depends=('static-compat-mtdev' 'static-compat-systemd-libs' 'static-compat-libev
 makedepends=('static-compat-meson' 'static-compat-wayland') # 'check' 'doxygen' 'graphviz' 'python-sphinx' 'python-recommonmark'
 options=(staticlibs !emptydirs)
 source=(https://gitlab.freedesktop.org/libinput/libinput/-/archive/$pkgver/$_pkgname-$pkgver.tar.bz2)
-sha256sums=('3173d83e0f5a686606d2780129c802b865b6a0750c86db88d56097afc016a2dd')
+sha256sums=('b9204a860b4f6f9b2587c484f67a21fbdedd01a97db1f983b0b51cb7bdd428aa')
 #validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
 
 prepare() {

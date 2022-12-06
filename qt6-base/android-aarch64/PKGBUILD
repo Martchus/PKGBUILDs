@@ -39,20 +39,22 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
         '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
         '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch'
-        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch')
+        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch'
+        '0013-Revert-Port-default-font-resolve-to-SystemParameters.patch')
 sha256sums=('532ad71cc0f9c8f7cb92766c47bc3d23263c60876becd9053802f9727af24fae'
-            '6aea45d1f820ff6b447a4d15773ce15389de7ed4e537788f62ed77676cc6c42f'
-            '1576f074c32c14e73a8b71445a5872b467d6ab1378e9a4eeeaf2a958b9d7cfe6'
-            '36d024993349d4f671e8caf27b05213301a3e00c138a8dc1511b4869a77022b8'
-            '9307389e5e21a9cb194606b704882c313bdbfeae933bf88d40b7cf1378638e26'
-            'ef675f0ecca827066dbcff73395467881a4b912afb83d0ded1bcd2a0468be5da'
-            '65dbc0e805fdd5bd43c8a9e509f20ae4159235cc2e56ce9080b9bd5c560000d6'
-            '5a9fad4e1765b4ddc8479255cad3dede58defb0b0103c38bde3a1cfad02298b9'
-            '26eda5d063b19553d8e6f6a9bd9c447e0fdbaf672351dfe763ca310ca5552061'
-            '85cd61a2099af49c2bb93e06ead056524e9bb47ffab479f5df2fea5ffd420b69'
-            '89d93e9ac08b96b7eb6fd3d080e80404522f037803b3953f63ec7fcc9b26fd29'
-            'b94517bf2d57a8d635207fdaf6e7ab5dd20ee66c0eb5a2080a769ffed90bab7f'
-            '075d509531e4e70f9b85c9accb38cc326b27b16a231613a9e3bfe80e2e188a70')
+            '555998352955c22bcfbc778c70356f79c50f350deae76188a9f976121d3a47fc'
+            '7109f304e393223b977d48bca510158273c48fef645fda4a3a0e4f824a3e0e7a'
+            'd8ea7ad9727c2b7df4e8a9460aaa715d42cfcaa4319406b49c4e3c6d14c371e3'
+            'fec43b95034a9568f7f0ef627c803b883a06954d8662a964af2a3a23a5ddbbef'
+            'd371b4e7fe85d252b5dee5e45f89ef33ed47c09bd75e09a422ca50624648baa5'
+            'b73b6de4efd0f18ad7147bdf0b76f0caf867c6858e19d797fb4e049aa2b0d488'
+            'c8974fc3c18185ad8db0c8d1c6569fc2144877a1decd9cab912df838e3470c3d'
+            '51ca9371b44429005360bce0fd8b7579d9c6ef728ae1a412f4c02c2ede4c72a8'
+            'eec0ef663e3b4bd017f77eb4eb2b191429b91634722043da6dc7aba86c7bfc19'
+            '43cdc8ebd6b23dd4ce451028e713f250b00b38339c3d558b2784070c2b81f531'
+            'd58e5ec17cdffab5e89e01688de0e444ff009a4264537d56c284a2364ff3ddf6'
+            'c58be70d806a456e622397763e9da117917d8c48f6153d2003c13758a481fff6'
+            'baefcd4cceff54566e16e061ba4ff06c1df1690a4bcd977d9cee8f373fe45684')
 
 prepare () {
   cd $_pkgfqn

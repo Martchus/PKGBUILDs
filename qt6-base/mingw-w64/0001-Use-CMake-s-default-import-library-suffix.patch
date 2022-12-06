@@ -1,7 +1,7 @@
 From cf97dadc21061c150c4cc813255b30f9f1d0aea0 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 5 Nov 2020 22:08:10 +0100
-Subject: [PATCH 01/12] Use CMake's default import library suffix
+Subject: [PATCH 01/13] Use CMake's default import library suffix
 
 Change-Id: I3dbedaec74683e5bfd008f7f2fd1e046dfb921b2
 ---

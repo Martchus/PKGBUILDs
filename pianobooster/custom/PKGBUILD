@@ -1,21 +1,21 @@
-_pkgname='PianoBooster'
+_pkgname='pianobooster'
 pkgname='pianobooster-custom'
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
-pkgver=v1.0.0.r20.gaaafb07
+pkgver=1.0.0.r46.g2e1daa4
 pkgrel=1
-depends=('fluidsynth' 'ftgl' 'hicolor-icon-theme' 'qt5-base' 'rtmidi')
-makedepends=('git' 'cmake' 'qt5-tools' 'ninja')
-optdepends=('qt5-translations')
+depends=('fluidsynth' 'ftgl' 'hicolor-icon-theme' 'qt6-base' 'rtmidi')
+makedepends=('git' 'cmake' 'qt6-tools' 'qt6-5compat' 'ninja')
+optdepends=('qt6-translations')
 conflicts=('pianobooster')
 arch=('x86_64')
 url='https://www.pianobooster.org'
 license=('GPL3')
-source=('git+https://github.com/Martchus/PianoBooster#branch=custom')
+source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/PianoBooster.git#branch=custom")
 sha256sums=(SKIP)
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build () {
@@ -25,6 +25,7 @@ build () {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DUSE_SYSTEM_FONT=ON \
         -DUSE_JACK=ON \
+        -DQT_PACKAGE_NAME=Qt6 \
         -DWITH_MAN=ON \
         .
   VERBOSE=1 cmake --build build

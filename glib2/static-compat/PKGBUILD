@@ -3,7 +3,7 @@
 
 _pkgname=glib2
 pkgname=static-compat-$_pkgname
-pkgver=2.74.2
+pkgver=2.74.3
 pkgrel=1
 pkgdesc="Low level core library"
 url="https://wiki.gnome.org/Projects/GLib"
@@ -13,7 +13,7 @@ depends=(static-compat-pcre2 static-compat-libffi static-compat-util-linux stati
 makedepends=(gettext shared-mime-info python libelf git static-compat-meson)
 checkdepends=(desktop-file-utils)
 options=(!strip !emptydirs staticlibs)
-_commit=b5299ed2055aa3ccd628aceb016c1e9bda516e39  # tags/2.74.2^0
+_commit=a8ad6347a404962c3b83aca1bf50610a76618c0f  # tags/2.74.3^0
 source=("git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
         0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch)
 b2sums=('SKIP'

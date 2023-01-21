@@ -71,14 +71,37 @@ configured to be used during the build. The call syntax is the following:
 makecontainerpkg [cre args] --- [makepkg args]
 ```
 
+Set the environment variable `CRE` to the container runtime executable (by
+default `docker`) and set `CRE_IMAGE` to use a different container image.
+
 Example where the host pacman cache and ccache directories are mounted into the
 container and a package rebuild is forced via `makepkg`'s flag `-f`:
 ```
 makecontainerpkg -v /var/cache/pacman/pkg/ -v /run/media/devel/ccache:/ccache -- -f CCACHE_DIR=/ccache
 ```
 
-Set the environment variable `CRE` to the container runtime executable (by
-default `docker`) and set `CRE_IMAGE` to use a different container image.
+Example using podman on a non-Arch system:
+```
+CRE=podman ../../devel/container/makecontainerpkg -v /hdd/cache/pacman/pkg:/var/cache/pacman/pkg -v /hdd/chroot/remote-config-x86_64:/cfg
+```
+
+It makes still sense to specify a cache directory, even though pacman is not
+used on the host system. Here also a directory containing a custom `pacman.conf`
+and `makepkg.conf` is mounted into the container.
+
+### Podman-specific remarks
+To use podman (instead of Docker) simply set `export CRE=podman`.
+
+To be able to run podman without root, you need to ensure user/group IDs can be
+mapped. The mapping is configured in the files `/etc/subuid` and `/etc/subgid`.
+Use `sudo usermod --add-subuids 200000-205000 --add-subgids 200000-205000 $USER`
+to configure it for the current user and the configuration via
+`grep $USER /etc/sub{u,g}id`.
+
+To change storage paths so e.g. containers are stored at a different location,
+edit `~/.config/containers/storage.conf` (or `/etc/containers/storage.conf` for
+system-wide configuration) to set `runroot` and `graphroot` to different
+locations.
 
 ---
 

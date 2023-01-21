@@ -159,7 +159,7 @@ usually preserve the original patches and create a new branch, eg.
 
 So in this case it would make sense to contribute directly there. To fix an
 existing patch, just create a fixup commit. This (unusual) fixup workflow aims
-to keep the number of additional changes as small as possbile.
+to keep the number of additional changes as small as possible.
 
 To get the patches into the PKGBUILD files, the script
 `devel/qt5/update-patches.sh` is used.

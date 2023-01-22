@@ -52,10 +52,10 @@ GitHub project as well, e.g. within the [general discussion
 issue](https://github.com/Martchus/PKGBUILDs/issues/94).
 
 ## Container image, building packages within a container
-The directory `devel/container` contains a script to build a container image
-suitable to run Arch Linux's `makepkg` script so you can build from PKGBUILDs on
-any environment where Docker, Podman or any other suitable container runtime is
-available.
+The directory `devel/container` contains the script `imagebuild` to build a
+container image suitable to run Arch Linux's `makepkg` script so you can build
+from PKGBUILDs on any environment where Docker, Podman or any other suitable
+container runtime is available.
 
 It also contains a script called `makecontainerpkg` which behaves like
 `makechrootpkg` from Arch Linux's devtools but uses the previously mentioned
@@ -109,8 +109,8 @@ is removed in the end. Set `DEBUG=1` to prevent that. Then one can use e.g.
 `podman container start …` and `podman container exec -it … bash` to enter the
 container for manual investigation.
 
----
 
+### Other approaches
 There's also the 3rdparty repository
 [docker-mingw-qt5](https://github.com/mdimura/docker-mingw-qt5) which contains
 an image with many mingw-w64 package pre-installed.

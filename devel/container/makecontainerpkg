@@ -2,7 +2,8 @@
 set -e
 
 # parse arguments
-cre_args=(--workdir "/startdir" -v "$PWD":/startdir --rm)
+cre_args=(--workdir "/startdir" -v "$PWD":/startdir)
+[[ $DEBUG ]] || script_args+=(--rm)
 script_args= read_script_args= no_sync=
 for arg in "$@"; do
     if [[ $read_script_args ]]; then
@@ -24,11 +25,6 @@ bindir=$(dirname "$0")
 script=$(cat "$bindir/containerbuild")
 if ! [[ $no_sync ]]; then
     script_sync=$(cat "$bindir/containersync")
-fi
-
-# allow one to prevent the container from stopping via DEBUG variable
-if [[ $DEBUG ]]; then
-    script_args+=' ; sleep infinity'
 fi
 
 ${CRE:-docker} run "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}" bash -c "$script_sync $script $script_args"

@@ -109,6 +109,56 @@ is removed in the end. Set `DEBUG=1` to prevent that. Then one can use e.g.
 `podman container start …` and `podman container exec -it … bash` to enter the
 container for manual investigation.
 
+### Using Arch-packages on another distribution via a container
+If you want to cross-compile software on non-Arch distributions you can make use
+of the `android-*` and `mingw-w64-*` packages provided by this repository using
+an Arch Linux container. The container image mentioned before is also suitable
+for this purpose.
+
+Here are some example commands how one might do that:
+```
+# create a directory to store builds and new container and start it
+mkdir -p /hdd/build/container
+podman container create -it \
+  --name archlinux-devel-container \                    # give container a meaningful name
+  -v /hdd/cache/pacman/pkg:/var/cache/pacman/pkg \      # share pacman cache accross different containers
+  -v /hdd/build/container:/build \                      # expose build directory to host
+  -v /hdd/projects:/src \                               # access source files from host
+  -v /hdd/chroot/remote-config-x86_64:/cfg \            # mount directory containing pacman.conf/makepkg.conf
+  archlinux-base-devel
+podman container start archlinux-devel-container
+
+# configure pacman to use config from mounted directory
+podman container exec archlinux-devel-container bash -c "$(cat devel/container/containersync)"
+
+# start interactive shell in container
+podman container exec -it archlinux-devel-container bash
+
+# install stuff you want
+podman container exec -it archlinux-devel-container \
+  pacman -Syu ninja git mingw-w64-cmake qt6-{base,tools} mingw-w64-qt6-{base,tools,translations,svg,5compat}
+
+# configure the build, e.g. run CMake
+podman container exec -it archlinux-devel-container x86_64-w64-mingw32-cmake \
+  -G Ninja \
+  -S /src/c++/cmake/PianoBooster \
+  -B /build/pianobooster-x86_64-w64-mingw32-release \
+  -DQT_PACKAGE_NAME:STRING=Qt6
+
+# conduct the build, e.g. invoke Ninja build system via CMake
+podman container exec -it archlinux-devel-container cmake \
+  --build /build/pianobooster-x86_64-w64-mingw32-release
+
+# get rid of the container when no longer needed
+podman container stop archlinux-devel-container
+podman container rm archlinux-devel-container
+```
+
+Note that these commands are intended to be run without root (see section
+"Podman-specific remarks" for details). In this case files that are created
+from within the container in the build and source directories will have your
+normal user/group outside the container which is quite convenient (within the
+container they will be owned by root).
 
 ### Other approaches
 There's also the 3rdparty repository

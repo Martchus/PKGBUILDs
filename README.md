@@ -143,11 +143,13 @@ podman container exec -it archlinux-devel-container x86_64-w64-mingw32-cmake \
   -G Ninja \
   -S /src/c++/cmake/PianoBooster \
   -B /build/pianobooster-x86_64-w64-mingw32-release \
+  -DPKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/x86_64-w64-mingw32-pkg-config \
   -DQT_PACKAGE_NAME:STRING=Qt6
 
 # conduct the build, e.g. invoke Ninja build system via CMake
-podman container exec -it archlinux-devel-container cmake \
-  --build /build/pianobooster-x86_64-w64-mingw32-release
+podman container exec -it archlinux-devel-container bash -c '
+  source /usr/bin/mingw-env -x86_64-w64-mingw32 && \
+  cmake --build /build/pianobooster-x86_64-w64-mingw32-release --verbose'
 
 # get rid of the container when no longer needed
 podman container stop archlinux-devel-container

@@ -103,6 +103,8 @@ edit `~/.config/containers/storage.conf` (or `/etc/containers/storage.conf` for
 system-wide configuration) to set `runroot` and `graphroot` to different
 locations.
 
+Finally, run `podman system migrate` to apply.
+
 ### Investigation of build failures
 By default, `makecontainerpkg` starts the container via `--rm` so the container
 is removed in the end. Set `DEBUG=1` to prevent that. Then one can use e.g.

@@ -16,7 +16,7 @@ _boost_arch=x86
 _boost_address_model=64
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=1.76.0
+pkgver=1.81.0
 _srcname=boost_${pkgver//./_}
 pkgrel=1
 url='https://www.boost.org/'
@@ -29,18 +29,26 @@ makedepends=('bzip2' 'zlib' 'android-ndk' 'android-sdk')
 conflicts=("android-$_pkgname-$_android_arch")
 replaces=("android-$_pkgname-$_android_arch")
 source=(https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.gz
+        boost-1.81.0-phoenix-multiple-definitions.patch
         $_pkgname-ublas-c++20-iterator.patch::https://github.com/boostorg/ublas/commit/a31e5cffa85f.patch
-        no-versioned-shlibs.patch)
-sha256sums=('7bd7ddceec1a1dfdcbdb3e609b60d01739c38390a5f956385a12f3122049f0ca'
+        no-versioned-shlibs.patch
+        disable-version-check.patch)
+sha256sums=('71feeed900fbccca04a3b4f2f84a7c217186f28a940ed8b7ed4725986baf99fa'
+            '3ebf428ef6be090a7b56a233330375539ac429333b83708e28fe5db049cfecdb'
             'aa38addb40d5f44b4a8472029b475e7e6aef1c460509eb7d8edf03491dc1b5ee'
-            'd82d0f15064812dcabb3456a7bcb1db0e0f6145980e4728e638372e0fd35af23')
+            'd82d0f15064812dcabb3456a7bcb1db0e0f6145980e4728e638372e0fd35af23'
+            '4520ebaa7ca5233478024e6aa57a6c9a0893967fed4461dff6f43035790a64d9')
 
 prepare() {
   cd ${_srcname}
+  # https://github.com/boostorg/phoenix/issues/111
+  patch -Np1 -i ../boost-1.81.0-phoenix-multiple-definitions.patch
+
   # https://github.com/boostorg/ublas/pull/97
   patch -Np2 -i ../$_pkgname-ublas-c++20-iterator.patch
 
   patch -i ../no-versioned-shlibs.patch
+  patch -i ../disable-version-check.patch
 }
 
 build() {

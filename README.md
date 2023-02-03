@@ -106,10 +106,10 @@ locations.
 Finally, run `podman system migrate` to apply.
 
 ### Investigation of build failures
-By default, `makecontainerpkg` starts the container via `--rm` so the container
-is removed in the end. Set `DEBUG=1` to prevent that. Then one can use e.g.
-`podman container start …` and `podman container exec -it … bash` to enter the
-container for manual investigation.
+By default, `makecontainerpkg` removes the container in the end. Set `DEBUG=1`
+to prevent that. Then one can use e.g. `podman container exec -it … bash` to
+enter the container for manual investigation. Set `DEBUG=on-failure` to only
+keep the container in case of a failure.
 
 ### Using Arch-packages on another distribution via a container
 If you want to cross-compile software on non-Arch distributions you can make use

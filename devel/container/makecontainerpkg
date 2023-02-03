@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
 
+# make basic arguments for cre
+pkgname=$(grep -oP '(?<=pkgname=).+(?=$)' PKGBUILD | tr '+' 'p')
+uuid=$(cat /proc/sys/kernel/random/uuid)
+name=makechrootpkg-$pkgname-$uuid
+cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir -it)
+
 # parse arguments
-cre_args=(--workdir "/startdir" -v "$PWD":/startdir)
-[[ $DEBUG ]] || script_args+=(--rm)
 script_args= read_script_args= no_sync=
 for arg in "$@"; do
     if [[ $read_script_args ]]; then
@@ -27,4 +31,21 @@ if ! [[ $no_sync ]]; then
     script_sync=$(cat "$bindir/containersync")
 fi
 
-${CRE:-docker} run "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}" bash -c "$script_sync $script $script_args"
+# invoke containerized build
+ec=0 cre=${CRE:-docker}
+"$cre" container create "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}"
+"$cre" container start "$name"
+"$cre" container exec "$name" bash \
+    -c "$script_sync $script $script_args" || ec=$?
+
+# stop and remove container unless we want to keep it for debugging
+[[ $ec == 0 && $DEBUG == on-failure || -z $DEBUG ]] && \
+    "$cre" container rm --force --time 0 "$name"
+
+# log message about commands to use for investigation
+[[ $ec != 0 ]] && [[ $DEBUG ]] && echo \
+    "You may investigate the failure via:
+    $cre exec -it '$name' bash
+    $cre mount '$name'"
+
+exit $ec

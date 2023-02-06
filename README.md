@@ -61,7 +61,7 @@ It also contains a script called `makecontainerpkg` which behaves like
 `makechrootpkg` from Arch Linux's devtools but uses the previously mentioned
 container image. Therefore it does *not* require devtools, a chroot setup and
 systemd-nsapwn. Instead, any container runtime should be sufficient (tested with
-Docker).
+Docker and Podman).
 
 The usage of `makecontainerpkg` is very similar to `makechrootpkg`. Simply run
 the script in a directory containing a `PKGBUILD` file. If the directory

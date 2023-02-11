@@ -6,7 +6,7 @@
 # you also find the URL of a binary repository.
 
 _pkgname=cppunit
-_android_arch=x86-64
+_android_arch=x86
 pkgname=android-$_android_arch-$_pkgname
 pkgver=1.15.1
 pkgrel=1

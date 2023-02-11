@@ -3,7 +3,7 @@
 
 _pkgname=glib2
 pkgname=static-compat-$_pkgname
-pkgver=2.74.3
+pkgver=2.74.5
 pkgrel=1
 pkgdesc="Low level core library"
 url="https://wiki.gnome.org/Projects/GLib"
@@ -13,10 +13,12 @@ depends=(static-compat-pcre2 static-compat-libffi static-compat-util-linux stati
 makedepends=(gettext shared-mime-info python libelf git static-compat-meson)
 checkdepends=(desktop-file-utils)
 options=(!strip !emptydirs staticlibs)
-_commit=a8ad6347a404962c3b83aca1bf50610a76618c0f  # tags/2.74.3^0
+_commit=39a71aff372ed491a24ca84409d9f93bc7c5d6d4  # tags/2.74.5^0
 source=("git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
+        "git+https://gitlab.gnome.org/GNOME/gvdb.git"
         0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch)
 b2sums=('SKIP'
+        'SKIP'
         '4d5cb5ad1222a5e8d06e79736170cd694a6277e0da71ffd55560d74cf5c3273551d302a35bd2ff43f09070d61c1de147bb312428fce98347d232ac3d44406511')
 
 pkgver() {
@@ -27,8 +29,15 @@ pkgver() {
 prepare() {
   cd glib
 
+  # Fix build (missing include)
+  git cherry-pick -n 03cb4261e00cf505790f4fd4e69f97b2ef4fcccd
+
   # Suppress noise from glib-compile-schemas.hook
   git apply -3 ../0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
+
+  git submodule init
+  git submodule set-url subprojects/gvdb "$srcdir/gvdb"
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {

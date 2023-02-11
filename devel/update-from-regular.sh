@@ -13,7 +13,7 @@ echo "variant version: $variantver"
 regular_file=$official_packages/$package/trunk/PKGBUILD
 source "$regular_file"
 regularver=$pkgver
-echo "variant version: $regularver"
+echo "regular version: $regularver"
 
 if [[ $variantver == "$regularver" ]]; then
     echo "nothing to do, versions are the same"
@@ -41,5 +41,5 @@ if [[ ! $basecomit ]]; then
 fi
 
 cd "$package/$variant"
-git -C "$official_packages" diff "$basecomit..master" -- "$package/trunk/PKGBUILD" > regular.diff
+git -C "$official_packages" diff "$basecomit..origin/master" -- "$package/trunk/PKGBUILD" > regular.diff
 patch -p3 -i regular.diff

@@ -12,19 +12,21 @@ _android_platform=24
 _prefix=/opt/android-libs/$_pkg_arch
 
 pkgname=android-$_pkg_arch-$_pkgname
-pkgver=5.74.0
+pkgver=5.240.0alpha0
 pkgrel=1
 pkgdesc="A QtQuick based components set (Android, $_pkg_arch)"
 arch=('any')
 url='https://community.kde.org/Frameworks'
 license=(LGPL)
-depends=("android-$_pkg_arch-qt5")
-makedepends=('cmake' 'android-ndk' 'android-sdk' 'extra-cmake-modules')
+depends=("android-$_pkg_arch-qt6"-{declarative,shadertools,svg})
+makedepends=('cmake' 'android-ndk' 'android-sdk' 'extra-cmake-modules-git' 'ninja' 'git' 'qt6-base' 'qt6-declarative' 'qt6-tools' 'qt6-shadertools')
 conflicts=("android-$_pkgname-$_android_arch")
 replaces=("android-$_pkgname-$_android_arch")
-source=("https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('9706915f219ef9394b030dbb24974d4fddef091008954cf75cf97cc97586e35f'
-            'SKIP')
+#source=("https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz"{,.sig})
+#sha256sums=('9706915f219ef9394b030dbb24974d4fddef091008954cf75cf97cc97586e35f'
+#            'SKIP')
+source=(git+https://invent.kde.org/epopov/kirigami.git)
+sha256sums=(SKIP)
 validpgpkeys=('53E6B47B45CEA3E0D5B7457758D0EE648A48B3BB') # David Faure <faure@kde.org>
 options=(!buildflags staticlibs !strip !emptydirs)
 
@@ -37,10 +39,15 @@ build() {
 
   # note: needs workaround for https://gitlab.kitware.com/cmake/cmake/issues/18739 (currently provided outside of the PKGBUILD itself)
 
-  cmake ../$_pkgname-$pkgver \
+  #cmake ../$_pkgname-$pkgver \
+  cmake ../kirigami \
     -DCMAKE_SYSTEM_NAME=Android \
     -DCMAKE_SYSTEM_VERSION=$_android_platform \
     -DANDROID_ABI=$_android_arch \
+    -DECM_DIR:PATH=/usr/share/ECM/cmake \
+    -DBUILD_EXAMPLES=OFF \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_QCH=OFF \
     -DCMAKE_ANDROID_ARCH_ABI=$_android_arch \
     -DCMAKE_ANDROID_NDK=/opt/android-ndk \
     -DCMAKE_ANDROID_SDK=/opt/android-sdk \
@@ -48,11 +55,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="$_prefix" \
     -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,$_prefix/lib" \
-    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;$_prefix" \
-    -DECM_DIR=/usr/share/ECM/cmake \
-    -DBUILD_EXAMPLES=OFF \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_QCH=OFF
+    -DCMAKE_FIND_ROOT_PATH="/opt/android-ndk/sysroot;$_prefix"
   make VERBOSE=1
 }
 

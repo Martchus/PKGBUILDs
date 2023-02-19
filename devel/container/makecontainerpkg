@@ -33,6 +33,18 @@ for arg in "$@"; do
     fi
 done
 
+# add arguments from environment
+if [[ $PACMAN_PKG_CACHE_DIR ]]; then
+    cre_args+=(-v "$PACMAN_PKG_CACHE_DIR":/var/cache/pacman/pkg)
+fi
+if [[ $CONTAINER_BUILD_CFG_DIR ]]; then
+    cre_args+=(-v "$CONTAINER_BUILD_CFG_DIR":/cfg)
+fi
+if [[ $CONTAINER_BUILD_CCACHE_DIR ]]; then
+    cre_args+=(-v "$CONTAINER_BUILD_CCACHE_DIR":/ccache)
+    script_args+=' CCACHE_DIR=/ccache'
+fi
+
 # load "containerbuild" and "containersync" script
 bindir=$(dirname "$0")
 script=$(cat "$bindir/containerbuild")

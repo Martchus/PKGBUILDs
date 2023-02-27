@@ -77,11 +77,8 @@ depends=(
   xz
   zlib
 
-  ocl-icd
   libfdk-aac
-  librsvg
   #glslang - see note below
-  vulkan-icd-loader
 )
 makedepends=(
   amf-headers
@@ -116,24 +113,23 @@ provides=(
   "ffmpeg-librsvg=$pkgver"
 )
 conflicts=("$_name")
-
 options=(
   debug
 )
 _tag=1326fe9d4c85cca1ee774b072ef4fa337694f2e7
 source=(
-  git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
+  git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
 )
-b2sums=(
-  SKIP
-  555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de
-)
+b2sums=('SKIP'
+        '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
   cd ffmpeg
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
+  msg2 "picking eb0455d64690eed0068e5cb202f72ecdf899837c"
+  git cherry-pick -n eb0455d64690eed0068e5cb202f72ecdf899837c # https://github.com/FFmpeg/FFmpeg/commit/eb0455d64690eed0068e5cb202f72ecdf899837c
 }
 
 pkgver() {
@@ -143,6 +139,7 @@ pkgver() {
 
 build() {
   cd $_name
+
   ./configure \
     --prefix=/usr \
     --disable-debug \
@@ -199,16 +196,18 @@ build() {
     --enable-nvenc \
     --enable-opencl \
     --enable-opengl \
+    --enable-omx \
     --enable-shared \
     --enable-version3 \
     --enable-vulkan \
-    --enable-omx \
     --enable-libfdk_aac \
     --enable-vaapi \
     --enable-vdpau \
     --enable-openal \
     --enable-nonfree
+
   # note: removing --enable-libglslang for now due to "ERROR: libglslang not found"
+
   make
   make tools/qt-faststart
   make doc/ff{mpeg,play}.1

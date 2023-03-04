@@ -140,7 +140,7 @@ podman container exec -it archlinux-devel-container bash
 podman container exec -it archlinux-devel-container \
   pacman -Syu ninja git mingw-w64-cmake qt6-{base,tools} mingw-w64-qt6-{base,tools,translations,svg,5compat}
 
-# configure the build, e.g. run CMake
+# configure the build using mingw-w64 packages, e.g. run CMake
 podman container exec -it archlinux-devel-container x86_64-w64-mingw32-cmake \
   -G Ninja \
   -S /src/c++/cmake/PianoBooster \
@@ -148,10 +148,28 @@ podman container exec -it archlinux-devel-container x86_64-w64-mingw32-cmake \
   -DPKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/x86_64-w64-mingw32-pkg-config \
   -DQT_PACKAGE_NAME:STRING=Qt6
 
-# conduct the build, e.g. invoke Ninja build system via CMake
+# conduct the build using mingw-w64 packages, e.g. invoke Ninja build system via CMake
 podman container exec -it archlinux-devel-container bash -c '
-  source /usr/bin/mingw-env -x86_64-w64-mingw32 && \
+  source /usr/bin/mingw-env x86_64-w64-mingw32 && \
   cmake --build /build/pianobooster-x86_64-w64-mingw32-release --verbose'
+
+# configure the build using android packages, e.g. run CMake
+podman container exec -it archlinux-devel-container bash -c '
+  android_arch=aarch64
+  source /usr/bin/android-env $android_arch && \
+  android-$android_arch-cmake \
+    -G Ninja \
+    -S /src/c++/cmake/subdirs/passwordmanager \
+    -B /build/passwordmanager-android-$android_arch-release \
+    -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}" \
+    -DPKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/android-$android_arch-pkg-config \
+    -DQT_PACKAGE_PREFIX:STRING=Qt6 \
+    -DKF_PACKAGE_PREFIX:STRING=KF6'
+
+# conduct the build using android packages, e.g. invoke Ninja build system via CMake
+podman container exec -it archlinux-devel-container bash -c '
+  source /usr/bin/android-env aarch64 && \
+  cmake --build /build/passwordmanager-android-aarch64-release --verbose'
 
 # get rid of the container when no longer needed
 podman container stop archlinux-devel-container

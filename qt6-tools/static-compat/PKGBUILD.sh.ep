@@ -2,7 +2,7 @@
 \
 _qtver=6.4.2
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -39,5 +39,5 @@ optdepends=('clang: for qdoc and lupdate')
     -DLLVM_DIR="$PWD/prefix/lib/cmake/llvm" \\
     -DClang_DIR="$PWD/prefix/lib/cmake/clang"
   # ensure system libc/libdl/libm is present on the linker-line before other libs
-  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM-14.so.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja\
+  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM-15.so.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja\
 % end

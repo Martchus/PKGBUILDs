@@ -162,6 +162,7 @@ podman container exec -it archlinux-devel-container bash -c '
     -S /src/c++/cmake/subdirs/passwordmanager \
     -B /build/passwordmanager-android-$android_arch-release \
     -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}" \
+    -DANDROID_SDK_ROOT="${ANDROID_HOME}" \
     -DPKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/android-$android_arch-pkg-config \
     -DQT_PACKAGE_PREFIX:STRING=Qt6 \
     -DKF_PACKAGE_PREFIX:STRING=KF6'

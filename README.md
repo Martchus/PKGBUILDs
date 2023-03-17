@@ -384,7 +384,7 @@ recent version of GCC/libstdc++ and other libraries such as Qt and Boost but
 still be able to run the resulting executables on older distributions.
 
 To use the packages, simply invoke `/usr/static-compat/bin/g++` instead of
-`/usr/bin/g++`. The package `static-compat-environment` provide a script to set
+`/usr/bin/g++`. The package `static-compat-environment` provides a script to set
 a few environment variables to make this easier. There are also packages
 providing build system wrappers such as `static-compat-cmake`.
 

@@ -172,6 +172,16 @@ podman container exec -it archlinux-devel-container bash -c '
   source /usr/bin/android-env aarch64 && \
   cmake --build /build/passwordmanager-android-aarch64-release --verbose'
 
+# use additional Android-related tooling from container
+# note: These are just example values. The ports for pairing and connection distinct.
+phone_ip=192.168.178.42 pairing_port=34765 pairing_code=922102 connection_port=32991
+podman container exec -it archlinux-devel-container \
+  /opt/android-sdk/platform-tools/adb pair "$phone_ip:$pairing_port" "$pairing_code"
+podman container exec -it archlinux-devel-container \
+  /opt/android-sdk/platform-tools/adb connect "$phone_ip:$connection_port"
+podman container exec -it archlinux-devel-container \
+  /opt/android-sdk/platform-tools/adb logcat
+
 # get rid of the container when no longer needed
 podman container stop archlinux-devel-container
 podman container rm archlinux-devel-container

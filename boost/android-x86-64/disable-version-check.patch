@@ -1,5 +1,5 @@
---- tools/build/src/tools/common.jam.orig	2023-02-03 10:57:59.385098144 +0100
-+++ tools/build/src/tools/common.jam	2023-02-03 11:00:34.982146918 +0100
+--- a/tools/build/src/tools/common.jam	2023-02-03 10:57:59.385098144 +0100
++++ b/tools/build/src/tools/common.jam	2023-02-03 11:00:34.982146918 +0100
 @@ -1127,18 +1127,18 @@
          import $(toolset) ;
          local tool-version = [ $(toolset).get-full-version $(command) ] ;

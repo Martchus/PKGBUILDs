@@ -6,12 +6,6 @@
 _pkgname=boost
 _pkg_arch=x86-64
 _android_arch=x86_64
-_android_toolchain=x86_64-linux-android$_android_platform
-_andoird_toolchain_dir=$_android_arch
-_android_platform=24 # https://developer.android.com/about/dashboards/
-_android_target=$_android_toolchain
-_android_prefix=/opt/android-libs/$_pkg_arch
-_android_ndk_path=/opt/android-ndk
 _boost_arch=x86
 _boost_address_model=64
 
@@ -25,7 +19,7 @@ license=('custom')
 pkgdesc="Free peer-reviewed portable C++ source libraries (Android, $_pkg_arch)"
 depends=("android-$_pkg_arch-libiconv")
 options=(!buildflags staticlibs !strip !emptydirs)
-makedepends=('bzip2' 'zlib' 'android-ndk' 'android-sdk')
+makedepends=('bzip2' 'zlib' 'android-ndk' 'android-sdk' 'android-environment')
 conflicts=("android-$_pkgname-$_android_arch")
 replaces=("android-$_pkgname-$_android_arch")
 source=(https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.gz
@@ -33,11 +27,11 @@ source=(https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcn
         $_pkgname-ublas-c++20-iterator.patch::https://github.com/boostorg/ublas/commit/a31e5cffa85f.patch
         no-versioned-shlibs.patch
         disable-version-check.patch)
-sha256sums=('71feeed900fbccca04a3b4f2f84a7c217186f28a940ed8b7ed4725986baf99fa'
+sha256sums=('205666dea9f6a7cfed87c7a6dfbeb52a2c1b9de55712c9c1a87735d7181452b6'
             '3ebf428ef6be090a7b56a233330375539ac429333b83708e28fe5db049cfecdb'
             'aa38addb40d5f44b4a8472029b475e7e6aef1c460509eb7d8edf03491dc1b5ee'
             'd82d0f15064812dcabb3456a7bcb1db0e0f6145980e4728e638372e0fd35af23'
-            '4520ebaa7ca5233478024e6aa57a6c9a0893967fed4461dff6f43035790a64d9')
+            '63d12e7d703b471882608b4225c489f6a35ab425602783a4f9c4ea99a10f9c4b')
 
 prepare() {
   cd ${_srcname}
@@ -48,33 +42,30 @@ prepare() {
   patch -Np2 -i ../$_pkgname-ublas-c++20-iterator.patch
 
   patch -i ../no-versioned-shlibs.patch
-  patch -i ../disable-version-check.patch
+  patch -p1 -i ../disable-version-check.patch
 }
 
 build() {
+  source android-env ${_pkg_arch}
+
   local _stagedir="${srcdir}/stagedir"
   local jobs="$(sed -e 's/.*\(-j *[0-9]\+\).*/\1/' <<< ${MAKEFLAGS})"
   local target_flags=" \
-    --target=$_android_target"
+    --target=${_pkg_arch}-linux-android$ANDROID_MINIMUM_PLATFORM --sysroot=$ANDROID_SYSROOT"
   local common_flags=" \
     $target_flags \
-    -isystem $_android_ndk_path/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1 \
-    -isystem $_android_ndk_path/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include \
-    -isystem $_android_ndk_path/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/$_android_toolchain \
     -fexceptions \
-    -no-canonical-prefixes \
-    -D__ANDROID_API__=$_android_platform \
-    -O3 \
-    -fPIC \
+    -DANDROID \
+    -O3 -DNDEBUG \
+    -D_FORTIFY_SOURCE=2 -O2 -pipe -fno-plt -fexceptions --param=ssp-buffer-size=4 -fPIC \
     -DBOOST_ASIO_HAS_STD_STRING_VIEW=1"
   local ld_flags=" \
     $target_flags \
-    -fexceptions \
-    $_android_ndk_path/sources/cxx-stl/llvm-libc++/libs/$_android_arch/libc++_shared.so \
-    -nostdlib++"
+    -fexceptions"
 
   cd ${_srcname}
 
+  msg2 'Bootstrapping b2'
   ./bootstrap.sh --with-toolset=gcc
 
   install -Dm755 tools/build/src/engine/b2 "${_stagedir}"/bin/b2
@@ -86,14 +77,14 @@ build() {
   install -dm755 "${_stagedir}"/share/boostbook
   cp -a tools/boostbook/{xsl,dtd} "${_stagedir}"/share/boostbook/
 
-  export PATH=$_android_ndk_path/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
-
   # default "minimal" install: "release link=shared,static
   # runtime-link=shared threading=single,multi"
   # --layout=tagged will add the "-mt" suffix for multithreaded libraries
-  # and installs includes in $_android_prefix/include/boost.
+  # and installs includes in $ANDROID_PREFIX/include/boost.
   # --layout=system no longer adds the -mt suffix for multi-threaded libs.
   # install to ${_stagedir} for consistency with regular boost package
+  msg2 'Invoking build via b2'
+  export PATH=$ANDROID_CROSS_PREFIX:$PATH
   "${_stagedir}"/bin/b2 \
     --with-atomic \
     --with-chrono \
@@ -129,9 +120,9 @@ build() {
     toolset=clang-android \
     architecture=$_boost_arch \
     address-model=$_boost_address_model \
-    -sICONV_PATH="/opt/android-libs/$_pkg_arch" \
+    -sICONV_PATH="$ANDROID_PREFIX" \
     cflags="$common_flags" \
-    cxxflags="$common_flags -frtti -std=c++14" \
+    cxxflags="$common_flags -frtti -std=gnu++17" \
     linkflags="$ld_flags" \
     --layout=system \
     ${jobs} \
@@ -141,23 +132,24 @@ build() {
 }
 
 package() {
-  local _stagedir="${srcdir}/stagedir"
-  install -dm755 "${pkgdir}"$_android_prefix
-  cp -a "${_stagedir}"/{include,share} "${pkgdir}"$_android_prefix
+  source android-env ${_pkg_arch}
 
-  local libdir="${pkgdir}"$_android_prefix/lib
+  local _stagedir="${srcdir}/stagedir"
+  install -dm755 "${pkgdir}$ANDROID_PREFIX"
+  cp -a "${_stagedir}"/{include,share} "${pkgdir}$ANDROID_PREFIX"
+
+  local libdir="${pkgdir}$ANDROID_PREFIX"/lib
   install -d "${libdir}"
   cp -a "${_stagedir}"/lib/*.a "${libdir}"/
 
-  install -dm755 "${pkgdir}"$_android_prefix
-  cp -a "${_stagedir}"/lib "${pkgdir}"$_android_prefix
+  install -dm755 "${pkgdir}$ANDROID_PREFIX"
+  cp -a "${_stagedir}"/lib "${pkgdir}$ANDROID_PREFIX"
 
   install -Dm644 "${srcdir}/"${_srcname}/LICENSE_1_0.txt \
-      "${pkgdir}"$_android_prefix/share/licenses/boost/LICENSE_1_0.txt
+      "${pkgdir}"/usr/share/licenses/$pkgname/LICENSE_1_0.txt
 
-  local strip=$_android_ndk_path/toolchains/$_android_toolchain-4.9/prebuilt/linux-x86_64/bin/$_android_toolchain-strip
-  find "${libdir}" -iname '*.a' -exec $strip -g {} \;
-  find "${libdir}" -iname '*.so' -exec $strip --strip-unneeded {} \;
+  find "${libdir}" -iname '*.a' -exec $ANDROID_STRIP -g {} \;
+  find "${libdir}" -iname '*.so' -exec $ANDROID_STRIP --strip-unneeded {} \;
 }
 
 # vim: ts=2 sw=2 et:

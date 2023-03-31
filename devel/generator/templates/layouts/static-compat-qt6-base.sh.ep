@@ -13,7 +13,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.4.3
+_qtver=6.5.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -27,7 +27,7 @@ depends=(shared-mime-info
          static-compat-libxdamage static-compat-libxkbcommon static-compat-libxmu
          static-compat-libxxf86vm static-compat-md4c static-compat-pcre2
          static-compat-sqlite static-compat-xcb-util-image static-compat-xcb-util-keysyms
-         static-compat-xcb-util-renderutil static-compat-vulkan-headers
+         static-compat-xcb-util-renderutil static-compat-xcb-util-cursor static-compat-vulkan-headers
          static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans)
 makedepends=(static-compat-cmake xdg-utils ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')

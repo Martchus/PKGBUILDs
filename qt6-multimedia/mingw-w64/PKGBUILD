@@ -32,6 +32,10 @@ prepare () {
     msg2 "Applying patch $patch"
     patch -p1 -i "$patch"
   done
+  # work around case-insensitive includes on case-sensitive filesystems
+  sed -i'' 's/\(.*\) \(Mf.*\|Propsys\) HINTS \(.*\)/\1 \L\2 HINTS \3/g' cmake/FindWMF.cmake
+  find src -type f -exec sed -i'' 's/#include <\(Dbt.*\|InitGuid.*\|Mf.*\|Wmcodec.*\|Functiondiscoverykeys_devpkey.*\)>/#include <\L\1>/g' {} \;
+  find src -type f -exec sed -i'' 's/#include "\(Dbt.*\|InitGuid.*\|Mf.*\|Wmcodec.*\|QUrl.*\)"/#include "\L\1"/g' {} \;
 }
 
 build() {

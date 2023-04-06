@@ -19,7 +19,7 @@ groups=(mingw-w64-qt6)
 _pkgfqn="qtmultimedia-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Fix-compile-flags-of-resonance-audio-for-mingw-w64.patch')
-sha256sums=('a4a72469e12da1e59ee032ab2e6677d620a5663c354d0ba88906d2bec1567d00'
+sha256sums=('9480d0c73abdd01aec4899e340938cec046a3f404b9f9ed945288be574dca146'
             'fa134d80bd74c32839407ec348424b55daf251899e5056adb024bad194e02482')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'

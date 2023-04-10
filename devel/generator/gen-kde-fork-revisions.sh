@@ -15,7 +15,7 @@ for pkgbuild in qt5-*/trunk/PKGBUILD ; do
     if [[ $pkgname != qt5-doc ]] && [[ $pkgver =~ $expected_version ]] && [[ $_commit ]]; then
         if [[ $pkgver == "${versions[qt5]}" ]]; then
             pkgver=0
-	fi
+        fi
         echo "${pkgname##qt5-} => [${pkgver##*+r}, '$_commit']",
     fi
 done

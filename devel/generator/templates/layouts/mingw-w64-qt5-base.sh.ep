@@ -31,7 +31,7 @@
 
 _qt_module=qt<%== $qt_module %>
 pkgname=<%= $package_name %>
-pkgver=5.15.8<%== $kde_fork_revision ? "+kde+r$kde_fork_revision->[0]" : '' %>
+pkgver=5.15.9<%== $kde_fork_revision ? "+kde+r$kde_fork_revision->[0]" : '' %>
 pkgrel=1
 % if ($kde_fork_revision) {
 _basever=${pkgver%%+*}
@@ -43,7 +43,7 @@ url='https://www.qt.io/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
 depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
-         'mingw-w64-pcre2')
+         'mingw-w64-pcre2'<%== $static_variant ? " 'mingw-w64-zstd'" : "" %>)
 % if ($static_variant) {
 depends+=(${pkgname%-static}) # the static version relies on the shared version for build tools and headers
 % }

@@ -94,8 +94,8 @@ To use podman (instead of Docker) simply set `export CRE=podman`.
 
 To be able to run podman without root, you need to ensure user/group IDs can be
 mapped. The mapping is configured in the files `/etc/subuid` and `/etc/subgid`.
-Use `sudo usermod --add-subuids 200000-205000 --add-subgids 200000-205000 $USER`
-to configure it for the current user and the configuration via
+Use `sudo usermod --add-subuids 200000-265536 --add-subgids 200000-265536 $USER`
+to configure it for the current user and verify the configuration via
 `grep $USER /etc/sub{u,g}id`.
 
 To change storage paths so e.g. containers are stored at a different location,

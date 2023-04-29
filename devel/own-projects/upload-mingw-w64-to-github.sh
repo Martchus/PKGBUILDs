@@ -66,9 +66,11 @@ do
     for arch in i686-w64-mingw32 x86_64-w64-mingw32; do
         binaries=(usr/$arch/bin/*-static.exe)
         for binary in ${binaries[@]}; do
+            binary_cli=${binary%-static.exe}-static-cli.exe
             base_name=${binary##*/}
             base_name=${base_name%-static.exe}
             symlink_name=$base_name-$arch.exe
+            symlink_name_cli=$base_name-$arch-cli.exe
             # consider Qt 6 the suffixless default and use suffix for Qt 5 version instead
             if  [[ $base_name =~ .*-qt6 ]]; then
                 base_name=${base_name%-qt6}
@@ -76,6 +78,7 @@ do
                 base_name=${base_name}-qt5
             fi
             binary_name=$base_name-$version-$arch.exe
+            binary_name_cli=$base_name-$version-$arch-cli.exe
 
             # check whether upload already exists
             zip_file="$binary_name.zip"
@@ -91,6 +94,10 @@ do
             echo "zipping $binary to $zip_file"
             mv "$binary" "$binary_name"
             ln -s "$binary_name" "$symlink_name"
+            if [[ -f $binary_cli ]]; then
+                mv "$binary_cli" "$binary_name_cli"
+                ln -s "$binary_name_cli" "$symlink_name_cli"
+            fi
             license_file_2=$project-$version-$arch-LICENSES.md
             cp "$license_file" "$license_file_2"
             bsdtar acf "$zip_file" "$binary_name" "$license_file_2"

@@ -1,10 +1,11 @@
 # Maintainer: Martchus <martchus@gmx.net>
+# Contributor: éclairevoyant
 # Contributor: Marco Pompili <aur AT emarcs DOT org>
 # Contributor: Ben Duffield <bavardage AT archlinux.us>
 
 pkgname=pocketsphinx
 pkgver=5.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A small speech recognizer'
 arch=('i686' 'x86_64')
 url='https://cmusphinx.github.io'

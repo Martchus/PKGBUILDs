@@ -25,8 +25,7 @@ build() {
 package() {
   cd $pkgname-$pkgver
 
-  DESTDIR="$pkgdir" cmake --build build --target install
+  DESTDIR="$pkgdir" cmake --install build
 
-  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -D -m644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -D -m644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
 }

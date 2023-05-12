@@ -3,7 +3,7 @@
 
 _pkgname=xz
 pkgname=static-compat-$_pkgname
-pkgver=5.4.1
+pkgver=5.4.3
 pkgrel=1
 pkgdesc='Library and command line tools for XZ and LZMA compressed files'
 arch=('x86_64')
@@ -14,9 +14,9 @@ makedepends=('static-compat-configure')
 options=(!emptydirs staticlibs)
 validpgpkeys=('3690C240CE51B4670D30AD1C38EE757D69184620') # Lasse Collin <lasse.collin@tukaani.org>
 source=("https://tukaani.org/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"{,.sig})
-sha256sums=('e4b0f81582efa155ccf27bb88275254a429d44968e488fc94b806f2a61cd3e22'
+sha256sums=('1c382e0bc2e4e0af58398a903dd62fff7e510171d2de47a1ebe06d1528e9b7e9'
             'SKIP')
-sha512sums=('5cff8383a68fb88ecbb3770ec48af0ad5582e08de9dccd339e0b685aaa53447e59d6425caa3f63b54a674e5d78c20520876db547d156e6658ad4841660cba85b'
+sha512sums=('aff0fe166af6df4491a6f5df2372cab100b081452461a0e8c6fd65b72af3f250f16c64d9fb8fd309141e9b9ae4e41649f48687cc29e63dd82f27f2eab19b4023'
              'SKIP')
 
 build() {

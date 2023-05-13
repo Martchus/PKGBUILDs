@@ -12,7 +12,8 @@ license=('GPL' 'LGPL' 'custom')
 depends=('glibc-static-compat')
 makedepends=('static-compat-configure')
 options=(!emptydirs staticlibs)
-validpgpkeys=('3690C240CE51B4670D30AD1C38EE757D69184620') # Lasse Collin <lasse.collin@tukaani.org>
+validpgpkeys=('3690C240CE51B4670D30AD1C38EE757D69184620'  # Lasse Collin <lasse.collin@tukaani.org>
+              '22D465F2B4C173803B20C6DE59FCF207FEA7F445') # Jia Tan <jiat0218@gmail.com>
 source=("https://tukaani.org/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"{,.sig})
 sha256sums=('1c382e0bc2e4e0af58398a903dd62fff7e510171d2de47a1ebe06d1528e9b7e9'
             'SKIP')

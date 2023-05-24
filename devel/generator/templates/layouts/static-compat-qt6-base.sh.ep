@@ -13,7 +13,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.5.0
+_qtver=6.5.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)

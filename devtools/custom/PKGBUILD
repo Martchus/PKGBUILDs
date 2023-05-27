@@ -8,7 +8,8 @@
 
 pkgname=devtools-custom
 _pkgname=devtools
-pkgver=20230307
+epoch=1
+pkgver=1.0.1
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
@@ -16,16 +17,38 @@ license=('GPL')
 url='https://martchus.no-ip.biz/gitea/Martchus/devtools/src/branch/custom'
 conflicts=('devtools' 'devtools-alarm')
 provides=('devtools' 'devtools-alarm')
-depends=('bash' 'openssh' 'subversion' 'rsync' 'arch-install-scripts'
-         'git' 'bzr' 'mercurial' 'diffutils' 'util-linux' 'awk')
-makedepends=('asciidoc')
+depends=(
+  arch-install-scripts
+  awk
+  bash
+  binutils
+  coreutils
+  diffutils
+  findutils
+  grep
+  jq
+  openssh
+  parallel
+  rsync
+  sed
+  util-linux
+
+  bzr
+  git
+  mercurial
+  subversion
+)
+makedepends=(
+  asciidoc
+  shellcheck
+)
 optdepends=('btrfs-progs: btrfs support')
-source=("git+https://martchus.no-ip.biz/gitea/Martchus/$_pkgname.git#branch=custom-$pkgver")
-md5sums=('SKIP')
+source=("git+https://martchus.no-ip.biz/gitea/Martchus/$_pkgname.git#branch=custom-v$pkgver")
+sha256sums=('SKIP')
 
 build() {
   cd "$srcdir/${_pkgname}"
-  make PREFIX=/usr
+  make BUILDTOOLVER="${epoch}:${pkgver}-${pkgrel}-${arch}" PREFIX=/usr
 }
 
 package() {

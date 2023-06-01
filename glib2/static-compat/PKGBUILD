@@ -3,7 +3,7 @@
 
 _pkgname=glib2
 pkgname=static-compat-$_pkgname
-pkgver=2.74.5
+pkgver=2.76.3
 pkgrel=1
 pkgdesc="Low level core library"
 url="https://wiki.gnome.org/Projects/GLib"
@@ -13,27 +13,35 @@ depends=(static-compat-pcre2 static-compat-libffi static-compat-util-linux stati
 makedepends=(gettext shared-mime-info python libelf git static-compat-meson)
 checkdepends=(desktop-file-utils)
 options=(!strip !emptydirs staticlibs)
-_commit=39a71aff372ed491a24ca84409d9f93bc7c5d6d4  # tags/2.74.5^0
-source=("git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
-        "git+https://gitlab.gnome.org/GNOME/gvdb.git"
-        0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch)
+_commit=69e209764bcfef599a21b32f82f88f1906bf197c  # tags/2.76.3^0
+source=(
+  "git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
+  "git+https://gitlab.gnome.org/GNOME/gvdb.git"
+  0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
+  0002-glocalfile-Sum-apparent-size-only-for-files-and-syml.patch
+  0003-tests-file-Do-not-rely-on-du-bytes-behaviour.patch
+)
 b2sums=('SKIP'
         'SKIP'
-        '4d5cb5ad1222a5e8d06e79736170cd694a6277e0da71ffd55560d74cf5c3273551d302a35bd2ff43f09070d61c1de147bb312428fce98347d232ac3d44406511')
+        'bd7f881ae6054c363783bf45b1add5eef5e8347554e23b9fece526701469d07cdcb9871fa73dee473796a219e8aa513796a96da769949097ea207db038578d07'
+        '6bcbcba60208162f7221701d6a642eabfc92c2fc6a476bcb42da5967577f8f0c75b688d149be01c9c48cd644aafa7fbdd63d9086385b8f7607fc981756d71a68'
+        '257bf37d304cc161dedcde0a2c4d01e297f8263cde48b49d3ee47ca95a8fb9ad44bbb9bf99da51ec766ffb6f9d502e0a8fdc6b86346e6755373ee515e23b9419')
 
 pkgver() {
   cd glib
-  git describe --tags | sed 's/-/+/g'
+  git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
 }
 
 prepare() {
   cd glib
 
-  # Fix build (missing include)
-  git cherry-pick -n 03cb4261e00cf505790f4fd4e69f97b2ef4fcccd
-
   # Suppress noise from glib-compile-schemas.hook
   git apply -3 ../0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
+
+  # fix test suite issues with coreutils >=9.2
+  # https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3358
+  git apply -3 ../0002-glocalfile-Sum-apparent-size-only-for-files-and-syml.patch
+  git apply -3 ../0003-tests-file-Do-not-rely-on-du-bytes-behaviour.patch
 
   git submodule init
   git submodule set-url subprojects/gvdb "$srcdir/gvdb"
@@ -54,7 +62,7 @@ build() {
 
 check() {
   source static-compat-environment
-  meson test -C build --no-suite flaky --print-errorlogs || true
+  meson test -C build --no-suite flaky --no-suite slow --print-errorlogs || true
 }
 
 package() {

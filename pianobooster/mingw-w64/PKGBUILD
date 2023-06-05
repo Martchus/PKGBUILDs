@@ -1,0 +1,62 @@
+_pkgname='pianobooster'
+pkgname='mingw-w64-pianobooster-custom'
+pkgdesc='A MIDI file player that teaches you how to play the piano (mingw-w64, with custom and experimental patches, statically linked)'
+pkgver=1.0.1
+pkgrel=1
+depends=('mingw-w64-qt6-base-static' 'mingw-w64-ftgl' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities')
+makedepends=('git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static' 'mingw-w64-qt6-5compat-static' 'ninja')
+optdepends=('mingw-w64-qt6-translations')
+arch=('x86_64')
+url='https://github.com/Martchus/PianoBooster'
+license=('GPL3')
+source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/PianoBooster.git#branch=custom")
+sha256sums=(SKIP)
+options=(!buildflags staticlibs !strip !emptydirs)
+
+_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build () {
+  cd "${srcdir}/${_pkgname}"
+  for _arch in "${_architectures[@]}"; do
+    ${_arch}-cmake-static \
+          -B "build-${_arch}-static" \
+          -DCMAKE_BUILD_TYPE:STRING='Release' \
+          -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
+          -DCONFIGURATION_NAME:STRING="static-qt6" \
+          -DCONFIGURATION_DISPLAY_NAME="" \
+          -DCONFIGURATION_PACKAGE_SUFFIX:STRING="-static" \
+          -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES:STRING="-static-qt6" \
+          -DCONFIGURATION_TARGET_SUFFIX:STRING="qt6" \
+          -DUSE_SYSTEM_FONT=ON \
+          -DBUILD_SHARED_LIBS:BOOL=OFF \
+          -DCMAKE_FIND_LIBRARY_SUFFIXES:STRING=".a;.lib" \
+          -DSTATIC_LINKAGE:BOOL=ON \
+          -DSTATIC_LIBRARY_LINKAGE:BOOL=ON \
+          -DBUILTIN_TRANSLATIONS:BOOL=ON \
+          -DBUILTIN_ICON_THEMES:STRING="breeze;breeze-dark" \
+          -DIMAGE_FORMAT_SUPPORT:STRING="Gif;ICO;Jpeg" \
+          -DSVG_SUPPORT:BOOL=ON \
+          -DSVG_ICON_SUPPORT:BOOL=ON \
+          -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
+          -DQT_PACKAGE_PREFIX=Qt6 \
+          -DCMAKE_POLICY_DEFAULT_CMP0057=NEW \
+          -DWITH_INTERNAL_FLUIDSYNTH:BOOL=OFF \
+          -DUSE_FTGL:BOOL=OFF \
+          -DWITH_MAN=ON \
+          .
+    VERBOSE=1 cmake --build "build-${_arch}-static"
+  done
+}
+
+package () {
+  cd "${srcdir}/${_pkgname}"
+  for _arch in "${_architectures[@]}"; do
+    DESTDIR="$pkgdir" cmake --install "build-${_arch}-static"
+    DESTDIR="$pkgdir" cmake --build "build-${_arch}-static" --target install-mingw-w64-strip
+  done
+}

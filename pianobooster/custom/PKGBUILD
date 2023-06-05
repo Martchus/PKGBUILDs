@@ -1,21 +1,21 @@
 _pkgname='pianobooster'
 pkgname='pianobooster-custom'
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
-pkgver=1.0.0.r46.g2e1daa4
+pkgver=1.0.1
 pkgrel=1
-depends=('fluidsynth' 'ftgl' 'hicolor-icon-theme' 'qt6-base' 'rtmidi')
+depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'libqtutilities-qt6.so' 'libc++utilities.so')
 makedepends=('git' 'cmake' 'qt6-tools' 'qt6-5compat' 'ninja')
 optdepends=('qt6-translations')
 conflicts=('pianobooster')
 arch=('x86_64')
-url='https://www.pianobooster.org'
+url='https://github.com/Martchus/PianoBooster'
 license=('GPL3')
 source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/PianoBooster.git#branch=custom")
 sha256sums=(SKIP)
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 build () {
@@ -25,7 +25,8 @@ build () {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DUSE_SYSTEM_FONT=ON \
         -DUSE_JACK=ON \
-        -DQT_PACKAGE_NAME=Qt6 \
+        -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES=-qt6 \
+        -DQT_PACKAGE_PREFIX=Qt6 \
         -DWITH_MAN=ON \
         .
   VERBOSE=1 cmake --build build

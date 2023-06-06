@@ -94,13 +94,15 @@ do
             echo "zipping $binary to $zip_file"
             mv "$binary" "$binary_name"
             ln -s "$binary_name" "$symlink_name"
+            additional_files=()
             if [[ -f $binary_cli ]]; then
                 mv "$binary_cli" "$binary_name_cli"
                 ln -s "$binary_name_cli" "$symlink_name_cli"
+                additional_files+=("$binary_name_cli")
             fi
             license_file_2=$project-$version-$arch-LICENSES.md
             cp "$license_file" "$license_file_2"
-            bsdtar acf "$zip_file" "$binary_name" "$license_file_2"
+            bsdtar acf "$zip_file" "$binary_name" "$license_file_2" "${additional_files[@]}"
             zip_files+=("$zip_file")
         done
     done

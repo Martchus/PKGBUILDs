@@ -12,7 +12,7 @@
 pkgname=static-compat-qt6-base
 _qtver=6.5.1
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -41,20 +41,22 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
         '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
         '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch'
-        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch')
+        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch'
+        '0013-QTabBar-recalculate-scroll-offset-when-showing.patch')
 sha256sums=('db56fa1f4303a1189fe33418d25d1924931c7aef237f89eea9de58e858eebfed'
-            '787b2aad23232c3dcec9ca737ca841f2bfc0375a84fdba6eeb605fc53e78b28c'
-            '3b37c244f12f1778d85af398bd27483bece3f5794e31aedabfb9622ed4ae02df'
-            '2b2e907d9b2e3ef1f1da241755db2f79433c71e919fe11f0c88261dc027e4fd5'
-            '841639befa60ada8e183190c1e30eea919a91e8548c123abe67b165f67db3b00'
-            '388df37ef99eba651c08910bbe8244ca9a44074051e3a0128dc90bede45fa449'
-            'dc272b9f35e93c97d5498ca9e7678193e3885a03b303b69985dea15c2e97c579'
-            '1ff55c21a407eb4193836caf51e45676155854ab43258dab819b675e6bbd357d'
-            'c817b9b638c808b2c49bb20462b26637a311d040b4dfeff03be907ed9a0999dc'
-            'cf691503f23eec594751f68da47bd96abf2b398144f79a625b0b338fef443406'
-            '9bfb7349bcf46792ec57a191355556d698655b9368de744c3f848da5d66cac23'
-            '2c7e228997ac3cf2d3ad6f9e373ab298643f3e2620e4e0038816567664f66e0d'
-            '65f5749461e0de6483fa684577947591a750336f6c2cd74fdd0c128e5ee25f25')
+            '283dc72fb579295a67c5d66a6da5e650a137e6c179f744e9a0ee0df8d4618794'
+            'b42a97f117fc0d517eaedf26f4ebaff4ad764794f4d23dc8574e59f977da8d96'
+            '8baa38d80fbba128d41c0620e6bc01b00b1b6c17b09989aeba6aed18b1f0cbb8'
+            '624be4e17ee19815f8fe42c07e1e88cec89df091360842c432900a4b861947d4'
+            'dfe3b54afe2366fee256825f19b2f2899404cf163968e8a9af1bef4a9764964a'
+            '24ce57861b4b6b315634cd2a75b9ca4f4be5c6dec22868c0e8dd3d66d471bd4d'
+            '842336b23d7aaa9d47d6f24846dd05720390be9cb27ab81cddc3142500754c8c'
+            'b104e7fc6f3dd6dd3d74dad07423314310454e45ac8a779f4c3991417f7628ed'
+            'fb5a9561214c941fd25a88df9ef53eae651e5fef757a6169500ff17cfb958ec2'
+            '3942e3df5745c8ee513c6735c00fa2a993b906903939f72ae161a7a9de6de282'
+            '20bf64f05496ad81cddf530d03e6805d10fb3a68411cb28c4b2cf3dbedd29147'
+            '746abfd92394f48af9ac9ca67860305221e3248e1e2a99bc2c761ed84b02f024'
+            '6e47dd529b22736bef04f53414096d1e18e911a150ae518053dfef0b21f2fa17')
 
 prepare () {
   cd $_pkgfqn

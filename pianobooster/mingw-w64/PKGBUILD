@@ -13,7 +13,8 @@ source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus
 sha256sums=(SKIP)
 options=(!buildflags staticlibs !strip !emptydirs)
 
-_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+#_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+_architectures=('x86_64-w64-mingw32')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -25,6 +26,7 @@ build () {
   for _arch in "${_architectures[@]}"; do
     ${_arch}-cmake-static \
           -B "build-${_arch}-static" \
+	  -G Ninja \
           -DCMAKE_BUILD_TYPE:STRING='Release' \
           -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
           -DCONFIGURATION_NAME:STRING="static-qt6" \
@@ -45,10 +47,12 @@ build () {
           -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
           -DQT_PACKAGE_PREFIX=Qt6 \
           -DCMAKE_POLICY_DEFAULT_CMP0057=NEW \
-          -DWITH_INTERNAL_FLUIDSYNTH:BOOL=OFF \
+          -DWITH_INTERNAL_FLUIDSYNTH:BOOL=ON \
           -DUSE_FTGL:BOOL=OFF \
           -DWITH_MAN=ON \
           .
+    sed -i 's|-lintl|-lintl -liconv|g' "build-${_arch}-static/build.ninja"
+    sed -i 's|-Wl,-Bdynamic  /usr/x86_64-w64-mingw32/lib/libSDL2.dll.a|-lSDL2 -lwinmm -lsetupapi -limm32 -lversion|g' "build-${_arch}-static/build.ninja"
     VERBOSE=1 cmake --build "build-${_arch}-static"
   done
 }

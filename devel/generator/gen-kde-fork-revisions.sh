@@ -10,7 +10,7 @@ arch_pkgbuilds=$1
 
 echo "expected version: $expected_version"
 
-for pkgbuild in qt5-*/trunk/PKGBUILD ; do
+for pkgbuild in qt5-*/PKGBUILD ; do
     source "$pkgbuild"
     if [[ $pkgname != qt5-doc ]] && [[ $pkgver =~ $expected_version ]] && [[ $_commit ]]; then
         if [[ $pkgver == "${versions[qt5]}" ]]; then

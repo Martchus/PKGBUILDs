@@ -8,7 +8,7 @@
 
 pkgname=subtitlecomposer
 pkgver=0.7.1
-pkgrel=6
+pkgrel=7
 pkgdesc='Video subtitle editor'
 arch=('i686' 'x86_64')
 url="https://invent.kde.org/multimedia/${_name}"

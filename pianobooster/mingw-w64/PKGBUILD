@@ -3,8 +3,9 @@ pkgname='mingw-w64-pianobooster-custom'
 pkgdesc='A MIDI file player that teaches you how to play the piano (mingw-w64, with custom and experimental patches, statically linked)'
 pkgver=1.0.1
 pkgrel=1
-depends=('mingw-w64-qt6-base-static' 'mingw-w64-ftgl' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities')
-makedepends=('git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static' 'mingw-w64-qt6-5compat-static' 'ninja')
+depends=()
+makedepends=('mingw-w64-qt6-base-static' 'mingw-w64-ftgl' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities'
+             'git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static' 'ninja')
 optdepends=('mingw-w64-qt6-translations')
 arch=('x86_64')
 url='https://github.com/Martchus/PianoBooster'
@@ -13,8 +14,7 @@ source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus
 sha256sums=(SKIP)
 options=(!buildflags staticlibs !strip !emptydirs)
 
-#_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
-_architectures=('x86_64-w64-mingw32')
+_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"

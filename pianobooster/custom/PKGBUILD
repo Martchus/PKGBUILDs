@@ -3,7 +3,7 @@ pkgname='pianobooster-custom'
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
 pkgver=1.0.1
 pkgrel=1
-depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'libqtutilities-qt6.so')
+depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'libqtutilities-qt6-git.so')
 makedepends=('git' 'cmake' 'clang' 'qt6-tools' 'qt6-declarative' 'ninja')
 optdepends=('qt6-translations')
 conflicts=('pianobooster')
@@ -19,21 +19,19 @@ pkgver() {
 }
 
 build () {
-  cd "${srcdir}/${_pkgname}"
-  cmake -G Ninja -B build \
+  cmake -G Ninja -B build -S "${srcdir}/${_pkgname}" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DUSE_SYSTEM_FONT=ON \
         -DUSE_JACK=ON \
         -DWITH_INTERNAL_FLUIDSYNTH=ON \
-        -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES=-qt6 \
+        -DCONFIGURATION_PACKAGE_SUFFIX=-git \
+        -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES=-qt6-git \
         -DQT_PACKAGE_PREFIX=Qt6 \
-        -DWITH_MAN=ON \
-        .
+        -DWITH_MAN=ON
   VERBOSE=1 cmake --build build
 }
 
 package () {
-  cd "${srcdir}/${_pkgname}"
   DESTDIR="$pkgdir" cmake --install build
 }

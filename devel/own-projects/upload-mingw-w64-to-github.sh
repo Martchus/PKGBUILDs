@@ -6,7 +6,28 @@ source "$(dirname $0)/../versions.sh"
 
 if ! [[ $DRY_RUN ]] && ! [[ $GITHUB_TOKEN ]]; then
     echo "Don't forget to set \$GITHUB_TOKEN."
-    exit -2
+    exit 1
+fi
+
+# determine GPGKEY to use and test signing
+if [[ -f /etc/makepkg.conf ]]; then
+    source /etc/makepkg.conf
+fi
+if ! [[ $GPGKEY ]] && ! [[ $SKIP_SIGNING ]]; then
+    echo "You must set \$GPGKEY for signing or \$SKIP_SIGNING to skip signing."
+    exit 2
+fi
+if [[ -n $GPGKEY ]]; then
+    # make helpers for signing used by buildservice available to this script as well
+    export PATH=/var/lib/buildservice-git/bin:/var/lib/buildservice:$PATH
+    SIGNWITHKEY=(-u "${GPGKEY}")
+    echo 'test' > /tmp/signing-test
+    if ! gpg --detach-sign --yes --use-agent "${SIGNWITHKEY[@]}" --no-armor /tmp/signing-test ; then
+        echo 'Not continuing, setup for signing is broken'
+        exit 3
+    fi
+    rm /tmp/signing-test*
+    echo "Will sign archives with key ${GPGKEY}"
 fi
 
 if [[ $DRY_RUN ]]; then
@@ -152,17 +173,29 @@ do
         done
     fi
 
-    # upload created zip files
+    # try next project and print warning if no files could be created
     if [[ ${#zip_files[@]} == 0 ]]; then
         echo "no zip files for $project/v$version could be created (either all skipped or no executables found)"
         continue
     fi
 
-    # upload files
+    # sign files
+    to_upload=()
     for zip_file in ${zip_files[@]}; do
+        to_upload+=("$zip_file")
+        if ! [[ $GPGKEY ]]; then
+            continue
+        fi
+        echo "signing $project/v$version -> $zip_file"
+        gpg --detach-sign --yes --use-agent "${SIGNWITHKEY[@]}" --no-armor "$zip_file"
+        to_upload+=("$zip_file.sig")
+    done
+
+    # upload files
+    for zip_file in ${to_upload[@]}; do
         echo "uploading $project/v$version -> $zip_file"
         if [[ $DRY_RUN ]]; then
-            mv --target-directory="$target" "$zip_file" 
+            mv --target-directory="$target" "$zip_file"
             continue
         fi
         if github-release upload --user martchus --repo "$gh_name" --tag "v$version" --file "$zip_file" --name "$zip_file"; then

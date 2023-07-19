@@ -10,9 +10,9 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=static-compat-qt6-base
-_qtver=6.5.1
+_qtver=6.5.2
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -41,22 +41,20 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0009-Find-fontconfig-via-pkg-config-for-correct-handling-.patch'
         '0010-Fix-dependency-of-xcb-image-on-xcb-util.patch'
         '0011-Allow-using-properties-of-PkgConfig-targets-for-glib.patch'
-        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch'
-        '0013-QTabBar-recalculate-scroll-offset-when-showing.patch')
-sha256sums=('db56fa1f4303a1189fe33418d25d1924931c7aef237f89eea9de58e858eebfed'
-            '283dc72fb579295a67c5d66a6da5e650a137e6c179f744e9a0ee0df8d4618794'
-            'b42a97f117fc0d517eaedf26f4ebaff4ad764794f4d23dc8574e59f977da8d96'
-            '8baa38d80fbba128d41c0620e6bc01b00b1b6c17b09989aeba6aed18b1f0cbb8'
-            '624be4e17ee19815f8fe42c07e1e88cec89df091360842c432900a4b861947d4'
-            'dfe3b54afe2366fee256825f19b2f2899404cf163968e8a9af1bef4a9764964a'
-            '24ce57861b4b6b315634cd2a75b9ca4f4be5c6dec22868c0e8dd3d66d471bd4d'
-            '842336b23d7aaa9d47d6f24846dd05720390be9cb27ab81cddc3142500754c8c'
-            'b104e7fc6f3dd6dd3d74dad07423314310454e45ac8a779f4c3991417f7628ed'
-            'fb5a9561214c941fd25a88df9ef53eae651e5fef757a6169500ff17cfb958ec2'
-            '3942e3df5745c8ee513c6735c00fa2a993b906903939f72ae161a7a9de6de282'
-            '20bf64f05496ad81cddf530d03e6805d10fb3a68411cb28c4b2cf3dbedd29147'
-            '746abfd92394f48af9ac9ca67860305221e3248e1e2a99bc2c761ed84b02f024'
-            '6e47dd529b22736bef04f53414096d1e18e911a150ae518053dfef0b21f2fa17')
+        '0012-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch')
+sha256sums=('3db4c729b4d80a9d8fda8dd77128406353baff4755ca619177eda4cddae71269'
+            '540ca3a030c75dd6494e58b1aef583ee706f4956f16e102f9f92aa22fed463d6'
+            '337853ff69a460dc70968fb790d037f7ab013fdc940aca34ece23e0bab98c367'
+            '9cda2dd1805a92e1dbb4730837a88393ce00349f2b559ad7ea5602a45bbbb924'
+            '2917901a83e4f463a5a19387f4580c0f65233fd516f047812237aee791a4a394'
+            '10ee1d9d8dad2b782e1cd671248748dc1b18ca584ca7d6ad43129b1a2a9a4476'
+            'fb95cb0a5a6843048097e89ee903016d899d38a72788607718d23c319f9bd06e'
+            '3c521c1ad55c9c34dfbd9275e3c493de33d9e7acf5788aef4e8853ed15fe6b6d'
+            '39e353883a95122523488d5f75a9e54946f4df0aa248f87b722988a39015780f'
+            '27bbf26f0d9ccf7f0a570983d681731d45f3fa6b36dc1beed467b5b361d43694'
+            '099bd3a735ac31bbca468eb190de49e134ef3185d8617c3d6ded34be2780f7c8'
+            '2ffae91bd81dc98f28860c337b72c55fd35e6706f934ffe1a5fb6c9c4c0c77cd'
+            '186828cc651bbabe2c7082a092a0eb40b82e15b131172bd377f5ec7b95e0a8d9')
 
 prepare () {
   cd $_pkgfqn

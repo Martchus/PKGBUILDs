@@ -1,7 +1,7 @@
-From d567a4807d46e1e6036ffca340aecea6ab425de9 Mon Sep 17 00:00:00 2001
+From f597ecb1b6cc9e2bf5ba1bc700657f9503a4c597 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Wed, 7 Oct 2020 12:13:37 +0200
-Subject: [PATCH 02/13] Fix finding D-Bus
+Subject: [PATCH 02/12] Fix finding D-Bus
 
 Change-Id: Ie21eb9cbc6b1b5d9c8b34eea46f54718e5926986
 ---

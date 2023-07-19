@@ -39,6 +39,7 @@ build() {
     $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
+      -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \\
       -DFEATURE_static_runtime=ON \\
 % }
       -DFEATURE_pkg_config=ON<%== content_for 'additional_cmake_args' %>

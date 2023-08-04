@@ -2,7 +2,7 @@
 # NOTE: libtool requires rebuilt with each new gcc version
 
 pkgname=({gcc,gcc-libs,lib32-gcc-libs,gcc-ada,gcc-fortran}-static-compat)
-pkgver=13.1.1
+pkgver=13.2.1
 _majorver=${pkgver%%.*}
 pkgrel=1
 pkgdesc='The GNU Compiler Collection'
@@ -32,7 +32,7 @@ checkdepends=(
 options=(!emptydirs !lto debug)
 _prefix=/usr/static-compat
 _libdir=usr/static-compat/lib/gcc/$CHOST/${pkgver%%+*}
-_commit=9a167ee2f8b9a0859fbab6cfdc276cf1f272effe
+_commit=d8a0dcd146dd95e2b6b85cf82c445214d364cf3b
 source=(git://gcc.gnu.org/git/gcc.git#commit=$_commit
 #source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz{,.sig}
         c89 c99

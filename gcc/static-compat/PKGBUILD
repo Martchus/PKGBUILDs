@@ -125,6 +125,14 @@ build() {
   "$srcdir/gcc/configure" \
     --enable-languages=ada,c,c++,fortran,lto \
     $_confflags
+
+  # link Ada host tools with host g++ - otherwise we run into linker errors because it would use the too old target glibc
+  # note: Since we don't need Ada anyways it maybe makes sense to just disable it in the future.
+  sed -i -r \
+    -e 's|\+\$\(GCC_LINK\)( .* \$\(TOOLS_LIBS\))|g++\1|g' \
+    -e 's|--LINK=\"\$\(GCC_LINK\)\"|--LINK=g++|g' \
+    gcc/ada/gcc-interface/Makefile
+
   make
 }
 

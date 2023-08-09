@@ -28,6 +28,9 @@ set(libbrotlicommon_STATIC_LDFLAGS "${pkgcfg_lib_libbrotlicommon_brotlicommon}" 
 set(libbrotlienc_STATIC_LDFLAGS "${pkgcfg_lib_libbrotlienc_brotlienc}" CACHE INTERNAL "static libbrotliend")
 set(libbrotlidec_STATIC_LDFLAGS "${pkgcfg_lib_libbrotlidec_brotlidec}" CACHE INTERNAL "static libbrotlidec")
 
+# disable use of find modules that don't work for static libraries
+set(CMAKE_DISABLE_FIND_PACKAGE_harfbuzz TRUE)
+
 # define dependencies of various static libraries as CMake doesn't pull them reliably automatically
 # note: It would be possible to deduce the dependencies via pkg-config. However, for simplicity I'm hard-coding the dependencies for now.
 #       In some cases the pkg-config file wouldn't work anyways because it is only covering the shared version (despite use of `-static`).

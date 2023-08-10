@@ -3,7 +3,7 @@
 
 _pkgname=glib2
 pkgname=static-compat-$_pkgname
-pkgver=2.76.3
+pkgver=2.76.4
 pkgrel=1
 pkgdesc="Low level core library"
 url="https://wiki.gnome.org/Projects/GLib"
@@ -13,7 +13,7 @@ depends=(static-compat-pcre2 static-compat-libffi static-compat-util-linux stati
 makedepends=(gettext shared-mime-info python libelf git static-compat-meson)
 checkdepends=(desktop-file-utils)
 options=(!strip !emptydirs staticlibs)
-_commit=69e209764bcfef599a21b32f82f88f1906bf197c  # tags/2.76.3^0
+_commit=f522c3f94d67493c58e9b0e27a7862c2e7ec105b  # tags/2.76.4^0
 source=(
   "git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git"
@@ -23,7 +23,7 @@ source=(
 )
 b2sums=('SKIP'
         'SKIP'
-        'bd7f881ae6054c363783bf45b1add5eef5e8347554e23b9fece526701469d07cdcb9871fa73dee473796a219e8aa513796a96da769949097ea207db038578d07'
+        '94c73ca7070c239494873dd52d6ee09382bbb5b1201f7afd737cfa140b1a2fb0744b2c2831baf3943d1d072550c35888d21ce6f19f89481ff9d1a60d9a0b30e0'
         '6bcbcba60208162f7221701d6a642eabfc92c2fc6a476bcb42da5967577f8f0c75b688d149be01c9c48cd644aafa7fbdd63d9086385b8f7607fc981756d71a68'
         '257bf37d304cc161dedcde0a2c4d01e297f8263cde48b49d3ee47ca95a8fb9ad44bbb9bf99da51ec766ffb6f9d502e0a8fdc6b86346e6755373ee515e23b9419')
 

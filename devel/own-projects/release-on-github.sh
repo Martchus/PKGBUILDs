@@ -21,7 +21,8 @@ do
     echo "NEXT: $project -> $version"
 
     # check whether CMakeLists.txt has been updated
-    cmake_lists=$(wget -qO- "https://raw.githubusercontent.com/$gh_user/$gh_name/master/CMakeLists.txt" || echo -n '')
+    echo "checking https://raw.githubusercontent.com/$gh_user/$gh_name/master/CMakeLists.txt"
+    cmake_lists=$(wget --no-cache -qO- "https://raw.githubusercontent.com/$gh_user/$gh_name/master/CMakeLists.txt" || echo -n '')
     major_version_regex='set\(META_VERSION_MAJOR ([^\)]*)\)'
     minor_version_regex='set\(META_VERSION_MINOR ([^\)]*)\)'
     patch_version_regex='set\(META_VERSION_PATCH ([^\)]*)\)'

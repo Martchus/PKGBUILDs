@@ -1,4 +1,4 @@
-From 4004f593210513e2283c866c179389d565825ed3 Mon Sep 17 00:00:00 2001
+From 7ca61e42a45702147f8a330d4fe4b05695492d2a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:25:40 +0200
 Subject: [PATCH 15/32] Rename qtmain to qt5main

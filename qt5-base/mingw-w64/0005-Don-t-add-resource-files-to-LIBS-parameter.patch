@@ -1,4 +1,4 @@
-From 511dc70a41721926177d5429b928dae0d9766f70 Mon Sep 17 00:00:00 2001
+From 27875f68422e87a7a5d52483da44fb7162421c47 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 13:58:28 +0200
 Subject: [PATCH 05/32] Don't add resource files to LIBS parameter

@@ -1,4 +1,4 @@
-From 4b44fc8d6eb08a8d650fa7f9a0ad8d2daee8c8e1 Mon Sep 17 00:00:00 2001
+From 2858bbfee0626ad84ba2c6510c8f894692d6eb94 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 3 Feb 2017 18:30:51 +0100
 Subject: [PATCH 01/32] Adjust win32-g++ profile for cross compilation with

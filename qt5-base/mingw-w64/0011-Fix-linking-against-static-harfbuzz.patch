@@ -1,4 +1,4 @@
-From cff1619ac4e1e7f190357dc5b6f9a569c9e22914 Mon Sep 17 00:00:00 2001
+From 9c05ceb56c99d297b8760b4ea4e608a43e7cfda1 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 14:22:56 +0200
 Subject: [PATCH 11/32] Fix linking against static harfbuzz

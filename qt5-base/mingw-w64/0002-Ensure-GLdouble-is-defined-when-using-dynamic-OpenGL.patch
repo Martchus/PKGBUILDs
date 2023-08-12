@@ -1,4 +1,4 @@
-From a386f2ffcf46ed410bc1b780c08761b71c3c99ca Mon Sep 17 00:00:00 2001
+From 52ed89a36a143e4faff7c0e60d74a7be81da4e8d Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 13:36:53 +0200
 Subject: [PATCH 02/32] Ensure GLdouble is defined when using dynamic OpenGL

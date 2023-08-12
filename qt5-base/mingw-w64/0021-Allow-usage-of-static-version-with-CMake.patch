@@ -1,4 +1,4 @@
-From 49e14061fa7b828779878fcde4e70b0b031086fd Mon Sep 17 00:00:00 2001
+From 967093fb90793e18fb0121f5370474329c3f90b8 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 5 Aug 2017 21:14:26 +0200
 Subject: [PATCH 21/32] Allow usage of static version with CMake

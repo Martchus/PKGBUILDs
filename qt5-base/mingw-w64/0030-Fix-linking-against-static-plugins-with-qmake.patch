@@ -1,4 +1,4 @@
-From 00b7b85a199cec674b6163f2c53abf35d8bbf26c Mon Sep 17 00:00:00 2001
+From 0aa8542902c84bdda22c92384e9c83ef2c2727ec Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 25 Aug 2017 17:07:17 +0200
 Subject: [PATCH 30/32] Fix linking against static plugins with qmake

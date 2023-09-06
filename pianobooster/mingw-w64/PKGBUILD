@@ -5,7 +5,8 @@ pkgver=1.0.1
 pkgrel=1
 depends=()
 makedepends=('mingw-w64-qt6-base-static' 'mingw-w64-ftgl' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities'
-             'git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static' 'ninja' 'breeze-icons')
+             'git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static'
+             'mingw-w64-qt6-translations' 'ninja' 'breeze-icons')
 optdepends=('mingw-w64-qt6-translations')
 arch=('x86_64')
 url='https://github.com/Martchus/PianoBooster'
@@ -41,6 +42,7 @@ build () {
           -DSTATIC_LIBRARY_LINKAGE:BOOL=ON \
           -DBUILTIN_TRANSLATIONS:BOOL=ON \
           -DBUILTIN_ICON_THEMES:STRING="breeze;breeze-dark" \
+          -DBUILTIN_ICON_THEMES_SEARCH_PATH:STRING="/usr/share/icons" \
           -DIMAGE_FORMAT_SUPPORT:STRING="Gif;ICO;Jpeg" \
           -DSVG_SUPPORT:BOOL=ON \
           -DSVG_ICON_SUPPORT:BOOL=ON \

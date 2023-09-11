@@ -6,12 +6,14 @@
 _reponame=arch-repo-manager
 pkgname=arch-repo-manager-git
 _name=${pkgname%-git}
+_liburing=OFF
 pkgver=340.599185d
 pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('libc++utilities-git.so' 'libpasswordfile-git.so' 'libboost_filesystem.so' 'libarchive.so' 'lmdb' 'liburing')
+depends=('libc++utilities-git.so' 'libpasswordfile-git.so' 'libboost_filesystem.so' 'libarchive.so' 'libcrypto.so' 'libssl.so' 'lmdb')
+[[ $_liburing != OFF ]] && depends+=('liburing.so')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
             "$_name-doc: API documentation")
 makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')
@@ -50,7 +52,7 @@ build() {
     -DBUILD_SHARED_LIBS:BOOL=ON \
     -DDUMMY_BUILD_ACTION_ENABLED:BOOL=ON \
     -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator-git' \
-    -DBOOST_ASIO_IO_URING:BOOL=OFF \
+    -DBOOST_ASIO_IO_URING:BOOL=$_liburing \
     .
   VERBOSE=1 ninja
 }

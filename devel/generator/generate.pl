@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-use Encode 'encode';
 use FindBin;
 use Mojolicious;
 use Mojo::File 'path';
@@ -265,5 +264,5 @@ for my $page (@pages) {
     $controller->stash($template_stash_variables) if defined $template_stash_variables;
     my $output = $controller->render_to_string(%$template_params);
     $log->debug($output);
-    $output_file->spurt(encode('UTF-8', $output));
+    $output_file->spew($output, 'UTF-8');
 }

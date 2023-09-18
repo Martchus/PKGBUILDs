@@ -308,7 +308,7 @@ native binaries which might be required by some projects. At this point the
 setup can break if the version of regular packages and the versions of the
 mingw-w64 packages differ. I cannot do anything about it except trying to
 upgrade the mingw-w64 packages as fast as possible. There's actually a lengthy
-discussion about this topi on the
+discussion about this topic on the
 [Qt development mailinglist](https://lists.qt-project.org/pipermail/development/2021-September/041732.html)
 so the situation might improve in the future. Note that as of
 qtbase commit `5ffc744b791a114a3180a425dd26e298f7399955` (requires Qt > 6.2.1)

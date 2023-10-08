@@ -1,17 +1,20 @@
 pkgbase=static-compat-zlib
+_pkgname=zlib
 pkgname=(static-compat-zlib static-compat-minizip)
 epoch=1
-pkgver=1.2.13
-pkgrel=2
-arch=('x86_64')
-license=('custom')
+pkgver=1.3
+pkgrel=1
+arch=(x86_64)
+license=(Zlib)
 url="https://www.zlib.net/"
 makedepends=('static-compat-configure')
-options=('staticlibs')
-source=("https://zlib.net/zlib-${pkgver}.tar.gz"{,.asc})
-sha256sums=('b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30'
+options=(staticlibs)
+source=(https://github.com/madler/zlib/releases/download/v$pkgver/$_pkgname-$pkgver.tar.xz{,.asc})
+sha512sums=('3868ac4da5842dd36c9dad794930675b9082ce15cbd099ddb79c0f6bd20a24aa8f33a123f378f26fe0ae02d91f31f2994dccaac565cedeaffed7b315e6ded2a2'
             'SKIP')
-validpgpkeys=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA')
+b2sums=('5fe0f32339267348a313f23a21e9588bdb180b7415be303c85f5f169444d019e5f176ef7322f6e64297c360acc2a6041c50e2f66d1860e5c392d8970990f176a'
+        'SKIP')
+validpgpkeys=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA')  # Mark Adler <madler@alumni.caltech.edu>
 
 prepare() {
 	cd "${srcdir}/zlib-$pkgver"

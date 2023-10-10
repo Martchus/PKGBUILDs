@@ -14,7 +14,7 @@
 
 _android_arch=<%= $variant_prefix_part =~ s/android-// && $variant_prefix_part %>
 pkgname=<%= $package_name %>
-_qtver=6.5.3
+_qtver=6.6.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -25,7 +25,7 @@ depends=('java-runtime-headless-openjdk>=11' 'ant' 'android-ndk' 'android-sdk' '
          'android-sdk-platform-tools' 'android-platform' "android-${_android_arch}-libjpeg-turbo"
          "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib")
 makedepends=('android-cmake<%= $static_suffix %>' 'android-pkg-config'
-             'java-environment-openjdk>=11' 'qt6-base' 'ninja')
+             'java-environment-openjdk=17' 'qt6-base' 'ninja')
 optdepends=('qt6-base: development tools')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
@@ -52,6 +52,8 @@ prepare () {
 % }
 build() {
   source android-env ${_android_arch}
+  echo "Java:"
+  archlinux-java status
   android-${_android_arch}-cmake<%== $static_suffix %> -G Ninja -B build-$_android_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}/static;${ANDROID_PREFIX}" \\

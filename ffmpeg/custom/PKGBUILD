@@ -10,7 +10,7 @@
 _name=ffmpeg
 pkgname=ffmpeg-custom
 pkgver=6.0
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
 arch=('x86_64')
@@ -135,6 +135,9 @@ prepare() {
   # FS#77813: fix playing ogg files with mplayer
   git cherry-pick -n cbcc817353a019da4332ad43deb7bbc4e695d02a
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
+  # use non-deprecated nvenc GUID for conftest
+  git cherry-pick -n 03823ac0c6a38bd6ba972539e3203a592579792f
+  git cherry-pick -n d2b46c1ef768bc31ba9180f6d469d5b8be677500
 }
 
 pkgver() {

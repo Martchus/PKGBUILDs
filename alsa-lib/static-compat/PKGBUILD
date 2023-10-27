@@ -1,7 +1,7 @@
 _pkgname=alsa-lib
 pkgname=static-compat-$_pkgname
 pkgver=1.2.10
-pkgrel=2
+pkgrel=3
 pkgdesc="An alternative implementation of Linux sound support"
 arch=(x86_64)
 url="https://www.alsa-project.org"
@@ -48,4 +48,5 @@ check() {
 package() {
   source static-compat-environment
   make DESTDIR="$pkgdir" install -C $_pkgname-$pkgver
+  rm -r $pkgdir/usr/{bin,share/alsa,share/aclocal}
 }

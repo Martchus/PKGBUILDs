@@ -1,5 +1,5 @@
-_pkgname='pianobooster'
-pkgname='pianobooster-custom'
+_pkgname=pianobooster
+pkgname=pianobooster-custom
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
 pkgver=1.0.1
 pkgrel=1

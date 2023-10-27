@@ -1,0 +1,39 @@
+_pkgname=glu
+pkgname=static-compat-$_pkgname
+pkgver=9.0.3
+pkgrel=1
+pkgdesc="Mesa OpenGL utility library"
+arch=('x86_64')
+url="https://gitlab.freedesktop.org/mesa/glu"
+license=('LGPL')
+depends=('static-compat-libglvnd')
+makedepends=('static-compat-meson')
+source=(https://mesa.freedesktop.org/archive/glu/glu-$pkgver.tar.xz{,.sig})
+sha512sums=('b2781059c0e176192c3fc0d7244645020937a463311171efddb9f35fb94ee43faabcf627fa7f429d48fceaf6dd9c5adb69c86c7a21ec4ea490f4ab143d52e3ba'
+            'SKIP')
+#validpgpkeys=('3BB639E56F861FA2E86505690FDD682D974CA72A') # "Matt Turner <mattst88@gmail.com>"
+validpgpkeys=('57551DE15B968F6341C248F68D8E31AFC32428A6') # Eric Engestrom <eric@engestrom.ch>
+
+build() {
+  source static-compat-environment
+
+  export PKG_CONFIG_PATH=$PWD:$PKG_CONFIG_PATH
+  cp $static_compat_prefix/lib/pkgconfig/libglvnd.pc opengl.pc
+
+  static-compat-meson glu-$pkgver build
+
+  # Print config
+  meson configure build
+
+  meson compile -C build
+}
+
+check() {
+  source static-compat-environment
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  source static-compat-environment
+  meson install -C build --destdir "$pkgdir"
+}

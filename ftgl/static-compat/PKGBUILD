@@ -1,0 +1,49 @@
+_pkgname=ftgl
+pkgname=static-compat-$_pkgname
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="OpenGL library to use arbitrary fonts"
+arch=(x86_64)
+url="https://github.com/frankheckenbach/ftgl"
+license=(MIT)
+depends=(static-compat-freetype2 static-compat-glu)
+makedepends=(static-compat-cmake git ninja)
+_commit=483639219095ad080538e07ceb5996de901d4e74  # tags/v2.4.0
+source=("git+https://github.com/frankheckenbach/ftgl#commit=$_commit")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  git describe --tags | sed 's/^v//;s/-/+/g'
+}
+
+prepare() {
+  source static-compat-environment
+  cd $_pkgname
+  git cherry-pick -n 835f2ba7911a6c15a1a314d5e3267fa089b5a319
+}
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+
+  static-compat-cmake -G Ninja -B build -S "${srcdir}/${_pkgname}"
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+
+  # FS#23283: install missing headers for OpenCascade
+  #install -Dt "$pkgdir/$static_compat_prefix/include/FTGL" -m644 src/FT{Face,Size}.h
+
+  install -Dt "$pkgdir/usr/share/licenses/$pkgname" -m644 $_pkgname/COPYING
+}
+
+# vim:set sw=2 et:

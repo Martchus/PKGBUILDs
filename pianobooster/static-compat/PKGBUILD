@@ -1,0 +1,63 @@
+_pkgname=pianobooster
+pkgname=static-compat-pianobooster
+pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
+pkgver=1.0.1
+pkgrel=1
+depends=('static-compat-fluidsynth' 'static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-openssl' 'static-compat-ftgl')
+makedepends=('static-compat-cmake' 'git' 'clang' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'ninja' 'ftgl')
+arch=('x86_64')
+url='https://github.com/Martchus/PianoBooster'
+license=('GPL3')
+source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/PianoBooster.git#branch=custom")
+sha256sums=(SKIP)
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build () {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  export CXXFLAGS+=' -static-libgcc -static-libstdc++'
+  export LDFLAGS+=' -static-libgcc -static-libstdc++'
+
+  source static-compat-environment
+
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+
+  export PKG_CONFIG_PATH=$PWD:$PKG_CONFIG_PATH
+  cp $static_compat_prefix/lib/pkgconfig/libglvnd.pc opengl.pc
+  cp /usr/lib/pkgconfig/ftgl.pc ftgl.pc
+
+  static-compat-cmake -G Ninja -B build -S "${srcdir}/${_pkgname}" \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DBUILTIN_TRANSLATIONS:BOOL=ON \
+    -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
+    -DBUILTIN_ICON_THEMES_SEARCH_PATH:STRING="/usr/share/icons" \
+    -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
+    -DSVG_SUPPORT:BOOL=ON \
+    -DSVG_ICON_SUPPORT:BOOL=ON \
+    -DGLIB2_USE_PKG_CONFIG:BOOL=ON \
+    -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
+    -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
+    -DUSE_SYSTEM_FONT=ON \
+    -DUSE_JACK=OFF \
+    -DUSE_BUNDLED_RTMIDI=ON \
+    -DWITH_INTERNAL_FLUIDSYNTH=ON \
+    -DBUILTIN_TRANSLATIONS:BOOL=ON \
+    -DQT_PACKAGE_PREFIX=Qt6 \
+    -DWITH_MAN=OFF
+  VERBOSE=1 cmake --build build
+}
+
+package () {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+}

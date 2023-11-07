@@ -24,7 +24,6 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
        || $project_name == 'qt5-webview'        # does not build for Windows, would require qt5-webengine
        || $project_name == 'qt5-canvas3d'       # removed from official releases
        || $project_name == 'qt5-script'         # extra case (still released, not on KDE branch)
-       || $project_name == 'qt6-3d'             # removed in beta1
        || $variant      == 'mingw-w64-test'     # just our own 'test' package (not used anymore)
     ]] && continue
 

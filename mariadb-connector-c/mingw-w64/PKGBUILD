@@ -17,7 +17,7 @@ replaces=('mingw-w64-libmariadbclient')
 conflicts=('mingw-w64-libmariadbclient')
 provides=("mingw-w64-libmariadbclient=$pkgver")
 depends=('mingw-w64-crt' 'mingw-w64-openssl' 'mingw-w64-zlib' 'mingw-w64-curl')
-makedepends=('mingw-w64-cmake')
+makedepends=('mingw-w64-cmake' 'ninja')
 options=('!strip' '!buildflags' 'staticlibs')
 source=(
   "https://github.com/mariadb-corporation/mariadb-connector-c/archive/refs/tags/v$pkgver.tar.gz"
@@ -42,14 +42,15 @@ build() {
   cd "$srcdir/mariadb-connector-c-${pkgver}"
   for _arch in ${_architectures}; do
     mkdir -p build-${_arch} && pushd build-${_arch}
-    ${_arch}-cmake \
-      -DCMAKE_BUILD_TYPE=RELEASE \
+    ${_arch}-cmake -G Ninja \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DWARNING_AS_ERROR=OFF \
       -DWITH_EXTERNAL_ZLIB=ON \
       -DWITH_SSL=OPENSSL \
       -DWITH_MYSQLCOMPAT=ON \
       -DWITH_UNIT_TESTS=OFF \
       ..
-    make
+    cmake --build .
     popd
   done
 }
@@ -57,7 +58,7 @@ build() {
 package() {
   for _arch in ${_architectures}; do
     cd "$srcdir/mariadb-connector-c-${pkgver}/build-${_arch}"
-    make DESTDIR="${pkgdir}" install
+    DESTDIR="${pkgdir}" cmake --install .
     ln -s mariadb "$pkgdir"/usr/${_arch}/include/mysql
     ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
     ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/lib/plugin/*.dll

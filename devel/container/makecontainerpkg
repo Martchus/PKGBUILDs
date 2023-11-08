@@ -17,11 +17,14 @@ fi
 cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir -it)
 
 # parse arguments
-script_args= read_script_args= no_sync=
+script_args= read_script_args= no_sync= single_run=
 for arg in "$@"; do
     if [[ $read_script_args ]]; then
         if [[ $arg == '--nodeps' ]] || [[ $arg == '-d' ]]; then
             no_sync=1
+        elif [[ $arg == '--printsrcinfo' ]]; then
+            no_sync=1
+            single_run=1
         fi
         script_args+=" '$arg'"
     else
@@ -55,7 +58,13 @@ fi
 # invoke containerized build
 ec=0 cre=${CRE:-docker}
 if ! [[ $CONTAINER ]]; then
-    "$cre" container create "${cre_args[@]}" "${CRE_IMAGE:-archlinux-base-devel}"
+    image=${CRE_IMAGE:-archlinux-base-devel}
+    if [[ $single_run ]]; then
+        "$cre" container run "${cre_args[@]}" "$image" bash \
+            -c "$script_sync $script $script_args" || ec=$?
+        exit $ec
+    fi
+    "$cre" container create "${cre_args[@]}" "$image"
     "$cre" container start "$name"
 fi
 "$cre" container exec "$name" bash \

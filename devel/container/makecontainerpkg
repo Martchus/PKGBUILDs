@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+# make tool to invoke configurable via environment variable to be able to invoke
+# other tools like `repo-add` or `updpkgsums` as well
+tool=${TOOL:-makepkg}
+[[ $tool == 'makepkg' ]] && single_run= no_sync= || single_run=1 no_sync=1
+
 # make basic arguments for cre
 if [[ $CONTAINER ]]; then
     name=$CONTAINER
@@ -12,17 +17,17 @@ else
         pkgname=$(echo "$pkgname" | tr '+' 'p')
     fi
     uuid=$(cat /proc/sys/kernel/random/uuid)
-    name=makechrootpkg-$pkgname-$uuid
+    name=$tool-$pkgname-$uuid
 fi
 cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir -it)
 
 # parse arguments
-script_args= read_script_args= no_sync= single_run=
+script_args= read_script_args=
 for arg in "$@"; do
     if [[ $read_script_args ]]; then
         if [[ $arg == '--nodeps' ]] || [[ $arg == '-d' ]]; then
             no_sync=1
-        elif [[ $arg == '--printsrcinfo' ]]; then
+        elif [[ $arg == '--printsrcinfo' ]] || [[ $arg == '--help' ]] || [[ $arg == '-h' ]]; then
             no_sync=1
             single_run=1
         fi
@@ -61,14 +66,14 @@ if ! [[ $CONTAINER ]]; then
     image=${CRE_IMAGE:-archlinux-base-devel}
     if [[ $single_run ]]; then
         "$cre" container run "${cre_args[@]}" "$image" bash \
-            -c "$script_sync $script $script_args" || ec=$?
+            -c "$script_sync $script '$tool' $script_args" || ec=$?
         exit $ec
     fi
     "$cre" container create "${cre_args[@]}" "$image"
     "$cre" container start "$name"
 fi
 "$cre" container exec "$name" bash \
-    -c "$script_sync $script $script_args" || ec=$?
+    -c "$script_sync $script '$tool' $script_args" || ec=$?
 
 # stop and remove container unless we want to keep it for debugging
 [[ $ec == 0 && $DEBUG == on-failure || -z $DEBUG ]] && \

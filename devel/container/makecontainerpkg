@@ -19,7 +19,7 @@ else
     uuid=$(cat /proc/sys/kernel/random/uuid)
     name=$tool-$pkgname-$uuid
 fi
-cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir -it)
+cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir -it --userns=keep-id:uid=1000,gid=1000)
 
 # parse arguments
 script_args= read_script_args=

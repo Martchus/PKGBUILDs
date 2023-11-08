@@ -3,7 +3,8 @@ MAINTAINER Martchus <martchus@gmx.net>
 
 RUN mkdir -p /startdir /build && \
     useradd -m -d /build -u 1000 -U -s /bin/bash builduser && \
-    chown -R builduser:builduser /build && \
+    chown -R builduser:builduser /startdir /build && \
+    echo 'builduser ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     pacman-key --init && \
     pacman-key --recv-keys B9E36A7275FC61B464B67907E06FE8F53CDC6A4C && \
     pacman-key --finger    B9E36A7275FC61B464B67907E06FE8F53CDC6A4C && \

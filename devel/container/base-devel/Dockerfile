@@ -2,7 +2,8 @@ FROM archlinux:base as base
 MAINTAINER Martchus <martchus@gmx.net>
 
 RUN mkdir -p /startdir /build && \
-    useradd -m -d /build -u 1000 -U -s /bin/bash builduser && \
+    groupadd -g 1000 builduser && \
+    useradd -m -d /build -u 1000 -g 1000 -s /bin/bash builduser && \
     chown -R builduser:builduser /startdir /build && \
     echo 'builduser ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     pacman-key --init && \

@@ -74,6 +74,10 @@ makecontainerpkg [cre args] --- [makepkg args]
 Set the environment variable `CRE` to the container runtime executable (by
 default `docker`) and set `CRE_IMAGE` to use a different container image.
 
+Note that you can also set the environment variable `TOOL` to invoke a different
+tool instead of `makepkg`, e.g. `TOOL=updpkgsums makecontainerpkg` can be used
+to update checksums.
+
 Example where the host pacman cache and ccache directories are mounted into the
 container and a package rebuild is forced via `makepkg`'s flag `-f`:
 ```

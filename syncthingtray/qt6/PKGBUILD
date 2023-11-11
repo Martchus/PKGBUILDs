@@ -27,7 +27,7 @@ _cfg=qt6
 pkgname=syncthingtray-$_cfg
 _name=${pkgname%-$_cfg}
 pkgver=1.4.8
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing (using Qt 6)'
 license=('GPL')
@@ -74,6 +74,7 @@ build() {
     -DSYNCTHINGCTL_CONFIGURATION_TARGET_SUFFIX:STRING="$_cfg" \
     -DSYNCTHINGTRAY_CONFIGURATION_TARGET_SUFFIX:STRING="$_cfg" \
     -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DKF_PACKAGE_PREFIX:STRING='KF6' \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=OFF \
     -DBUILD_SHARED_LIBS:BOOL=ON \

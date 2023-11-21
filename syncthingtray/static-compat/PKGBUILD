@@ -14,10 +14,10 @@ _js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
 
 # set to non-empty string to enable KIO plugin to show Syncthing actions in
 # Dolphin file browser
-_enable_kio_plugin=${SYNCTHING_TRAY_ENABLE_KIO_PLUGIN:-0}
+_enable_kio_plugin=${SYNCTHING_TRAY_ENABLE_KIO_PLUGIN_STATIC_COMPAT:-0}
 
 # set to non-empty string to enable Plasmoid for Plasma 5 desktop
-_enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID:-0}
+_enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID_STATIC_COMPAT:-0}
 
 # set whether libsyncthing should be enabled: either ON or OFF
 _enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
@@ -28,7 +28,7 @@ _enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
-pkgver=1.4.8
+pkgver=1.4.9
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
@@ -49,7 +49,7 @@ checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 [[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
-sha256sums=('3d6eb1cce6d3daf1507997ed8b144791191a59db848d1fdab50c590b45e14582'
+sha256sums=('f9003bbe185d355f9cac18862077fa2cc4e809f7f416d9b1dd5ef6474c926742'
             'SKIP')
 
 [[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON

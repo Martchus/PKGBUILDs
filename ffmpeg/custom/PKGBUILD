@@ -9,8 +9,8 @@
 
 _name=ffmpeg
 pkgname=ffmpeg-custom
-pkgver=6.0
-pkgrel=4
+pkgver=6.1
+pkgrel=1
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
 arch=('x86_64')
@@ -119,7 +119,7 @@ conflicts=("$_name")
 options=(
   debug
 )
-_tag=3949db4d261748a9f34358a388ee255ad1a7f0c0
+_tag=3cdfac27d3ea06f8719faed48b4ae2e75e94a463
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch

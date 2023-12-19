@@ -10,7 +10,7 @@
 _name=ffmpeg
 pkgname=ffmpeg-custom
 pkgver=6.1
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
 arch=('x86_64')
@@ -20,8 +20,11 @@ depends=(
   alsa-lib
   aom
   bzip2
+  cairo
   fontconfig
   fribidi
+  glib2
+  glibc
   gmp
   gnutls
   gsm
@@ -35,14 +38,17 @@ depends=(
   libdrm
   libfreetype.so
   libgl
+  libharfbuzz.so
   libiec61883
   libjxl.so
   libmodplug
   libopenmpt.so
+  libplacebo.so
   libpulse
   librav1e.so
   libraw1394
   librsvg-2.so
+  librubberband.so
   libsoxr
   libssh
   libtheora
@@ -70,6 +76,7 @@ depends=(
   openjpeg2
   opus
   sdl2
+  snappy
   speex
   srt
   svt-av1
@@ -87,6 +94,7 @@ makedepends=(
   avisynthplus
   clang
   ffnvcodec-headers
+  frei0r-plugins
   git
   ladspa
   mesa
@@ -98,10 +106,12 @@ makedepends=(
 )
 optdepends=(
   'avisynthplus: AviSynthPlus support'
+  'frei0r-plugins: Frei0r video effects support'
   'intel-media-sdk: Intel QuickSync support (legacy)'
   'onevpl-intel-gpu: Intel QuickSync support'
   'ladspa: LADSPA filters'
   'nvidia-utils: Nvidia NVDEC/NVENC support'
+  'onevpl-intel-gpu: Intel QuickSync support'
 )
 provides=(
   libavcodec.so
@@ -138,6 +148,12 @@ prepare() {
   # use non-deprecated nvenc GUID for conftest
   git cherry-pick -n 03823ac0c6a38bd6ba972539e3203a592579792f
   git cherry-pick -n d2b46c1ef768bc31ba9180f6d469d5b8be677500
+  # Fix VDPAU vo
+  git cherry-pick -n e9c93009fc34ca9dfcf0c6f2ed90ef1df298abf7
+  # Fix bug in av_fft_end
+  git cherry-pick -n a562cfee2e214252f8b3f516527272ae32ef9532
+  git cherry-pick -n 250471ea1745fc703eb346a2a662304536a311b1
+
 }
 
 pkgver() {
@@ -158,6 +174,7 @@ build() {
     --enable-cuda-llvm \
     --enable-lto \
     --enable-fontconfig \
+    --enable-frei0r \
     --enable-gmp \
     --enable-gnutls \
     --enable-gpl \
@@ -174,15 +191,19 @@ build() {
     --enable-libjxl \
     --enable-libmodplug \
     --enable-libgsm \
+    --enable-libharfbuzz \
     --enable-libmp3lame \
     --enable-libopencore_amrnb \
     --enable-libopencore_amrwb \
     --enable-libopenjpeg \
     --enable-libopenmpt \
     --enable-libopus \
+    --enable-libplacebo \
     --enable-libpulse \
     --enable-librav1e \
     --enable-librsvg \
+    --enable-librubberband \
+    --enable-libsnappy \
     --enable-libsoxr \
     --enable-libspeex \
     --enable-libsrt \

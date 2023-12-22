@@ -100,14 +100,12 @@ To be able to run podman without root, you need to ensure user/group IDs can be
 mapped. The mapping is configured in the files `/etc/subuid` and `/etc/subgid`.
 Use `sudo usermod --add-subuids 200000-265536 --add-subgids 200000-265536 $USER`
 to configure it for the current user and verify the configuration via
-`grep $USER /etc/sub{u,g}id`.
+`grep $USER /etc/sub{u,g}id`. Finally, run `podman system migrate` to apply.
 
 To change storage paths so e.g. containers are stored at a different location,
 edit `~/.config/containers/storage.conf` (or `/etc/containers/storage.conf` for
 system-wide configuration) to set `runroot` and `graphroot` to different
 locations.
-
-Finally, run `podman system migrate` to apply.
 
 ### Investigation of build failures
 By default, `makecontainerpkg` removes the container in the end. Set `DEBUG=1`

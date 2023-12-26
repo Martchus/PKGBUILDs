@@ -9,7 +9,7 @@
 pkgname=devtools-custom
 _pkgname=devtools
 epoch=1
-pkgver=1.0.1
+pkgver=1.0.4
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
@@ -24,6 +24,7 @@ depends=(
   binutils
   coreutils
   diffutils
+  fakeroot
   findutils
   grep
   jq
@@ -33,7 +34,7 @@ depends=(
   sed
   util-linux
 
-  bzr
+  breezy
   git
   mercurial
   subversion

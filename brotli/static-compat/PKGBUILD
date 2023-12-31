@@ -5,8 +5,8 @@
 # Contributor: Guillaume Horel <guillaume.horel@gmail.com>
 
 pkgname=static-compat-brotli
-_gitcommit=e61745a6b7add50d380cfd7d3883dd6c62fc2c71
-pkgver=1.0.9
+_gitcommit=ed738e842d2fbdf2d6459e39267a633c4a9b2f5d
+pkgver=1.1.0
 pkgrel=1
 pkgdesc='Generic-purpose lossless compression algorithm'
 url='https://github.com/google/brotli'
@@ -18,11 +18,6 @@ options=('staticlibs')
 source=(${pkgname}::"git+${url}#commit=${_gitcommit}")
 sha512sums=('SKIP')
 
-prepare() {
-  cd ${pkgbase}
-  git cherry-pick -n 09b0992b6acb7faa6fd3b23f9bc036ea117230fc # Fix broken Libs: in pc file
-}
-
 pkgver() {
   cd ${pkgbase}
   git describe --tags --match 'v*' | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -33,19 +28,20 @@ build() {
   cd ${pkgbase}
   static-compat-cmake -B build \
     -DCMAKE_BUILD_TYPE=Release
-  make -C build VERBOSE=1
+  cmake --build build -v
 }
 
 check() {
   source static-compat-environment
   cd ${pkgbase}
-  make test
+  cd build
+  ctest --output-on-failure --stop-on-failure -j$(nproc)
 }
 
 package() {
   source static-compat-environment
   cd ${pkgbase}
-  make -C build DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" cmake --install build
   find "$pkgdir/$static_compat_prefix" -iname '*.so*' -delete
   for file in "$pkgdir/$static_compat_prefix"/lib/pkgconfig/*.pc; do
     sed -i -E 's/-lbrotli(enc|dec|common)/\0-static/g' "$file"

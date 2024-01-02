@@ -7,7 +7,7 @@
 pkgname=static-compat-brotli
 _gitcommit=ed738e842d2fbdf2d6459e39267a633c4a9b2f5d
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Generic-purpose lossless compression algorithm'
 url='https://github.com/google/brotli'
 arch=('x86_64')
@@ -43,8 +43,5 @@ package() {
   cd ${pkgbase}
   DESTDIR="$pkgdir" cmake --install build
   find "$pkgdir/$static_compat_prefix" -iname '*.so*' -delete
-  for file in "$pkgdir/$static_compat_prefix"/lib/pkgconfig/*.pc; do
-    sed -i -E 's/-lbrotli(enc|dec|common)/\0-static/g' "$file"
-  done
   install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
 }

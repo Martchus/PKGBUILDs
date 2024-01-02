@@ -5,7 +5,8 @@
 include("/usr/share/mingw/toolchain-@TRIPLE@.cmake")
 
 # prefer libraries from "static" sub-prefix
-set(CMAKE_FIND_ROOT_PATH "/usr/@TRIPLE@/static;${CMAKE_FIND_ROOT_PATH}")
+set(CMAKE_STATIC_PREFIX "/usr/@TRIPLE@/static")
+set(CMAKE_FIND_ROOT_PATH "${CMAKE_STATIC_PREFIX};${CMAKE_FIND_ROOT_PATH}")
 
 # prefer static libraries
 # note: It is of no use to set the real variable CMAKE_FIND_LIBRARY_SUFFIXES here because it gets overridden by CMake
@@ -21,9 +22,9 @@ set(BOOST_USE_STATIC_LIBS ON)
 set(Vulkan_LIBRARY "/usr/@TRIPLE@/lib/libvulkan.dll.a" CACHE FILEPATH "shared Vulkan IDC library")
 
 # workaround limitations in upstream pkg-config files and CMake find modules
-set(pkgcfg_lib_libbrotlicommon_brotlicommon "/usr/@TRIPLE@/lib/libbrotlicommon-static.a" CACHE INTERNAL "static libbrotlicommon")
-set(pkgcfg_lib_libbrotlienc_brotlienc "/usr/@TRIPLE@/lib/libbrotlienc-static.a;/usr/@TRIPLE@/lib/libbrotlicommon-static.a" CACHE INTERNAL "static libbrotliend")
-set(pkgcfg_lib_libbrotlidec_brotlidec "/usr/@TRIPLE@/lib/libbrotlidec-static.a;/usr/@TRIPLE@/lib/libbrotlicommon-static.a" CACHE INTERNAL "static libbrotlidec")
+set(pkgcfg_lib_libbrotlicommon_brotlicommon "${CMAKE_STATIC_PREFIX}/lib/libbrotlicommon.a" CACHE INTERNAL "static libbrotlicommon")
+set(pkgcfg_lib_libbrotlienc_brotlienc "${CMAKE_STATIC_PREFIX}/lib/libbrotlienc.a;${CMAKE_STATIC_PREFIX}/lib/libbrotlicommon.a" CACHE INTERNAL "static libbrotliend")
+set(pkgcfg_lib_libbrotlidec_brotlidec "${CMAKE_STATIC_PREFIX}/lib/libbrotlidec.a;${CMAKE_STATIC_PREFIX}/lib/libbrotlicommon.a" CACHE INTERNAL "static libbrotlidec")
 set(libbrotlicommon_STATIC_LDFLAGS "${pkgcfg_lib_libbrotlicommon_brotlicommon}" CACHE INTERNAL "static libbrotlicommon")
 set(libbrotlienc_STATIC_LDFLAGS "${pkgcfg_lib_libbrotlienc_brotlienc}" CACHE INTERNAL "static libbrotliend")
 set(libbrotlidec_STATIC_LDFLAGS "${pkgcfg_lib_libbrotlidec_brotlidec}" CACHE INTERNAL "static libbrotlidec")
@@ -39,6 +40,6 @@ set(POSTGRESQL_DEPENDENCIES "-lpgcommon;-lpgport;-lintl;-lssl;-lcrypto;-lshell32
 set(MYSQL_DEPENDENCIES "-lssl;-lcrypto;-lshlwapi;-lgdi32;-lws2_32;-lpthread;-lz;-lm" CACHE INTERNAL "dependencies of static MySQL/MariaDB libraries")
 set(LIBPNG_DEPENDENCIES "-lz" CACHE INTERNAL "dependencies of static libpng")
 set(GLIB2_DEPENDENCIES "-lintl;-lws2_32;-lole32;-lwinmm;-lshlwapi;-lm" CACHE INTERNAL "dependencies of static Glib2")
-set(FREETYPE_DEPENDENCIES "-lbz2;-lharfbuzz;-lfreetype;-lbrotlidec-static;-lbrotlicommon-static" CACHE INTERNAL "dependencies of static FreeType2 library")
+set(FREETYPE_DEPENDENCIES "-lbz2;-lharfbuzz;-lfreetype;-lbrotlidec;-lbrotlicommon" CACHE INTERNAL "dependencies of static FreeType2 library")
 set(HARFBUZZ_DEPENDENCIES "-lglib-2.0;${GLIB2_DEPENDENCIES};-lintl;-lm;-lfreetype;-lgraphite2" CACHE INTERNAL "dependencies of static HarfBuzz library")
 set(DBUS1_DEPENDENCIES "-lws2_32;-liphlpapi;-ldbghelp" CACHE INTERNAL "dependencies of static D-Bus1 library")

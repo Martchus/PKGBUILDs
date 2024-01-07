@@ -1,4 +1,4 @@
-From b15e8c7c60573f0db3f833121bdab3cc4cb0c6f2 Mon Sep 17 00:00:00 2001
+From 83459578b49cefb55f3977182b2f2a8dff1eff32 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:04:42 +0200
 Subject: [PATCH 17/32] Use system zlib for build tools

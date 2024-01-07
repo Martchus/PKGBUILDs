@@ -1,4 +1,4 @@
-From 6c1d85a212305032a4e9e1f079c5e4df686e0520 Mon Sep 17 00:00:00 2001
+From 5f254a0f2f5857a6c1da88166549b38a3864a38c Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 26 Jun 2021 22:24:12 +0200
 Subject: [PATCH 32/32] Fix crashes in rasterization code using setjmp

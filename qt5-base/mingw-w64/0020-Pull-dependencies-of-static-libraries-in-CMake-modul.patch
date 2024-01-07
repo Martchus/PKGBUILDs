@@ -1,4 +1,4 @@
-From a3e0ad75bf779757045d265a8bef264c1c50ac4c Mon Sep 17 00:00:00 2001
+From 52e0f0689c9bfc6f10e5b5eeaf51181fea9beb25 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:32:00 +0200
 Subject: [PATCH 20/32] Pull dependencies of static libraries in CMake modules

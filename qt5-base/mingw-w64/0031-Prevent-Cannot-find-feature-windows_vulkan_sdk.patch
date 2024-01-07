@@ -1,4 +1,4 @@
-From 6b05944fb3e923db33a49058a32bb46c83cb4dd8 Mon Sep 17 00:00:00 2001
+From a7a3f6a64e90aee5a0024f9b8b1d6d4876d25d7e Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Mon, 24 Jun 2019 13:51:02 +0200
 Subject: [PATCH 31/32] Prevent 'Cannot find feature windows_vulkan_sdk'

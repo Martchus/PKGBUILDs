@@ -1,4 +1,4 @@
-From 2bd02758a9925b87028aaad70023b895f8114902 Mon Sep 17 00:00:00 2001
+From 4e95aba534172824d9756ec22bfe903d29d98e54 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 18:50:21 +0200
 Subject: [PATCH 23/32] Use correct pkg-config --static flag

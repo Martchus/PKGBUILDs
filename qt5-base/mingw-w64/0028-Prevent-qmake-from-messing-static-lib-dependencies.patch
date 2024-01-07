@@ -1,4 +1,4 @@
-From 86737e878c859ca4452b1d3c1f7e94be5c9007b7 Mon Sep 17 00:00:00 2001
+From fc455d2b8916fbfe7b0b5240822b96c6567a7e2c Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Tue, 7 Feb 2017 18:25:28 +0100
 Subject: [PATCH 28/32] Prevent qmake from messing static lib dependencies

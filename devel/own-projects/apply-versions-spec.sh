@@ -11,6 +11,7 @@ fi
 for spec_file in "$OSC_DIR"/*/*/*.spec; do
     trimmed_path=${spec_file#$OSC_DIR/*/*/}
     project_name=${trimmed_path%*.spec}
+    project_name=${project_name%-qt6}
     spec_dir=${spec_file%/*}
 
     # skip packages with unknown version

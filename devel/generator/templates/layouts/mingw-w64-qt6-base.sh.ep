@@ -16,12 +16,12 @@
 pkgname=<%= $package_name %>
 _qtver=6.6.2
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
 pkgdesc='A cross-platform application and UI framework (mingw-w64)'
-depends=('mingw-w64-crt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
+depends=('mingw-w64-crt' 'mingw-w64-cppwinrt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
          'mingw-w64-brotli' 'mingw-w64-pcre2' 'mingw-w64-zstd')
 makedepends=('mingw-w64-cmake<%= $static_suffix %>' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c'
@@ -58,12 +58,22 @@ prepare () {
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
+
+    local _enable_winrt_support=ON
+    if [[ ! -e /usr/${_arch}/include/winrt/Windows.Foundation.h ]]; then
+      echo "cppwinrt headers seem incomplete, disabling FEATURE_cpp_winrt"
+      _enable_winrt_support=OFF
+    fi
+
     $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
+      -DCMAKE_CXX_STANDARD=20 \\
+      -DCMAKE_CXX_FLAGS="$CXX_FLAGS -std=c++20" \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
       -DFEATURE_static_runtime=ON \\
       -DFEATURE_openssl_linked=ON \\
 % }
+      -DFEATURE_cpp_winrt=$_enable_winrt_support \\
       -DFEATURE_pkg_config=ON \\
       -DFEATURE_system_pcre2=ON \\
       -DFEATURE_system_freetype=ON \\

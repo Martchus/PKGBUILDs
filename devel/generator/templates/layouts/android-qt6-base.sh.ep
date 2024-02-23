@@ -51,9 +51,8 @@ prepare () {
 
 % }
 build() {
+  export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
   source android-env ${_android_arch}
-  echo "Java:"
-  archlinux-java status
   android-${_android_arch}-cmake<%== $static_suffix %> -G Ninja -B build-$_android_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}/static;${ANDROID_PREFIX}" \\

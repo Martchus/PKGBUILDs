@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
+[ "$(whoami)" == root ] && sudo= || sudo=sudo
 for config_file in {/cfg/,}{makepkg,pacman}.conf; do
-    [[ -f $config_file ]] && sudo cp --target-directory=/etc "$config_file"
+    [[ -f $config_file ]] && $sudo cp --target-directory=/etc "$config_file"
 done
 [[ -f PKGBUILD ]] && source PKGBUILD
-sudo pacman -Syu --noconfirm --needed "${depends[@]}" "${makedepends[@]}" "${checkdepends[@]}"
+$sudo pacman -Syu --noconfirm --needed "${depends[@]}" "${makedepends[@]}" "${checkdepends[@]}"

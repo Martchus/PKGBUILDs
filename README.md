@@ -121,19 +121,8 @@ for this purpose.
 
 Here are some example commands how one might do that:
 ```
-# create a directory to store builds and new container and start it
-mkdir -p /hdd/build/container
-podman container create -it \
-  --name archlinux-devel-container \                    # give container a meaningful name
-  -v /hdd/cache/pacman/pkg:/var/cache/pacman/pkg \      # share pacman cache accross different containers
-  -v /hdd/build/container:/build \                      # expose build directory to host
-  -v /hdd/projects:/src \                               # access source files from host
-  -v /hdd/chroot/remote-config-x86_64:/cfg \            # mount directory containing pacman.conf/makepkg.conf
-  archlinux-base-devel
-podman container start archlinux-devel-container
-
-# configure pacman to use config from mounted directory
-podman container exec archlinux-devel-container bash -c "$(cat devel/container/containersync)"
+# do basic container setup
+containers/create-devel-container-example
 
 # start interactive shell in container
 podman container exec -it archlinux-devel-container bash

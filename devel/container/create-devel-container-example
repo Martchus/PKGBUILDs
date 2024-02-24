@@ -1,0 +1,19 @@
+#!/bin/bash
+dev_dir=/hdd
+bindir=$(dirname "$0")
+
+# create a directory to store builds and new container and start it
+mkdir -p "$dev_dir/build/container"
+
+# create container sharing pacman cache, chroot directory and build and source directory with host
+podman container create -it \
+  --name archlinux-devel-container \
+  -v "$dev_dir/cache/pacman/pkg:/var/cache/pacman/pkg" \
+  -v "$dev_dir/build/container:/build" \
+  -v "$dev_dir/projects:/src" \
+  -v "$dev_dir/chroot/remote-config-x86_64:/cfg" \
+  archlinux-base-devel
+
+# configure pacman to use config from mounted directory
+podman container start archlinux-devel-container
+podman container exec archlinux-devel-container bash -c "$(cat "$bindir/containersync")"

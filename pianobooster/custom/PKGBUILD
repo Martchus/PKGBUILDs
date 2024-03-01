@@ -1,7 +1,7 @@
 _pkgname=pianobooster
 pkgname=pianobooster-custom
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
-pkgver=1.0.1
+pkgver=1391.dfc69f1
 pkgrel=1
 depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'libqtutilities-qt6-git.so')
 makedepends=('git' 'cmake' 'clang' 'qt6-tools' 'qt6-declarative' 'ninja')

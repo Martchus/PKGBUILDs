@@ -3,7 +3,7 @@ pkgname=pianobooster-custom
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
 pkgver=1391.dfc69f1
 pkgrel=1
-depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'libqtutilities-qt6-git.so')
+depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'libqtutilities-git.so')
 makedepends=('git' 'cmake' 'clang' 'qt6-tools' 'qt6-declarative' 'ninja')
 optdepends=('qt6-translations')
 conflicts=('pianobooster')
@@ -26,7 +26,7 @@ build () {
         -DUSE_JACK=ON \
         -DWITH_INTERNAL_FLUIDSYNTH=ON \
         -DCONFIGURATION_PACKAGE_SUFFIX=-git \
-        -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES=-qt6-git \
+        -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES=-git \
         -DBUILTIN_TRANSLATIONS:BOOL=ON \
         -DQT_PACKAGE_PREFIX=Qt6 \
         -DWITH_MAN=ON

@@ -1,0 +1,42 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_pkgname=qqc2-breeze-style
+_android_arch=aarch64
+
+pkgname=android-${_android_arch}-${_pkgname}
+pkgver=6.0.2
+_dirver=$(echo $pkgver | cut -d. -f1-3)
+pkgrel=1
+pkgdesc="Applications useful for Plasma development (Android, $_android_arch)"
+arch=('any')
+url='https://kde.org/plasma-desktop/'
+license=(LGPL-2.0-or-later)
+depends=("android-$_android_arch"-{qt6-declarative,kcoreaddons,kguiaddons,kconfig,kirigami2,kcolorscheme,kquickcharts})
+makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools')
+source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig})
+sha256sums=('904e6398aee2ad31291c027ab096a197c942eb4a73eef7f4de4282cbca6b325d'
+            'SKIP')
+validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
+              '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
+              'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson <davidedmundson@kde.org>
+              '1FA881591C26B276D7A5518EEAAF29B42A678C20') # Marco Martin <notmart@gmail.com>
+options=(!buildflags staticlibs !strip !emptydirs)
+
+build() {
+  source android-env ${_android_arch}
+  android-${_android_arch}-cmake -G Ninja -B build-$_android_arch -S $_pkgname-$pkgver \
+    -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}" \
+    -DECM_DIR:PATH=/usr/share/ECM/cmake \
+    -DBUILD_EXAMPLES=OFF \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_QCH=OFF
+  VERBOSE=1 cmake --build build-$_android_arch
+}
+
+package() {
+  source android-env ${_android_arch}
+  DESTDIR="$pkgdir" VERBOSE=1 cmake --install build-$_android_arch
+}

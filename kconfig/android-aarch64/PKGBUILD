@@ -3,18 +3,18 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_pkgname=kirigami
+_pkgname=kconfig
 _android_arch=aarch64
 
-pkgname=android-${_android_arch}-${_pkgname}2
+pkgname=android-${_android_arch}-${_pkgname}
 pkgver=6.0.0
-pkgrel=2
-pkgdesc="A QtQuick based components set (Android, $_android_arch)"
+pkgrel=1
+pkgdesc="Configuration system (Android, $_android_arch)"
 arch=('any')
 url='https://community.kde.org/Frameworks'
 license=(LGPL-2.0-only LGPL-3.0-only)
-depends=("android-$_android_arch-qt6"-{declarative,shadertools,svg,5compat})
-makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools' 'qt6-shadertools')
+depends=("android-$_android_arch-qt6"-{base,declarative,tools})
+makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools')
 source=(https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz{,.sig})
 sha256sums=('3f7c1e6b048df4ab3d67fbef01a5ad1dd0289c9b158644668fba0225c050c050'
             'SKIP')
@@ -36,6 +36,4 @@ build() {
 package() {
   source android-env ${_android_arch}
   DESTDIR="$pkgdir" VERBOSE=1 cmake --install build-$_android_arch
-  mkdir -p "$pkgdir/$ANDROID_PREFIX/qml/org"
-  ln -rs "$pkgdir/$ANDROID_PREFIX/lib/qml/org/kde" "$pkgdir/$ANDROID_PREFIX/qml/org/kde"
 }

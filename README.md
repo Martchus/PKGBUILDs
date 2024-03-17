@@ -127,11 +127,11 @@ containers/create-devel-container-example
 # start interactive shell in container
 podman container exec -it archlinux-devel-container bash
 
-# install stuff you want, e.g. mingw-w64 or android Qt package
+# install stuff you want, e.g. mingw-w64 or android Qt packages
 podman container exec -it archlinux-devel-container \
   pacman -Syu ninja git mingw-w64-cmake qt6-{base,tools} mingw-w64-qt6-{base,tools,translations,svg,5compat}
 podman container exec -it archlinux-devel-container \
-  pacman -Syu clang ninja git extra-cmake-modules android-cmake qt6-{base,tools,declarative,shadertools} android-aarch64-qt6-{base,declarative,tools,translations,svg,5compat} android-aarch64-{boost,libiconv,kirigami2}
+  pacman -Syu clang ninja git extra-cmake-modules android-cmake qt6-{base,tools,declarative,shadertools} android-aarch64-qt6-{base,declarative,tools,translations,svg,5compat} android-aarch64-{boost,libiconv,qqc2-breeze-style}
 
 # configure the build using mingw-w64 packages, e.g. run CMake
 podman container exec -it archlinux-devel-container x86_64-w64-mingw32-cmake \

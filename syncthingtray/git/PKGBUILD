@@ -31,7 +31,7 @@ arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=('GPL')
 depends=('libqtutilities-git.so' 'libqtforkawesome-git.so' 'libc++utilities-git.so' 'libboost_filesystem.so'
-         'qt6-svg' 'openssl' 'desktop-file-utils' 'xdg-utils')
+         'qt6-svg' 'openssl' 'desktop-file-utils')
 [[ $_webview_provider == none ]] && [[ $_js_provider == none ]] && depends+=('qt6-base')
 [[ $_webview_provider == webkit ]] && depends+=('qt6-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('qt6-webengine')

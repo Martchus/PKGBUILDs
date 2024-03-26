@@ -1,0 +1,18 @@
+pkgname=buildenv
+pkgver=1
+pkgrel=2
+pkgdesc='Build environment for my Arch Linux package builds'
+arch=('any')
+license=('GPL-2.0-or-later')
+url='https://github.com/Martchus/PKGBUILDs'
+depends=('base-devel' 'multilib-devel')
+source=(android.sh parallel.sh)
+sha256sums=(SKIP SKIP)
+
+package() {
+  cd "$srcdir"
+  mkdir -p "$pkgdir/usr/share/makepkg/buildenv"
+  for src in android parallel; do
+    cp -v "$src.sh" "$pkgdir/usr/share/makepkg/buildenv/$src.sh"
+  done
+}

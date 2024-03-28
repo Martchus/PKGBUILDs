@@ -1,6 +1,6 @@
 % layout 'static-compat-qt6-module', has_binaries => 1;
 \
-_qtver=6.6.2
+_qtver=6.6.3
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -24,6 +24,7 @@ optdepends=('clang: for qdoc and lupdate')
   cp -r   --target-directory=prefix/lib/cmake /usr/lib/cmake/llvm
   ln -frs --target-directory=prefix/lib/cmake /usr/lib/cmake/clang
   ln -frs --target-directory=prefix/lib /usr/lib/*LLVM*
+  ln -frs --target-directory=prefix/lib /usr/lib/libllvm*
   ln -frs --target-directory=prefix/lib /usr/lib/libLTO*
   ln -frs --target-directory=prefix/lib /usr/lib/libRemarks*
   ln -frs --target-directory=prefix/lib /usr/lib/libclang*
@@ -39,5 +40,5 @@ optdepends=('clang: for qdoc and lupdate')
     -DLLVM_DIR="$PWD/prefix/lib/cmake/llvm" \\
     -DClang_DIR="$PWD/prefix/lib/cmake/clang"
   # ensure system libc/libdl/libm is present on the linker-line before other libs
-  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM-16.so.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja\
+  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM-.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja\
 % end

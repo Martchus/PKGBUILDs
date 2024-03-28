@@ -31,7 +31,7 @@ source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         '0001-Recorder-includes-to-prevent-conflict-with-vsnprintf.patch'
         '0002-Fix-build-with-ANGLE.patch'
         '0003-Workaround-multiple-definition-errors-with-amstrmid-.patch')
-sha256sums=('eef7a053fc4d4e33bdd1ae7dd0a2db32f755eacbf2e4a144246d33c3e02a0ab5'
+sha256sums=('SKIP'
             '36bbaf9842fb930b4f17ae7ad2349b5dc9216492caeb7292f54d8fd7c0d66399'
             'b733514a287d915d74ddbbb901b2fae1a0c169becbadaf9bb63738392e383064'
             '5ba3a72643af5e16b9f51ac9e5317d2f7e41dcb177f2201ac38ef0d0cd9a66e5')

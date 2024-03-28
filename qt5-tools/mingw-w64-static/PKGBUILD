@@ -40,7 +40,7 @@ url='https://www.qt.io/'
 _pkgfqn=${_qt_module}
 source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         '0001-Fix-linguist-macro.patch')
-sha256sums=('52080466c7d03c6a6fd007940ed9cd42b2c73192ea2e76edf81619edff2adecf'
+sha256sums=('SKIP'
             '3c8c553909b394a9d4833116be8a6a6f4a1e267e894fabd925c2519933b25e43')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'

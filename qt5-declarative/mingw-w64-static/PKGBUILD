@@ -33,7 +33,7 @@ source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         '0001-Ensure-static-plugins-are-exported.patch'
         '0002-Prevent-exporting-QML-parser-symbols-on-static-build.patch'
         '0003-Disable-d3d12-requiring-fxc.exe.patch')
-sha256sums=('7ed5dd98f8123b7678d347ff6b55d7475a1af00b3f5d4d7476029c12a241df41'
+sha256sums=('SKIP'
             '4504b8402891188e8a7274489e241b886648079e61270b0a95e37473bf0970af'
             '996d4fa1c19d0fe14d10de09f5017e7194d21877611d407da9908888d345e3f0'
             'c0cf74107f30d2a6d735aa5466a1f57c08ca0fa2f800765b8e684877271e9ddc')

@@ -3,14 +3,23 @@ set -e
 
 package=$1
 variant=$2
-official_packages=${OFFICIAL_PACKAGES:-/run/media/devel/src/svntogit-packages}
+official_packages=${OFFICIAL_PACKAGES:-/run/media/devel/src/arch-packages}
 
 current_variant_file=$package/$variant/PKGBUILD
 source "$current_variant_file"
 variantver=$pkgver
 echo "variant version: $variantver"
 
-regular_file=$official_packages/$package/trunk/PKGBUILD
+regular_dir=$official_packages/$package
+if [[ ! -e $regular_dir ]]; then
+    pushd "$official_packages"
+    pkgctl repo clone "$package"
+    popd
+else
+    git -C "$regular_dir" pull --rebase origin main
+fi
+
+regular_file=$regular_dir/PKGBUILD
 source "$regular_file"
 regularver=$pkgver
 echo "regular version: $regularver"
@@ -20,12 +29,12 @@ if [[ $variantver == "$regularver" ]]; then
     exit 0
 fi
 
-commits=($(git -C "$official_packages" log -n 8 --pretty=format:%H HEAD~1 "$package/trunk/PKGBUILD"))
+commits=($(git -C "$regular_dir" log -n 20 --pretty=format:%H HEAD~1 "PKGBUILD"))
 tempfile=/tmp/regular-pkgbuild
 basecomit=
 for commit in "${commits[@]}"; do
     echo "checking diff as of commit $commit"
-    git -C "$official_packages" show "$commit:$package/trunk/PKGBUILD" > "$tempfile"
+    git -C "$regular_dir" show "$commit:PKGBUILD" > "$tempfile"
     source "$tempfile"
     if [[ $variantver != "$pkgver" ]]; then
         continue
@@ -41,5 +50,5 @@ if [[ ! $basecomit ]]; then
 fi
 
 cd "$package/$variant"
-git -C "$official_packages" diff "$basecomit..origin/master" -- "$package/trunk/PKGBUILD" > regular.diff
-patch -p3 -i regular.diff
+git -C "$regular_dir" diff "$basecomit..origin/main" -- "PKGBUILD" > regular.diff
+patch -p1 -i regular.diff

@@ -3,7 +3,7 @@
 
 _pkgname=glib2
 pkgname=static-compat-$_pkgname
-pkgver=2.85.2
+pkgver=2.86.0
 pkgrel=1
 pkgdesc="Low level core library"
 url="https://gitlab.gnome.org/GNOME/glib"
@@ -17,11 +17,13 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/gvdb.git"
   0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
   0002-gdesktopappinfo-Add-more-known-terminals.patch
+  0003-meson.build-Avoid-linking-with-libatomic-when-unneed.patch
 )
-b2sums=('c48a8b560ee8dd90de08f9c8d044db2b368bdc956f7eb7d83697dbdf44efa7ec6443f6d53a7d16e8dd9b1b995ab8ef7a06fcb3f833c733f53c0cf57ac3f87a61'
+b2sums=('afe82f85c6b93273917ef4b7127dfb58c5e0f1e1946226abb7e0b80abd1ab6f0d8a98b030b0dffac79e48b2f9c9540879044b8a486d8996e59c5210dcd333d0c'
         'SKIP'
         '4ddbd31f5f466fce99d82890292ff922555a9ab379d22202aeea5127f58798668f871dea0485cc0f458069276ad512412285ede6c8f3e36bea899358f49e931a'
-        'bf57425e3081a8f5d36d6a54eff1bfa93ba6bab8f0a4d3f3bf1e319ebfa71d99ce6a0466166fc694f53c5bd151e9cc65339e222c48e963f0cdc075852d0e1f7c')
+        'bf57425e3081a8f5d36d6a54eff1bfa93ba6bab8f0a4d3f3bf1e319ebfa71d99ce6a0466166fc694f53c5bd151e9cc65339e222c48e963f0cdc075852d0e1f7c'
+        '76033114a10d3df461981502eb386d0d6e645eaf27885f5e6dc75bc8495d770e0e75338f7191ae534825b30b75a84e2e9889f33fcdbd109ae10a85c2d34b1e28')
 
 pkgver() {
   cd glib
@@ -31,11 +33,6 @@ pkgver() {
 prepare() {
   cd glib
 
-  # Drop dep on libatomic
-  # https://gitlab.archlinux.org/archlinux/packaging/packages/qemu/-/issues/6
-  git revert -n 4e6dc4dee0e1c6407113597180d9616b4f275f94
-  sed -i '/    atomic_dep,/d' glib/meson.build
-
   # Suppress noise from glib-compile-schemas.hook
   git apply -3 ../0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
 
@@ -43,6 +40,10 @@ prepare() {
   # This is a downstream only patch; GNOME will not add new terminal emulators.
   # https://gitlab.gnome.org/GNOME/glib/-/issues/338#note_1076172
   git apply -3 ../0002-gdesktopappinfo-Add-more-known-terminals.patch
+
+  # Drop dep on libatomic
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/qemu/-/issues/6
+  git apply -3 ../0003-meson.build-Avoid-linking-with-libatomic-when-unneed.patch
 
   git submodule init
   git submodule set-url subprojects/gvdb "$srcdir/gvdb"

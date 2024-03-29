@@ -4,26 +4,40 @@
 
 _pkgname=util-linux
 pkgname=static-compat-$_pkgname
-_pkgmajor=2.38
-_realver=${_pkgmajor}.1
-pkgver=${_realver/-/}
+pkgver=2.41.2
 pkgrel=1
 pkgdesc='Miscellaneous system utilities for Linux'
 url='https://github.com/karelzak/util-linux'
 arch=('x86_64')
 depends=('glibc-static-compat')
-makedepends=('systemd' 'python' 'libcap-ng' 'libxcrypt' 'static-compat-configure')
-license=('GPL2')
+makedepends=('systemd' 'python' 'libcap-ng' 'libxcrypt' 'git' 'static-compat-configure')
+license=(
+  'BSD-2-Clause'
+  'BSD-3-Clause'
+  'BSD-4-Clause-UC'
+  'GPL-2.0-only'
+  'GPL-2.0-or-later'
+  'GPL-3.0-or-later'
+  'ISC'
+  'LGPL-2.1-or-later'
+  'LicenseRef-PublicDomain'
+)
 options=(!emptydirs staticlibs strip)
 validpgpkeys=('B0C64D14301CC6EFAEDF60E4E4B71D5EEC39C284')  # Karel Zak
 options=(staticlibs)
-source=("https://www.kernel.org/pub/linux/utils/util-linux/v${_pkgmajor}/${_pkgname}-${_realver}.tar."{xz,sign})
-sha256sums=('60492a19b44e6cf9a3ddff68325b333b8b52b6c59ce3ebd6a0ecaa4c5117e84f'
+source=("git+https://github.com/util-linux/util-linux#tag=v${pkgver/rc/-rc}")
+sha256sums=('d7fec66283cce093f54aaf0f30dcb6adfea7c7c170abf8cdf24df3c409397f87'
             'SKIP')
+
+prepare() {
+  source static-compat-environment
+  cd "$_pkgname"
+  ./autogen.sh
+}
 
 build() {
   source static-compat-environment
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname"
 
   # We ship Debian's hardlink in package 'hardlink', Fedora's hardlink was
   # merged in util-linux. For now we disable the latter, but let's dicuss
@@ -78,6 +92,7 @@ build() {
     --disable-lsmem \
     --disable-chmem \
     --disable-ipcrm \
+    --disable-ipcmk \
     --disable-ipcs \
     --disable-irqtop \
     --disable-lsirq \
@@ -105,16 +120,22 @@ build() {
     --disable-schedutils \
     --disable-wall \
     --disable-write \
+    --disable-liblastlog2 \
+    --disable-lsfd \
     --without-systemd \
     --without-python \
-    --disable-pylibmount
-
+    --disable-pylibmount \
+    --disable-chfn-chsh-password \
+    --disable-fstrim \
+    --disable-swapon \
+    --disable-lsblk \
+    --disable-lscpu
   make
 }
 
 package() {
   source static-compat-environment
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname"
 
   make DESTDIR="$pkgdir" install
   rm -r "$pkgdir/$static_compat_prefix"/{sbin,bin}

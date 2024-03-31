@@ -45,7 +45,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0015-Fix-setting-exception-flags-of-plugin-targets.patch'
         '0016-Link-corelib-correctly-against-runtimeobject-when-co.patch'
         '0017-Workaround-linker-error-about-missing-symbol-__sync_.patch')
-sha256sums=('b89b426b9852a17d3e96230ab0871346574d635c7914480a2a27f98ff942677b'
+sha256sums=('0493fd0b380c4edf8872f011a7f26d245aa4cdd75b349904ef340a22dedf7462'
             '4436fa3cb4ae8042d4e7420dd69aff5e7ee90eab623b55290dadb4347f3af562'
             '5535db09b73284474eaf13181f52f52d67acad39f9fdc3a4cbd9938354e431b5'
             'c4dd118f2670f526d1a294e00db91e3bc8e3fc733ece40f3d42e14f4210c9d9e'

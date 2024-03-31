@@ -18,7 +18,7 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qtquick3d-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('fcdc9f8955ea12ca8ffa4d202edec2ac2b70f3955e50a17157bf7d19dab93a38')
+sha256sums=('997626f0b7fbaa168a7d227414bfe4068289aa8e767ffcc60bf754d83c2b9ae2')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

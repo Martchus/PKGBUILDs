@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=mingw-w64-qt6-declarative
-_qtver=6.6.3
+_qtver=6.7.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -22,8 +22,8 @@ groups=(mingw-w64-qt6)
 _pkgfqn="qtdeclarative-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Exclude-qmltime-when-cross-compiling.patch')
-sha256sums=('05207b2cfcf2ca74321165e81fc382ca289340d52de74ca2bad4c2b124a792f3'
-            'e12a6de49432cb4c37a26e12e3a533f56f34ec8822986fd3a648e4c0036fb7e7')
+sha256sums=('5a0c39579a74d7cca581162c866ed0887287d4f8d5abff7ab9492d4a58fa9e2c'
+            'b7bac9eb7e662598125640ec9cf3d9cdb7f5d08f02ee49bf8a12fe82941677ce')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

@@ -215,7 +215,7 @@ build() {
     export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32 -ldnsapi -liphlpapi"
 
     msg2 'Build qmake and configure' && ../${_pkgfqn}/configure $qt_configure_args
-    msg2 'Build Qt libraries'        && make -j$(nproc)
+    msg2 'Build Qt libraries'        && make
 
     popd
   done
@@ -224,7 +224,7 @@ build() {
 package() {
   for _arch in ${_architectures}; do
     cd "$srcdir/${_pkgfqn}"
-    make install -j$(nproc) -C ../build-${_arch} INSTALL_ROOT="${pkgdir}"
+    make install -C ../build-${_arch} INSTALL_ROOT="${pkgdir}"
 
     # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
     pushd "$srcdir/build-${_arch}/lib"

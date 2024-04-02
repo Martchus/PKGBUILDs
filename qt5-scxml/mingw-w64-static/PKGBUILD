@@ -54,7 +54,7 @@ build() {
       make qmake_all
       find . -type f -iname 'Makefile' -exec sed -i "s|-L/usr/$_arch/lib -lQt5Bootstrap|-L/usr/lib -L/usr/$_arch/lib -lQt5Bootstrap|g" {} \;
 
-      make -j$(nproc)
+      make
       popd
     done
   done
@@ -67,7 +67,7 @@ package() {
     for _config in "${_configurations[@]}"; do
       pushd build-${_arch}-${_config##*=}
 
-      make -j$(nproc) INSTALL_ROOT="$pkgdir" install
+      make INSTALL_ROOT="$pkgdir" install
 
       # use prl files from build directory since installed prl files seem to have incorrect QMAKE_PRL_LIBS_FOR_CMAKE
       if [[ -d 'lib' ]]; then

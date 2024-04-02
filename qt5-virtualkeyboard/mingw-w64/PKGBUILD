@@ -58,7 +58,7 @@ build() {
       make qmake_all
       find . \( -type f -name 'Makefile*' -o -name '*.prl' \) -exec sed -i "$_fix_deps_of_static_3rdparty_libs" {} \; -exec touch -d 300101 {} \;
 
-      make -j$(nproc)
+      make
       popd
     done
   done
@@ -71,7 +71,7 @@ package() {
     for _config in "${_configurations[@]}"; do
       pushd build-${_arch}-${_config##*=}
 
-      make -j$(nproc) INSTALL_ROOT="$pkgdir" install
+      make INSTALL_ROOT="$pkgdir" install
 
       # apply the fix for the dependency order like in build
       find "${pkgdir}/usr/${_arch}/lib" \( -type f -name '*.prl' -o -name '*.pc' \) -exec sed -i -e "$_fix_deps_of_static_3rdparty_libs" {} \;

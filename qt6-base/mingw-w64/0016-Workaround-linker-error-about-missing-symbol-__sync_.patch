@@ -1,7 +1,7 @@
 From 3176558331d11327354603618f6bb6a26705c50c Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 17 Feb 2024 23:11:18 +0100
-Subject: [PATCH 16/17] Workaround linker error about missing symbol
+Subject: [PATCH 16/18] Workaround linker error about missing symbol
  `__sync_bool_compare_and_swap_16`
 
 This error only happens when compiling for the x86_64-w64-mingw32 target

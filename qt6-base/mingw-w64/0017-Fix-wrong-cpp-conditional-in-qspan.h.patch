@@ -1,7 +1,7 @@
 From 97da3cf6be021886a367ce894425f842059fbdcf Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Tue, 2 Apr 2024 23:29:07 +0200
-Subject: [PATCH 17/17] Fix wrong cpp conditional in qspan.h
+Subject: [PATCH 17/18] Fix wrong cpp conditional in qspan.h
 
 Picked from https://gitlab.archlinux.org/archlinux/packaging/packages/qt6-base/-/blob/main/fix-wrong-cpp-if.patch
 

@@ -19,7 +19,7 @@ _pkgfqn="qt5compat-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
 sha256sums=('9d49d4fd8345d8a40b63e0b65cd49c1d8286e33a7f1409bf1316763f654e19f5')
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 build() {
   for _arch in ${_architectures}; do

@@ -19,7 +19,7 @@ _pkgfqn="qttranslations-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
 sha256sums=('26fc8047062ca4bacd1bd953be86fd39c6e0a5f5e9920c72ba9d40876cea4b56')
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 build() {
   for _arch in ${_architectures}; do

@@ -19,7 +19,7 @@ source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/arc
 sha256sums=('018dc831794182a66f4820ede7e399cee7633107542451206062bb01500541e0')
 options=(!buildflags staticlibs !strip !emptydirs)
 
-_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+_architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})
 _configurations=()
 [[ $NO_SHARED_LIBS ]] || _configurations+=('shared')
 [[ $NO_STATIC_LIBS ]] || _configurations+=('static') makedepends+=('mingw-w64-cmake-static' 'mingw-w64-qt6-base-static' 'mingw-w64-qt6-translations' 'mingw-w64-qt6-svg-static' 'breeze-icons' 'numix-icon-theme-git')

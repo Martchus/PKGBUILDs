@@ -28,7 +28,7 @@ sha256sums=('42de641e79b22d4dd44eb179e8818a8a4bf424c3feec1d0d9524bae5fde458cc'
             '23fba5f191f204e0414c547bf4c9b10fd7ca42c151260e8f64698449a75fbdb3')
 options=(!buildflags staticlibs !strip !emptydirs)
 
-_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+_architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})
 _configurations=()
 [[ $NO_SHARED_LIBS ]] || _configurations+=('shared')
 [[ $NO_STATIC_LIBS ]] || _configurations+=('static') makedepends+=('mingw-w64-cmake-static' 'mingw-w64-qt6-base-static' 'mingw-w64-qt6-declarative-static')

@@ -34,7 +34,7 @@ source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/arc
 sha256sums=('ebafac24ab7c3833a018b5848b32d9fa2cfa01cafeff1b1ec1a6e30eb7415b1b')
 options=(!buildflags staticlibs !strip !emptydirs)
 
-_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+_architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})
 _configurations=()
 if ! [[ $NO_SHARED_LIBS ]]; then
     _configurations+=('shared')

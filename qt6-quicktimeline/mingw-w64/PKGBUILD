@@ -19,7 +19,7 @@ _pkgfqn="qtquicktimeline-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
 sha256sums=('eb45657c6c6b5d57775473d4d69e7d964a17778695ffb2ff50a75aa1b63489bd')
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 build() {
   for _arch in ${_architectures}; do

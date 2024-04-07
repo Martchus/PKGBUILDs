@@ -19,7 +19,7 @@ _pkgfqn="qtcharts-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
 sha256sums=('899d5498c91bfb01fde2ff2438c82adf4d4d9b3cf646e7ad7b0036dbf32b7ca4')
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 build() {
   for _arch in ${_architectures}; do

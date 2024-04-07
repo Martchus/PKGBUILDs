@@ -15,7 +15,7 @@ source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus
 sha256sums=(SKIP)
 options=(!buildflags staticlibs !strip !emptydirs)
 
-_architectures=('i686-w64-mingw32' 'x86_64-w64-mingw32')
+_architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"

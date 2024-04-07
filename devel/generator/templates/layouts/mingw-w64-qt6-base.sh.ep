@@ -38,7 +38,13 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
 sha256sums=('<%== $qt_module_sha256 %>'\
 <%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+# disable i686 build because 32-bit Windows is generally not supported by upstream and
+# it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)
+# remarks:
+# - This is in-line with MSYS2's packaging of mingw-w64 Qt 6 packages.
+# - You may override MINGW_W64_QT6_ARCHS by adding the variable to `/etc/makepkg.conf` in case you
+#   nevertheless want to attempt the i686 build.
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 % if ($patch_files->size || content_for('prepare')->size) {
 prepare () {

@@ -15,7 +15,7 @@ _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
 sha256sums=('<%== stash('git_commit') ? 'SKIP' : $qt_module_sha256 %>'\
 <%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 % if ($patch_files->size || content_for('prepare')->size) {
 prepare () {

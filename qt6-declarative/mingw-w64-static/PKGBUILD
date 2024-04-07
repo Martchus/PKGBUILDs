@@ -25,7 +25,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
 sha256sums=('5a0c39579a74d7cca581162c866ed0887287d4f8d5abff7ab9492d4a58fa9e2c'
             'b7bac9eb7e662598125640ec9cf3d9cdb7f5d08f02ee49bf8a12fe82941677ce')
 
-_architectures='i686-w64-mingw32 x86_64-w64-mingw32'
+_architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
 prepare () {
   cd $_pkgfqn

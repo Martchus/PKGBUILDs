@@ -1,18 +1,20 @@
+# Contributor: Caleb Maclennan <caleb@alerque.com>
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 _pkgname=tcl
 pkgname=static-compat-$_pkgname
-pkgver=8.6.13
+pkgver=8.6.14
 pkgrel=1
 pkgdesc="Powerful, easy-to-learn dynamic programming language"
 arch=('x86_64')
-url="http://tcl.sourceforge.net/"
-license=('custom')
+url='http://tcl.sourceforge.net/'
+license=(TCL)
 depends=('static-compat-zlib')
 makedepends=('static-compat-configure')
 options=('staticlibs' '!lto')
-source=(https://downloads.sourceforge.net/sourceforge/tcl/tcl${pkgver}-src.tar.gz)
-sha256sums=('43a1fae7412f61ff11de2cfd05d28cfc3a73762f354a417c62370a54e2caf066')
+_archive="$_pkgname$pkgver"
+source=("https://downloads.sourceforge.net/sourceforge/tcl/$_archive-src.tar.gz")
+sha256sums=('5880225babf7954c58d4fb0f5cf6279104ce1cd6aa9b71e9a6322540e1c4de66')
 
 prepare() {
   cd tcl${pkgver}
@@ -30,7 +32,7 @@ build() {
 check() {
   source static-compat-environment
   cd tcl${pkgver}/unix
-  make test
+  make test -j1
 }
 
 package() {
@@ -50,14 +52,14 @@ package() {
       -e "s#'{/usr/lib} '#'/usr/lib/tcl$_tclver'#" \
       -i "${pkgdir}/$static_compat_prefix/lib/tclConfig.sh"
 
-  tdbcver=tdbc1.1.5
+  tdbcver=tdbc1.1.7
   sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$tdbcver#$static_compat_prefix/lib/$tdbcver#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/generic#$static_compat_prefix/include#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver/library#$static_compat_prefix/lib/tcl${pkgver%.*}#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$tdbcver#$static_compat_prefix/include#" \
       -i "${pkgdir}/$static_compat_prefix/lib/$tdbcver/tdbcConfig.sh"
 
-  itclver=itcl4.2.3
+  itclver=itcl4.2.4
   sed -e "s#${srcdir}/tcl${pkgver}/unix/pkgs/$itclver#$static_compat_prefix/lib/$itclver#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver/generic#$static_compat_prefix/include#" \
       -e "s#${srcdir}/tcl${pkgver}/pkgs/$itclver#$static_compat_prefix/include#" \

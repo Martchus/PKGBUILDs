@@ -4,19 +4,29 @@
 
 _pkgname=xorgproto
 pkgname=static-compat-$_pkgname
-pkgver=2022.2
+pkgver=2024.1
 pkgrel=1
 pkgdesc="combined X.Org X11 Protocol headers"
 arch=('any')
 url="https://xorg.freedesktop.org/"
-license=('custom')
+license=(BSD-2-Clause
+         HPND
+         HPND-sell-variant
+         ICU
+         MIT
+         MIT-open-group
+         SGI-B-2.0
+         SMLNJ
+         X11
+         X11-distribute-modifications-variant)
 makedepends=('xorg-util-macros' 'static-compat-meson')
 checkdepends=('python-libevdev')
 source=(https://xorg.freedesktop.org/archive/individual/proto/$_pkgname-$pkgver.tar.xz{,.sig})
-sha512sums=('8e6108110600d076a94cc6d0e465b2e9adfbbe8d7e6b75fae9c5262d99dc6074ab1ed561a74d6d451f00f5b7af9f507a6317be9c0770efeed9e60b64beb7a1c9'
+sha512sums=('63955cb604ff831575af2193548857c1b99e52d00206ea9421ce99e145094bcd907388c4574bc32174a01cbe2c940b0377bf75ae7d2c0f953157dc9c32e5a07f'
             'SKIP')
-validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # "Peter Hutterer (Who-T) <office@who-t.net>"
+#validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # "Peter Hutterer (Who-T) <office@who-t.net>"
 #validpgpkeys=('FD0004A26EADFE43A4C3F249C6F7AE200374452D') # "Povilas Kanapickas <povilas@radix.lt>"
+validpgpkeys=('67DC86F2623FC5FD4BB5225D14706DBE1E4B4540') # "Olivier Fourdan <fourdan@xfce.org>"
 
 prepare() {
   mkdir build

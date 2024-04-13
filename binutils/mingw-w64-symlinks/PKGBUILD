@@ -1,59 +1,71 @@
-# $Id: PKGBUILD 182460 2016-07-07 13:03:56Z spupykin $
-# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Maintainer: rubenvb vanboxem <dottie> ruben <attie> gmail <dottie> com
+# Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
 # Same as official package but uses symlinks instead of hard links allowing
 # installation when /usr/i686-w64-mingw32 and /usr/x86_64-w64-mingw32 are
 # bound from another partition.
 
-_targets="i686-w64-mingw32 x86_64-w64-mingw32"
-
 pkgname=mingw-w64-binutils-symlinks
-pkgver=2.32
+pkgver=2.42
 pkgrel=1
-pkgdesc="Cross binutils for the MinGW-w64 cross-compiler (uses symlinks instead of hard links)"
-arch=('i686' 'x86_64')
+pkgdesc="Cross binutils for the MinGW-w64 cross-compiler"
+arch=('x86_64')
 url="http://www.gnu.org/software/binutils"
-license=('GPL')
+license=(GPL-2.0-or-later GPL-3.0-or-later LGPL-2.0-or-later LGPL-3.0-or-later GFDL-1.3 FSFAP)
 groups=('mingw-w64-toolchain' 'mingw-w64')
 depends=('zlib')
 provides=('mingw-w64-binutils')
-conflicts=('mingw-w64-binutils')
+conflicts=('mingw-w64-binutils');
 options=('!libtool' '!emptydirs')
-validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')
+validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')  # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
 source=("https://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.gz"{,.sig})
-sha256sums=('9b0d97b3d30df184d302bced12f976aa1e5fbf4b0be696cdebc6cca30411a46e'
+sha512sums=('1e4ee462513eadd3c540e4782f9661df62ecbcd4d6297d61dcc0845ae7d30243c57571787706af3bb4d561e4350609d7057307290e81d76290a301f159a6abc5'
             'SKIP')
 
+_targets="i686-w64-mingw32 x86_64-w64-mingw32"
+
 prepare() {
-  cd ${srcdir}/binutils-${pkgver}
+  cd "$srcdir"/binutils-${pkgver}
   #do not install libiberty
   sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
-  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
-  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
 }
 
 build() {
+  # Fix the check for limits.h and certain other checks by dropping the fortify flag from CPPFLAGS
+  # note: Otherwise libiberty/config.h lacks HAVE_LIMITS_H and the compilation runs into errors like:
+  #  /build/gcc-static-compat/src/gcc/libiberty/fibheap.c:38:25: error: ‘LONG_MIN’ undeclared (first use in this function)
+  #  38 | #define FIBHEAPKEY_MIN  LONG_MIN
+  #     |                         ^~~~~~~~
+  #  /build/gcc-static-compat/src/gcc/libiberty/fibheap.c:220:30: note: in expansion of macro ‘FIBHEAPKEY_MIN’
+  #  220 |   if (okey == key && okey != FIBHEAPKEY_MIN)
+  #      |                              ^~~~~~~~~~~~~~
+  #  /build/gcc-static-compat/src/gcc/libiberty/fibheap.c:36:1: note: ‘LONG_MIN’ is defined in header ‘<limits.h>’; did you forget to ‘#include <limits.h>’?
+  #   35 | #include "fibheap.h"
+  #  +++ |+#include <limits.h>
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2}
+
   for _target in $_targets; do
-    msg "Building ${_target} cross binutils"
-    mkdir -p ${srcdir}/binutils-${_target} && cd "${srcdir}/binutils-${_target}"
-    $srcdir/binutils-${pkgver}/configure --prefix=/usr \
+    echo "Building ${_target} cross binutils"
+    mkdir -p "$srcdir"/binutils-${_target} && cd "${srcdir}/binutils-${_target}"
+    "$srcdir"/binutils-${pkgver}/configure --prefix=/usr \
         --target=${_target} \
         --infodir=/usr/share/info/${_target} \
         --enable-lto --enable-plugins \
         --enable-deterministic-archives \
         --disable-multilib --disable-nls \
         --disable-werror
-    make
+     make -O
   done
 }
 
 package() {
   for _target in ${_targets}; do
-    msg "Installing ${_target} cross binutils"
-    cd ${srcdir}/binutils-${_target}
-    make DESTDIR=${pkgdir} install
+    echo "Installing ${_target} cross binutils"
+    cd "$srcdir"/binutils-${_target}
+    make DESTDIR="$pkgdir" install
+
+    rm "$pkgdir"/usr/lib/bfd-plugins/libdep.so
   done
+
   cd "${pkgdir}/usr/bin"
   for file in *; do
     if [[ ! -L $file ]] && [[ ! -d $file ]]; then

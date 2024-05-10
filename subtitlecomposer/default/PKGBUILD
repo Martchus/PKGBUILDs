@@ -8,12 +8,12 @@
 
 pkgname=subtitlecomposer
 pkgver=0.8.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Video subtitle editor'
 arch=('i686' 'x86_64')
 url="https://invent.kde.org/multimedia/${pkgname}"
 license=('GPL')
-depends=('qt5-declarative' 'kcoreaddons5' 'ktextwidgets5' 'kio5' 'sonnet5' 'kcodecs5' 'kxmlgui5' 'ki18n5' 'ffmpeg' 'openal')
+depends=('qt6-declarative' 'qt6-5compat' 'kcoreaddons' 'ktextwidgets' 'kio' 'sonnet' 'kcodecs' 'kxmlgui' 'ki18n' 'ffmpeg' 'openal')
 makedepends=('extra-cmake-modules' 'jack' 'blas' 'xorg-server-xvfb')
 
 # Comment/uncomment the following dependency to disable/enable
@@ -48,6 +48,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DKDE_INSTALL_LIBDIR=lib \
+    -DQT_MAJOR_VERSION=6 \
     -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   cmake --build "${srcdir}/build"
 }

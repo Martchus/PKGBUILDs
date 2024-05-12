@@ -1,7 +1,7 @@
 # Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=mingw-w64-gcc
-pkgver=13.2.1
+pkgver=14.1.1+r1+g43b730b9134
 pkgrel=1
 pkgdesc="Cross GCC for the MinGW-w64 cross-compiler"
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ depends=('zlib' 'libisl' 'libmpc' 'mingw-w64-crt' 'mingw-w64-binutils' 'mingw-w6
 # gcc-d doesn't build as of 13.1.0
 makedepends=("gcc-ada" "git")
 options=('!strip' 'staticlibs' '!emptydirs' '!buildflags')
-_commit=d8a0dcd146dd95e2b6b85cf82c445214d364cf3b
+_commit=43b730b9134af60a8f1c5b107d625f7127ff23c5
 source=(git+https://sourceware.org/git/gcc.git#commit=${_commit})
 #source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig})
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
@@ -32,6 +32,10 @@ prepare() {
 }
 
 build() {
+  # Avoid errors due to implicit function declarations and similar issues (which are treated as errors as of GCC 14,
+  # see https://gcc.gnu.org/gcc-14/porting_to.html)
+  export CFLAGS_FOR_TARGET=-fpermissive
+
   for _arch in ${_architectures}; do
     mkdir -p "$srcdir"/build-${_arch} && cd "$srcdir"/build-${_arch}
     "$srcdir"/gcc/configure --prefix=/usr --libexecdir=/usr/lib \
@@ -55,7 +59,7 @@ package() {
     make DESTDIR="$pkgdir" install
     ${_arch}-strip "$pkgdir"/usr/${_arch}/lib/*.dll
     strip "$pkgdir"/usr/bin/${_arch}-*
-    strip "$pkgdir"/usr/lib/gcc/${_arch}/${pkgver}/{cc1*,collect2,gnat1,f951,lto*}
+    strip "$pkgdir"/usr/lib/gcc/${_arch}/*/{cc1*,collect2,gnat1,f951,lto*}
     ln -s ${_arch}-gcc "$pkgdir"/usr/bin/${_arch}-cc
     # mv dlls
     mkdir -p "$pkgdir"/usr/${_arch}/bin/

@@ -1,8 +1,8 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->glibc->binutils->gcc
 # NOTE: libtool requires rebuilt with each new gcc version
 
-pkgname=({gcc,gcc-libs,lib32-gcc-libs,gcc-ada,gcc-fortran}-static-compat)
-pkgver=13.2.1
+pkgname=({gcc,gcc-libs,lib32-gcc-libs,gcc-fortran}-static-compat)
+pkgver=14.1.1+r1+g43b730b9134
 _majorver=${pkgver%%.*}
 pkgrel=1
 pkgdesc='The GNU Compiler Collection'
@@ -32,11 +32,10 @@ checkdepends=(
 options=(!emptydirs !lto debug)
 _prefix=/usr/static-compat
 _libdir=usr/static-compat/lib/gcc/$CHOST/${pkgver%%+*}
-_commit=d8a0dcd146dd95e2b6b85cf82c445214d364cf3b
-source=(git://gcc.gnu.org/git/gcc.git#commit=$_commit
+_commit=43b730b9134af60a8f1c5b107d625f7127ff23c5
+source=(git+https://sourceware.org/git/gcc.git#commit=$_commit
 #source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz{,.sig}
         c89 c99
-        gcc-ada-repro.patch
 )
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
@@ -46,8 +45,7 @@ validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.
 #            'SKIP'
 sha256sums=('SKIP'
             'de48736f6e4153f03d0a5d38ceb6c6fdb7f054e8f47ddd6af0a3dbf14f27b931'
-            '2513c6d9984dd0a2058557bf00f06d8d5181734e41dcfe07be7ed86f2959622a'
-            '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f')
+            '2513c6d9984dd0a2058557bf00f06d8d5181734e41dcfe07be7ed86f2959622a')
 
 prepare() {
   [[ ! -d gcc ]] && ln -s gcc-${pkgver/+/-} gcc
@@ -60,9 +58,6 @@ prepare() {
   sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
   sed -i 's|MULTILIB_DIRNAMES .*|MULTILIB_DIRNAMES = 64 32|' gcc/config/i386/t-linux64
   sed -i 's|m32=.*|m32=../lib32\$\(call if_multiarch,:i386-linux-gnu\)|' gcc/config/i386/t-linux64
-
-  # Reproducible gcc-ada
-  patch -Np0 < "$srcdir/gcc-ada-repro.patch"
 
   mkdir -p "$srcdir/gcc-build"
 }
@@ -123,15 +118,8 @@ build() {
   CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2}
 
   "$srcdir/gcc/configure" \
-    --enable-languages=ada,c,c++,fortran,lto \
+    --enable-languages=c,c++,fortran,lto \
     $_confflags
-
-  # link Ada host tools with host g++ - otherwise we run into linker errors because it would use the too old target glibc
-  # note: Since we don't need Ada anyways it maybe makes sense to just disable it in the future.
-  sed -i -r \
-    -e 's|\+\$\(GCC_LINK\)( .* \$\(TOOLS_LIBS\))|g++\1|g' \
-    -e 's|--LINK=\"\$\(GCC_LINK\)\"|--LINK=g++|g' \
-    gcc/ada/gcc-interface/Makefile
 
   make
 }
@@ -167,7 +155,6 @@ package_gcc-libs-static-compat() {
     make -C $CHOST/$lib DESTDIR="$pkgdir" install-toolexeclibLTLIBRARIES
   done
 
-  #make -C $CHOST/libobjc DESTDIR="$pkgdir" install-libs
   make -C $CHOST/libstdc++-v3/po DESTDIR="$pkgdir" install
 
   rm -rf "$pkgdir"/$_libdir/include/d/
@@ -243,7 +230,7 @@ package_gcc-static-compat() {
 
   make -C gcc DESTDIR="$pkgdir" install-man install-info
   rm "$pkgdir"$_prefix/share/man/man1/gfortran.1
-  rm "$pkgdir"$_prefix/share/info/{gfortran,gnat-style,gnat_rm,gnat_ugn}.info
+  rm "$pkgdir"$_prefix/share/info/gfortran.info
   rm -r "$pkgdir"$_prefix/share/info/dir
 
   make -C libcpp DESTDIR="$pkgdir" install
@@ -287,44 +274,6 @@ package_gcc-fortran-static-compat() {
   rm -r "$pkgdir"$_prefix/share/info/dir
 
   ln -s gfortran "$pkgdir$_prefix/bin/f95"
-
-  # Install Runtime Library Exception
-  install -d "$pkgdir$_prefix/share/licenses/$pkgname/"
-  ln -s $_prefix/share/licenses/gcc-libs/RUNTIME.LIBRARY.EXCEPTION \
-    "$pkgdir$_prefix/share/licenses/$pkgname/"
-}
-
-package_gcc-ada-static-compat() {
-  pkgdesc='Ada front-end for GCC (GNAT)'
-  depends=("gcc-static-compat=$pkgver-$pkgrel" libisl.so)
-  options=(!emptydirs staticlibs debug)
-
-  cd gcc-build/gcc
-  make DESTDIR="$pkgdir" ada.install-{common,info}
-  install -m755 gnat1 "$pkgdir/${_libdir}"
-
-  cd "$srcdir"/gcc-build/$CHOST/libada
-  make DESTDIR="${pkgdir}" INSTALL="install" \
-    INSTALL_DATA="install -m644" install-libada
-
-  cd "$srcdir"/gcc-build/$CHOST/32/libada
-  make DESTDIR="${pkgdir}" INSTALL="install" \
-    INSTALL_DATA="install -m644" install-libada
-
-  ln -s gcc "$pkgdir$_prefix/bin/gnatgcc"
-
-  # insist on dynamic linking, but keep static libraries because gnatmake complains
-  mv "$pkgdir"/${_libdir}/adalib/libgna{rl,t}-${_majorver}.so "$pkgdir$_prefix/lib"
-  ln -s libgnarl-${_majorver}.so "$pkgdir$_prefix/lib/libgnarl.so"
-  ln -s libgnat-${_majorver}.so "$pkgdir$_prefix/lib/libgnat.so"
-  rm -f "$pkgdir"/${_libdir}/adalib/libgna{rl,t}.so
-  rm -r "$pkgdir"$_prefix/share/info/dir
-
-  install -d "$pkgdir$_prefix/lib32/"
-  mv "$pkgdir"/${_libdir}/32/adalib/libgna{rl,t}-${_majorver}.so "$pkgdir$_prefix/lib32"
-  ln -s libgnarl-${_majorver}.so "$pkgdir$_prefix/lib32/libgnarl.so"
-  ln -s libgnat-${_majorver}.so "$pkgdir$_prefix/lib32/libgnat.so"
-  rm -f "$pkgdir"/${_libdir}/32/adalib/libgna{rl,t}.so
 
   # Install Runtime Library Exception
   install -d "$pkgdir$_prefix/share/licenses/$pkgname/"

@@ -2,7 +2,7 @@ _pkgname='pianobooster'
 pkgname='mingw-w64-pianobooster-custom'
 pkgdesc='A MIDI file player that teaches you how to play the piano (mingw-w64, with custom and experimental patches, statically linked)'
 pkgver=1392.86ce9b0
-pkgrel=2
+pkgrel=3
 depends=()
 makedepends=('mingw-w64-qt6-base-static' 'mingw-w64-ftgl' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities'
              'git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static'

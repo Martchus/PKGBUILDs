@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-wayland
-_qtver=6.7.0
+_qtver=6.7.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -16,7 +16,7 @@ makedepends=(static-compat-cmake static-compat-vulkan-headers ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtwayland-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('d73470e4217da388d8cd2a517ee8bb373853f33c569306e80f04397845157aea')
+sha256sums=('7ef176a8e701c90edd8e591dad36f83c30d623ef94439ff62cafcffd46a83d20')
 
 build() {
   check_buildoption ccache y && ccache_args='

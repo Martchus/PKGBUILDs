@@ -25,7 +25,7 @@ groups=('mingw-w64-qt5')
 url='https://www.qt.io/'
 _pkgfqn=${_qt_module}
 source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit)
-sha256sums=('SKIP')
+sha256sums=('64ac02bf05741e663d80daa0474a8ecbfe7fa416f5125a8c4373eb3544078031')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

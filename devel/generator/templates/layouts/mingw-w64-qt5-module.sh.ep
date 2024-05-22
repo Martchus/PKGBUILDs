@@ -45,7 +45,7 @@ _pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"\
 % }
 <%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
-% if ($kde_fork_revision || stash('is_lts')) {
+% if ($qt_module_sha256 =~ qr/missing/) {
 sha256sums=('SKIP'\
 % } else {
 sha256sums=('<%== $qt_module_sha256 %>'\

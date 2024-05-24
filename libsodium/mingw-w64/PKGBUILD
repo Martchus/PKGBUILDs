@@ -6,7 +6,6 @@
 #   Alexey Pavlov <alexpux@gmail.com>
 # Contributor: Wolfgang Pupp <wolfgang.pupp@gmail.com>
 
-
 _realname=libsodium
 pkgname="mingw-w64-${_realname}"
 pkgver=1.0.19

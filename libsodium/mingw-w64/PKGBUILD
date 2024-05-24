@@ -1,10 +1,9 @@
-# Based on Arch Linux libsodium by
-#   Felix Yan <felixonmars@archlinux.org>
-#   namelessjon <jonathan.stott@gmail.com>
-#   Alessio Sergi <asergi at archlinux dot us>
-# and MSYS2 mingw-w64-libsodium by
-#   Alexey Pavlov <alexpux@gmail.com>
-# Contributor: Wolfgang Pupp <wolfgang.pupp@gmail.com>
+# Maintainer: Wolfgang Pupp <wolfgang.pupp@gmail.com>
+# Maintainer: Martchus <martchus@gmx.net>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: namelessjon <jonathan.stott@gmail.com>
+# Contributor: Alessio Sergi <asergi at archlinux dot us>
+# Contributor: Alexey Pavlov <alexpux@gmail.com>
 
 _realname=libsodium
 pkgname="mingw-w64-${_realname}"

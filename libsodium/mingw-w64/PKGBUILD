@@ -16,8 +16,7 @@ license=('custom:ISC')
 depends=('mingw-w64-crt')
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-configure')
-source=("https://download.libsodium.org/libsodium/releases/${_realname}-${pkgver}.tar.gz"
-        "https://download.libsodium.org/libsodium/releases/${_realname}-${pkgver}.tar.gz.sig")
+source=(https://download.libsodium.org/libsodium/releases/${_realname}-${pkgver}.tar.gz{,.sig})
 b2sums=('de43520150b55760142d186404cc3e49471c6e911a7a590c7ae08bc61e928c063c459555f49cd88155238fb0008ef3924b6d7c14ba9cff2f90f1e96201e1259c'
         'SKIP')
 
@@ -28,13 +27,7 @@ build() {
   for _arch in ${_architectures}; do
     mkdir -p "${srcdir}"/build-${_arch} && cd "${srcdir}"/build-${_arch}
 
-    ../${_realname}-stable/configure \
-      --prefix="/usr/${_arch}" \
-      --target=${_arch} \
-      --build="$CHOST" \
-      --host="${_arch}" \
-      --enable-shared \
-      --enable-static
+    ${_arch}-configure ../${_realname}-stable
 
     make
   done

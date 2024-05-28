@@ -1,4 +1,4 @@
-From 33ff3ba65c06a02136208b80567a0ba0c8db844a Mon Sep 17 00:00:00 2001
+From dce1b9b945c9f5a528cf21f3fba9bb7bab69c134 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 2 Jun 2017 18:28:10 +0200
 Subject: [PATCH 09/32] Don't try to use debug version of D-Bus library
@@ -25,5 +25,5 @@ index e97969ab25c..b75f8a8033c 100644
                      },
                      "condition": "config.win32 && features.shared"
 -- 
-2.44.0
+2.45.1
 

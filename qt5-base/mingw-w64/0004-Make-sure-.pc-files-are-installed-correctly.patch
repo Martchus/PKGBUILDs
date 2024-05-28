@@ -1,4 +1,4 @@
-From ed34f597de640c8ef123db60931353894564aa8d Mon Sep 17 00:00:00 2001
+From 9b0772d1085b410d1e11816de607f88df648518d Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 18 Sep 2016 13:54:12 +0200
 Subject: [PATCH 04/32] Make sure *.pc files are installed correctly
@@ -62,5 +62,5 @@ index 5e446bd7e2b..183cef29089 100644
                      uninst.append("\n\t");
                  uninst.append("-$(DEL_FILE) " + escapeFilePath(dst_pc));
 -- 
-2.44.0
+2.45.1
 

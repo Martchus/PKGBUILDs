@@ -1,0 +1,26 @@
+From a0b0083a0229c3e1d2ba47705dbadb0f2921d1c2 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Tue, 28 May 2024 22:26:21 +0200
+Subject: [PATCH 2/2] Avoid build error in qcollectiongenerator
+
+Change-Id: I91930bca30a6eff7ea9cac2727ec3af2844cad02
+---
+ src/assistant/qcollectiongenerator/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/assistant/qcollectiongenerator/main.c b/src/assistant/qcollectiongenerator/main.c
+index 783a799a1..517aae6fb 100644
+--- a/src/assistant/qcollectiongenerator/main.c
++++ b/src/assistant/qcollectiongenerator/main.c
+@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
+ 
+     argv[0] = newPath;
+ #ifdef _WIN32
+-    const intptr_t ret = _spawnvp(_P_WAIT, newPath, argv);
++    const intptr_t ret = _spawnvp(_P_WAIT, newPath, (const char * const*)(argv));
+     if (ret == -1) {
+         fprintf(stderr, "Error while executing \"%s\" tool.\n", newPath);
+         return 3;
+-- 
+2.45.1
+

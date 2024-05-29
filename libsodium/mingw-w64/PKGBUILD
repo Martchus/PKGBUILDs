@@ -7,7 +7,7 @@
 
 _realname=libsodium
 pkgname="mingw-w64-${_realname}"
-pkgver=1.0.19
+pkgver=1.0.20
 pkgrel=1
 pkgdesc="A modern, portable, easy to use crypto library (mingw-w64)"
 arch=(any)
@@ -17,7 +17,7 @@ depends=('mingw-w64-crt')
 options=(!strip !buildflags staticlibs)
 makedepends=('mingw-w64-configure')
 source=(https://download.libsodium.org/libsodium/releases/${_realname}-${pkgver}.tar.gz{,.sig})
-b2sums=('de43520150b55760142d186404cc3e49471c6e911a7a590c7ae08bc61e928c063c459555f49cd88155238fb0008ef3924b6d7c14ba9cff2f90f1e96201e1259c'
+b2sums=('2f1d8b2dc8a65f95433132b12bdccb7e0e4750326b05c4f42ddd3a74bf568faa2515384bfe94bba2ef420aff35c515d3d44945ea5a68f72e6a73b3a9b5bb234c'
         'SKIP')
 
 validpgpkeys=("54A2B8892CC3D6A597B92B6C210627AABA709FE1") # Frank Denis

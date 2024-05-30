@@ -20,19 +20,19 @@ Contains PKGBUILD files for creating Arch Linux packages:
 So if you like to improve one of my AUR packages, just create a PR here.
 
 ## Binary repository
-I also provide a [binary repository](https://martchus.no-ip.biz/repo/arch/ownstuff/os)
+I also provide a [binary repository](https://martchus.dyn.f3l.de/repo/arch/ownstuff/os)
 containing the packages found in this repository and a lot of packages found in
 the AUR:
 
 ```
 [ownstuff-testing]
 SigLevel = Optional TrustAll
-Server = https://martchus.no-ip.biz/repo/arch/$repo/os/$arch
+Server = https://martchus.dyn.f3l.de/repo/arch/$repo/os/$arch
 Server = https://ftp.f3l.de/~martchus/$repo/os/$arch
 
 [ownstuff]
 SigLevel = Optional TrustAll
-Server = https://martchus.no-ip.biz/repo/arch/$repo/os/$arch
+Server = https://martchus.dyn.f3l.de/repo/arch/$repo/os/$arch
 Server = https://ftp.f3l.de/~martchus/$repo/os/$arch
 ```
 

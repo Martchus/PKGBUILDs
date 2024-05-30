@@ -14,7 +14,7 @@ pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
 license=('GPL')
-url='https://martchus.no-ip.biz/gitea/Martchus/devtools/src/branch/custom'
+url='https://martchus.dyn.f3l.de/gitea/Martchus/devtools/src/branch/custom'
 conflicts=('devtools' 'devtools-alarm')
 provides=('devtools' 'devtools-alarm')
 depends=(
@@ -44,7 +44,7 @@ makedepends=(
   shellcheck
 )
 optdepends=('btrfs-progs: btrfs support')
-source=("git+https://martchus.no-ip.biz/gitea/Martchus/$_pkgname.git#branch=custom-v$pkgver")
+source=("git+https://martchus.dyn.f3l.de/gitea/Martchus/$_pkgname.git#branch=custom-v$pkgver")
 sha256sums=('SKIP')
 
 build() {

@@ -4,15 +4,18 @@ Contains PKGBUILD files for creating Arch Linux packages:
 * Packages for my own applications and libraries such as
   [Syncthing  Tray](https://github.com/Martchus/syncthingtray),
   [Tag Editor](https://github.com/Martchus/tageditor),
-  [Password Manager](https://github.com/Martchus/passwordmanager), ...
-* Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go):
+  [Password Manager](https://github.com/Martchus/passwordmanager), …
+* Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go)
+  and many more:
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
     * `mingw-w64-*` packages which allow to build for Windows under Arch Linux,
       eg. FreeType 2, Qt 5 and Qt 6
     * `static-compat-*` packages containing static libraries to build self-contained
       applications running on older GNU/Linux distributions under Arch Linux
     * `android-*` packages which allow to build for Android under Arch Linux,
-      eg. iconv, Boost, OpenSSL, CppUnit, Qt 5 and Kirigami
+      eg. iconv, Boost, OpenSSL, CppUnit, Qt 6 and Kirigami
+    * `wasm-*` packages which allow to build for WebAssembly under Arch Linux using
+      the official `emscripten` package; so far limited to a few Qt 6 modules
     * `apple-darwin-*` packages which allow to build for MaxOS X under Arch
       Linux, eg. osxcross and Qt 5 (still experimental)
 * Other packages imported from the AUR to build with slight modifications

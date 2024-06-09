@@ -46,7 +46,7 @@ sub _render_deps {
     my ($package_prefix, $controller, @d) = @_;
     my $prefix = $controller->stash('package_name_prefix');
     my $suffix = $controller->stash('package_name_suffix');
-    my $quote  = $prefix =~ qr/^(mingw-w64|android)/ ? "'" : '';
+    my $quote  = $prefix =~ qr/^(mingw-w64|android|wasm)/ ? "'" : '';
     return join(' ', map { "${quote}${prefix}${package_prefix}-${_}${suffix}${quote}" } @d);
 }
 sub _render_optdeps {

@@ -1,0 +1,12 @@
+% layout 'wasm-qt6-module', has_binaries => 1;
+\
+_qtver=6.7.1
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(any)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='Classes for QML and JavaScript languages (wasm)'
+depends=(<%== qt6deps qw(base) %>)
+makedepends=('qt6-declarative' 'qt6-shadertools' 'cmake' 'ninja' 'python')
+optdepends=('qt6-declarative: development tools')

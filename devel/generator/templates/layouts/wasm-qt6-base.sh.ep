@@ -1,0 +1,70 @@
+# Maintainer: Martchus <martchus@gmx.net>
+<%== content_for 'additional_contributors' %>\
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# This file is created from PKGBUILD.sh.ep contained by the mentioned repository.
+# Do not edit it manually! See README.md in the repository's root directory
+# for more information.
+% if ($patch_files->size) {
+
+# All patches are managed at https://github.com/Martchus/qt<%== $qt_module %>
+% }
+
+pkgname=<%= $package_name %>
+_qtver=6.7.1
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(any)
+url='https://www.qt.io'
+license=(GPL3 LGPL3 FDL custom)
+pkgdesc='A cross-platform application and UI framework (wasm)'
+depends=('emscripten')
+makedepends=('qt6-base' 'ninja' 'cmake')
+optdepends=('qt6-base: development tools')
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+groups=(wasm-qt6)
+_pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"\
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+sha256sums=('<%== $qt_module_sha256 %>'\
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+
+% if ($patch_files->size || content_for('prepare')->size) {
+prepare () {
+  cd $_pkgfqn
+
+% if ($patch_files->size) {
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+% }
+<%== content_for 'prepare' %>\
+}
+
+% }
+build() {
+  export EMSDK=/usr/lib/emscripten
+  /usr/lib/emscripten/emcmake cmake -G Ninja -B build -S $_pkgfqn \\
+      -DCMAKE_FIND_ROOT_PATH:PATH="/usr/lib/emscripten/system" \\
+      -DCMAKE_INSTALL_PREFIX:PATH="/usr/lib/emscripten/system" \\
+      -DBUILD_SHARED_LIBS=OFF \\
+      -DFEATURE_static_runtime=ON \\
+      -DFEATURE_thread=ON \\
+      -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \\
+      -DQT_HOST_PATH=/usr
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 $_pkgfqn/LICENSES/* -t "$pkgdir"/usr/share/licenses/$pkgname
+
+  find "${pkgdir}"/usr/lib/emscripten/system -type f -name 'lib*.so' -exec /usr/lib/emscripten/emstrip -g --strip-unneeded {} \;
+  find "${pkgdir}"/usr/lib/emscripten/system -type f -name 'lib*.a' -exec /usr/lib/emscripten/emstrip -g {} \;
+  [[ -d "${pkgdir}"/usr/lib/emscripten/system/share/doc ]] && rm -r "${pkgdir}"/usr/lib/emscripten/system/share/doc || true
+}

@@ -10,7 +10,7 @@
 _name=ffmpeg
 pkgname=ffmpeg-custom
 pkgver=7.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
 arch=('x86_64')
@@ -26,7 +26,6 @@ depends=(
   glib2
   glibc
   gmp
-  gnutls
   gsm
   jack
   lame

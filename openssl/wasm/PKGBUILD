@@ -7,7 +7,7 @@ _pkgver=3.3.1
 pkgname=wasm-$_pkgname
 # use a pacman compatible version scheme
 pkgver=${_pkgver/[a-z]/.${_pkgver//[0-9.]/}}
-pkgrel=1
+pkgrel=2
 pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (wasm)"
 arch=('any')
 url='https://www.openssl.org'
@@ -39,6 +39,7 @@ build() {
     --openssldir="$_prefix" \
     -Wl,--no-allow-shlib-undefined \
     -Wl,--no-undefined \
+    -pthread \
     no-tests \
     no-asm \
     no-async \

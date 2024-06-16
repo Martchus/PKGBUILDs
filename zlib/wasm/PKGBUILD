@@ -1,0 +1,56 @@
+pkgbase=wasm-zlib
+_pkgname=zlib
+pkgname=(wasm-zlib wasm-minizip)
+epoch=1
+pkgver=1.3.1
+pkgrel=2
+pkgdesc='Compression library implementing the deflate compression method found in gzip and PKZIP (wasm)'
+arch=(x86_64)
+license=(Zlib)
+url="https://www.zlib.net/"
+makedepends=('emscripten')
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+source=(https://github.com/madler/zlib/releases/download/v$pkgver/$_pkgname-$pkgver.tar.xz{,.asc})
+sha512sums=('1e8e70b362d64a233591906a1f50b59001db04ca14aaffad522198b04680be501736e7d536b4191e2f99767e7001ca486cd802362cca2be05d5d409b83ea732d'
+            'SKIP')
+b2sums=('42d109223801a493de6d52e7343403d7fc3234a6ca816425fe41ac9c18019b01b93841acd28a235e99f2256a6a17f93624e96b2ddb58d588c8190a6bedb82910'
+        'SKIP')
+validpgpkeys=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA')  # Mark Adler <madler@alumni.caltech.edu>
+
+prepare() {
+  cd $_pkgname-$pkgver/contrib/minizip
+  cp Makefile Makefile.orig
+  cp ../README.contrib readme.txt
+  autoreconf -fiv
+}
+
+build() {
+  cd $_pkgname-$pkgver
+
+  /usr/lib/emscripten/emconfigure ./configure --prefix=/usr/lib/emscripten/system --static
+  /usr/lib/emscripten/emmake make
+
+  cd contrib/minizip
+  /usr/lib/emscripten/emconfigure ./configure --prefix=/usr/lib/emscripten/system
+  /usr/lib/emscripten/emmake make
+}
+
+package_wasm-zlib() {
+  depends=(emscripten)
+
+  /usr/lib/emscripten/emmake make install DESTDIR="$pkgdir" -C $_pkgname-$pkgver
+  install -D -m644 $_pkgname-$pkgver/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
+
+package_wasm-minizip() {
+  pkgdesc='Mini zip and unzip based on zlib'
+  depends=(wasm-zlib)
+
+  /usr/lib/emscripten/emmake make install DESTDIR="$pkgdir" -C $_pkgname-$pkgver/contrib/minizip
+  install -D -m644 $_pkgname-$pkgver/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+
+  # https://github.com/madler/zlib/pull/229
+  rm "$pkgdir/usr/lib/emscripten/system/include/minizip/crypt.h"
+}
+
+# vim: ts=2 sw=2 et:

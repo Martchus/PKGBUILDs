@@ -8,7 +8,7 @@
 _realname=libsodium
 pkgname="mingw-w64-${_realname}"
 pkgver=1.0.20
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern, portable, easy to use crypto library (mingw-w64)"
 arch=(any)
 url="https://github.com/jedisct1/libsodium"
@@ -27,7 +27,7 @@ build() {
   for _arch in ${_architectures}; do
     mkdir -p "${srcdir}"/build-${_arch} && cd "${srcdir}"/build-${_arch}
 
-    ${_arch}-configure ../${_realname}-stable
+    ${_arch}-configure ../${_realname}-${pkgver}
 
     make
   done
@@ -45,6 +45,6 @@ package() {
     rm -rf "${pkgdir}/usr/${_arch}/share"
   done
 
-  install -Dm644 ${srcdir}/${_realname}-stable/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 ${srcdir}/${_realname}-${pkgver}/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 

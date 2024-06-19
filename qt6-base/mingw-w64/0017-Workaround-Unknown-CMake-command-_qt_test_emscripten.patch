@@ -1,4 +1,4 @@
-From 19d7db0e354566e0dd0ea73b1e38fc715c19233b Mon Sep 17 00:00:00 2001
+From 4ea8a0829c0470b911dda26774c33f3e16f68010 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Jun 2024 23:28:03 +0200
 Subject: [PATCH 17/18] Workaround `Unknown CMake command

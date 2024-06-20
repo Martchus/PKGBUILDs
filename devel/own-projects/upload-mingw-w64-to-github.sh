@@ -36,7 +36,11 @@ fi
 
 projects=(${PROJECTS:-${!versions[@]}})
 
-repo_dir=${PATH_REPO_OWNSTUFF}
+if [[ $EXPERIMENTAL ]]; then
+    repo_dir=${PATH_REPO_OWNSTUFF_EXPERIMENTAL}
+else
+    repo_dir=${PATH_REPO_OWNSTUFF}
+fi
 if ! [[ $repo_dir ]]; then
     echo "\$PATH_REPO_OWNSTUFF is empty."
     exit -1

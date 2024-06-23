@@ -5,17 +5,21 @@
 
 pkgname=mingw-w64-zstd
 _pkgname=zstd
-pkgver=1.5.5
+pkgver=1.5.6
 pkgrel=1
 pkgdesc="Zstandard - Fast real-time compression algorithm (mingw-w64)"
 url="https://facebook.github.io/zstd/"
 arch=('any')
-license=('BSD' 'GPL2')
+license=('BSD-3-Clause OR GPL-2.0-or-later')
 depends=('mingw-w64-crt')
-makedepends=('mingw-w64-cmake')
+makedepends=('mingw-w64-cmake' 'ninja')
 options=('staticlibs' '!buildflags' '!strip')
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebook/${_pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('98e9c3d949d1b924e28e01eccb7deed865eefebf25c2f21c702e5cd5b63b85e1')
+source=(https://github.com/facebook/zstd/releases/download/v${pkgver}/zstd-${pkgver}.tar.zst{,.sig})
+sha256sums=('4aa8dd1c1115c0fd6b6b66c35c7f6ce7bd58cc1dfd3e4f175b45b39e84b14352'
+            'SKIP')
+b2sums=('88430a6a5db47462f93f2458cd3cc4823913de2d2d979cad56b06b48367a4ee51f59c795944c16d06abfdd19758b69f0b6e504ed833d02ff76e4cda519d220e4'
+        'SKIP')
+validpgpkeys=(4EF4AC63455FC9F4545D9B7DEF8FE99528B52FFD)
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -26,7 +30,7 @@ build() {
   export CXXFLAGS+=' -ffat-lto-objects'
   for _arch in ${_architectures}; do
     mkdir -p "build-${_arch}" && pushd "build-${_arch}"
-    ${_arch}-cmake -S ../build/cmake \
+    ${_arch}-cmake -G Ninja -S ../build/cmake \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_INSTALL_PREFIX=/usr/${_arch} \
       -DCMAKE_INSTALL_LIBDIR=lib \
@@ -36,7 +40,7 @@ build() {
       -DZSTD_BUILD_TESTS=OFF \
       -DZSTD_PROGRAMS_LINK_SHARED=OFF \
       -DZSTD_BUILD_PROGRAMS=OFF
-    make
+    cmake --build ./
     popd
   done
 }
@@ -46,7 +50,7 @@ package() {
 
   for _arch in ${_architectures}; do
     pushd "build-${_arch}"
-    make DESTDIR="${pkgdir}" install
+    DESTDIR="${pkgdir}" cmake --install ./
     ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
     ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a
     popd

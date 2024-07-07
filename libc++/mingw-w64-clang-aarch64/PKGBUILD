@@ -1,0 +1,67 @@
+pkgname=mingw-w64-clang-aarch64-libc++
+pkgver=18.1.8
+pkgrel=1
+url="https://libcxx.llvm.org/"
+pkgdesc='LLVM C++ standard library (mingw-w64)'
+license=('custom:Apache 2.0 with LLVM Exception')
+arch=('any')
+depends=('mingw-w64-clang-aarch64-compiler-rt')
+makedepends=('clang' 'cmake' 'ninja' 'python' 'mingw-w64-clang-aarch64-cmake')
+checkdepends=('llvm')
+options=(!lto staticlibs !buildflags !strip)
+source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/llvm-project-$pkgver.src.tar.xz"{,.sig})
+sha512sums=('25eeee9984c8b4d0fbc240df90f33cbb000d3b0414baff5c8982beafcc5e59e7ef18f6f85d95b3a5f60cb3d4cd4f877c80487b5768bc21bc833f107698ad93db'
+            'SKIP')
+validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A') # Tom Stellard <tstellar@redhat.com>
+
+_target="aarch64-w64-mingw32"
+
+prepare() {
+  mkdir -p build
+  sed -i 's/CREDITS.TXT/CREDITS/' llvm-project-$pkgver.src/libcxx{,abi}/LICENSE.TXT
+}
+
+build() {
+  cd build
+
+  source mingw-clang-env $_target
+
+  $_target-cmake \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_COMPILER_WORKS=1 \
+    -DLLVM_ENABLE_RUNTIMES="libunwind;libcxxabi;libcxx" \
+    -DLIBUNWIND_USE_COMPILER_RT=TRUE \
+    -DLIBUNWIND_ENABLE_SHARED=ON \
+    -DLIBUNWIND_ENABLE_STATIC=ON \
+    -DLIBCXX_USE_COMPILER_RT=ON \
+    -DLIBCXX_ENABLE_SHARED=ON \
+    -DLIBCXX_ENABLE_STATIC=ON \
+    -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=TRUE \
+    -DLIBCXX_CXX_ABI=libcxxabi \
+    -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
+    -DLIBCXX_ENABLE_ABI_LINKER_SCRIPT=FALSE \
+    -DLIBCXXABI_ENABLE_SHARED=OFF \
+    -DLLVM_EXTERNAL_LIT=/usr/bin/lit \
+    -DLLVM_ENABLE_PIC=ON \
+    ../llvm-project-$pkgver.src/runtimes
+  ninja --verbose cxx cxxabi
+}
+
+check() {
+  source mingw-clang-env $_target
+  # the tests are extremely slow
+  # ninja -C build check-cxx check-cxxabi
+}
+
+package() {
+  source mingw-clang-env $_target
+
+  DESTDIR="$pkgdir" ninja -C build install-cxx
+  install -Dm0644 llvm-project-$pkgver.src/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
+  install -Dm0644 llvm-project-$pkgver.src/libcxx/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+
+  DESTDIR="$pkgdir" ninja -C build install-cxxabi
+  install -Dm0644 llvm-project-$pkgver.src/libcxxabi/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
+  install -Dm0644 llvm-project-$pkgver.src/libcxxabi/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+}

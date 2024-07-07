@@ -50,5 +50,12 @@ package() {
     echo "Installing ${_target} crt"
     cd "$srcdir"/crt-${_target}
     make DESTDIR="$pkgdir" install
+
+    if [[ $pkgname =~ .*-clang-.* ]]; then
+      # Create empty dummy archives, to avoid failing when the compiler driver
+      # adds -lssp -lssh_nonshared when linking.
+      ar rcs "${pkgdir}"/usr/${_target}/lib/libssp.a
+      ar rcs "${pkgdir}"/usr/${_target}/lib/libssp_nonshared.a
+    fi
   done
 }

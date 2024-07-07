@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /usr/bin/mingw-env @TRIPLE@
+. /usr/bin/mingw-clang-env @TRIPLE@
 
 # check if last arg is a path to configure, else use parent
 for last; do true; done

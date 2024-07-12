@@ -17,10 +17,10 @@
 
 _qt_module=qtbase
 pkgname=mingw-w64-qt5-base
-pkgver=5.15.14+kde+r140
+pkgver=5.15.14+kde+r141
 pkgrel=1
 _basever=${pkgver%%+*}
-_commit=1c13ef067ea3c97342f98039931ea18b3992014f
+_commit=0e1ff2f06ddac7c32c5a5e0b65e402c9332e56f8
 pkgdesc='A cross-platform application and UI framework, native OpenGL backend (mingw-w64)'
 arch=('i686' 'x86_64')
 url='https://www.qt.io/'

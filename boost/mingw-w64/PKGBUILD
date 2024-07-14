@@ -15,38 +15,18 @@ sha256sums=('7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617')
 _architectures="32:i686-w64-mingw32 64:x86_64-w64-mingw32"
 
 prepare() {
-  for _arch_with_address_model in ${_architectures}; do
-    source mingw-env "${_arch_with_address_model:3}"
-    _arch=$_arch_with_address_model
+  # https://github.com/boostorg/charconv/issues/196
+  curl -L https://github.com/boostorg/charconv/pull/197.patch | patch -p2 -d boost_${_boostver} -f || true
+
+  for _arch in ${_architectures}; do
+    source mingw-env "${_arch:3}"
 
     rm -rf build-${_arch:3}
     cp -r boost_${_boostver} build-${_arch:3}
     pushd build-${_arch:3}
 
-    # avoid including intrinsics via x86intrin.h as it conflicts with intrin.h which is already otherwise included
-    if [[ $_arch =~ .*i.?86.* ]]; then
-      find -iname 'config.hpp' -exec sed -i \
-        -e 's|x86intrin.h|intrin.h|g' \
-        -e "s|define BOOST_CHARCONV_HAS_X86_INTRINSICS|define BOOST_CHARCONV_HAS_NO_INTRINSICS|g" \
-      {} \+
-    fi
-    # concrete error prevented by this is:
-    # In file included from ./boost/charconv/detail/fast_float/float_common.hpp:70,
-    #             from ./boost/charconv/detail/fast_float/fast_float.hpp:11,
-    #             from libs/charconv/build/../src/from_chars.cpp:15:
-    # /usr/i686-w64-mingw32/include/intrin.h:805:5: error: conflicting declaration of ‘__m64 _m_pf2iw(__m64)’ with ‘C’ linkage
-    #  805 |     __MACHINEX86X_NOWIN64(__m64 _m_pf2iw(__m64))
-    #      |     ^~~~~~~~~~~~~~~~~~~~~
-    # In file included from /usr/lib/gcc/i686-w64-mingw32/14.1.1/include/x86intrin.h:34,
-    #                  from ./boost/charconv/detail/config.hpp:82,
-    #                  from libs/charconv/build/../src/from_chars_float_impl.hpp:9,
-    #                  from libs/charconv/build/../src/from_chars.cpp:14:
-    # /usr/lib/gcc/i686-w64-mingw32/14.1.1/include/mm3dnow.h:199:1: note: previous declaration with ‘C++’ linkage
-    #   199 | _m_pf2iw (__m64 __A)
-    #       | ^~~~~~~~
-
     cat > user-config.jam << EOF
-using gcc : mingw64 : $CXX
+using gcc : mingw64 : ${CXX}
         :
         <rc>${_arch:3}-windres
         <archiver>${_arch:3}-ar
@@ -59,10 +39,8 @@ EOF
 
 package() {
   cd "${srcdir}"
-  for _arch_with_address_model in ${_architectures}; do
-    source mingw-env "${_arch_with_address_model:3}"
-    _arch=$_arch_with_address_model
-
+  for _arch in ${_architectures}; do
+    source mingw-env "${_arch:3}"
     pushd "build-${_arch:3}"
     LD_PRELOAD="" ./b2 -d2 -q ${MAKEFLAGS} \
       target-os=windows \
@@ -74,8 +52,8 @@ package() {
       --prefix=${pkgdir}/usr/${_arch:3} \
       --user-config=user-config.jam \
       --without-python --without-mpi --without-graph_parallel \
-      cxxflags="$default_mingw_pp_flags $default_mingw_compiler_flags" \
-      linkflags="$default_mingw_linker_flags" \
+      cxxflags="${CXXFLAGS}" \
+      linkflags="${LDFLAGS}" \
       address-model=${_arch:0:2} \
       architecture=x86 \
       binary-format=pe \

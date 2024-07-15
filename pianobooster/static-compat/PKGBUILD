@@ -1,7 +1,7 @@
 _pkgname=pianobooster
 pkgname=static-compat-pianobooster
 pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
-pkgver=1.0.1
+pkgver=1392.86ce9b0
 pkgrel=1
 depends=('static-compat-fluidsynth' 'static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-openssl' 'static-compat-ftgl')
 makedepends=('static-compat-cmake' 'git' 'clang' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'ninja' 'ftgl')

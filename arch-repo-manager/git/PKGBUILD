@@ -12,7 +12,7 @@ pkgrel=3
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for managing custom Arch Linux repositories'
 license=('GPL')
-depends=('libc++utilities-git.so' 'libpasswordfile-git.so' 'libboost_filesystem.so' 'libarchive.so' 'libcrypto.so' 'libssl.so' 'lmdb'
+depends=('libc++utilities-git.so' 'libpasswordfile-git.so' 'libboost_filesystem.so' 'libcrypto.so' 'libssl.so' 'lmdb'
          'devtools-custom>=1.1.1')
 [[ $_liburing != OFF ]] && depends+=('liburing.so')
 optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'

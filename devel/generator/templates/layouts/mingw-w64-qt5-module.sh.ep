@@ -24,9 +24,7 @@ pkgname=mingw-w64-qt5-<%== $qt_module %><%== $static_variant ? '-static' : '' %>
 % if ($kde_fork_revision) {
 _commit=<%== $kde_fork_revision->[1] %>
 _basever=${pkgver%%+*}
-% if ($kde_fork_revision->[0] > 0) {
 pkgver+=+kde+r<%== $kde_fork_revision->[0] %>
-% }
 makedepends+=('git')
 % } elsif (stash('is_lts')) {
 makedepends+=('git')

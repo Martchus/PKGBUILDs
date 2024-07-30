@@ -19,6 +19,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-qt5-declarative')
 license=('GPL3' 'LGPL' 'FDL' 'custom')
 _commit=3873bdc809ca8d58d91968cb0de34da26646bc79
 _basever=${pkgver%%+*}
+pkgver+=+kde+r0
 makedepends+=('git')
 options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')

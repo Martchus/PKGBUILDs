@@ -19,6 +19,7 @@ makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config' 'mingw-w64-vulkan-headers' '
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
 _commit=9bf4d03e2515f7c454647d54542330b6e90f8191
 _basever=${pkgver%%+*}
+pkgver+=+kde+r0
 makedepends+=('git')
 options=('!strip' '!buildflags' 'staticlibs')
 groups=('mingw-w64-qt5')

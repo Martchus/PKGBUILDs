@@ -1,7 +1,7 @@
 # Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=mingw-w64-gcc
-pkgver=14.1.1+r58+gfc9fb69ad62
+pkgver=14.2.0
 pkgrel=1
 pkgdesc="Cross GCC for the MinGW-w64 cross-compiler"
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ depends=('zlib' 'libisl' 'libmpc' 'mingw-w64-crt' 'mingw-w64-binutils' 'mingw-w6
 # gcc-d doesn't build as of 13.1.0
 makedepends=("gcc-ada" "git")
 options=('!strip' 'staticlibs' '!emptydirs' '!buildflags')
-_commit=fc9fb69ad624fd4cc89ff31ad0a7b8d88481c1f7
+_commit=04696df09633baf97cdbbdd6e9929b9d472161d3
 # using GitHub mirror as sourceware.org is very slow
 _repo=https://github.com/gcc-mirror/gcc.git
 #_repo=https://sourceware.org/git/gcc.git

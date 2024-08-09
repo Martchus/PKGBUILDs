@@ -1,4 +1,4 @@
-From 5857b1de7b86f55343e16ade0089abe12ce2d0c4 Mon Sep 17 00:00:00 2001
+From 7cb59e009a6ac55a05ee115737363af2349dbf71 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 12 Sep 2020 20:30:49 +0200
 Subject: [PATCH 2/2] Enable pkg-config for mingw-w64 build
@@ -36,5 +36,5 @@ index d6e23e56..67a93e31 100644
  
  IF(MSVC)
 -- 
-2.42.0
+2.46.0
 

@@ -1,4 +1,4 @@
-From e0ac61a6a7ef4a08792f6f3417585ec10a857dc4 Mon Sep 17 00:00:00 2001
+From 495711c00ea8d7cf7b812dd300b3682f7f9da9ae Mon Sep 17 00:00:00 2001
 From: Tilmann Meyer <allescrafterx@gmail.com>
 Date: Fri, 17 Apr 2020 02:12:23 +0200
 Subject: [PATCH 1/2] Fix mingw-w64 build
@@ -16,7 +16,7 @@ Subject: [PATCH 1/2] Fix mingw-w64 build
  9 files changed, 46 insertions(+), 47 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0874e5eb..72072949 100644
+index b987bc7f..7f2f501a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,6 +3,9 @@
@@ -116,19 +116,19 @@ index c1c883d1..cdca6dce 100644
    ADD_CUSTOM_COMMAND(
      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${symlink_name}
 diff --git a/include/ma_global.h b/include/ma_global.h
-index 6d1c6f65..bcb1d974 100644
+index 52f20f41..c39d72b5 100644
 --- a/include/ma_global.h
 +++ b/include/ma_global.h
-@@ -36,7 +36,7 @@
- #endif
+@@ -30,7 +30,7 @@
+ #define strdup _strdup
+ #define sleep(x) Sleep(1000*(x))
  #define strerror_r(errno,buf,len) strerror_s(buf,len,errno)
- #endif
 -#define STDCALL __stdcall 
 +#define STDCALL
  #endif
  
  #include <ma_config.h>
-@@ -442,7 +442,7 @@ typedef SOCKET_SIZE_TYPE size_socket;
+@@ -436,7 +436,7 @@ typedef SOCKET_SIZE_TYPE size_socket;
  #define NO_PISAM		/* Not needed anymore */
  #define NO_MISAM		/* Not needed anymore */
  #define NO_HASH			/* Not needed anymore */
@@ -163,7 +163,7 @@ index 76b16830..97584819 100644
                    int argc, ...);
  struct st_mysql_client_plugin * STDCALL
 diff --git a/include/mysql/client_plugin.h b/include/mysql/client_plugin.h
-index 262fd4a0..9a0e1e66 100644
+index 667074ce..06e15c28 100644
 --- a/include/mysql/client_plugin.h
 +++ b/include/mysql/client_plugin.h
 @@ -194,7 +194,7 @@ typedef struct st_mysql_client_plugin_REMOTEIO
@@ -297,5 +297,5 @@ index 8c304c99..e2e9c5a1 100644
    ENDIF()
  ENDIF()
 -- 
-2.42.0
+2.46.0
 

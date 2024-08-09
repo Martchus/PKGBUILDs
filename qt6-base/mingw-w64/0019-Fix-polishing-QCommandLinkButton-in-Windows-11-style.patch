@@ -1,0 +1,46 @@
+From 4f338b9583105fc0386c141687a5a86e13cda146 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Fri, 9 Aug 2024 21:00:52 +0200
+Subject: [PATCH 19/19] Fix polishing QCommandLinkButton in Windows 11 style
+
+The condition for QCommandLinkButton needs to be checked before the one for
+QAbstractButton; otherwise it is never entered.
+
+Change-Id: Ie9e1c20b38a52b2d72f28279e38deb533595b974
+---
+ src/plugins/styles/modernwindows/qwindows11style.cpp | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/plugins/styles/modernwindows/qwindows11style.cpp b/src/plugins/styles/modernwindows/qwindows11style.cpp
+index 3d07677c5a..a0f488aa53 100644
+--- a/src/plugins/styles/modernwindows/qwindows11style.cpp
++++ b/src/plugins/styles/modernwindows/qwindows11style.cpp
+@@ -2048,6 +2048,12 @@ void QWindows11Style::polish(QWidget* widget)
+             QLineEdit *le = cb->lineEdit();
+             le->setFrame(false);
+         }
++    } else if (qobject_cast<QCommandLinkButton *>(widget)) {
++        widget->setProperty("_qt_usingVistaStyle",false);
++        QPalette pal = widget->palette();
++        pal.setColor(QPalette::ButtonText, pal.text().color());
++        pal.setColor(QPalette::BrightText, pal.text().color());
++        widget->setPalette(pal);
+     } else if (widget->inherits("QAbstractSpinBox")) {
+         const int minWidth = 2 * 24 + 40;
+         const int originalWidth = widget->size().width();
+@@ -2072,12 +2078,6 @@ void QWindows11Style::polish(QWidget* widget)
+         pal.setColor(scrollarea->viewport()->backgroundRole(), Qt::transparent);
+         scrollarea->viewport()->setPalette(pal);
+         scrollarea->viewport()->setProperty("_q_original_background_palette", originalPalette);
+-    } else if (qobject_cast<QCommandLinkButton *>(widget)) {
+-        widget->setProperty("_qt_usingVistaStyle",false);
+-        QPalette pal = widget->palette();
+-        pal.setColor(QPalette::ButtonText, pal.text().color());
+-        pal.setColor(QPalette::BrightText, pal.text().color());
+-        widget->setPalette(pal);
+     }
+ }
+ 
+-- 
+2.46.0
+

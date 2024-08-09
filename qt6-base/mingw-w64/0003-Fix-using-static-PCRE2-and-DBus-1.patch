@@ -1,7 +1,7 @@
 From b0e198e0b2d80d40d34b4de04796af7a570b9d35 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 5 Nov 2020 21:13:19 +0100
-Subject: [PATCH 03/18] Fix using static PCRE2 and DBus-1
+Subject: [PATCH 03/19] Fix using static PCRE2 and DBus-1
 
 When making a static build of Qt we're using the static version of these
 libraries and must define the corresponding macros.
@@ -13,7 +13,7 @@ Change-Id: I2387b79462b6d183b71f9433dd937f63fc7ef26e
  2 files changed, 9 insertions(+)
 
 diff --git a/src/corelib/text/qregularexpression.cpp b/src/corelib/text/qregularexpression.cpp
-index a1e288ae6ce..41f943cdf19 100644
+index a1e288ae6c..41f943cdf1 100644
 --- a/src/corelib/text/qregularexpression.cpp
 +++ b/src/corelib/text/qregularexpression.cpp
 @@ -20,6 +20,11 @@
@@ -29,7 +29,7 @@ index a1e288ae6ce..41f943cdf19 100644
  #include <pcre2.h>
  
 diff --git a/src/dbus/qdbus_symbols_p.h b/src/dbus/qdbus_symbols_p.h
-index 78b7e049ef3..d06a3b04aac 100644
+index 78b7e049ef..d06a3b04aa 100644
 --- a/src/dbus/qdbus_symbols_p.h
 +++ b/src/dbus/qdbus_symbols_p.h
 @@ -21,6 +21,10 @@
@@ -44,5 +44,5 @@ index 78b7e049ef3..d06a3b04aac 100644
  #  include <dbus/dbus.h>
  #else
 -- 
-2.45.2
+2.46.0
 

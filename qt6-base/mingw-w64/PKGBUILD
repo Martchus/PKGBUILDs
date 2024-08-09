@@ -13,7 +13,7 @@
 pkgname=mingw-w64-qt6-base
 _qtver=6.7.2
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -48,26 +48,28 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0015-Link-corelib-correctly-against-runtimeobject-when-co.patch'
         '0016-Workaround-linker-error-about-missing-symbol-__sync_.patch'
         '0017-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
-        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch')
+        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
+        '0019-Fix-polishing-QCommandLinkButton-in-Windows-11-style.patch')
 sha256sums=('c5f22a5e10fb162895ded7de0963328e7307611c688487b5d152c9ee64767599'
-            '217fa5c44df0277155e2ef3d4cae8fc9285e379379a411d8ca1f3fc1324b6989'
-            '972e547f5e67ddaefab50d214f314efc28e79bf833354f358a1e1ab6a2f8d707'
-            '2f468ed9d2df0c4268b36899496c117f2ce79ba3f93baf02697ae3b78893546e'
-            'd392e4333b5c22fe9311c2e6eff5e2fc9475125b1ee7cb3b674ce2c6ecea0ff0'
-            'f9b5bf7e7b2596ceb3a5f6128df4d5673d3924db3a171297eaf7354379f5bb73'
-            '08316d483dcbf4fb09dfa57e8813842d9a9676b74d0526977e7c972d49137a81'
-            '284ee48fef5fc950b13100406b51603edab78a3ce844b30c283e7d43cd680770'
-            '3fa62a55e2bba3f1c61420b7b37f1cf51f57b8773da14d4d2fbd98cbe1a34d4f'
-            'fae4939da47d5382daabcc219ae769bd9b0e58bc3574816da681f45b6d350aca'
-            '47591452c62e9d50a1267d82c890173cfe211feb5fa2ad7d67ce92da56d452ab'
-            '201897d416eba8a5c70a491bbfcbf854669322d1116240571a3757087c4e1623'
-            '9f47f026417454ee04c9c6977fb8c0527b30dfe21481bb9aa1d519873fe520fa'
-            'cb2ae60aa82697d81347752901f3c0f5ab59b49948b0d68fbbc61864434d50fb'
-            'ae7f962f0532426ab5d63f40b5a42871f2a1dad66c69b0c3009ad6068c18d7e7'
-            '28c8635532fa0864659223cf311da87c362db308b62cb9373fb7ca8cf745ed24'
-            'fa7d743363115ac193b86820cdc39038a963ab540dbd52616b4f82bb67698538'
-            '5da28b0cea5bdf027601201bdc3512d5723d6dc64faac74a1c1a10eeffd91fcb'
-            'fb5d3896be9eada68ca77d9ff978adf30e8673f1736b56695766e74848a3e251')
+            'e357b70ca8aefb3b9bcea9a1a84900ad7eda0cb8e7dd01433664fb4833f2aa43'
+            '4400a8942d37099d4c3f8df1bed843dac2871b7bfe35f227d3bb53d224fa7cb2'
+            'a1f1bba5f6712259ec6e669de59a7d225d1f4f2a4ce3c8ca2008321e13db72a3'
+            'e288efeb9bfed9c8d716373a405a050e3958de9b0c488aeffa0527c972211f54'
+            'b9359aee1455165b637f174e14c82f1998b554c2d0fca72b9d0fb6c1c17be9b1'
+            'e7132e072f477c814769caaee8c7521ab8be79425aa726430e2339d54320150d'
+            'fdec0cb9b5bc493d8836b9f9d8cd742948113cb41c4422acdc07e2952e6278f6'
+            'f8d6e47eaab508dac173bb39cefa4c9e10b0afd2a6cde0626542cccba8406104'
+            '02f2675753de80585a8816c8b803fdfc0ac98b4f0a39b7ee23718b350ff58460'
+            '998c408764634e12a6aeeaff8d6ca6f6872f6fadf595f4b5935fc4eb951aa797'
+            'cc380824700fabfd081d9c27c38f383daf36051c3e9760c8a48fe415c7697289'
+            '971e5916da7e13d84a02212adb069a9349775a130d2f0bfb8ab6ea5a08d7aff0'
+            '19508dc42c94e002c32d9658d9980b4fe9f1b6db3f36bf074535071bc50cf4c8'
+            '2f0657dcaf281de10a6269c6420f7d06354eca0457abe75c7fcdbcd0804490af'
+            'dc236c0c74e598eba4d1c7ad370d3663a100893859217f5ccdf1753d45eb5f01'
+            '1a31013dd95256648531b84fa1df243c4b907b1c9d73c251005f83555ebe63cb'
+            '48381706210fbabef15a1eb3caa8e09fc931700c38062272849a9ef33c68df6c'
+            'd4be080ae1eef1edfe7b0e8a1f7981322030726ea349190aa83f60f78a98d875'
+            '41618a3df6710079452fc7ca9daab71b3c5e3519d5bb0e19768570b621ad46fb')
 
 # disable i686 build because 32-bit Windows is generally not supported by upstream and
 # it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)

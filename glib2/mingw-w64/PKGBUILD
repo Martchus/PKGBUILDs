@@ -5,69 +5,78 @@
 # Contributor: Martchus <martchus@gmx.net>
 
 pkgname=mingw-w64-glib2
-pkgver=2.58.1
+pkgver=2.82.0
 pkgrel=1
-_commit=a9f5a6fa2fdd6eb2f754709d7e790d24e3ceaa18 # tags/2.58.1^0
 arch=(any)
-pkgdesc="Low level core library (mingw-w64)"
-depends=(mingw-w64-libffi mingw-w64-pcre mingw-w64-gettext mingw-w64-zlib)
-makedepends=(mingw-w64-meson git)
-license=("LGPL2.1")
+pkgdesc="Low level core library"
+url="https://gitlab.gnome.org/GNOME/glib"
+license=(LGPL-2.1-or-later)
+depends=(mingw-w64-libffi mingw-w64-pcre2 mingw-w64-gettext mingw-w64-zlib)
+makedepends=(mingw-w64-meson python-packaging git)
 options=(!strip !buildflags staticlibs !emptydirs)
-url="https://wiki.gnome.org/Projects/GLib"
-source=("git+https://gitlab.gnome.org/GNOME/glib.git#commit=$_commit"
-  "0001-gsocket-fix-cross-compilation.patch"
-  "0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch"
-  "glib-formaterror.patch"
-  "glib-include-time-h-for-localtime_r.patch"
-  "glib-prefer-constructors-over-DllMain.patch")
-sha256sums=('SKIP'
-            '44c8c6b4ca376177a8c333a00c3485d638f8641967503e15364606d4c4292ff3'
-            'afd62a852a0b6aed4ce86eb97297e5080b26055cc878413b89d482c184b826b3'
-            'ea529d5cbf8cf7ca66467664a3ead37473a1c009ac973d5694b06cc9d0b23df3'
-            'ac567f7a9cad51ab97dba70bcdd6c0c16f93d2451c43fde380e4fdb20b2d4b31'
-            '8a02502069fa88c667a4fd1599280f927cb1bcf61e9fcd369fec5bdb5440d480')
+source=(
+  "git+https://gitlab.gnome.org/GNOME/glib.git?signed#tag=$pkgver"
+  "git+https://gitlab.gnome.org/GNOME/gvdb.git"
+  0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
+)
+b2sums=('9dee8619918d1bf85d853ddc661c4702046b5361bd3fde105d0b3c550f5dbdbaa6578557107588053bb4e980a21e83b95c2c9e9c7868fb89ca852bc950ac3dba'
+        'SKIP'
+        '8d6cc5d4d321bb861b6acb86d796a4646f2c5b0a4b4fa54ddda750cbf523de8521edaa7da2595addbe8a3c8ba66020cf4c7c9cbf8ad263515b36808e5b354f57')
+validpgpkeys=(
+  53EF3DC3B63E2899271BD26322E8091EEA11BBB7 # Emmanuele Bassi <ebassi@gnome.org>
+  923B7025EE03C1C59F42684CF0942E894B2EAFA0 # Philip Withnall <pwithnall@gnome.org>
+)
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
-pkgver() {
-  cd glib
-  git describe --tags | sed 's/-/+/g'
-}
-
 prepare() {
   cd glib
+  # https://gitlab.gnome.org/GNOME/glib/issues/539
   patch -Np1 -i ../0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
-  patch -Np1 -i ../glib-prefer-constructors-over-DllMain.patch
-  patch -Np1 -i ../glib-formaterror.patch
-  patch -Np1 -i ../glib-include-time-h-for-localtime_r.patch
-  patch -Np1 -i ../0001-gsocket-fix-cross-compilation.patch
+
+  git submodule init
+  git submodule set-url subprojects/gvdb "$srcdir/gvdb"
+  git -c protocol.file.allow=always submodule update
 }
 
 
 build() {
   for _arch in ${_architectures}; do
-    mkdir -p "${srcdir}/glib/build-${_arch}"
-    cd "${srcdir}/glib/build-${_arch}"
-    ${_arch}-meson \
-      --default-library both ..
-    ninja
-  done
+    mkdir -p "${srcdir}/glib/build-${_arch}-static"
+    mkdir -p "${srcdir}/glib/build-${_arch}-shared"
 
+    cd "${srcdir}/glib/build-${_arch}-static"
+    ${_arch}-meson \
+      -D strip=true \
+      -D man=false \
+      -D gtk_doc=false \
+      --default-library static ..
+    meson compile
+
+    cd "${srcdir}/glib/build-${_arch}-shared"
+    ${_arch}-meson \
+      -D strip=true \
+      -D man=false \
+      -D gtk_doc=false \
+      --default-library shared ..
+    meson compile
+  done
 }
 
 package() {
   for _arch in ${_architectures}; do
     # fix pkg-config files (see https://github.com/mesonbuild/meson/pull/3939)
-    for pc_file in ${srcdir}/glib/build-${_arch}/meson-private/*.pc; do
+    for pc_file in ${srcdir}/glib/build-${_arch}-shared/meson-private/*.pc; do
       sed -i 's/-lgnulib//g' "$pc_file"
       sed -i 's/-lcharset//g' "$pc_file"
       sed -i 's/-lgiowin32//g' "$pc_file"
     done
-    DESTDIR="${pkgdir}" ninja -C "${srcdir}/glib/build-${_arch}" install
     
-    #FIXME: Ranlib (isn't meson supposed to do this?)
-    ${_arch}-gcc-ranlib ${pkgdir}/usr/${_arch}/lib/*.a
+    DESTDIR="${pkgdir}" meson install -C "${srcdir}/glib/build-${_arch}-static"
+    DESTDIR="${pkgdir}" meson install -C "${srcdir}/glib/build-${_arch}-shared"
+    if [[ $NO_EXECUTABLES ]]; then
+      find "${pkgdir}/usr/${_arch}" -name '*.exe' -delete
+    fi
 
   done
 }

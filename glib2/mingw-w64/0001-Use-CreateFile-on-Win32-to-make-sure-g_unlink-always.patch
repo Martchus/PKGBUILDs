@@ -1,28 +1,242 @@
-From 7f4f4354540440c0a8a37beaccbec8bc7fc15ec7 Mon Sep 17 00:00:00 2001
-From: Erik van Pienbroek <epienbro@fedoraproject.org>
-Date: Mon, 27 Aug 2012 23:28:54 +0200
-Subject: [PATCH] Use CreateFile on Win32 to make sure g_unlink always works
-
-The functions g_open(), g_creat() and g_fopen() defer to _wopen(),
-_wcreat() and _wfopen() respectively. This is very similar to
-the corresponding arrangement for Linux. However, those Windows
-functions do not support renaming a file whilst it's open. As a
-result, g_rename() behaves differently on the Windows platform
-compared to its Linux behaviour, where files can be renamed even
-while there are file handles still open. Resolved this by using
-the Win32 API function CreateFile() instead of _wopen(), _wcreat()
-and _wfopen()
-
-Patch initially created by John Emmas
----
- glib/gstdio.c | 259 ++++++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 233 insertions(+), 26 deletions(-)
-
-diff --git a/glib/gstdio.c b/glib/gstdio.c
-index 6d763e1..c1d072f 100644
---- a/glib/gstdio.c
-+++ b/glib/gstdio.c
-@@ -758,6 +758,11 @@
+diff -rupN --no-dereference glib-2.80.0/gio/tests/org.gtk.test.gschema.override.orig glib-2.80.0-new/gio/tests/org.gtk.test.gschema.override.orig
+--- glib-2.80.0/gio/tests/org.gtk.test.gschema.override.orig	2024-03-07 22:35:05.000000000 +0100
++++ glib-2.80.0-new/gio/tests/org.gtk.test.gschema.override.orig	1970-01-01 01:00:00.000000000 +0100
+@@ -1,2 +0,0 @@
+-[org.gtk.test.per-desktop:GNOME-Classic]
+-desktop = "GNOME Classic"
+diff -rupN --no-dereference glib-2.80.0/gio/tests/org.gtk.test.gschema.xml.orig glib-2.80.0-new/gio/tests/org.gtk.test.gschema.xml.orig
+--- glib-2.80.0/gio/tests/org.gtk.test.gschema.xml.orig	2024-03-07 22:35:05.000000000 +0100
++++ glib-2.80.0-new/gio/tests/org.gtk.test.gschema.xml.orig	1970-01-01 01:00:00.000000000 +0100
+@@ -1,225 +0,0 @@
+-<schemalist>
+-
+-  <schema id="org.gtk.test" path="/tests/" gettext-domain="test">
+-    <key name="greeting" type="s">
+-      <default l10n="messages">"Hello, earthlings"</default>
+-      <summary>A greeting</summary>
+-      <description>
+-         Greeting of the invading martians
+-      </description>
+-    </key>
+-    <key name="farewell" type="s">
+-      <default l10n="messages">"So long"</default>
+-    </key>
+-
+-    <child name='basic-types' schema='org.gtk.test.basic-types'/>
+-    <child name='complex-types' schema='org.gtk.test.complex-types'/>
+-    <child name='localized' schema='org.gtk.test.localized'/>
+-  </schema>
+-
+-  <schema id="org.gtk.test.no-path">
+-    <key name="test-boolean" type="b">
+-      <default>true</default>
+-    </key>
+-  </schema>
+-
+-  <schema id="org.gtk.test.basic-types" path="/tests/basic-types/">
+-    <key name="test-boolean" type="b">
+-      <default>true</default>
+-    </key>
+-    <key name="test-byte" type="y">
+-      <default>25</default>
+-    </key>
+-    <key name="test-int16" type="n">
+-      <default>-1234</default>
+-    </key>
+-    <key name="test-uint16" type="q">
+-      <default>1234</default>
+-    </key>
+-    <key name="test-int32" type="i">
+-      <default>-123456</default>
+-    </key>
+-    <key name="test-uint32" type="u">
+-      <default>123456</default>
+-    </key>
+-    <key name="test-int64" type="x">
+-      <default>-123456789</default>
+-    </key>
+-    <key name="test-uint64" type="t">
+-      <default>123456789</default>
+-    </key>
+-    <key name="test-double" type="d">
+-      <default>123.456</default>
+-    </key>
+-    <key name="test-string" type="s">
+-      <default>"a string, it seems"</default>
+-    </key>
+-    <key name="test-objectpath" type="o">
+-      <default>"/a/object/path"</default>
+-    </key>
+-  </schema>
+-
+-  <schema id="org.gtk.test.complex-types" path="/tests/complex-types/">
+-    <key name="test-tuple" type="(s(ii))">
+-      <default>("one",(2,3))</default>
+-    </key>
+-    <key name="test-array" type="ai">
+-      <default>[0,1,2,3,4,5]</default>
+-    </key>
+-    <key name="test-dict" type="a{sau}">
+-      <default>
+-      {
+-        "AC": [0,0, 0,0,0,0,0,0],
+-        "IV": [0,0, 0,0,0,0,0,0]
+-      }
+-      </default>
+-    </key>
+-  </schema>
+-
+-  <schema id="org.gtk.test.localized" path="/tests/localized/" gettext-domain="test">
+-    <key name="error-message" type="s">
+-      <default l10n="messages">"Unnamed"</default>
+-    </key>
+-    <key name="backspace" type="s">
+-      <default l10n="messages" context="keyboard label">"BackSpace"</default>
+-    </key>
+-    <key name="midnight" type="s">
+-      <default l10n="time">"12:00 AM"</default>
+-    </key>
+-  </schema>
+-
+-  <schema id="org.gtk.test.binding" path="/tests/binding/">
+-    <key name="bool" type="b">
+-      <default>false</default>
+-    </key>
+-    <key name="anti-bool" type="b">
+-      <default>false</default>
+-    </key>
+-    <key name="byte" type="y">
+-      <default>0</default>
+-    </key>
+-    <key name="int16" type="n">
+-      <default>0</default>
+-    </key>
+-    <key name="uint16" type="q">
+-      <default>0</default>
+-    </key>
+-    <key name="int" type="i">
+-      <default>0</default>
+-    </key>
+-    <key name="uint" type="u">
+-      <default>0</default>
+-    </key>
+-    <key name="int64" type="x">
+-      <default>0</default>
+-    </key>
+-    <key name="uint64" type="t">
+-      <default>0</default>
+-    </key>
+-    <key name="double" type="d">
+-      <default>0</default>
+-    </key>
+-    <key name="string" type="s">
+-      <default>""</default>
+-    </key>
+-    <key name="chararray" type="ay">
+-      <default>[48, 49]</default>
+-    </key>
+-    <key name="strv" type="as">
+-      <default>[]</default>
+-    </key>
+-    <key name="enum" enum="org.gtk.test.TestEnum">
+-      <default>'foo'</default>
+-    </key>
+-    <key name="flags" flags="org.gtk.test.TestFlags">
+-      <default>['mourning', 'laughing']</default>
+-    </key>
+-    <key name="range" type='u'>
+-      <default>33</default>
+-      <range min="2" max="44"/>
+-    </key>
+-  </schema>
+-
+-  <schema id='org.gtk.test.enums' path='/tests/enums/'>
+-    <key name='test' enum='org.gtk.test.TestEnum'>
+-      <default>'bar'</default>
+-      <aliases>
+-        <alias value='qux' target='quux'/>
+-      </aliases>
+-    </key>
+-    <key name='f-test' flags='org.gtk.test.TestFlags'>
+-      <default>[]</default>
+-      <aliases>
+-        <alias value='speaking' target='talking'/>
+-      </aliases>
+-    </key>
+-  </schema>
+-
+-  <schema id='org.gtk.test.enums.direct' path='/tests/enums/'>
+-    <key name='f-test' type='as'>
+-      <default>[]</default>
+-    </key>
+-    <key name='test' type='s'>
+-      <default>'bar'</default>
+-    </key>
+-  </schema>
+-
+-  <schema id='org.gtk.test.range' path='/tests/range/'>
+-    <key name='val' type='i'>
+-      <default>33</default>
+-      <range min='2' max='44'/>
+-    </key>
+-  </schema>
+-
+-  <schema id='org.gtk.test.range.direct' path='/tests/range/'>
+-    <key name='val' type='i'>
+-      <default>33</default>
+-    </key>
+-  </schema>
+-
+-  <schema id='org.gtk.test.mapped' path='/tests/mapped/'>
+-    <key name='val' type='i'>
+-      <default>0</default>
+-    </key>
+-  </schema>
+-
+-  <schema id="org.gtk.test.descriptions" path="/a/">
+-    <key name='a' type='i'>
+-      <summary>
+-        a paragraph.
+-
+-        with some whitespace.
+-         
+-        because not everyone has a great editor.
+-
+-       	  
+-
+-
+-        lots of space is            as one.    
+-      </summary>
+-      <default>0</default>
+-    </key>
+-  </schema>
+-
+-  <schema id='org.gtk.test.extends.base'>
+-    <key name='int32' type='i'>
+-      <default>0</default>
+-    </key>
+-    <key name='string' type='s'>
+-      <default>''</default>
+-    </key>
+-  </schema>
+-  <schema id='org.gtk.test.extends.extended' extends='org.gtk.test.extends.base'>
+-    <override name="int32">42</override>
+-    <key name='another-int32' type='i'>
+-      <default>0</default>
+-    </key>
+-  </schema>
+-
+-  <schema id="org.gtk.test.per-desktop" path="/tests/per-desktop/">
+-    <key name="desktop" type="s">
+-      <default>"GNOME"</default>
+-    </key>
+-  </schema>
+-
+-</schemalist>
+diff -rupN --no-dereference glib-2.80.0/glib/gstdio.c glib-2.80.0-new/glib/gstdio.c
+--- glib-2.80.0/glib/gstdio.c	2024-03-07 22:35:05.000000000 +0100
++++ glib-2.80.0-new/glib/gstdio.c	2024-03-23 15:49:26.580309338 +0100
+@@ -1052,6 +1052,11 @@ g_open (const gchar *filename,
  	int          mode)
  {
  #ifdef G_OS_WIN32
@@ -34,7 +248,7 @@ index 6d763e1..c1d072f 100644
    wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
    int retval;
    int save_errno;
-@@ -768,12 +773,114 @@
+@@ -1062,12 +1067,114 @@ g_open (const gchar *filename,
        return -1;
      }
  
@@ -55,8 +269,7 @@ index 6d763e1..c1d072f 100644
 +	  g_free (wfilename);
 +	  return -1;
 +	}
- 
--  g_free (wfilename);
++
 +	dwDesiredAccess |= GENERIC_READ;
 +	dwSharedAccess  |= FILE_SHARE_WRITE;
 +  }
@@ -134,6 +347,7 @@ index 6d763e1..c1d072f 100644
 +  else
 +    retval = _open_osfhandle((long)hFile, flags);
  
+-  g_free (wfilename);
 +  if ((-1) != retval)
 +  {
 +    /* We have a valid file handle. Set its translation mode to text or binary, as appropriate */
@@ -144,7 +358,7 @@ index 6d763e1..c1d072f 100644
 +    else
 +      _setmode(retval, _O_BINARY);
 +  }
-+
+ 
 +  save_errno = errno;
 +  g_free (wfilename);
    errno = save_errno;
@@ -152,7 +366,7 @@ index 6d763e1..c1d072f 100644
    return retval;
  #else
    int fd;
-@@ -821,6 +928,8 @@
+@@ -1115,6 +1222,8 @@ g_creat (const gchar *filename,
  	 int          mode)
  {
  #ifdef G_OS_WIN32
@@ -161,7 +375,7 @@ index 6d763e1..c1d072f 100644
    wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
    int retval;
    int save_errno;
-@@ -831,12 +940,41 @@
+@@ -1125,12 +1234,41 @@ g_creat (const gchar *filename,
        return -1;
      }
  
@@ -206,13 +420,12 @@ index 6d763e1..c1d072f 100644
    return retval;
  #else
    return creat (filename, mode);
-@@ -1286,36 +1424,102 @@
+@@ -1572,34 +1710,102 @@ g_fopen (const gchar *filename,
  	 const gchar *mode)
  {
  #ifdef G_OS_WIN32
 -  wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
 -  wchar_t *wmode;
--  gchar   *mode2;
 -  FILE *retval;
 -  int save_errno;
 -
@@ -222,9 +435,7 @@ index 6d763e1..c1d072f 100644
 -      return NULL;
 -    }
 -
--  mode2 = _g_win32_get_mode_alias (mode);
--  wmode = g_utf8_to_utf16 (mode2, -1, NULL, NULL, NULL);
--  g_free (mode2);
+-  wmode = g_utf8_to_utf16 (mode, -1, NULL, NULL, NULL);
 -
 -  if (wmode == NULL)
 -    {
@@ -232,6 +443,15 @@ index 6d763e1..c1d072f 100644
 -      errno = EINVAL;
 -      return NULL;
 -    }
+-
+-  _g_win32_fix_mode (wmode);
+-  retval = _wfopen (wfilename, wmode);
+-  save_errno = errno;
+-
+-  g_free (wfilename);
+-  g_free (wmode);
+-
+-  errno = save_errno;
 +  int   hFile;
 +  int   flags  = 0;
 +  gchar priv_mode[4];
@@ -318,20 +538,15 @@ index 6d763e1..c1d072f 100644
 +      goto out;
 +	}
 +  }
- 
--  retval = _wfopen (wfilename, wmode);
--  save_errno = errno;
++ 
 +  hFile = g_open (filename, flags, (_S_IREAD | _S_IWRITE));
- 
--  g_free (wfilename);
--  g_free (wmode);
++ 
 +  if (INVALID_HANDLE_VALUE == (HANDLE)hFile)
 +    /* 'errno' will have already been set by 'g_open()' */
 +    retval = NULL;
 +  else
 +    retval = _fdopen(hFile, mode);
- 
--  errno = save_errno;
++ 
 +out:
    return retval;
  #else

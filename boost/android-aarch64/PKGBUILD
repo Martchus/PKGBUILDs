@@ -23,23 +23,13 @@ optdepends+=("android-${_android_arch}-openmpi: for mpi support")
 fi
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.bz2"
-        "boost-1.81.0-phoenix-multiple-definitions.patch"
-        "boost-ublas-c++20-iterator.patch::https://github.com/boostorg/ublas/commit/a31e5cffa85f.patch"
         "disable-version-check.patch")
 sha256sums=('1bed88e40401b2cb7a1f76d4bab499e352fa4d0c5f31c0dbae64e24d34d7513b'
-            '3ebf428ef6be090a7b56a233330375539ac429333b83708e28fe5db049cfecdb'
-            'aa38addb40d5f44b4a8472029b475e7e6aef1c460509eb7d8edf03491dc1b5ee'
             '63d12e7d703b471882608b4225c489f6a35ab425602783a4f9c4ea99a10f9c4b')
 
 prepare() {
   cd "${srcdir}/$_srcname"
   source android-env ${_android_arch}
-
-  # https://github.com/boostorg/phoenix/issues/111
-  patch -Np1 -i ../boost-1.81.0-phoenix-multiple-definitions.patch
-
-  # https://github.com/boostorg/ublas/pull/97
-  patch -Np2 -i ../boost-ublas-c++20-iterator.patch
   patch -p1 -i ../disable-version-check.patch
 }
 

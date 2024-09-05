@@ -87,7 +87,10 @@ for variant_dir in "${variant_dirs[@]}"; do
     if [ "$(ls -A "$variant_dir")" ]; then
         rm "$variant_dir/"* # clean existing files first (files might have been removed in master and we don't want any leftovers)
     fi
-    cp "$master/"* "$variant_dir"
+    for file in "$master/"*; do
+        [[ $file == "$master/PKGBUILD" ]] && continue
+        ln -rs "$file" "$variant_dir"
+    done
 
     msg2 "Restore values to preserve"
     sed_args=()

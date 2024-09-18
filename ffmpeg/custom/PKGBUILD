@@ -9,8 +9,8 @@
 
 _name=ffmpeg
 pkgname=ffmpeg-custom
-pkgver=7.0.1
-pkgrel=2
+pkgver=7.0.2
+pkgrel=1
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
 arch=('x86_64')
@@ -21,71 +21,70 @@ depends=(
   aom
   bzip2
   cairo
+  dav1d
   fontconfig
+  freetype2
   fribidi
   glib2
   glibc
   gmp
+  gnutls
   gsm
+  harfbuzz
   jack
   lame
-  libass.so
+  libass
   libavc1394
-  libbluray.so
-  libbs2b.so
-  libdav1d.so
+  libbluray
+  libbs2b
   libdrm
   libdvdnav
   libdvdread
-  libfreetype.so
   libgl
-  libharfbuzz.so
   libiec61883
-  libjxl.so
+  libjxl
   libmodplug
-  libopenmpt.so
-  libplacebo.so
+  libopenmpt
+  libplacebo
   libpulse
-  librav1e.so
   libraw1394
-  librsvg-2.so
-  librubberband.so
+  librsvg
   libsoxr
   libssh
   libtheora
-  libva-drm.so
-  libva-x11.so
-  libva.so
+  libva
   libvdpau
-  libvidstab.so
-  libvorbis.so
-  libvorbisenc.so
-  libvpx.so
+  libvorbis
+  libvpx
   libwebp
   libx11
-  libx264.so
-  libx265.so
   libxcb
   libxext
   libxml2
   libxv
-  mbedtls
-  libxvidcore.so
-  libzimg.so
   ocl-icd
   onevpl
   opencore-amr
   openjpeg2
   opus
+  rav1e
+  rubberband
   sdl2
   snappy
   speex
   srt
   svt-av1
   v4l-utils
+  vapoursynth
+  vid.stab
   vmaf
   vulkan-icd-loader
+  x264
+  x265
+  xvidcore
   xz
+  zeromq
+  zimg
   zlib
 
   libfdk-aac
@@ -131,18 +130,22 @@ conflicts=("$_name")
 options=(
   debug
 )
-_tag=47f70eda3e2ff003a787e512afd07b0c266f7a70
+_tag=a18b979d17fa169a6f93c5be8732533c8e06337d
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
 )
-b2sums=('d2d6a645509e697932dc8f7a57719e069299e53eb37cda7bf01fd94c9e9956e5532dc5c923fa86d72d0e3a051a7f405e768c73c66ca8aea29271923a17222e03'
+b2sums=('bcc0fb367d2822665f0918292a0cf581e0119d6ba6d2e3d0b6e794b6f74d30c118b5c47e26b5687473f01b346f8ec7e885f80729ce6115e18003b2371ff4553f'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
   cd ffmpeg
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
+
+  # Fix VAAPI AV1 performance with Mesa
+  git cherry-pick -n fe9d889dcd79ea18d4dfaa39df4ddbd4c8c3b15c
+  git cherry-pick -n d2d911eb9a2fc6eb8d86b3ae025a56c1a2692fba
 }
 
 pkgver() {
@@ -165,6 +168,7 @@ build() {
     --enable-fontconfig \
     --enable-frei0r \
     --enable-gmp \
+    --enable-gnutls \
     --enable-gpl \
     --enable-ladspa \
     --enable-libaom \
@@ -214,7 +218,7 @@ build() {
     --enable-libxml2 \
     --enable-libxvid \
     --enable-libzimg \
-    --enable-mbedtls \
+    --enable-libzmq \
     --enable-nvdec \
     --enable-nvenc \
     --enable-opencl \
@@ -239,6 +243,33 @@ build() {
 }
 
 package() {
+  depends+=(
+    libass.so
+    libbluray.so
+    libbs2b.so
+    libdav1d.so
+    libfreetype.so
+    libharfbuzz.so
+    libjxl.so
+    libopenmpt.so
+    libplacebo.so
+    librav1e.so
+    librsvg-2.so
+    librubberband.so
+    libva.so
+    libva-drm.so
+    libva-x11.so
+    libvidstab.so
+    libvorbisenc.so
+    libvorbis.so
+    libvpx.so
+    libx264.so
+    libx265.so
+    libxvidcore.so
+    libzimg.so
+    libzmq.so
+  )
+
   cd $_name
 
   make DESTDIR="${pkgdir}" install install-man

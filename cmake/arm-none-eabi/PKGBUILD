@@ -9,7 +9,7 @@ pkgrel=1
 arch=('any')
 pkgdesc='CMake wrapper for arm-none-eabi'
 depends=('cmake' 'arm-none-eabi-gcc')
-license=('GPL')
+license=(GPL-2-or-later)
 url='https://github.com/Martchus/PKGBUILDs'
 source=("arm-none-eabi-cmake.sh"
         "toolchain.cmake")

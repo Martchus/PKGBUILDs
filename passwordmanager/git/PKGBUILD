@@ -13,9 +13,8 @@ pkgver=350.4bf6a91
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
-license=('GPL')
-depends=('qt6-base' 'libqtutilities-git.so' 'libpasswordfile-git.so' 'libc++utilities-git.so' 'openssl'
-         'desktop-file-utils')
+license=(GPL-2-or-later)
+depends=('qt6-base' 'qtutilities-git' 'passwordfile-git' 'c++utilities-git' 'desktop-file-utils')
 makedepends=('cmake' 'ninja' 'qt6-tools' 'git' 'clang' 'qt6-declarative')
 [[ $_quick_gui == ON ]] && depends+=('qt6-declarative' 'kirigami')
 provides=("${_name}")
@@ -47,6 +46,8 @@ build() {
 }
 
 package() {
+  depends+=('libqtutilities-git.so' 'libpasswordfile-git.so' 'libc++utilities-git.so')
+
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   DESTDIR="${pkgdir}" ninja install
 }

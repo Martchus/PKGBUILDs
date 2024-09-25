@@ -8,12 +8,12 @@ assignees: ''
 ---
 
 Before reporting and issue, make sure to have **followed the instructions** on
-https://martchus.no-ip.biz/repo/arch/ownstuff.
+https://martchus.dyn.f3l.de/repo/arch/ownstuff.
 
 Note that packages are always built against the latest Arch Linux repository
 so other distributions such as Manjaro are *not* supported.
 
-Please prefer the `ftp.f3l.de` mirror as `martchus.no-ip.biz` is self-hosted.
+Please prefer the `ftp.f3l.de` mirror as `martchus.dyn.f3l.de` is self-hosted.
 
 ---
 

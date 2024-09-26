@@ -42,13 +42,13 @@ source=(git+https://code.qt.io/qt/$_pkgfqn.git#tag=v${pkgver}-lts\
 _pkgfqn="${_qt_module}-everywhere-src-${pkgver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${pkgver}/submodules/${_pkgfqn}.tar.xz"\
 % }
-<%== include 'fragments/source_file_list', relevant_files => $patch_files %>)
+<%== include 'fragments/source_file_list', relevant_files => $patch_files %><%== content_for 'source' %>)
 % if ($qt_module_sha256 =~ qr/missing/) {
 sha256sums=('SKIP'\
 % } else {
 sha256sums=('<%== $qt_module_sha256 %>'\
 % }
-<%== include 'fragments/sha256_list', relevant_files => $patch_files %>)
+<%== include 'fragments/sha256_list', relevant_files => $patch_files %><%== content_for 'sha256sums' %>)
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 

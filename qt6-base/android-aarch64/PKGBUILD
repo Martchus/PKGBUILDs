@@ -11,7 +11,7 @@
 
 _android_arch=aarch64
 pkgname=android-aarch64-qt6-base
-_qtver=6.7.2
+_qtver=6.7.3
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -49,28 +49,26 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0015-Link-corelib-correctly-against-runtimeobject-when-co.patch'
         '0016-Workaround-linker-error-about-missing-symbol-__sync_.patch'
         '0017-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
-        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
-        '0019-Fix-polishing-QCommandLinkButton-in-Windows-11-style.patch')
-sha256sums=('c5f22a5e10fb162895ded7de0963328e7307611c688487b5d152c9ee64767599'
-            'e357b70ca8aefb3b9bcea9a1a84900ad7eda0cb8e7dd01433664fb4833f2aa43'
-            '4400a8942d37099d4c3f8df1bed843dac2871b7bfe35f227d3bb53d224fa7cb2'
-            'a1f1bba5f6712259ec6e669de59a7d225d1f4f2a4ce3c8ca2008321e13db72a3'
-            'e288efeb9bfed9c8d716373a405a050e3958de9b0c488aeffa0527c972211f54'
-            'b9359aee1455165b637f174e14c82f1998b554c2d0fca72b9d0fb6c1c17be9b1'
-            'e7132e072f477c814769caaee8c7521ab8be79425aa726430e2339d54320150d'
-            'fdec0cb9b5bc493d8836b9f9d8cd742948113cb41c4422acdc07e2952e6278f6'
-            'f8d6e47eaab508dac173bb39cefa4c9e10b0afd2a6cde0626542cccba8406104'
-            '02f2675753de80585a8816c8b803fdfc0ac98b4f0a39b7ee23718b350ff58460'
-            '998c408764634e12a6aeeaff8d6ca6f6872f6fadf595f4b5935fc4eb951aa797'
-            'cc380824700fabfd081d9c27c38f383daf36051c3e9760c8a48fe415c7697289'
-            '971e5916da7e13d84a02212adb069a9349775a130d2f0bfb8ab6ea5a08d7aff0'
-            '19508dc42c94e002c32d9658d9980b4fe9f1b6db3f36bf074535071bc50cf4c8'
-            '2f0657dcaf281de10a6269c6420f7d06354eca0457abe75c7fcdbcd0804490af'
-            'dc236c0c74e598eba4d1c7ad370d3663a100893859217f5ccdf1753d45eb5f01'
-            '1a31013dd95256648531b84fa1df243c4b907b1c9d73c251005f83555ebe63cb'
-            '48381706210fbabef15a1eb3caa8e09fc931700c38062272849a9ef33c68df6c'
-            'd4be080ae1eef1edfe7b0e8a1f7981322030726ea349190aa83f60f78a98d875'
-            '41618a3df6710079452fc7ca9daab71b3c5e3519d5bb0e19768570b621ad46fb')
+        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch')
+sha256sums=('8ccbb9ab055205ac76632c9eeddd1ed6fc66936fc56afc2ed0fd5d9e23da3097'
+            'af547377e9d6d6ab757fbcbc1c555cf3c4bf345838bceb0e4e4cb176515a8a81'
+            '523bc7177d282f71d0d70d8ea6fb83861e45d9b8882f88df8a71e4276619bd15'
+            '14070979d32a347bfab32aaf6d05245ddcadc30c75541f4a84cadf635d12ef41'
+            '0499063e794112a910c2b50bd4c0d393efcb3e78251551d403091c2cb8b0ed99'
+            'b5219ef30553b2cf2c581b3af16e44dfa2c4fe32779bae27ea383d64b6134557'
+            'f0194a9b8c724926f893eda11a2d9e10f3bd2eb19bb7f0593ea8addce80eb0d9'
+            '4aa57b28d808acf23c77271cfa1cba20352e0e05cd887009bdf59d2f16e7ca14'
+            'f17dbc7ead2be8d8b9dac6e88e499a0981fd350134329a6dd1ad7d815c0cfa10'
+            'a811e3678c3bad11e8798ea90d84690c73a6151042bc4d202af647b1cdb25537'
+            '1fa56c96eefdfe64d16bc46bbf7a815b18491c706e9d902dc91a66f874654535'
+            '2c6aaee3715fc94aec622b0e33290ec2ec388f7301220b3d8edeceba7b871bc0'
+            'e496216b356067e9d8ec18648a3aa97845a0f1a9e644a879eeda883525349f86'
+            'b15f4555a7f271824e87995fe5eb0bd7b9cb86c8c1286a2f23e4eb35c8e62ce6'
+            '7541ed5a3fbaec82edec6aefc4a5f350dfd9ca38e505be9adc6e3bdedee5d6a4'
+            'ca1fb271f30d606ffdc0a8688ba510ed3597b6d84ac9a1f8a1e42ecf6111397c'
+            '842cff7c1d91ed3665925b9295a054f9ce1c85d904f7de520d42859a5e3af01f'
+            '129e3572ed9dd9ab9e172093748fa81469f31eaf5870dd6dc3a9768ebfc18883'
+            '3a86f0edfe27fa14abd4fa8b10f9e9bcf289d23808829991b40834d04abaeb2e')
 
 prepare () {
   cd $_pkgfqn

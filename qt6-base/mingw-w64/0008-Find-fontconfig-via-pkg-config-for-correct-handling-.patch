@@ -1,7 +1,7 @@
-From 6b179b1027324f770737f2abf8ef8f377f6477c8 Mon Sep 17 00:00:00 2001
+From 6cc5733b03e8e9b13608d6f35b9efa6536d0d50b Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 24 Apr 2022 23:00:27 +0200
-Subject: [PATCH 08/19] Find fontconfig via pkg-config for correct handling of
+Subject: [PATCH 08/18] Find fontconfig via pkg-config for correct handling of
  its dependencies
 
 CMake's own find module unforunately does not consider fontconfig's deps so
@@ -17,7 +17,7 @@ Change-Id: I331cd6b1af4f2857279c90920d777977e80fdce5
 
 diff --git a/cmake/FindFontconfig.cmake b/cmake/FindFontconfig.cmake
 new file mode 100644
-index 0000000000..1a52327ae6
+index 00000000000..1a52327ae6f
 --- /dev/null
 +++ b/cmake/FindFontconfig.cmake
 @@ -0,0 +1,11 @@
@@ -33,7 +33,7 @@ index 0000000000..1a52327ae6
 +    set(Fontconfig_FOUND 1)
 +endif()
 diff --git a/src/gui/CMakeLists.txt b/src/gui/CMakeLists.txt
-index b6f74369ae..1fa0f9906d 100644
+index b6f74369ae5..1fa0f9906db 100644
 --- a/src/gui/CMakeLists.txt
 +++ b/src/gui/CMakeLists.txt
 @@ -742,7 +742,7 @@ qt_internal_extend_target(Gui CONDITION QT_FEATURE_fontconfig AND QT_FEATURE_fre
@@ -46,7 +46,7 @@ index b6f74369ae..1fa0f9906d 100644
  
  qt_internal_extend_target(Gui CONDITION APPLE AND NOT MACOS
 diff --git a/src/gui/configure.cmake b/src/gui/configure.cmake
-index 4affd7b30a..141675b5e6 100644
+index 99c517e3581..daed7ab7bef 100644
 --- a/src/gui/configure.cmake
 +++ b/src/gui/configure.cmake
 @@ -43,7 +43,7 @@ qt_find_package(WrapSystemFreetype 2.2.0 PROVIDED_TARGETS WrapSystemFreetype::Wr
@@ -59,5 +59,5 @@ index 4affd7b30a..141675b5e6 100644
  qt_find_package(gbm PROVIDED_TARGETS gbm::gbm MODULE_NAME gui QMAKE_LIB gbm)
  qt_find_package(WrapSystemHarfbuzz 2.6.0 PROVIDED_TARGETS WrapSystemHarfbuzz::WrapSystemHarfbuzz MODULE_NAME gui QMAKE_LIB harfbuzz)
 -- 
-2.46.0
+2.46.2
 

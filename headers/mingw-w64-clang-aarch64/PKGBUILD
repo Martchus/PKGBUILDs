@@ -20,6 +20,13 @@ build() {
     mkdir -p "$srcdir"/headers-${_target} && cd "$srcdir"/headers-${_target}
     if [[ $pkgname =~ .*-clang-.* ]]; then
         _configure_args+=" --enable-cfguard"
+
+        export AR=llvm-ar ASM=clang LD=lld-link CC=clang CXX=clang++ RANLIB=llvm-ranlib DLLTOOL=llvm-dlltool
+        export ARFLAGS=""
+        export ASMFLAGS="-rtlib=compiler-rt -fuse-ld=lld -mguard=cf -target $_target -Xclang -triple -Xclang $_target"
+        export LDFLAGS="-target $_target -Xclang -triple -Xclang $_target"
+        export CFLAGS="-rtlib=compiler-rt -fuse-ld=lld -target $_target -Xclang -triple -Xclang $_target"
+        export CXXFLAGS="-rtlib=compiler-rt -fuse-ld=lld -stdlib=libc++ -target $_target -Xclang -triple -Xclang $_target"
     fi
     if [[ $pkgname =~ .*-clang-.* ]] || [[ $pkgname =~ .*-ucrt-.* ]]; then
       _configure_args+=" --enable-idl --with-default-win32-winnt=0x601 --with-default-msvcrt=ucrt"

@@ -8,10 +8,10 @@ Contains PKGBUILD files for creating Arch Linux packages:
 * Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go)
   and many more:
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
-    * `mingw-w64-*` packages which allow to build for Windows (i686/x86_64) under
-      Arch Linux, e.g. FreeType 2, Qt 5 and Qt 6
-    * `mingw-w64-clang-aarch64-*` packages which allow to build for Windows (aarch64
-      via LLVM/Clang) under Arch Linux, so far only binutils/mingw-w64 provided
+    * `mingw-w64-*` packages which allow to build for Windows (i686/x86_64, libstdc++)
+      under Arch Linux, e.g. FreeType 2, Qt 5 and Qt 6
+    * `mingw-w64-clang-aarch64-*` packages which allow to build for Windows (aarch64,
+      libc++) via LLVM/Clang as provided by Arch Linux, so far only core packages provided
     * `static-compat-*` packages containing static libraries to build self-contained
       applications running on older GNU/Linux distributions under Arch Linux
     * `android-*` packages which allow to build for Android under Arch Linux,
@@ -380,6 +380,17 @@ Here are nevertheless some useful hints to run WINE manually:
   still attempts to show the crash window and the application stays stuck in
   that state.
 * See https://wiki.winehq.org/Wine_User's_Guide for more information
+
+### Running aarch64 binaries compiled via mingw-w64-clang-aarch64 packages
+It is possible to run aarch64 binaries on an x86_64 host using WINE and QEMU,
+checkout [the linaro blog](https://www.linaro.org/blog/emulate-windows-on-arm)
+for details. They also provide a container image that is easy to use:
+
+```
+source mingw-clang-env aarch64-w64-mingw32
+$CXX $CXXFLAGS -mconsole -static main.cpp -o main.exe
+podman run -it --rm -v "$PWD:/pwd" linaro/wine-arm64 wine-arm64 /pwd/main.exe
+```
 
 ## Static GNU/Linux libraries
 This repository contains several `static-compat-*` packages providing static

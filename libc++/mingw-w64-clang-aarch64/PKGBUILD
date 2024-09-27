@@ -31,21 +31,25 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_COMPILER_WORKS=1 \
     -DLLVM_ENABLE_RUNTIMES="libunwind;libcxxabi;libcxx" \
-    -DLIBUNWIND_USE_COMPILER_RT=TRUE \
+    -DLIBUNWIND_USE_COMPILER_RT=ON \
     -DLIBUNWIND_ENABLE_SHARED=ON \
     -DLIBUNWIND_ENABLE_STATIC=ON \
+    -DLIBUNWIND_ENABLE_FRAME_APIS=ON \
     -DLIBCXX_USE_COMPILER_RT=ON \
     -DLIBCXX_ENABLE_SHARED=ON \
     -DLIBCXX_ENABLE_STATIC=ON \
     -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=TRUE \
     -DLIBCXX_CXX_ABI=libcxxabi \
+    -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON \
     -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
     -DLIBCXX_ENABLE_ABI_LINKER_SCRIPT=FALSE \
     -DLIBCXXABI_ENABLE_SHARED=OFF \
+    -DLIBCXXABI_ENABLE_STATIC=ON \
+    -DLIBCXXABI_HAS_WIN32_THREAD_API=ON \
     -DLLVM_EXTERNAL_LIT=/usr/bin/lit \
     -DLLVM_ENABLE_PIC=ON \
     ../llvm-project-$pkgver.src/runtimes
-  ninja --verbose cxx cxxabi
+  cmake --build . -- unwind cxxabi cxx cxx_experimental
 }
 
 check() {
@@ -57,11 +61,14 @@ check() {
 package() {
   source mingw-clang-env $_target
 
-  DESTDIR="$pkgdir" ninja -C build install-cxx
-  install -Dm0644 llvm-project-$pkgver.src/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
-  install -Dm0644 llvm-project-$pkgver.src/libcxx/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+  DESTDIR="$pkgdir" cmake --build build --target install-cxx
+  install -Dm0644 llvm-project-$pkgver.src/libcxx/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS-libcxx
+  install -Dm0644 llvm-project-$pkgver.src/libcxx/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE-libcxx
 
-  DESTDIR="$pkgdir" ninja -C build install-cxxabi
-  install -Dm0644 llvm-project-$pkgver.src/libcxxabi/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS
-  install -Dm0644 llvm-project-$pkgver.src/libcxxabi/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE
+  DESTDIR="$pkgdir" cmake --build build --target install-cxxabi
+  install -Dm0644 llvm-project-$pkgver.src/libcxxabi/CREDITS.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/CREDITS-libcxxabi
+  install -Dm0644 llvm-project-$pkgver.src/libcxxabi/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE-libcxxabi
+
+  DESTDIR="$pkgdir" cmake --build build --target install-unwind
+  install -Dm0644 llvm-project-$pkgver.src/libunwind/LICENSE.TXT "$pkgdir"/usr/share/licenses/"$pkgname"/LICENSE-libunwind
 }

@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 _pkgname=qqc2-breeze-style
-_android_arch=aarch64
+_android_arch=x86
 
 pkgname=android-${_android_arch}-${_pkgname}
 pkgver=6.1.5

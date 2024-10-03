@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 _pkgname=kquickcharts
-_android_arch=aarch64
+_android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-${_pkgname}
 pkgver=6.6.0

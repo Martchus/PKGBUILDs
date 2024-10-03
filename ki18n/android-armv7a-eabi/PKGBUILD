@@ -3,27 +3,31 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-_pkgname=kquickcharts
-_android_arch=aarch64
+_pkgname=ki18n
+_android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-${_pkgname}
 pkgver=6.6.0
 pkgrel=1
-pkgdesc="A QtQuick plugin providing high-performance charts (Android, $_android_arch)"
+pkgdesc="Advanced internationalization framework (Android, $_android_arch)"
 arch=('any')
 url='https://community.kde.org/Frameworks'
 license=(LGPL-2.0-only LGPL-3.0-only)
-depends=("android-$_android_arch"-{qt6-base,qt6-declarative,qt6-shadertools,qt6-tools,kirigami2})
-makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja'
-             'qt6-base' 'qt6-declarative' 'qt6-shadertools' 'qt6-tools')
+depends=('iso-codes' "android-$_android_arch"-{qt6-base,qt6-declarative,qt6-tools,gettext})
+makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools')
 source=(https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz{,.sig})
-sha256sums=('d8441008d625763bf7b20a8b1685d09cd69416c6ce4603743e93c16fc5397a47'
+sha256sums=('582b4c58bb69803412322d3db656fd4f5fde154eac1ac89b2c6bc905c5b61e6e'
             'SKIP')
 validpgpkeys=(53E6B47B45CEA3E0D5B7457758D0EE648A48B3BB # David Faure <faure@kde.org>
               E0A3EB202F8E57528E13E72FD7574483BB57B18D # Jonathan Esk-Riddell <jr@jriddell.org>
               90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1 # Nicolas Fella <nicolas.fella@kde.org>
               )
 options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd $_pkgname-$pkgver
+  sed -i -e '/loadMessageCatalogFile/d' src/i18n/kcatalog.cpp
+}
 
 build() {
   source android-env ${_android_arch}

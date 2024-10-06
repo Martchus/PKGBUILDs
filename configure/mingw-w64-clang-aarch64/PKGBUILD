@@ -1,9 +1,9 @@
 pkgname=mingw-w64-clang-aarch64-configure
 pkgver=0.1.1
-pkgrel=11
+pkgrel=12
 arch=('any')
 pkgdesc="configure wrapper for MinGW (mingw-w64)"
-depends=('mingw-w64-clang-aarch64-pkg-config' 'mingw-w64-clang-environment')
+depends=('mingw-w64-clang-aarch64-pkg-config' 'mingw-w64-clang-aarch64-libc++' 'mingw-w64-clang-environment')
 license=("GPL")
 url="http://fedoraproject.org/wiki/MinGW"
 source=("mingw-configure.sh")

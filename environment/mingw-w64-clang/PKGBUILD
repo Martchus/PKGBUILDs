@@ -1,15 +1,20 @@
 pkgname=mingw-w64-clang-environment
 pkgver=1
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="Script providing common environment variables and functions for targeting MinGW with Clang (mingw-w64)"
 license=('GPL-2-or-later')
-depends=('clang' 'lld')
+depends=('llvm' 'clang' 'lld')
 url='https://github.com/Martchus/PKGBUILDs'
-source=("mingw-env.sh")
+source=("mingw-env.sh" "lld.sh" "clang.sh" "clang++.sh" "windres.sh" "strip.sh")
 sha256sums=('SKIP')
 
 package() {
   install -d "${pkgdir}"/usr/bin
   install -m 755 mingw-env.sh "${pkgdir}"/usr/bin/mingw-clang-env
+  install -m 755 lld.sh "${pkgdir}"/usr/bin/mingw-lld
+  install -m 755 clang.sh "${pkgdir}"/usr/bin/mingw-clang
+  install -m 755 clang++.sh "${pkgdir}"/usr/bin/mingw-clang++
+  install -m 755 windres.sh "${pkgdir}"/usr/bin/mingw-llvm-windres
+  install -m 755 strip.sh "${pkgdir}"/usr/bin/mingw-llvm-strip
 }

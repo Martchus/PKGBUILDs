@@ -1,6 +1,8 @@
 # PKGBUILDs
-Contains PKGBUILD files for creating Arch Linux packages:
+Contains PKGBUILD files for creating Arch Linux packages. If you like to improve one of
+my AUR packages, just create a PR here.
 
+## Overview over provided packages
 * Packages for my own applications and libraries such as
   [Syncthing  Tray](https://github.com/Martchus/syncthingtray),
   [Tag Editor](https://github.com/Martchus/tageditor),
@@ -9,20 +11,26 @@ Contains PKGBUILD files for creating Arch Linux packages:
   and many more:
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
     * `mingw-w64-*` packages which allow to build for Windows (i686/x86_64, libstdc++)
-      under Arch Linux, e.g. FreeType 2, Qt 5 and Qt 6
+      under Arch Linux with GCC, e.g. FreeType 2, Qt 5 and Qt 6 and may more
     * `mingw-w64-clang-aarch64-*` packages which allow to build for Windows (aarch64,
       libc++) via LLVM/Clang as provided by Arch Linux, so far only core packages provided
+    * `mingw-w64-aarch64-*` packages which allow to build for Windows (aarch64,
+      libstdc++) via GCC, so far no packages provided
+        * So far GCC does not support the `aarch64-w64-mingw32` target so no packages have
+          been created yet except `mingw-w64-clang-aarch64-binutils` which still needs to be
+          renamed to `mingw-w64-aarch64-binutils`.
+        * Note that these packages will conflict with `mingw-w64-clang-aarch64-*` packages
+          as they share the same install prefix.
     * `static-compat-*` packages containing static libraries to build self-contained
-      applications running on older GNU/Linux distributions under Arch Linux
-    * `android-*` packages which allow to build for Android under Arch Linux,
-      eg. iconv, Boost, OpenSSL, CppUnit, Qt 6 and Kirigami
+      applications running on older GNU/Linux distributions under Arch Linux, so far the most
+      important Qt 6 modules and other important C/C++ libraries provided
+    * `android-*` packages which allow to build for Android under Arch Linux using the Android
+      SDK, e.g. iconv, Boost, OpenSSL, CppUnit, Qt 6 and Kirigami
     * `wasm-*` packages which allow to build for WebAssembly under Arch Linux using
       the official `emscripten` package; so far limited to a few Qt 6 modules
     * `apple-darwin-*` packages which allow to build for MaxOS X under Arch
-      Linux, eg. osxcross and Qt 5 (still experimental)
-* Other packages imported from the AUR to build with slight modifications
-
-So if you like to improve one of my AUR packages, just create a PR here.
+      Linux, e.g. osxcross and Qt 5 (still experimental, more or less discontinued)
+* Other packages imported from the AUR to build with slight modifications.
 
 ## Binary repository
 I also provide a [binary repository](https://martchus.dyn.f3l.de/repo/arch/ownstuff/os)

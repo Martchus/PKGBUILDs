@@ -5,18 +5,17 @@
 # Contributor: Martchus < martchus at gmx dot net >
 
 _pkgver=3.4.0
-_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+_architectures="aarch64-w64-mingw32"
 
-pkgname=mingw-w64-openssl
+pkgname=mingw-w64-clang-aarch64-openssl
 pkgver=${_pkgver/[a-z]/.${_pkgver//[0-9.]/}}
 pkgrel=1
-pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64)"
+pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64-clang-aarch64)"
 arch=('any')
 url='https://www.openssl.org'
 license=('Apache-2.0')
-depends=('mingw-w64-zlib')
-makedepends=('mingw-w64-gcc'
-             'mingw-w64-environment'
+depends=('mingw-w64-clang-aarch64-zlib')
+makedepends=(             'mingw-w64-clang-environment'
              'perl')
 options=('!strip' 'staticlibs' '!buildflags' '!lto')
 source=("https://github.com/openssl/openssl/releases/download/openssl-${pkgver}/openssl-${pkgver}.tar.gz"{,.asc}
@@ -35,7 +34,8 @@ prepare() {
 build() {
   cd "${srcdir}/openssl-${_pkgver}"
   for _arch in ${_architectures}; do
-    source mingw-env ${_arch}
+    source mingw-clang-env $_arch
+
     if [[ $_arch != 'aarch64-w64-mingw32' ]]; then
       # conflict with --cross-compile-prefix
       unset CC
@@ -66,12 +66,13 @@ build() {
 
 package() {
   for _arch in ${_architectures}; do
+    source mingw-clang-env $_arch
     cd "${srcdir}/build-${_arch}"
     make -j1 DESTDIR="${pkgdir}" LIBDIR=lib install_sw
     install -m644 ms/applink.c "${pkgdir}/usr/${_arch}/include/openssl/"
-    find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec ${_arch}-strip {} \;
-    find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
-    find "${pkgdir}/usr/${_arch}" -name '*.a' -o -name '*.dll' | xargs ${_arch}-strip -g
+    find "${pkgdir}/usr/${_arch}" -name '*.exe' -exec $STRIP {} \;
+    find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec $STRIP --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" -name '*.a' -o -name '*.dll' | xargs $STRIP -g
   done
 }
 

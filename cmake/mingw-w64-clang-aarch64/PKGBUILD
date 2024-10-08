@@ -1,15 +1,19 @@
 pkgname=mingw-w64-clang-aarch64-cmake
 pkgver=1
-pkgrel=35.1
+pkgrel=1
 arch=('any')
 pkgdesc="CMake wrapper for MinGW (mingw-w64)"
-depends=('cmake' 'mingw-w64-clang-aarch64-pkg-config' 'mingw-w64-clang-environment')
-optdepends=('mingw-w64-clang-aarch64-wine: runtime support')
+depends=('cmake' 'mingw-w64-clang-aarch64-pkg-config' 'mingw-w64-clang-aarch64-libc++' 'mingw-w64-clang-environment')
+optdepends=(
+  'mingw-w64-clang-aarch64-binutils: windmc support'
+  'mingw-w64-clang-aarch64-wine: runtime support'
+)
 license=("GPL")
 url="http://fedoraproject.org/wiki/MinGW"
 source=("mingw-cmake.sh"
         "toolchain-mingw.cmake")
-sha256sums=('SKIP' 'SKIP')
+sha256sums=('5cc1682d0ff3c86feb476167bc3530c0b8f31193ccc174dd7191740a0c7e24c9'
+            'e9272994067d2a01cb65cd42357b944ad68bc39714662954d473d861751251b0')
 
 _architectures="aarch64-w64-mingw32"
 

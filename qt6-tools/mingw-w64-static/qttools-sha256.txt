@@ -1,1 +1,1 @@
-f03bb7df619cd9ac9dba110e30b7bcab5dd88eb8bdc9cc752563b4367233203f
+../mingw-w64/qttools-sha256.txt

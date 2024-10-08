@@ -1,1 +1,1 @@
-40142cb71fb1e07ad612bc361b67f5d54cd9367f9979ae6b86124a064deda06b
+../mingw-w64/qtsvg-sha256.txt

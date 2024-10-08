@@ -1,1 +1,1 @@
-2a845e2e10bc2bfd9c3e4d7e00d8081de885fd8fd5f26276e2a28fadf3d71a0f
+../mingw-w64/qtactiveqt-sha256.txt

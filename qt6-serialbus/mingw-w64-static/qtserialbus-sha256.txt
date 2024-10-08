@@ -1,1 +1,1 @@
-55d82e9c7a827808b7383f0a57ad12c2a6fcf5b6c936b27e633155163c0a6276
+../mingw-w64/qtserialbus-sha256.txt

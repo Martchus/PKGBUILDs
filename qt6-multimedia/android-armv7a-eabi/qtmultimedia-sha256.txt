@@ -1,0 +1,1 @@
+../android-aarch64/qtmultimedia-sha256.txt

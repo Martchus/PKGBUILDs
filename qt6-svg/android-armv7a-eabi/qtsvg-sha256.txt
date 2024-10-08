@@ -1,0 +1,1 @@
+../android-aarch64/qtsvg-sha256.txt

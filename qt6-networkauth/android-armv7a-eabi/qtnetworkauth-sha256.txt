@@ -1,0 +1,1 @@
+../android-aarch64/qtnetworkauth-sha256.txt

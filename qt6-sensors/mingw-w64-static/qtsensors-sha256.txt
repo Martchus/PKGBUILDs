@@ -1,1 +1,1 @@
-c03a8d5da362ed5f3f185902def04a7c2b69be3f8a283b1389eb6c49a5f3c8fc
+../mingw-w64/qtsensors-sha256.txt

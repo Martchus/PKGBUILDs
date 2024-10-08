@@ -1,0 +1,1 @@
+../android-aarch64/qtvirtualkeyboard-sha256.txt

@@ -1,1 +1,1 @@
-8b6a68a3dfaa7e9d10a0dafccee594c72e8de061bc573ae86b1c081b423a53f0
+../mingw-w64/qt5compat-sha256.txt

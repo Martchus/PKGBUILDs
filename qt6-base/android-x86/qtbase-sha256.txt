@@ -1,1 +1,1 @@
-8ccbb9ab055205ac76632c9eeddd1ed6fc66936fc56afc2ed0fd5d9e23da3097
+../android-aarch64/qtbase-sha256.txt

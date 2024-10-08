@@ -1,1 +1,1 @@
-d4fa58ee809b39c9eda8d20ee4677971e918edb9a076540466693bc46db146f0
+../mingw-w64/qtserialport-sha256.txt

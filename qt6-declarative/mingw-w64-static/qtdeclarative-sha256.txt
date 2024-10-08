@@ -1,1 +1,1 @@
-937b70e441abf5bc4e50d44d26610e2714a28514acf3885cd36116cd610b9875
+../mingw-w64/qtdeclarative-sha256.txt

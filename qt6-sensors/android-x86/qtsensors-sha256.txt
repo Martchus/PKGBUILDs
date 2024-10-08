@@ -1,0 +1,1 @@
+../android-aarch64/qtsensors-sha256.txt

@@ -1,1 +1,1 @@
-1a872104e212c048ada47d28ea8bb2e0ab0637663a3b085989349e249f1423d9
+../mingw-w64/qtvirtualkeyboard-sha256.txt

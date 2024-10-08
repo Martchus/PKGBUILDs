@@ -1,1 +1,1 @@
-6b9a75a5e8829c56f4cfcdd146082882896b87eda380996f9cc34936504a13b7
+../mingw-w64/qtnetworkauth-sha256.txt

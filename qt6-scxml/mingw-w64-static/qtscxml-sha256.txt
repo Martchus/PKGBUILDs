@@ -1,1 +1,1 @@
-608febeb0dafb6fbf559e064dee779ab799441ed804267b534705ea5077eeda3
+../mingw-w64/qtscxml-sha256.txt

@@ -1,0 +1,1 @@
+../android-aarch64/qtscxml-sha256.txt

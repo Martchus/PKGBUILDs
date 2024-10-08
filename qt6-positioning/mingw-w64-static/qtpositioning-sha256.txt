@@ -1,1 +1,1 @@
-da7073754224c91fb938ff5b02ff938540640605ac9ff6526db88d799cc6661c
+../mingw-w64/qtpositioning-sha256.txt

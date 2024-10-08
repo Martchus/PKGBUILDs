@@ -1,0 +1,81 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+_realname=cppwinrt
+pkgname=mingw-w64-clang-aarch64-${_realname}
+pkgver=2.0.240405.15
+_windows_rs_ver=0.59.0
+pkgrel=1
+arch=('any')
+pkgdesc='C++ language projection for Windows Runtime (WinRT) APIs (mingw-w64)'
+url='https://aka.ms/cppwinrt'
+license=('spdx:MIT')
+depends=('mingw-w64-clang-aarch64-crt')
+makedepends=('mingw-w64-clang-aarch64-cmake' 'mingw-w64-cppwinrt' 'mingw-w64-gcc' 'mingw-w64-wine' 'ninja' 'git')
+source=("https://github.com/microsoft/cppwinrt/archive/${pkgver}/${_realname}-${pkgver}.tar.gz"
+        "https://github.com/microsoft/windows-rs/archive/${_windows_rs_ver}/windows-rs-${_windows_rs_ver}.tar.gz")
+sha256sums=('1da61942ee0a4500440592b7daf7bf5151b2c8aa92e57f85259cfd13c57be0d0'
+            'cc1b581ea290e4c69501793952332777cb25f5c6eae438d450446011d444c2f4')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+_architectures=('aarch64-w64-mingw32')
+
+build() {
+  cd ${_realname}-${pkgver}
+  for _arch in "${_architectures[@]}"; do
+    mkdir -p "build-${_arch}" && pushd "build-${_arch}"
+    # build cppwinrt.exe
+    ${_arch}-cmake \
+      -G Ninja \
+      -DCMAKE_BUILD_TYPE:STRING='Release' \
+      -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
+      -DCPPWINRT_BUILD_VERSION="${pkgver}" \
+      -DBUILD_TESTING=OFF \
+      ../
+    cmake --build .
+
+    # add Windows metadata
+    # note: The metadata comes from https://github.com/microsoft/win32metadata. However, at this point
+    # this build script cannot make use of that. Instead, one has to just point it to the metadata files
+    # usually found under C:/Windows/System32/WinMetadata via the WIN_METADATA environment variable.
+    input=()
+    if [[ -d $WIN_METADATA ]]; then
+      ln -s "$WIN_METADATA" win-metadata
+      input+=(-input win-metadata)
+    else
+      echo "You need to provide metadata files usually found under C:/Windows/System32/WinMetadata on a
+Windows system and point this build script to it via the WIN_METADATA environment variable.
+Otherwise this package will not contain all headers that are required by e.g. Qt 6."
+    fi
+
+    # add rust metadata provided by https://github.com/microsoft/windows-rs
+    echo "SPDX-License-Identifier: MIT OR Apache-2.0
+SPDX-FileCopyrightText: Copyright (c) Microsoft Corporation
+
+Generated using .winmd files from https://github.com/microsoft/windows-rs
+" > license.txt
+    ln -s "${srcdir}/windows-rs-${_windows_rs_ver}/crates/libs/bindgen/default" rust-metadata
+    input+=(-license license.txt -input rust-metadata)
+
+    # generate headers using x86_64 build of cppwinrt.exe assuming this build is conducted on an x86_64 system
+    x86_64-w64-mingw32-wine /usr/x86_64-w64-mingw32/bin/cppwinrt.exe "${input[@]}" -output "output"
+    popd
+  done
+}
+
+package() {
+  cd ${_realname}-${pkgver}
+  for _arch in "${_architectures[@]}"; do
+    source mingw-clang-env $_arch
+    pushd "build-${_arch}"
+    DESTDIR="${pkgdir}" cmake --install .
+    mkdir "${pkgdir}/usr/${_arch}/include"
+    cp -vr --target-directory="${pkgdir}/usr/${_arch}/include" output/*
+    $STRIP --strip-all "$pkgdir"/usr/${_arch}/bin/*.exe
+    popd
+  done
+
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/LICENSE" "${pkgdir}/share/licenses/${pkgname}/LICENSE"
+}

@@ -1,3 +1,0 @@
-[submodule "bluetooth-raspberrypi/default"]
-	path = bluetooth-raspberrypi/default
-	url = https://github.com/RoEdAl/alarm-bluetooth-raspberrypi

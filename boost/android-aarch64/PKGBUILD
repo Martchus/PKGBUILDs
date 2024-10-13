@@ -17,10 +17,6 @@ depends=("android-${_android_arch}-bzip2"
          "android-${_android_arch}-zlib"
          "android-${_android_arch}-zstd")
 makedepends=('android-environment')
-if [[ $_android_arch == aarch64 ]] || [[ $_android_arch == x86-64 ]]; then
-makedepends+=("android-${_android_arch}-openmpi")
-optdepends+=("android-${_android_arch}-openmpi: for mpi support")
-fi
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.bz2"
         "disable-version-check.patch")

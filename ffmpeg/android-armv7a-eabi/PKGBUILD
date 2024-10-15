@@ -29,8 +29,6 @@ depends=("android-${_android_arch}-aom"
          "android-${_android_arch}-lame"
          "android-${_android_arch}-libass"
          "android-${_android_arch}-libdrm"
-         "android-${_android_arch}-libopenmpt"
-         "android-${_android_arch}-libsoxr"
          "android-${_android_arch}-libtheora"
          "android-${_android_arch}-libva"
          "android-${_android_arch}-libvorbis"
@@ -38,20 +36,18 @@ depends=("android-${_android_arch}-aom"
          "android-${_android_arch}-libwebp"
          "android-${_android_arch}-libxml2"
          "android-${_android_arch}-libvpl"
-         "android-${_android_arch}-ocl-icd"
-         "android-${_android_arch}-opencore-amr"
          "android-${_android_arch}-openjpeg2"
          "android-${_android_arch}-opus"
-         "android-${_android_arch}-snappy"
          "android-${_android_arch}-speex"
-         "android-${_android_arch}-svt-av1"
-         "android-${_android_arch}-vid.stab"
          "android-${_android_arch}-vmaf"
          "android-${_android_arch}-x264"
          "android-${_android_arch}-x265"
          "android-${_android_arch}-xvidcore"
          "android-${_android_arch}-xz"
          "android-${_android_arch}-zlib")
+makedepends=('android-configure'
+             'nasm'
+             'git')
 
 if [ "${FFMPEG_FULL}" = 1 ]; then
     depends+=("android-${_android_arch}-alsa-lib"
@@ -61,6 +57,8 @@ if [ "${FFMPEG_FULL}" = 1 ]; then
               "android-${_android_arch}-libbluray"
               "android-${_android_arch}-libbs2b"
               "android-${_android_arch}-libiec61883"
+              "android-${_android_arch}-libopenmpt"
+              "android-${_android_arch}-libsoxr"
               "android-${_android_arch}-libmodplug"
               "android-${_android_arch}-libraw1394"
               "android-${_android_arch}-libvdpau"
@@ -69,16 +67,17 @@ if [ "${FFMPEG_FULL}" = 1 ]; then
               "android-${_android_arch}-libxcb"
               "android-${_android_arch}-libxext"
               "android-${_android_arch}-libxv"
+              "android-${_android_arch}-snappy"
+              "android-${_android_arch}-ocl-icd"
+              "android-${_android_arch}-opencore-amr"
               "android-${_android_arch}-rav1e"
               "android-${_android_arch}-rubberband"
               "android-${_android_arch}-sdl2"
-              "android-${_android_arch}-srt")
+              "android-${_android_arch}-srt"
+              "android-${_android_arch}-svt-av1"
+              "android-${_android_arch}-vid.stab")
+    makedepends+=("android-${_android_arch}-opencl-headers")
 fi
-
-makedepends=('android-configure'
-             "android-${_android_arch}-opencl-headers"
-             'nasm'
-             'git')
 
 if [ "${FFMPEG_FULL}" = 1 ]; then
     makedepends=("android-${_android_arch}-avisynthplus"
@@ -103,18 +102,16 @@ fi
 options=(!strip !buildflags staticlibs !emptydirs)
 _tag=507a51fbe9732f0f6f12f43ce12431e8faa834b7
 source=(
-  git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
-  add-av_stream_get_first_dts-for-chromium.patch
+    git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
+    configure.patch
 )
 b2sums=('c7ec6b1db61608195117b79f3f0c8f6323c3abeb39721359da0f10e7d739da8301e04ff5fa83c022f86fc760f66e00066f9a50d97b771f797ccc679f9d912c40'
-        '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de')
+        '59d451d94fecf7479b576c495d508d644061514942657c6a358600f0fa2cec5ccd65d897d8a5b84ae1d5a6061b9faff356d94872a70441965aa0ff40a5f6dcaa')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
     cd ffmpeg
     source android-env ${_android_arch}
-
-    patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
 
     check_ndk_version_ge_than 18.0
     patch -Np1 -i ../configure.patch
@@ -181,6 +178,8 @@ build() {
         extra_options="${extra_options} --enable-ladspa"
         extra_options="${extra_options} --enable-libbluray"
         extra_options="${extra_options} --enable-libbs2b"
+        extra_options="${extra_options} --enable-libsnappy"
+        extra_options="${extra_options} --enable-libsoxr"
         extra_options="${extra_options} --enable-libiec61883"
         extra_options="${extra_options} --enable-libjxl"
         extra_options="${extra_options} --enable-libmodplug"
@@ -188,6 +187,12 @@ build() {
         extra_options="${extra_options} --enable-libssh"
         extra_options="${extra_options} --enable-librav1e"
         extra_options="${extra_options} --enable-librubberband"
+        extra_options="${extra_options} --enable-libsvtav1"
+        extra_options="${extra_options} --enable-libopencore_amrnb"
+        extra_options="${extra_options} --enable-libopencore_amrwb"
+        extra_options="${extra_options} --enable-libopenmpt"
+        extra_options="${extra_options} --enable-libvidstab"
+        extra_options="${extra_options} --enable-opencl"
         extra_options="${extra_options} --enable-sdl2"
     else
         extra_options="${extra_options} --disable-alsa"
@@ -196,6 +201,8 @@ build() {
         extra_options="${extra_options} --disable-ladspa"
         extra_options="${extra_options} --disable-libbluray"
         extra_options="${extra_options} --disable-libbs2b"
+        extra_options="${extra_options} --disable-libsnappy"
+        extra_options="${extra_options} --disable-libsoxr"
         extra_options="${extra_options} --disable-libiec61883"
         extra_options="${extra_options} --disable-libjxl"
         extra_options="${extra_options} --disable-libmodplug"
@@ -204,6 +211,12 @@ build() {
         extra_options="${extra_options} --disable-librav1e"
         extra_options="${extra_options} --disable-libxcb"
         extra_options="${extra_options} --disable-librubberband"
+        extra_options="${extra_options} --disable-libsvtav1"
+        extra_options="${extra_options} --disable-libopencore_amrnb"
+        extra_options="${extra_options} --disable-libopencore_amrwb"
+        extra_options="${extra_options} --disable-libopenmpt"
+        extra_options="${extra_options} --disable-libvidstab"
+        extra_options="${extra_options} --disable-opencl"
         extra_options="${extra_options} --disable-sdl2"
         extra_options="${extra_options} --disable-xlib"
     fi
@@ -247,12 +260,8 @@ build() {
         --enable-libfreetype \
         --enable-libfribidi \
         --enable-libopus \
-        --enable-libsnappy \
-        --enable-libsoxr \
         --enable-libspeex \
-        --enable-libsvtav1 \
         --enable-libtheora \
-        --enable-libvidstab \
         --enable-libvmaf \
         --enable-libvorbis \
         --enable-libvpl \
@@ -262,12 +271,8 @@ build() {
         --enable-libx265 \
         --enable-libxml2 \
         --enable-libxvid \
-        --enable-opencl \
         --enable-libmp3lame \
-        --enable-libopencore_amrnb \
-        --enable-libopencore_amrwb \
         --enable-libopenjpeg \
-        --enable-libopenmpt \
         --enable-libgsm \
         --enable-libharfbuzz \
         ${extra_options}
@@ -275,7 +280,7 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/ffmpeg-${pkgver}"
+    cd ffmpeg
     source android-env ${_android_arch}
 
     make DESTDIR="${pkgdir}" install

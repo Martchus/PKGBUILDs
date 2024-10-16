@@ -28,7 +28,7 @@ _enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
-pkgver=1.6.2
+pkgver=1.6.3
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
@@ -49,7 +49,7 @@ checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 [[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
-sha256sums=('022d37bf125f32cd0eb52b4946361d5d8500e8b0b6ef095292f4a89dff085d34'
+sha256sums=('49ab861c2bc0649652b8dcbc4cf8788c743008a8bc6d023f7d4a3b3bbdc3bdc6'
             'SKIP')
 
 [[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON

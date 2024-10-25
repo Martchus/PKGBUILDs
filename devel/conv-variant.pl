@@ -50,11 +50,11 @@ sub handle_package ($src_path, $dst_path) {
             }
             elsif (-e $dst_file) {
                 $log->info("Keeping existing file $dst_file as it is not a symlink");
-                return;
+                next;
             }
             symlink("../$from/$src_basename", $dst_file) or die "Unable to create symlink at $dst_file: $!\n";
             $log->info("Linked $src_file to $dst_file");
-            return;
+            next;
         }
         my $pkgbuild = $src_file->slurp;
         for my $pattern (@$to_patterns) {

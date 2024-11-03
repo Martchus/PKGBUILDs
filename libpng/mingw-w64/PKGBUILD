@@ -19,9 +19,6 @@ prepare() {
 
   # autoreconf to get updated libtool files with clang support
   autoreconf -fiv
-
-  # skip x86 specific check that prevents shared libs from being created when targeting aarch64
-  for f in configure ./ltmain.sh; do sed -i -e 's|file_magic.*DLL|pass_all|g' $f; done
 }
 
 build() {

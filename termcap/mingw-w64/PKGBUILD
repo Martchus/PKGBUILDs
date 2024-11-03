@@ -24,11 +24,11 @@ build()
   autoconf
   for _arch in ${_architectures}; do
     mkdir -p build-${_arch} && pushd build-${_arch}
-    export CPPFLAGS=-fpermissive
+    export CPPFLAGS='-fpermissive -fPIC -Wno-error=implicit-function-declaration'
     ${_arch}-configure
     make
     # Build a shared library.  No need for -fPIC on Windows.
-    ${_arch}-gcc -shared \
+    $CC -shared \
       -Wl,--out-implib,libtermcap.dll.a \
       -o libtermcap-0.dll \
       termcap.o tparam.o version.o

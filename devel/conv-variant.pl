@@ -37,7 +37,7 @@ die "Conversion from $from to $to not defined\n" unless $to_patterns;
 my $log = Mojo::Log->new;
 my $has_error;
 
-sub handle_package ($src_path, $dst_path) {
+sub handle_package ($src_path, $dst_path, $always_copy = 0) {
     $log->info("Converting $src_path to $dst_path");
     $dst_path->make_path;
     for my $src_file (@{$src_path->list({dir => 1})}) {
@@ -48,11 +48,16 @@ sub handle_package ($src_path, $dst_path) {
             if (-l $dst_file) {
                 unlink($dst_file) or die "Unable to unlink $dst_file: $!\n";
             }
-            elsif (-e $dst_file) {
+            elsif (!$always_copy && -e $dst_file) {
                 $log->info("Keeping existing file $dst_file as it is not a symlink");
                 next;
             }
-            symlink("../$from/$src_basename", $dst_file) or die "Unable to create symlink at $dst_file: $!\n";
+            if ($always_copy) {
+                $src_file->copy_to($dst_file);
+            }
+            else {
+                symlink("../$from/$src_basename", $dst_file) or die "Unable to create symlink at $dst_file: $!\n";
+            }
             $log->info("Linked $src_file to $dst_file");
             next;
         }
@@ -105,7 +110,7 @@ if (scalar @ARGV == 2 && ($ARGV[0] =~ m/\// || $ARGV[1] =~ m/\//)) {
     my $src_path = path($ARGV[0]);
     my $dst_path = path($ARGV[1]);
     if (-f $src_path->child('PKGBUILD') && -d $dst_path && ($force || !-f $dst_path->child('PKGBUILD'))) {
-        handle_package($src_path, $dst_path);
+        handle_package($src_path, $dst_path, 1);
     }
     else {
         $log->error("Unable to find source and/or destination paths.");

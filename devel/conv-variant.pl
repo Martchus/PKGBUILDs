@@ -15,7 +15,7 @@ my %patterns = (
         {re => '(mingw-w64-)', repl => 'mingw-w64-clang-aarch64-', line_cond => $no_url},
         {re => '\(mingw-w64\)', repl => '(mingw-w64-clang-aarch64)'},
         {re => 'mingw-w64-clang-aarch64-environment',        repl => 'mingw-w64-clang-environment'},
-        {re => '(["\']*)(mingw-w64-clang-aarch64-gcc)(["\']*\s?)', repl => ''},
+        {re => '(["\']*)(mingw-w64-clang-aarch64-(gcc|cairo))(["\']*\s?)', repl => ''},
         {re => '32:i686-w64-mingw32[\s\w\-]*', repl => 'aarch64-w64-mingw32'},
         {re => '64:x86_64-w64-mingw32[\s\w\-]*', repl => 'aarch64-w64-mingw32'},
         {re => '(i686-w64-mingw32[\s\w\-]*)', repl => 'aarch64-w64-mingw32', line_cond => $no_cond},

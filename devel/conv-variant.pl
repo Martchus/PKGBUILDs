@@ -24,6 +24,7 @@ my %patterns = (
         {re => '(x86_64-w64-mingw32[\s\w\-]*)', repl => 'aarch64-w64-mingw32', line_cond => $no_cond},
         {re => '(aarch64-w64-mingw32[\s\w\-\'\"]*aarch64-w64-mingw32)', repl => 'aarch64-w64-mingw32'},
         {re => '\$\{_arch\}-strip', repl => '$STRIP'},
+        {re => '\$\{_arch\}-ranlib', repl => '$RANLIB'},
         {se => 'build() {', append => "\n  export USE_COMPILER_WRAPPERS=1", cond => 'mingw-w64-clang-aarch64-configure'},
         {se => 'package() {', append => "\n  export USE_COMPILER_WRAPPERS=1", cond => 'mingw-w64-clang-aarch64-configure'},
         {se => 'for _arch in ${_architectures}; do', append => "\n    source mingw-clang-env \$_arch"},

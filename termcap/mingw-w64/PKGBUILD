@@ -18,8 +18,7 @@ sha256sums=('91a0e22e5387ca4467b5bcb18edf1c51b930262fd466d5fda396dd9d26719100')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
-build()
-{
+build() {
   cd "$srcdir/termcap-$pkgver"
   autoconf
   for _arch in ${_architectures}; do
@@ -28,7 +27,7 @@ build()
     ${_arch}-configure
     make
     # Build a shared library.  No need for -fPIC on Windows.
-    $CC -shared \
+    ${CC:-$_arch-gcc} -shared \
       -Wl,--out-implib,libtermcap.dll.a \
       -o libtermcap-0.dll \
       termcap.o tparam.o version.o

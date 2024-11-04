@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use Mojo::Base -strict, -signatures;
+
+use File::Copy::Recursive 'dircopy';
 use Mojo::File 'path';
 use Mojo::Log;
 
@@ -53,7 +55,12 @@ sub handle_package ($src_path, $dst_path, $always_copy = 0) {
                 next;
             }
             if ($always_copy) {
-                $src_file->copy_to($dst_file);
+                if (-d $src_file) {
+                    dircopy($src_file, $dst_file) or die "Unable to copy $dst_file: $!\n";
+                }
+                else {
+                    $src_file->copy_to($dst_file);
+                }
             }
             else {
                 symlink("../$from/$src_basename", $dst_file) or die "Unable to create symlink at $dst_file: $!\n";

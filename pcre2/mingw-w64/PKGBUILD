@@ -1,4 +1,5 @@
-pkgname=mingw-w64-pcre2
+_pkgname=pcre2
+pkgname=mingw-w64-$_pkgname
 pkgver=10.44
 pkgrel=1
 pkgdesc='A library that implements Perl 5-style regular expressions. 2nd version (mingw-w64)'
@@ -9,7 +10,7 @@ makedepends=(mingw-w64-configure mingw-w64-readline mingw-w64-bzip2 mingw-w64-zl
 depends=(mingw-w64-crt)
 options=(staticlibs !strip !buildflags)
 optdepends=(mingw-w64-readline mingw-w64-bzip2 mingw-w64-zlib)
-source=("https://github.com/PhilipHazel/${pkgname##mingw-w64-}/releases/download/${pkgname##mingw-w64-}-$pkgver/${pkgname##mingw-w64-}-$pkgver.tar.bz2"{,.sig})
+source=("https://github.com/PhilipHazel/$_pkgname/releases/download/$_pkgname-$pkgver/$_pkgname-$pkgver.tar.bz2"{,.sig})
 sha512sums=('ee91cc10a2962bc7818b03d368df3dd31f42ea9a7260ae51483ea8cd331b7431e36e63256b0adc213cc6d6741e7c90414fd420622308c0ae3fcb5dd878591be2'
             'SKIP')
 validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8')  # Philip Hazel
@@ -17,11 +18,11 @@ validpgpkeys=('45F68D54BBE23FB3039B46E59766E084FB0F43D8')  # Philip Hazel
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
-  cd "$srcdir/${pkgname##mingw-w64-}-$pkgver"
+  cd "$srcdir/$_pkgname-$pkgver"
 }
 
 build() {
-  cd "$srcdir/${pkgname##mingw-w64-}-$pkgver"
+  cd "$srcdir/$_pkgname-$pkgver"
   for _arch in ${_architectures}; do
     mkdir -p build-${_arch} && pushd build-${_arch}
     ${_arch}-configure \

@@ -34,15 +34,15 @@ class CrossFileGenerator:
 			config.write(configfile)
 
 	def get_binaries_section(self):
-		binaries = {'c':"'clang'".format(self.arch),
-				'cpp':"'clang++'".format(self.arch),
-				'asm':"'clang'".format(self.arch),
+		binaries = {'c':"'mingw-clang'".format(self.arch),
+				'cpp':"'mingw-clang++'".format(self.arch),
+				'asm':"'mingw-clang'".format(self.arch),
 				'fortran':"'flang'".format(self.arch),
 				'ar':"'llvm-ar'".format(self.arch),
 				'pkgconfig':"'{}-pkg-config'".format(self.arch),
 				'ranlib':"'llvm-ranlib'".format(self.arch),
-				'strip':"'llvm-strip'".format(self.arch),
-				'windres':"'llvm-windres'".format(self.arch),
+				'strip':"'mingw-llvm-strip'".format(self.arch),
+				'windres':"'mingw-llvm-windres'".format(self.arch),
 				'dlltool':"'llvm-dlltool'".format(self.arch),
 				}
 		if self.need_exe_wrapper:
@@ -60,7 +60,6 @@ class CrossFileGenerator:
 			'cpp_args':[f for f in self.cxxflags.split(" ") if f],
 			'c_link_args':[f for f in self.ldflags.split(" ") if f],
 			'cpp_link_args':[f for f in self.ldflags.split(" ") if f]
-			'asm_args':[f for f in self.asmflags.split(" ") if f]
 			}
 
 	def get_host_machine_section(self):

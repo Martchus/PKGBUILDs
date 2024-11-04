@@ -1,16 +1,15 @@
 pkgname=mingw-w64-clang-aarch64-meson
 pkgver=1
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="Meson wrapper for MinGW (mingw-w64-clang-aarch64)"
 depends=('meson' 'mingw-w64-clang-aarch64-pkg-config' 'mingw-w64-clang-aarch64-libc++' 'mingw-w64-clang-environment')
-makedepends=('mingw-w64-clang-environment')
 optdepends=('mingw-w64-clang-aarch64-wine: Set NEED_WINE env variable in your PKGBUILD to use wine support in meson')
 license=("GPL")
 url="https://github.com/Martchus/PKGBUILDs"
 source=("toolchain_generator.py"
         "meson-mingw-wrapper")
-sha256sums=('b24aaa1392d34a6ae73ee26b094e887a820e885b0f417eb38be4a8351e385458'
+sha256sums=('3eee880e51bf173fa9743bfee9178d7d0558eb405e48eac9c3590b3186834b5c'
             '2defbbb1f43e13815b2a8a8327bd14aad175219eb4ff9935d5bf9d46b9f8728a')
 _architectures="aarch64-w64-mingw32"
 

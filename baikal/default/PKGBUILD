@@ -3,7 +3,7 @@
 
 pkgname=baikal
 pkgver=0.10.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Lightweight CalDAV+CardDAV server'
 url='http://sabre.io/baikal/'
 arch=('any')

@@ -1,6 +1,6 @@
 pkgname=mingw-w64-clang-environment
 pkgver=1
-pkgrel=4
+pkgrel=5
 arch=('any')
 pkgdesc="Script providing common environment variables and functions for targeting MinGW with Clang (mingw-w64)"
 license=('GPL-2-or-later')
@@ -10,7 +10,7 @@ source=("mingw-env.sh" "lld.sh" "clang.sh" "clang++.sh" "windres.sh" "strip.sh")
 sha256sums=('c3be528af25478987827c18238191c5606da9b960ed32ff0a4eda3769c25b7f3'
             'db37ead09607a88a5b215687e106e6794fa1d0b4c9f50bfe4891b9b3840f1a0a'
             '5722f79c9de1cb9ecac902b2d688f5a27398d5f1dacef9379f59aecc338a3d9d'
-            '5dc83a7c32b6e06ff42fd37e51fce224bb1ca3a95ebd22e259563b58355f5252'
+            'b20f256f48d36e6f20b52d4835cccecc3a1aa1d46e9febdbd10043a6e197af2c'
             '0f9e9833064742fe284eb97a09178c480634b0ece33af61f8399af69c49e9d8e'
             '14876fb3be2f0cfa95eef91a3799773882ec906d5deb5ac1a8c76733d22bf6b1')
 

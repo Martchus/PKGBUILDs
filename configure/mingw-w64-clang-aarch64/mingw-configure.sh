@@ -13,7 +13,7 @@ fi
 # let check for recognizing dependent libraries always pass
 # note: This is logged as "checking how to recognize dependent libraries... file_magic ^x86 archive import|^x86 DLL" and
 #       obviously not going to work when targeting e.g. aarch64.
-sed -i -e 's|file_magic.*DLL|pass_all|g' ${config_path}/configure
+find "$config_path" -name configure -exec sed -i -e 's|file_magic.*DLL|pass_all|g' {} \;
 
 ${config_path}/configure \
   --host=@TRIPLE@ --target=@TRIPLE@ --build="$CHOST" \

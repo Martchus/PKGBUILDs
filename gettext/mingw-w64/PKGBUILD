@@ -35,6 +35,8 @@ build() {
       --disable-csharp \
       --enable-threads=win32 \
       --without-emacs ..
+    [[ $pkgname =~ .*-clang-.* ]] && \
+      find . -name libtool -exec sed -i -e 's|-nostdlib||g' {} \+
     make
     popd
   done

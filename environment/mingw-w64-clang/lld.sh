@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # pass the machine argument and special platform library flags for build systems that invoke the linker directly
-target=${TARGET:-aarch64-w64-mingw32}
+target=${MINGW_W64_CLANG_TARGET:-aarch64-w64-mingw32}
 arch="${target%%-*}"
 os="${target##*-}"
 case $arch in

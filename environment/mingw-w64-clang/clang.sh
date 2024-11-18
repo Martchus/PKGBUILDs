@@ -1,5 +1,5 @@
 #!/bin/sh
 
 # pass important flags via this wrapper for build systems that don't use CFLAGS consistently
-_target=${TARGET:-aarch64-w64-mingw32}
+_target=${MINGW_W64_CLANG_TARGET:-aarch64-w64-mingw32}
 clang -rtlib=compiler-rt -fuse-ld=lld -mguard=cf -target $_target -Xclang -triple -Xclang $_target "$@"

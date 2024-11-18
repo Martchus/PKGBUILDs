@@ -12,7 +12,7 @@ default_mingw_cxx_compiler_flags="$default_mingw_compiler_flags -stdlib=libc++ -
 default_mingw_linker_flags="$cross_clang_flags -Wl,-O1,--sort-common,--as-needed -fstack-protector"
 [[ $_arch_ == aarch64 ]] || [[ $_arch_ =~ arm.* ]] || default_mingw_compiler_flags+=" -fcf-protection"
 
-export TARGET=$_target
+export MINGW_W64_CLANG_TARGET=$_target
 export CPPFLAGS="${MINGW_CPPFLAGS:-$default_mingw_pp_flags $CPPFLAGS}"
 export CFLAGS="${MINGW_CFLAGS:-$default_mingw_compiler_flags $CFLAGS}"
 export CXXFLAGS="${MINGW_CXXFLAGS:-$default_mingw_cxx_compiler_flags $CXXFLAGS}"

@@ -132,38 +132,68 @@ of the `android-*` and `mingw-w64-*` packages provided by this repository using
 an Arch Linux container. The container image mentioned before is also suitable
 for this purpose.
 
-Here are some example commands how one might do that:
+To build my projects, have a look at
+[CMake presets](https://github.com/Martchus/cpp-utilities/blob/master/README.md#remarks-about-building-for-android)
+I provide for building on Android.
+
+Otherwise, checkout the following subsections for generic example commands to
+build CMake-based projects in a container for Windows and Android. Note that
+these commands are intended to be run without root (see section "Podman-specific
+remarks" for details). In this case files that are created from within the
+container in the build and source directories will have your normal user/group
+outside the container which is quite convenient (within the container they will
+be owned by root).
+
+#### Setup
+Checkout the script under `devel/container/create-devel-container-example` for
+example commands.
+
+#### Start interactive shell in container
 ```
-# do basic container setup
-containers/create-devel-container-example
-
-# start interactive shell in container
 podman container exec -it archlinux-devel-container bash
+```
 
-# install stuff you want, e.g. mingw-w64 or android Qt packages
+#### Install stuff you want, e.g. Qt packages for targeting mingw-w64 or Android
+```
 podman container exec -it archlinux-devel-container \
   pacman -Syu ninja git mingw-w64-cmake qt6-{base,tools} mingw-w64-qt6-{base,tools,translations,svg,5compat}
+```
+
+```
 podman container exec -it archlinux-devel-container \
   pacman -Syu clang ninja git extra-cmake-modules android-cmake qt6-{base,tools,declarative,shadertools} android-aarch64-qt6-{base,declarative,tools,translations,svg,5compat} android-aarch64-{boost,libiconv,qqc2-breeze-style}
+```
 
-# configure the build using mingw-w64 packages, e.g. run CMake
+#### Building for Windows using mingw-w64-* packages
+Configure the build, e.g. run CMake:
+```
 podman container exec -it archlinux-devel-container x86_64-w64-mingw32-cmake \
   -G Ninja \
   -S /src/c++/cmake/PianoBooster \
   -B /build/pianobooster-x86_64-w64-mingw32-release \
   -DPKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/x86_64-w64-mingw32-pkg-config \
   -DQT_PACKAGE_NAME:STRING=Qt6
+```
 
-# conduct the build using mingw-w64 packages, e.g. invoke Ninja build system via CMake
+Conduct the build, e.g. invoke Ninja build system via CMake:
+```
 podman container exec -it archlinux-devel-container bash -c '
-  source /usr/bin/mingw-env x86_64-w64-mingw32 && \
+  source /usr/bin/mingw-env x86_64-w64-mingw32
   cmake --build /build/pianobooster-x86_64-w64-mingw32-release --verbose'
+```
 
-# configure the build using android packages, e.g. run CMake
+#### Building for Android using android-* packages
+Use `keytool` to generate a key for signing the APK:
+```
+podman container exec -it archlinux-devel-container keytool …
+```
+
+Configure the build, e.g. run CMake:
+```
 podman container exec -it archlinux-devel-container bash -c '
   android_arch=aarch64
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
-  source /usr/bin/android-env $android_arch && \
+  source /usr/bin/android-env $android_arch
   android-$android_arch-cmake \
     -G Ninja \
     -S /src/c++/cmake/subdirs/passwordmanager \
@@ -173,15 +203,19 @@ podman container exec -it archlinux-devel-container bash -c '
     -DPKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/android-$android_arch-pkg-config \
     -DQT_PACKAGE_PREFIX:STRING=Qt6 \
     -DKF_PACKAGE_PREFIX:STRING=KF6'
+```
 
-# conduct the build using android packages, e.g. invoke Ninja build system via CMake
+Conduct the build, e.g. invoke Ninja build system via CMake:
+```
 podman container exec -it archlinux-devel-container bash -c '
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
-  source /usr/bin/android-env aarch64 && \
+  source /usr/bin/android-env aarch64
   cmake --build /build/passwordmanager-android-aarch64-release --verbose'
+```
 
-# use additional Android-related tooling from container
-# note: These are just example values. The ports for pairing and connection are distinct.
+#### Deploy/debug Android package using tooling from android-sdk package
+```
+#  example values; ports for pairing and connection are distinct
 phone_ip=192.168.178.42 pairing_port=34765 pairing_code=922102 connection_port=32991
 podman container exec -it archlinux-devel-container \
   /opt/android-sdk/platform-tools/adb pair "$phone_ip:$pairing_port" "$pairing_code"
@@ -189,17 +223,15 @@ podman container exec -it archlinux-devel-container \
   /opt/android-sdk/platform-tools/adb connect "$phone_ip:$connection_port"
 podman container exec -it archlinux-devel-container \
   /opt/android-sdk/platform-tools/adb logcat
+podman container exec -it archlinux-devel-container \
+  /opt/android-sdk/platform-tools/adb install …
+```
 
-# get rid of the container when no longer needed
+#### Delete container setup again (when no longer needed)
+```
 podman container stop archlinux-devel-container
 podman container rm archlinux-devel-container
 ```
-
-Note that these commands are intended to be run without root (see section
-"Podman-specific remarks" for details). In this case files that are created
-from within the container in the build and source directories will have your
-normal user/group outside the container which is quite convenient (within the
-container they will be owned by root).
 
 ### Other approaches
 There's also the 3rdparty repository

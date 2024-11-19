@@ -1,0 +1,53 @@
+pkgname=mingw-w64-libxml2
+pkgver=2.13.5
+pkgrel=1
+arch=('any')
+pkgdesc='XML C parser and toolkit (mingw-w64)'
+url='https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home'
+depends=('mingw-w64-crt' 'mingw-w64-libiconv' 'mingw-w64-zlib' 'mingw-w64-xz')
+makedepends=('git' 'mingw-w64-configure')
+options=('!buildflags' '!strip' 'staticlibs')
+license=(MIT)
+# using GitHub mirror as https://gitlab.gnome.org/GNOME/libxml2.git seems broken right now
+source=("git+https://github.com/GNOME/libxml2.git#tag=v$pkgver")
+b2sums=('3cf2c7a553a00ba7878fc9c9c6696db9e20932d0e190966e18c6e2c75406f737c482e5cf5be5302ea882f5d1de8132c5aec7760dbca5ca63ad2b5bade73d5934')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare () {
+  cd libxml2
+
+  # avoid `ld.lld: error: unknown argument '--enable-auto-image-base'` when using LLVM-based toolchain
+  [[ $pkgname =~ .*-clang-.* ]] && \
+    find . -name 'libtool.m4' -exec sed -i -e 's|$wl--enable-auto-image-base||g' {} \+
+
+  # disable doc & examples
+  sed -i "s| doc example | |g" Makefile.am
+  autoreconf -vfi
+}
+
+build() {
+  cd libxml2
+
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+    ${_arch}-configure --without-python
+    make
+    popd
+  done
+}
+
+package() {
+  cd libxml2
+  install -Dm644 Copyright -t "$pkgdir/usr/share/licenses/$pkgname"
+
+  for _arch in ${_architectures}; do
+    cd "${srcdir}/libxml2/build-${_arch}"
+    make install DESTDIR="${pkgdir}"
+    rm -r "${pkgdir}"/usr/${_arch}/share
+    rm "${pkgdir}"/usr/${_arch}/bin/*.exe
+    ${_arch}-strip --strip-unneeded "${pkgdir}"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip --strip-debug "${pkgdir}"/usr/${_arch}/lib/*.a
+  done
+}
+

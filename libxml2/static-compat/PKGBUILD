@@ -6,8 +6,8 @@
 
 _pkgname=libxml2
 pkgname=static-compat-$_pkgname
-pkgver=2.10.3
-pkgrel=2
+pkgver=2.13.5
+pkgrel=1
 pkgdesc='XML C parser and toolkit'
 url='https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home'
 arch=(x86_64)
@@ -15,15 +15,15 @@ license=(MIT)
 depends=(static-compat-zlib static-compat-xz)
 makedepends=(git static-compat-configure python)
 options=(!emptydirs staticlibs)
-_commit=f507d167f1755b7eaea09fb1a44d29aab828b6d1  # tags/v2.10.3^0
-source=("git+https://gitlab.gnome.org/GNOME/libxml2.git#commit=$_commit"
-        libxml2-2.9.8-python3-unicode-errors.patch
-        no-fuzz.diff
-        https://www.w3.org/XML/Test/xmlts20130923.tar.gz)
-sha256sums=('SKIP'
-            '3d07a50fc0963bda05fc5269dedc51f108260699e25e455bb31f6d80c2a9cada'
-            '3908e7a53b20109bdfde143238f36e22a154dbb7d363b634e54c0a18328f4656'
-            '9b61db9f5dbffa545f4b8d78422167083a8568c59bd1129f94138f936cf6fc1f')
+# using GitHub mirror as https://gitlab.gnome.org/GNOME/libxml2.git seems broken right now
+source=(
+  "git+https://github.com/GNOME/libxml2.git#tag=v$pkgver"
+  https://www.w3.org/XML/Test/xmlts20130923.tar.gz
+  0001-HACK-Don-t-run-fuzzing-tests.patch
+)
+b2sums=('3cf2c7a553a00ba7878fc9c9c6696db9e20932d0e190966e18c6e2c75406f737c482e5cf5be5302ea882f5d1de8132c5aec7760dbca5ca63ad2b5bade73d5934'
+        '63a47bc69278ef510cd0b3779aed729e1b309e30efa0015d28ed051cc03f9dfddb447ab57b07b3393e8f47393d15473b0e199c34cb1f5f746b15ddfaa55670be'
+        '151e84ee17051eeecfa8c62a7376ff269860f3ff6d33fb92209ff5f8dc9576a5648bbe9ffc96317695c069760ccfecaa3e6f19fb7a7c2e9f039a146d7fc8a516')
 
 pkgver() {
   cd libxml2
@@ -34,13 +34,11 @@ prepare() {
   source static-compat-environment
   cd libxml2
   mkdir build
+  # Use xmlconf from conformance test suite
   ln -s ../xmlconf
 
-  # https://src.fedoraproject.org/rpms/libxml2/tree/rawhide
-  git apply -3 ../libxml2-2.9.8-python3-unicode-errors.patch
-
   # Do not run fuzzing tests
-  git apply -3 ../no-fuzz.diff
+  git apply -3 ../0001-HACK-Don-t-run-fuzzing-tests.patch
 
   NOCONFIGURE=1 ./autogen.sh
 }
@@ -57,7 +55,8 @@ build() (
     --without-history \
     --without-icu \
     --without-docbook \
-    --without-html
+    --without-html \
+    --without-python
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' libtool
   make
 )

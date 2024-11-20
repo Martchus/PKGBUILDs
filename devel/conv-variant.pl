@@ -23,11 +23,12 @@ my %patterns = (
         {re => '(i686-w64-mingw32[\s\w\-]*)', repl => 'aarch64-w64-mingw32', line_cond => $no_cond},
         {re => '(x86_64-w64-mingw32[\s\w\-]*)', repl => 'aarch64-w64-mingw32', line_cond => $no_cond},
         {re => '(aarch64-w64-mingw32[\s\w\-\'\"]*aarch64-w64-mingw32)', repl => 'aarch64-w64-mingw32'},
-        {re => '\$\{_arch\}-strip', repl => '$STRIP'},
-        {re => '\$\{_arch\}-ranlib', repl => '$RANLIB'},
+        {re => '\$\{?_arch\}?-strip', repl => '$STRIP'},
+        {re => '\$\{?_arch\}?-ranlib', repl => '$RANLIB'},
         {se => 'build() {', append => "\n  export USE_COMPILER_WRAPPERS=1", cond => 'mingw-w64-clang-aarch64-configure'},
         {se => 'package() {', append => "\n  export USE_COMPILER_WRAPPERS=1", cond => 'mingw-w64-clang-aarch64-configure'},
         {se => 'for _arch in ${_architectures}; do', append => "\n    source mingw-clang-env \$_arch"},
+        {se => 'for _arch in "${_architectures[@]}"; do', append => "\n    source mingw-clang-env \$_arch"},
         {re => '.*source mingw-env.*', repl => ''},
     ]}
 );
@@ -72,7 +73,8 @@ sub handle_package ($src_path, $dst_path, $always_copy = 0) {
         my $pkgbuild = $src_file->slurp;
         for my $pattern (@$to_patterns) {
             my $cond = $pattern->{cond};
-            next if defined $cond && index($pkgbuild, $cond) < 0;
+            pos($pkgbuild) = 0;
+            next if defined $cond && $pkgbuild !~ m/$cond/g;
             my $re = $pattern->{re};
             my $se = $pattern->{se};
             if (defined(my $repl = $pattern->{repl})) {

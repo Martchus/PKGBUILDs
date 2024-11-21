@@ -13,7 +13,7 @@ set(CMAKE_FIND_ROOT_PATH "${CMAKE_STATIC_PREFIX};${CMAKE_FIND_ROOT_PATH}")
 #       after loading the toolchain file. The project needs to make the actual override if enforcing static libraries
 #       is required.
 set(CMAKE_FIND_LIBRARY_SUFFIXES_OVERRIDE ".a;.lib")
-set(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS} -static -static-libgcc -static-libstdc++" CACHE STRING "linker flags for static builds" FORCE)
+set(CMAKE_EXE_LINKER_FLAGS "$ENV{LDFLAGS} @EXE_LINKER_FLAGS@" CACHE STRING "linker flags for static builds" FORCE)
 set(OPENSSL_USE_STATIC_LIBS ON)
 set(BOOST_USE_STATIC_LIBS ON)
 

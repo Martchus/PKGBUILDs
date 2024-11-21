@@ -9,7 +9,7 @@
 pkgname=devtools-custom
 _pkgname=devtools
 epoch=1
-pkgver=1.1.1
+pkgver=1.2.1
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
@@ -23,7 +23,9 @@ depends=(
   bash
   binutils
   coreutils
+  curl
   diffutils
+  expac
   fakeroot
   findutils
   grep
@@ -40,16 +42,28 @@ depends=(
   subversion
 )
 makedepends=(
-  asciidoc
+  asciidoctor
   shellcheck
 )
-optdepends=('btrfs-progs: btrfs support')
+checkdepends=(
+  bats
+)
+optdepends=(
+  'btrfs-progs: btrfs support'
+  'bat: pretty printing for pkgctl search'
+  'nvchecker: pkgctl version subcommand'
+)
 source=("git+https://martchus.dyn.f3l.de/gitea/Martchus/$_pkgname.git#branch=custom-v$pkgver")
 sha256sums=('SKIP')
 
 build() {
   cd "$srcdir/${_pkgname}"
   make BUILDTOOLVER="${epoch}:${pkgver}-${pkgrel}-${arch}" PREFIX=/usr
+}
+
+check() {
+  cd "$srcdir/${_pkgname}"
+  make PREFIX=/usr test
 }
 
 package() {

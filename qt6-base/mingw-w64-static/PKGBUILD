@@ -21,13 +21,15 @@ pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 depends=('mingw-w64-crt' 'mingw-w64-cppwinrt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'
          'mingw-w64-brotli' 'mingw-w64-pcre2' 'mingw-w64-zstd')
-makedepends=('mingw-w64-cmake-static' 'mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c'
-             'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-pkg-config'
-             'qt6-base' 'ninja')
-optdepends=('mingw-w64-postgresql: PostgreSQL driver'
-            'mingw-w64-mariadb-connector-c: MariaDB driver'
-            'qt6-base: development tools')
+makedepends=('qt6-base' 'ninja' 'mingw-w64-cmake-static'
+             'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-pkg-config')
+optdepends=('qt6-base: development tools')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+if ! [[ $pkgname =~ .*-clang-.* ]]; then
+  makedepends+=('mingw-w64-postgresql' 'mingw-w64-mariadb-connector-c')
+  optdepends+=('mingw-w64-postgresql: PostgreSQL driver'
+               'mingw-w64-mariadb-connector-c: MariaDB driver')
+fi
 groups=(mingw-w64-qt6)
 _pkgfqn="qtbase-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
@@ -98,11 +100,10 @@ build() {
     fi
 
     $_arch-cmake-static -G Ninja -B build-$_arch -S $_pkgfqn \
-      -DCMAKE_CXX_STANDARD=20 \
-      -DCMAKE_CXX_FLAGS="$CXX_FLAGS -std=c++20" \
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \
       -DFEATURE_static_runtime=ON \
       -DFEATURE_openssl_linked=ON \
+      -DFEATURE_cxx20=ON \
       -DFEATURE_cpp_winrt=$_enable_winrt_support \
       -DFEATURE_pkg_config=ON \
       -DFEATURE_system_pcre2=ON \

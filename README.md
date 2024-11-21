@@ -11,9 +11,11 @@ my AUR packages, just create a PR here.
   and many more:
     * misc packages, eg. Subtitle Composer, openelec-dvb-firmware, Jangouts
     * `mingw-w64-*` packages which allow to build for Windows (i686/x86_64, libstdc++)
-      under Arch Linux with GCC, e.g. FreeType 2, Qt 5 and Qt 6 and may more
+      under Arch Linux with GCC, e.g. Boost, Qt 5 and Qt 6 and may more
     * `mingw-w64-clang-aarch64-*` packages which allow to build for Windows (aarch64,
-      libc++) via LLVM/Clang as provided by Arch Linux, so far only core packages provided
+      libc++) via LLVM/Clang as provided by Arch Linux, e.g. Boost, Qt 6 and may more
+        * These packages are mainly converted on the fly from `mingw-w64-*` packages
+          via `devel/conv-variant.pl`.
     * `mingw-w64-aarch64-*` packages which allow to build for Windows (aarch64,
       libstdc++) via GCC, so far no packages provided
         * So far GCC does not support the `aarch64-w64-mingw32` target so no packages have

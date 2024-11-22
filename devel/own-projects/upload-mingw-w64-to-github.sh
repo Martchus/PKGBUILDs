@@ -65,73 +65,78 @@ do
     pushd "$temp_dir"
 
     for variant in '' 'qt6'; do
-    [[ $variant ]] && variant_suffix=-$variant || variant_suffix=
+        [[ $variant ]] && variant_suffix=-$variant || variant_suffix=
 
-    # determine file path of arch linux package
-    pkg_name=mingw-w64-$project$variant_suffix
-    pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.!(*.sig))
-    if [[ ${#pkg_files[@]} == 0 ]]; then
-        echo "no mingw-w64$variant_suffix package for $project/v$version present"
-        continue
-    fi
-    latest_pkg_file=${pkg_files[-1]}
-
-    # extract arch linux package
-    pkg_file_name=${latest_pkg_file##*/}
-    bsdtar xJf "$latest_pkg_file"
-
-    # locate the license file
-    license_file=usr/share/licenses/$pkg_name/LICENSES-windows-distribution.md
-    if [[ ! -f $license_file ]]; then
-        echo "the package $latest_pkg_file does not include the expected license file $license_file"
-        continue
-    fi
-
-    # make a zip file for each statically linked binary
-    for arch in i686-w64-mingw32 x86_64-w64-mingw32; do
-        binaries=(usr/$arch/bin/*-static.exe)
-        for binary in ${binaries[@]}; do
-            binary_cli=${binary%-static.exe}-static-cli.exe
-            base_name=${binary##*/}
-            base_name=${base_name%-static.exe}
-            symlink_name=$base_name-$arch.exe
-            symlink_name_cli=$base_name-$arch-cli.exe
-            # consider Qt 6 the suffixless default and use suffix for Qt 5 version instead
-            if  [[ $base_name =~ .*-qt6 ]]; then
-                base_name=${base_name%-qt6}
-            else
-                base_name=${base_name}-qt5
-            fi
-            binary_name=$base_name-$version-$arch.exe
-            binary_name_cli=$base_name-$version-$arch-cli.exe
-
-            # check whether upload already exists
-            zip_file="$binary_name.zip"
-            if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
-                echo "auto-skipping $project/v$version; $zip_file already present"
+        # handle mingw-w64 packages
+        mingw_w64_pkg=(mingw-w64{,-clang-aarch64}-$project$variant_suffix)
+        for pkg_name in "${mingw_w64_pkg[@]}"; do
+            # determine file path of arch linux package
+            pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.!(*.sig))
+            if [[ ${#pkg_files[@]} == 0 ]]; then
+                echo "no package $pkg_name for $project/v$version present"
                 continue
-            elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
-                echo "auto-skipping $project/v$version; $zip_file already present (dry-run)"
+            fi
+            latest_pkg_file=${pkg_files[-1]}
+
+            # extract arch linux package
+            pkg_file_name=${latest_pkg_file##*/}
+            bsdtar xJf "$latest_pkg_file"
+
+            # locate the license file
+            license_file=usr/share/licenses/$pkg_name/LICENSES-windows-distribution.md
+            if [[ ! -f $license_file ]]; then
+                echo "the package $latest_pkg_file does not include the expected license file $license_file"
                 continue
             fi
 
-            # create zip file
-            echo "zipping $binary to $zip_file"
-            mv "$binary" "$binary_name"
-            ln -s "$binary_name" "$symlink_name"
-            additional_files=()
-            if [[ -f $binary_cli ]]; then
-                mv "$binary_cli" "$binary_name_cli"
-                ln -s "$binary_name_cli" "$symlink_name_cli"
-                additional_files+=("$binary_name_cli")
-            fi
-            license_file_2=$project-$version-$arch-LICENSES.md
-            cp "$license_file" "$license_file_2"
-            bsdtar acf "$zip_file" "$binary_name" "$license_file_2" "${additional_files[@]}"
-            zip_files+=("$zip_file")
+            # make a zip file for each statically linked binary
+            for arch in i686-w64-mingw32 x86_64-w64-mingw32 aarch64-w64-mingw32; do
+                binaries=(usr/$arch/bin/*-static.exe)
+                for binary in ${binaries[@]}; do
+                    binary_cli=${binary%-static.exe}-static-cli.exe
+                    base_name=${binary##*/}
+                    base_name=${base_name%-static.exe}
+                    symlink_name=$base_name-$arch.exe
+                    symlink_name_cli=$base_name-$arch-cli.exe
+                    # consider Qt 6 the suffixless default and use suffix for Qt 5 version instead
+                    if  [[ $base_name =~ .*-qt6 ]]; then
+                        base_name=${base_name%-qt6}
+                    else
+                        base_name=${base_name}-qt5
+                    fi
+                    binary_name=$base_name-$version-$arch.exe
+                    binary_name_cli=$base_name-$version-$arch-cli.exe
+
+                    # check whether upload already exists
+                    zip_file="$binary_name.zip"
+                    if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
+                        echo "auto-skipping $project/v$version; $zip_file already present"
+                        continue
+                    elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
+                        echo "auto-skipping $project/v$version; $zip_file already present (dry-run)"
+                        continue
+                    fi
+
+                    # create zip file
+                    echo "zipping $binary to $zip_file"
+                    mv "$binary" "$binary_name"
+                    ln -s "$binary_name" "$symlink_name"
+                    additional_files=()
+                    if [[ -f $binary_cli ]]; then
+                        mv "$binary_cli" "$binary_name_cli"
+                        ln -s "$binary_name_cli" "$symlink_name_cli"
+                        additional_files+=("$binary_name_cli")
+                    fi
+                    license_file_2=$project-$version-$arch-LICENSES.md
+                    cp "$license_file" "$license_file_2"
+                    bsdtar acf "$zip_file" "$binary_name" "$license_file_2" "${additional_files[@]}"
+                    zip_files+=("$zip_file")
+                done
+            done
         done
     done
-    done
+
+    # handle static-compat packages
     pkg_name=static-compat-$project
     pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.!(*.sig))
     if [[ ${#pkg_files[@]} == 0 ]]; then

@@ -33,8 +33,6 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
   declare -A _config_flags=(
     [shared]='
         -DBUILD_SHARED_LIBS:BOOL=ON
@@ -46,13 +44,14 @@ build() {
         -DSTATIC_LIBRARY_LINKAGE:BOOL=ON
     '
   )
-
   for _arch in "${_architectures[@]}"; do
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
       mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       ${_arch}-cmake \
         -G Ninja \
+        -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \
+        -B "build-${_arch}-${_cfg}" \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
         -DCONFIGURATION_NAME:STRING="${_cfg}" \
@@ -60,37 +59,27 @@ build() {
         -DNO_GENERATOR:BOOL=ON \
         -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
         -DVERSIONED_MINGW_LIBRARIES:BOOL=ON \
-        ${_config_flags[$_cfg]} \
-        ../
-      ninja
-      popd
+        ${_config_flags[$_cfg]}
+      VERBOSE=1 cmake --build "build-${_arch}-${_cfg}"
     done
   done
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
   for _arch in "${_architectures[@]}"; do
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
-      pushd "build-${_arch}-${_cfg}"
       export WINEPATH="/usr/${_arch}/bin" WINEDEBUG=-all
-      ninja check
-      popd
+      [[ $_cfg == shared ]] && cmake --build "build-${_arch}-${_cfg}" --target check
     done
   done
 }
 
 package() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
   for _arch in "${_architectures[@]}"; do
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
-      pushd "build-${_arch}-${_cfg}"
-      DESTDIR="${pkgdir}" ninja install-mingw-w64-strip
-      popd
+      DESTDIR="${pkgdir}" cmake --build "build-${_arch}-${_cfg}" --target install-mingw-w64-strip
     done
   done
 }

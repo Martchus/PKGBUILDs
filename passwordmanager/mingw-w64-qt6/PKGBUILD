@@ -25,8 +25,6 @@ _configurations=()
 [[ $NO_STATIC_LIBS ]] || _configurations+=('static') makedepends+=('mingw-w64-cmake-static' 'mingw-w64-qt6-base-static' 'mingw-w64-qt6-translations' 'mingw-w64-qt6-svg-static' 'breeze-icons' 'numix-icon-theme-git')
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
   declare -A _config_flags=(
     [shared]='
         -DBUILD_SHARED_LIBS:BOOL=ON
@@ -47,13 +45,13 @@ build() {
   declare -A _cfg_suffix=(
     [static]='-static'
   )
-
   for _arch in "${_architectures[@]}"; do
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
-      mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       ${_arch}-cmake${_cfg_suffix[$_cfg]} \
         -G Ninja \
+        -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \
+        -B "build-${_arch}-${_cfg}" \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
         -DCONFIGURATION_NAME:STRING="${_cfg}-qt6" \
@@ -66,27 +64,21 @@ build() {
         -DKF_PACKAGE_PREFIX:STRING=KF6 \
         -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
         -DQUICK_GUI:BOOL=OFF \
-        ${_config_flags[$_cfg]} \
-        ../
-      VERBOSE=1 ninja
-      popd
+        ${_config_flags[$_cfg]}
+      VERBOSE=1 cmake --build "build-${_arch}-${_cfg}"
     done
   done
 }
 
 package() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
   install \
     -D --target-directory="$pkgdir/usr/share/licenses/$pkgname" \
-    LICENSES-windows-distribution.md
+    "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}/LICENSES-windows-distribution.md"
 
   for _arch in "${_architectures[@]}"; do
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
-      pushd "build-${_arch}-${_cfg}"
-      DESTDIR="${pkgdir}" ninja install-mingw-w64-strip
-      popd
+      DESTDIR="${pkgdir}" cmake --build "build-${_arch}-${_cfg}" --target install-mingw-w64-strip
     done
   done
 }

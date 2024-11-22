@@ -434,6 +434,12 @@ $CXX $CXXFLAGS -mconsole -static main.cpp -o main.exe
 podman run -it --rm -v "$PWD:/pwd" linaro/wine-arm64 wine-arm64 /pwd/main.exe
 ```
 
+You can also use this approach to test graphical applications, e.g.:
+```
+xhost +local:
+podman run -it -e DISPLAY -v ~/.Xauthority:/root/.Xauthority:Z --ipc=host --net=host --rm -v "$PWD:/pwd" linaro/wine-arm64 wine-arm64 /pwd/syncthingtray.exe --windowed
+```
+
 ## Static GNU/Linux libraries
 This repository contains several `static-compat-*` packages providing static
 libraries intended to distribute "self-contained" executables. These libraries

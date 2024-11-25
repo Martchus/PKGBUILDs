@@ -31,7 +31,7 @@
 
 _qt_module=qt<%== $qt_module %>
 pkgname=<%= $package_name %>
-pkgver=5.15.15<%== $kde_fork_revision ? "+kde+r$kde_fork_revision->[0]" : '' %>
+pkgver=5.15.16<%== $kde_fork_revision ? "+kde+r$kde_fork_revision->[0]" : '' %>
 pkgrel=1
 % if ($kde_fork_revision) {
 _basever=${pkgver%%+*}

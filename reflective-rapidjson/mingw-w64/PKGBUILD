@@ -47,7 +47,6 @@ build() {
   for _arch in "${_architectures[@]}"; do
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
-      mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       ${_arch}-cmake \
         -G Ninja \
         -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \

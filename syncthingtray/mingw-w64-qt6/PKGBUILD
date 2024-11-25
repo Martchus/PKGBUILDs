@@ -117,7 +117,7 @@ build() {
         -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
         -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
         ${_config_flags[$_cfg]} \
-        ${_arch_flags[@]}
+        ${arch_flags[@]}
       VERBOSE=1 cmake --build "build-${_arch}-${_cfg}"
     done
   done

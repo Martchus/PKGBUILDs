@@ -60,7 +60,7 @@ build() {
         -DQT_PACKAGE_PREFIX:STRING=Qt6 \
         -DKF_PACKAGE_PREFIX:STRING=KF6 \
         -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
-        ${_config_flags[$_cfg]} \
+        ${_config_flags[$_cfg]}
       VERBOSE=1 cmake --build "build-${_arch}-${_cfg}"
     done
   done

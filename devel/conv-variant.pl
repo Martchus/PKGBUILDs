@@ -30,8 +30,13 @@ my %patterns = (
         {se => 'for _arch in ${_architectures}; do', append => "\n    source mingw-clang-env \$_arch"},
         {se => 'for _arch in "${_architectures[@]}"; do', append => "\n    source mingw-clang-env \$_arch"},
         {re => '.*source mingw-env.*', repl => ''},
+        {re => 'install-mingw-w64-clang-aarch64-strip', repl => 'install-mingw-w64-strip'},
     ]}
 );
+
+# allow conversion from mingw-w64-qt6 to mingw-w64-clang-aarch64-qt6 as well
+my $from_mingw = $patterns{'mingw-w64-qt6'} = $patterns{'mingw-w64'};
+$from_mingw->{'mingw-w64-clang-aarch64-qt6'} = $from_mingw->{'mingw-w64-clang-aarch64'};
 
 my $from_patterns = $patterns{$from} // {};
 my $to_patterns = $from_patterns->{$to};

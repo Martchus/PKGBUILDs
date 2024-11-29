@@ -34,9 +34,11 @@ my %patterns = (
     ]}
 );
 
-# allow conversion from mingw-w64-qt6 to mingw-w64-clang-aarch64-qt6 as well
-my $from_mingw = $patterns{'mingw-w64-qt6'} = $patterns{'mingw-w64'};
-$from_mingw->{'mingw-w64-clang-aarch64-qt6'} = $from_mingw->{'mingw-w64-clang-aarch64'};
+# allow conversion from mingw-w64-qt6 and *-static to mingw-w64-clang-aarch64-qt6 and *-static as well
+my $from_mingw = $patterns{'mingw-w64-qt6'} = $patterns{'mingw-w64-static'} = $patterns{'mingw-w64'};
+my $from_mingw_to_clang_aarch64 = $from_mingw->{'mingw-w64-clang-aarch64'};
+$from_mingw->{'mingw-w64-clang-aarch64-qt6'} = $from_mingw_to_clang_aarch64;
+$from_mingw->{'mingw-w64-clang-aarch64-static'} = $from_mingw_to_clang_aarch64;
 
 my $from_patterns = $patterns{$from} // {};
 my $to_patterns = $from_patterns->{$to};

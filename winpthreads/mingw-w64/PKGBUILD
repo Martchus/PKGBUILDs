@@ -1,4 +1,4 @@
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=mingw-w64-winpthreads
 pkgver=12.0.0
@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc='MinGW-w64 winpthreads library'
 arch=('any')
 url='https://www.mingw-w64.org'
-license=('custom')
+license=('LicenseRef-custom')
 groups=('mingw-w64-toolchain' 'mingw-w64')
 makedepends=('mingw-w64-gcc' 'mingw-w64-binutils' "mingw-w64-crt=${pkgver}")
 provides=('mingw-w64-headers-bootstrap')
@@ -22,7 +22,7 @@ _targets="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
   for _target in ${_targets}; do
-    msg "Building ${_target} winpthreads..."
+    echo "Building ${_target} winpthreads..."
     mkdir -p "$srcdir"/winpthreads-build-${_target} && cd "$srcdir"/winpthreads-build-${_target}
     "$srcdir"/mingw-w64-v${pkgver}/mingw-w64-libraries/winpthreads/configure --prefix=/usr/${_target} \
         --host=${_target} --enable-static --enable-shared
@@ -36,4 +36,9 @@ package() {
     make DESTDIR="$pkgdir" install
     ${_target}-strip --strip-unneeded "$pkgdir"/usr/${_target}/bin/*.dll
   done
+
+  # Licenses
+  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/COPYING.MinGW-w64/COPYING.MinGW-w64.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64.txt
+  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64-runtime.txt
+  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/mingw-w64-headers/ddk/readme.txt "$pkgdir"/usr/share/licenses/${pkgname}/ddk-readme.txt
 }

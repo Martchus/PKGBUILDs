@@ -1,4 +1,4 @@
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=mingw-w64-crt
 pkgver=12.0.0
@@ -6,9 +6,10 @@ pkgrel=1
 pkgdesc='MinGW-w64 CRT for Windows'
 arch=('any')
 url='https://www.mingw-w64.org'
-license=('custom')
+license=('LicenseRef-custom')
 groups=('mingw-w64-toolchain' 'mingw-w64')
-makedepends=('mingw-w64-gcc' 'mingw-w64-binutils' "mingw-w64-headers=${pkgver}")
+makedepends=("mingw-w64-headers=${pkgver}")
+[[ $pkgname =~ .*-clang-.* ]] && makedepends+=('clang' 'llvm' 'lld') || makedepends+=('mingw-w64-gcc' 'mingw-w64-binutils')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
 source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
@@ -25,7 +26,23 @@ build() {
         _crt_configure_args="--disable-lib64 --enable-lib32"
     elif [ ${_target} == "x86_64-w64-mingw32" ]; then
         _crt_configure_args="--disable-lib32 --enable-lib64"
+    elif [ ${_target} == "aarch64-w64-mingw32" ]; then
+        _crt_configure_args="--disable-lib32 --disable-lib64 --disable-libarm32 --enable-libarm64"
     fi
+    if [[ $pkgname =~ .*-clang-.* ]]; then
+        _crt_configure_args+=" --enable-cfguard"
+
+        export AR=llvm-ar ASM=clang LD=lld-link CC=clang CXX=clang++ RANLIB=llvm-ranlib DLLTOOL=llvm-dlltool
+        export ARFLAGS=""
+        export ASMFLAGS="-rtlib=compiler-rt -fuse-ld=lld -mguard=cf -target $_target -Xclang -triple -Xclang $_target"
+        export LDFLAGS="-target $_target -Xclang -triple -Xclang $_target"
+        export CFLAGS="-rtlib=compiler-rt -fuse-ld=lld -target $_target -Xclang -triple -Xclang $_target"
+        export CXXFLAGS="-rtlib=compiler-rt -fuse-ld=lld -stdlib=libc++ -target $_target -Xclang -triple -Xclang $_target"
+    fi
+    if [[ $pkgname =~ .*-clang-.* ]] || [[ $pkgname =~ .*-ucrt-.* ]]; then
+      _crt_configure_args+=" --with-default-msvcrt=ucrt --disable-dependency-tracking"
+    fi
+    echo "extra args: $_crt_configure_args"
     mkdir -p "$srcdir"/crt-${_target} && cd "$srcdir"/crt-${_target}
     "$srcdir"/mingw-w64-v${pkgver}/mingw-w64-crt/configure --prefix=/usr/${_target} \
         --host=${_target} --enable-wildcard \
@@ -39,5 +56,17 @@ package() {
     echo "Installing ${_target} crt"
     cd "$srcdir"/crt-${_target}
     make DESTDIR="$pkgdir" install
+
+    if [[ $pkgname =~ .*-clang-.* ]]; then
+      # Create empty dummy archives, to avoid failing when the compiler driver
+      # adds -lssp -lssh_nonshared when linking.
+      ar rcs "${pkgdir}"/usr/${_target}/lib/libssp.a
+      ar rcs "${pkgdir}"/usr/${_target}/lib/libssp_nonshared.a
+    fi
   done
+  # Licenses
+  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/COPYING.MinGW-w64/COPYING.MinGW-w64.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64.txt
+  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64-runtime.txt
+  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/mingw-w64-headers/ddk/readme.txt "$pkgdir"/usr/share/licenses/${pkgname}/ddk-readme.txt
+
 }

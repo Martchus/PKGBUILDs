@@ -1,7 +1,7 @@
 pkgname=mingw-w64-boost
 pkgver=1.86.0
 _boostver=${pkgver//./_}
-pkgrel=1
+pkgrel=2
 pkgdesc="Free peer-reviewed portable C++ source libraries (mingw-w64)"
 arch=('any')
 url="http://www.boost.org/"
@@ -73,6 +73,10 @@ package() {
     $_arch-strip --strip-unneeded "$pkgdir"/usr/$_arch/bin/*.dll
     #$_arch-strip -g "$pkgdir"/usr/$_arch/static/lib/*.a
     $_arch-strip -g "$pkgdir"/usr/$_arch/lib/*.a
+
+    # use static zstd with static libs
+    find "$pkgdir"/usr/$_arch/lib/cmake -ipath '*-static*' -iname '*.cmake' -exec \
+      sed -i -e 's|zstd::libzstd_shared|zstd::libzstd_static|g' {} \;
   done
   install -Dm644 "$srcdir/boost-$pkgver/LICENSE_1_0.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

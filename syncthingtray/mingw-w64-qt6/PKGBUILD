@@ -9,15 +9,12 @@ _webview_provider=${MINGW_W64_SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
 # set the JavaScript provider: either script, qml, auto or none
 _js_provider=${MINGW_W64_SYNCTHING_TRAY_JS_PROVIDER:-qml}
 
-# set whether libsyncthing should be enabled: either ON or OFF
-_enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
-
-_reponame=syncthingtray
 pkgname=mingw-w64-syncthingtray-qt6
+_reponame=syncthingtray
 _name=${pkgname#mingw-w64-}
 _name=${_name%-qt6}
-pkgver=1.6.4
-pkgrel=2
+pkgver=1.7.0
+pkgrel=1
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=(GPL-2-or-later)
@@ -28,13 +25,20 @@ depends=('mingw-w64-crt' 'mingw-w64-qt6-svg' 'mingw-w64-qtutilities-qt6' 'mingw-
 [[ $_js_provider == script ]] && depends+=('mingw-w64-qt6-script')
 [[ $_js_provider == qml ]] && depends+=('mingw-w64-qt6-declarative' 'qt6-declarative')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja')
-[[ $_enable_libsyncthing == ON ]] && makedepends+=('git' 'go')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-[[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
-sha256sums=('1d8729557d04595f814dd153fbfa5baf10b8d2c371aab20a595cb060dacd3ff4'
+sha256sums=('19e89ab3ecc228d1a5081bc50bf856b684f6336400726c45011ebad4fcde2519'
             'SKIP')
 options=(!buildflags staticlibs !strip !emptydirs)
+
+# set whether libsyncthing should be enabled: either ON or OFF
+[[ $pkgname =~ .*-clang-.* ]] \
+  && _enable_libsyncthing=${MINGW_W64_CLANG_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-OFF} \
+  || _enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
+if [[ $_enable_libsyncthing == ON ]]; then
+  makedepends+=('git' 'go')
+  source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
+fi
 
 _architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})
 _configurations=()

@@ -2,7 +2,7 @@
 set -e # abort on first error
 shopt -s nullglob
 shopt -s extglob
-path=$(dirname $0)
+path=$(realpath "$(dirname $0)")
 source "$path/../versions.sh"
 
 if ! [[ $DRY_RUN ]] && ! [[ $GITHUB_TOKEN ]]; then

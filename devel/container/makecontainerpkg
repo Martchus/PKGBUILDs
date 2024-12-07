@@ -12,9 +12,11 @@ if [[ $CONTAINER ]]; then
 else
     if [[ $PKGNAME ]]; then
         pkgname=$PKGNAME
-    else
+    elif [[ -e PKGBUILD ]]; then
         source PKGBUILD
         pkgname=$(echo "$pkgname" | tr '+' 'p')
+    else
+        pkgname=nopkg
     fi
     uuid=$(cat /proc/sys/kernel/random/uuid)
     name=$tool-$pkgname-$uuid

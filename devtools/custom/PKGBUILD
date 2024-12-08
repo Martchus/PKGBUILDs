@@ -9,7 +9,7 @@
 pkgname=devtools-custom
 _pkgname=devtools
 epoch=1
-pkgver=1.2.1
+pkgver=1.3.0
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
@@ -28,7 +28,9 @@ depends=(
   expac
   fakeroot
   findutils
+  glow
   grep
+  gum
   jq
   openssh
   parallel

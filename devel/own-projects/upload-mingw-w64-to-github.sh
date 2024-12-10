@@ -2,7 +2,8 @@
 set -e # abort on first error
 shopt -s nullglob
 shopt -s extglob
-source "$(dirname $0)/../versions.sh"
+path=$(dirname $0)
+source "$path/../versions.sh"
 
 if ! [[ $DRY_RUN ]] && ! [[ $GITHUB_TOKEN ]]; then
     echo "Don't forget to set \$GITHUB_TOKEN."
@@ -35,6 +36,7 @@ if [[ $DRY_RUN ]]; then
 fi
 
 projects=(${PROJECTS:-${!versions[@]}})
+errors=()
 
 if [[ $EXPERIMENTAL ]]; then
     repo_dir=${PATH_REPO_OWNSTUFF_EXPERIMENTAL}
@@ -114,6 +116,17 @@ do
                         continue
                     elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
                         echo "auto-skipping $project/v$version; $zip_file already present (dry-run)"
+                        continue
+                    fi
+
+                    # check whether exe is actually self-contained
+                    binaries=("$binary")
+                    [[ -e $binary_cli ]] && binaries+=("$binary_cli")
+                    if "$path/is-self-contained-exe.sh" "${binaries[@]}"; then
+                        echo "$binary is self-contained"
+                    else
+                        echo "skipping $binary as it is not self-contained"
+                        errors+=("$binary as it is not self-contained")
                         continue
                     fi
 
@@ -218,3 +231,6 @@ do
     popd
     rm -r "$temp_dir"
 done
+
+for error in "${errors[@]}"; do echo "error: $error"; done
+[[ ${errors[@]} == 0 ]] && exit 0 || exit 1

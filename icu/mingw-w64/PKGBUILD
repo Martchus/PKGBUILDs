@@ -49,10 +49,10 @@ build() {
   CC=gcc CXX=g++ ../configure --enable-static --disable-shared
   make
   popd
+  # add flag to prevent `error: unable to find numeric literal operator ‘operator""Q’`
+  [[ $pkgname =~ .*-clang-.* ]] || export CFLAGS+=-fext-numeric-literals CXXFLAGS+=-fext-numeric-literals
   for _arch in ${_architectures}; do
     mkdir build-${_arch} && pushd build-${_arch}
-    # add flag to prevent `error: unable to find numeric literal operator ‘operator""Q’`
-    [[ $pkgname =~ .*-clang-.* ]] || export CFLAGS+=-fext-numeric-literals CXXFLAGS+=-fext-numeric-literals
     ${_arch}-configure \
       --with-cross-build=${PWD}/../nativebuild \
       --with-data-packaging=library \

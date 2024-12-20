@@ -2,19 +2,19 @@
  
 _realname=fluidsynth
 pkgname=mingw-w64-fluidsynth
-pkgver=2.3.5
+pkgver=2.4.1
 pkgrel=1
 pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications (mingw-w64)"
-url="http://www.fluidsynth.org/"
+url="https://www.fluidsynth.org/"
+license=(LGPL-2.1-or-later)
 arch=('any')
-license=('LGPL')
 #depends=('mingw-w64-sdl2' 'mingw-w64-glib2')
 depends=('mingw-w64-sdl2' 'mingw-w64-glib2' 'mingw-w64-libsndfile' 'mingw-w64-portaudio' 'mingw-w64-readline')
 makedepends=('mingw-w64-cmake' 'mingw-w64-pkg-config' 'ninja')
 options=('staticlibs' '!buildflags' '!strip')
 source=("${_realname}-${pkgver}.tar.gz::https://github.com/FluidSynth/${_realname}/archive/v${pkgver}.tar.gz")
-sha512sums=('35eaea8c1709ebbd5dee8f3946ab59c39afe31d92b972a44013fa23987aa48936f7d1326d5bda81c6e66f02bf988e48601367d49276a4dd78dbca7a2571f5e57')
-b2sums=('11f04d2a508f54c4bd03c867e81528f36eeb5698ad017d7fe778349b5ab91dc9e518d426d2394e748344795b8c1bf86eeaee97294ad66974db07587d0a80797a')
+sha512sums=('d01d18c42ce98d0daa4e137118fc41f0a59047013870c09bacd9014baadf747e8e73571046781e34bc03eef454f2ef12ee59cf9b2c7f9517c586c08041ebe081')
+b2sums=('15ed3a808d0c0123226a087520564c2833d43c20fd8b6aa273a7467a74d92b8a67159fc960ad2f3a5d764b8e95ec25c1ec045c203058ceb83bfc276408d96b58')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -26,10 +26,12 @@ build() {
     
     export CFLAGS="$cflags_base"
     ${_arch}-cmake -G Ninja -S .. -B shared -DBUILD_SHARED_LIBS=1 -Denable-portaudio=1 -Denable-dbus=0
+    sed -i -e "s|/usr/$_arch/lib/libSDL2main.a||g" shared/build.ninja
     VERBOSE=1 cmake --build shared
-	
+
     export CFLAGS="$cflags_base -DGLIB_STATIC_COMPILATION=1 -DGMODULE_STATIC_COMPILATION=1"
     ${_arch}-cmake -G Ninja -S .. -B static -DBUILD_SHARED_LIBS=0 -Denable-aufile=0 -Denable-dbus=0 -Denable-ipv6=0 -Denable-jack=0 -Denable-ladspa=0 -Denable-midishare=0 -Denable-opensles=0 -Denable-oboe=0 -Denable-oss=0 -Denable-readline=0 -Denable-winmidi=1 -Denable-waveout=0 -Denable-network=0 -Denable-pulseaudio=0 -Denable-dsound=0 -Denable-alsa=0 -Denable-libinstpatch=0 -Denable-portaudio=0 -Denable-wasapi=0 -Denable-openmp=1 -Denable-libsndfile=0 -Denable-sdl2=1
+    sed -i -e "s|/usr/$_arch/lib/libSDL2main.a||g" static/build.ninja
     VERBOSE=1 cmake --build static
     popd
   done

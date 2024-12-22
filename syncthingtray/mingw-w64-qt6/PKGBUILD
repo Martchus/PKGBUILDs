@@ -17,7 +17,7 @@ pkgname=mingw-w64-syncthingtray-qt6
 _name=${pkgname#mingw-w64-}
 _name=${_name%-qt6}
 pkgver=1.6.4
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=(GPL-2-or-later)
@@ -92,7 +92,7 @@ build() {
       msg2 "${_arch}-${_cfg}"
       local arch_flags=()
       [[ $_arch =~ aarch64-.* ]] && arch_flags+=(
-        -DUSE_BOOST_PROCESS:BOOL=OFF
+        -DUSE_BOOST_PROCESS:BOOL=ON # supposed to work on Windows on ARM as of Boost 1.87.0
       )
       ${_arch}-cmake${_cfg_suffix[$_cfg]} \
         -G Ninja \

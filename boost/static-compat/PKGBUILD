@@ -11,7 +11,7 @@
 
 _pkgname=boost
 pkgname=static-compat-$_pkgname
-pkgver=1.86.0
+pkgver=1.87.0
 pkgrel=1
 _srcname=boost_${pkgver//./_}
 pkgdesc="Free peer-reviewed portable C++ source libraries"
@@ -22,7 +22,7 @@ options=('staticlibs')
 depends=('static-compat-zlib' 'static-compat-zstd' 'static-compat-bzip2')
 makedepends=('static-compat-environment')
 source=(https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.bz2)
-sha256sums=('1bed88e40401b2cb7a1f76d4bab499e352fa4d0c5f31c0dbae64e24d34d7513b')
+sha256sums=('af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89')
 
 prepare() {
   cd $_srcname

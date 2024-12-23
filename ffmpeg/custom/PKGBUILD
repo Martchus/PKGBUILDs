@@ -10,7 +10,7 @@
 _name=ffmpeg
 pkgname=ffmpeg-custom
 pkgver=7.1
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
 arch=('x86_64')
@@ -223,7 +223,6 @@ build() {
     --enable-nvenc \
     --enable-opencl \
     --enable-opengl \
-    --enable-omx \
     --enable-shared \
     --enable-version3 \
     --enable-vulkan \

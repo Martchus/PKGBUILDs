@@ -26,6 +26,10 @@ build() {
     mkdir -p "${srcdir}/${_name}-${pkgver}/build-${_arch}"
     cd "${srcdir}/${_name}-${pkgver}/build-${_arch}"
     ${_arch}-configure
+    if [[ $pkgname =~ .*-clang-.* ]]; then
+      # workaround libtool issue, see https://github.com/mstorsjo/llvm-mingw#known-issues
+      sed -i -e 's|-nostdlib||g' libtool
+    fi
     make
   done
 }

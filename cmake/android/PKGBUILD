@@ -2,7 +2,7 @@
 
 pkgname=android-cmake
 pkgver=1
-pkgrel=3
+pkgrel=4
 arch=('any')
 pkgdesc="CMake wrapper for Android"
 depends=('cmake'

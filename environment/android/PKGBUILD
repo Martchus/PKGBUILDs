@@ -1,5 +1,5 @@
 pkgname=android-environment
-pkgver=6
+pkgver=7
 pkgrel=1
 pkgdesc='Script providing common environment variables and functions for Android builds.'
 arch=('any')

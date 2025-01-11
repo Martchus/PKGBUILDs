@@ -18,7 +18,7 @@ depends=("android-${_android_arch}-bzip2"
          "android-${_android_arch}-zstd")
 makedepends=('android-environment')
 options=(!strip !buildflags staticlibs !emptydirs)
-source=("https://boostorg.jfrog.io/artifactory/main/release/$pkgver/source/$_srcname.tar.bz2"
+source=("https://archives.boost.io/release/${pkgver}/source/${_srcname}.tar.bz2"
         "disable-version-check.patch")
 sha256sums=('af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89'
             '63d12e7d703b471882608b4225c489f6a35ab425602783a4f9c4ea99a10f9c4b')

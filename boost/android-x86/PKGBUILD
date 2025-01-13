@@ -6,7 +6,7 @@
 _android_arch=x86
 pkgname=android-${_android_arch}-boost
 pkgver=1.87.0
-pkgrel=1
+pkgrel=2
 _srcname=boost_${pkgver//./_}
 arch=('any')
 pkgdesc="Free peer-reviewed portable C++ source libraries (Android, ${_android_arch})"

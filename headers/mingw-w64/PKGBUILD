@@ -2,7 +2,7 @@
 
 pkgname=mingw-w64-headers
 pkgver=12.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="MinGW-w64 headers for Windows"
 arch=('any')
 url="https://www.mingw-w64.org"

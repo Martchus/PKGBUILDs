@@ -1,6 +1,6 @@
 pkgname=mingw-w64-clang-aarch64-compiler-rt
 pkgver=19.1.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Compiler runtime libraries for clang (mingw-w64)"
 arch=('any')
 url="https://compiler-rt.llvm.org/"

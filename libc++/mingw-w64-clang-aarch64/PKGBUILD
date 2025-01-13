@@ -27,10 +27,15 @@ build() {
 
   source mingw-clang-env $_target
 
+  # avoid build errors caused by inclusion of headers from existing mingw-w64-clang-aarch64-libc++ package
+  # note: mingw-w64-clang-aarch64-cmake pulls the existing package into the build env.
+  export CXXFLAGS=${CXXFLAGS/-isystem\/usr\/aarch64-w64-mingw32\/include\/c++\/v1/}
+
   $_target-cmake \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_COMPILER_WORKS=1 \
+    -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
     -DLLVM_ENABLE_RUNTIMES="libunwind;libcxxabi;libcxx" \
     -DLIBUNWIND_USE_COMPILER_RT=ON \
     -DLIBUNWIND_ENABLE_SHARED=ON \

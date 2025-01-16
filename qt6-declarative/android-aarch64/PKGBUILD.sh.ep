@@ -2,7 +2,7 @@
 \
 _qtver=6.8.1
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -13,3 +13,15 @@ optdepends=('qt6-declarative: development tools')
 conflicts=(<%== qt6deps qw(quickcontrols2) %>)
 provides=(<%== qt6deps qw(quickcontrols2) %>)
 replaces=(<%== qt6deps qw(quickcontrols2) %>)
+% \
+% content_for additional_cmake_args => begin
+ \\
+    -DFEATURE_quickcontrols2_quick_designer=OFF \\
+    -DFEATURE_quickcontrols2_fusion=OFF \\
+    -DFEATURE_quickcontrols2_imagine=OFF \\
+    -DFEATURE_quickcontrols2_universal=OFF \\
+    -DFEATURE_quickcontrols2_fluentwinui3=OFF \\
+    -DFEATURE_quickcontrols2_macos=OFF \\
+    -DFEATURE_quickcontrols2_ios=OFF \\
+    -DFEATURE_quickcontrols2_windows=OFF\
+% end

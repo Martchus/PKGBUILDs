@@ -13,7 +13,7 @@ _android_arch=x86-64
 pkgname=android-x86-64-qt6-base
 _qtver=6.8.1
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -49,26 +49,30 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0015-Link-corelib-correctly-against-runtimeobject-when-co.patch'
         '0016-Workaround-linker-error-about-missing-symbol-__sync_.patch'
         '0017-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
-        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch')
+        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
+        '0019-Android-Quit-hosting-Context-only-when-app-is-entire.patch'
+        '0020-Allow-handling-Android-activity-lifecycle-by-user-pr.patch')
 sha256sums=('40b14562ef3bd779bc0e0418ea2ae08fa28235f8ea6e8c0cb3bce1d6ad58dcaf'
-            'd9e52174bc67de800d8c7d6849d57070b9c252822aa155965885ecbaf6a599e6'
-            '5ad195693ee54833f16dc8dd2645e8eb929818591e8dfde1bdd90933d5769552'
-            '7c3d0814ab948a2974f26a74d33d16be18f7c3dee9e656920e0310c97ed26c70'
-            '83dfad20eefddfb0959a99fcbb99cddcf49469bbf2fe2aef138e77e57594ecf6'
-            'd65c79d9ab12e9e7b15918ba5567c3d792761bb922473a06ab7762aa7e46e4e7'
-            '9e9fb4f4f2ed25310e3b9d8983777deb1d7bc70b254bccfbe0a00740c42dbc42'
-            '6ff6ef06978ecf35eb58d3c9adc635469d860704d47bb04c1e0a002afb32fcb9'
-            '15959b2a4aa423355632a01729f2f9d28328b66222c09728437caccabdd89eff'
-            '697651aefb33425e7cddefc73c93149f8f99adcfbc5723a459c665d9ee125a70'
-            '353b5cd748e0d5f6f8c6297436e716ed85d8dc3e6ea1d4df4150407c4f2e26d0'
-            'b764833f2ad995387edcc1c69d0dc77a601b44d36817765b94d7b7b1b4f8fa9c'
-            '612d637d1a1ecf3f6e69383bd24f17fc3870dddf73294f355f1272c732df01c4'
-            'd62957971a884702f6bb211ff49f2806ce0d61fb09ecb372832a5a787cb97ecc'
-            'b6be14723fb82d0b0bb4faa8d530d0ec05e65d514862961002e99501d88a9eae'
-            'f3635b1ad1b4630b214fbac3140710d10fb55c1199a48c40d22c336ae1836bb2'
-            '6a319f037b4643cb4c2d71574713719a2941e094a080d01b55befb624f00d638'
-            '1f38dbf9f3ee5dd47c54e5365f5ee0cfcdceb897e53af4d26a476cab15161b5d'
-            '7b5f30fbf757647a58230c709d97f980e6019562da549aa714a6855287ddd4d2')
+            '48ec451323a8293be67869a26dcccd8573425d96d2be80c2680502ea7af06663'
+            '6ff5c6fcafab187ab9e636759ac61341292a1d0726bf9506df527da08b61ec32'
+            'be26f1cd11086e582e27e90055ce89668d009d05bbc9928fcc2c684e5a2c3f7d'
+            '158c734b400cbbfad209ce2ca58cd2c9627a2e1555f9b81f1d303aacae2bf232'
+            '0e284eac74f1865693bd2799480eee8be43eb7b94a5a736cd578bcc4bf8397f4'
+            'd1857b5ce72e0534df5396919802d77f7a084fc94478ccb7b1a73ecccfe1c473'
+            'c3d77455ceb849b2356af6d86585759d7fad219203cf7e842074af9b53d8edbd'
+            'e0d81fbb03fa65a0c8afe7e2920a8f08dd006f0fb5b3f67d56f3f55da349a69f'
+            '30de2ff2a83f9b7e675e01e1fba9ad4a471f04bb83f607cd3abdfd19c9875d51'
+            '61cd378e1b74fc8da0d82d139f35dedcbca32399cdff064f41dadb7c108ba64b'
+            '0a0e162ca753e85e9f249dd3515cd1ae8a74ab01ffd4f87e8f6720582adcae10'
+            '2a3711ced287367d8b4c667c47ff9bfa98d73f679fbb131025dcacc6aa5dc15e'
+            '2fdba643908e000b9d1742bd04d74222a63c7f677cc6c24015ca5055b8333ca4'
+            '995923a07aff2c78b0f094fabab1c1539e12148546c9d0280f0f21fe06a4aa56'
+            'ce056c17b84679ef0d75374154e483c37732d2505580f607f3542a65760cffb6'
+            '9b9e8bb6306e76df261c016cdbb53f845e560231806b34aee2e31ff4cf69d9ea'
+            '5106989fdf153494b98685924c8fded94b51a5a12c49ae3626c71f9733ac4e01'
+            '2b5a2dcec2577e7d30e27b3a3b46ba0185937384817a985b8333f6e4a91b9c6c'
+            '550e89a1afb42269659bc87b645a8ce4f6a50586dea8a206d621a5fc1c030939'
+            '24bcffb19ca747ba839f8d28ed8f7b6ef053024d95cac2b9e6c370cad4b79b21')
 
 prepare () {
   cd $_pkgfqn

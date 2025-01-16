@@ -73,7 +73,7 @@ sha256sums=('40b14562ef3bd779bc0e0418ea2ae08fa28235f8ea6e8c0cb3bce1d6ad58dcaf'
             '5106989fdf153494b98685924c8fded94b51a5a12c49ae3626c71f9733ac4e01'
             '2b5a2dcec2577e7d30e27b3a3b46ba0185937384817a985b8333f6e4a91b9c6c'
             '550e89a1afb42269659bc87b645a8ce4f6a50586dea8a206d621a5fc1c030939'
-            '24bcffb19ca747ba839f8d28ed8f7b6ef053024d95cac2b9e6c370cad4b79b21')
+            '508c84c8863e088f2463cd276c10f1462bfda75d8f60eef239b66f1361894991')
 
 # disable i686 build because 32-bit Windows is generally not supported by upstream and
 # it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)

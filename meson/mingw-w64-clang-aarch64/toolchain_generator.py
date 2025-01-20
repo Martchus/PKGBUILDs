@@ -44,6 +44,7 @@ class CrossFileGenerator:
 				'strip':"'mingw-llvm-strip'".format(self.arch),
 				'windres':"'mingw-llvm-windres'".format(self.arch),
 				'dlltool':"'llvm-dlltool'".format(self.arch),
+				'cmake':"'{}-cmake'".format(self.arch),
 				}
 		if self.need_exe_wrapper:
 			binaries.update({'exe_wrapper':"'{}-wine'".format(self.arch)})

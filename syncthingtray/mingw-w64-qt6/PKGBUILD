@@ -9,11 +9,16 @@ _webview_provider=${MINGW_W64_SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
 # set the JavaScript provider: either script, qml, auto or none
 _js_provider=${MINGW_W64_SYNCTHING_TRAY_JS_PROVIDER:-qml}
 
+# define package name with additional variants for experimentation that can be uncommented
 pkgname=mingw-w64-syncthingtray-qt6
+#pkgname=mingw-w64-syncthingtray-qt6-libst # enable libsyncthing regardless of env
+#pkgname=mingw-w64-syncthingtray-qt6-libst-no-mguard-cgo # do not pass mguard to cgo flags
+#pkgname=mingw-w64-syncthingtray-qt6-libst-no-mguard-all # do not use mguard at all (of course deps are still built with it)
+
 _reponame=syncthingtray
 _name=${pkgname#mingw-w64-}
-_name=${_name%-qt6}
-pkgver=1.7.1
+_name=${_name%-qt6*}
+pkgver=1.7.2
 pkgrel=1
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
@@ -27,7 +32,7 @@ depends=('mingw-w64-crt' 'mingw-w64-qt6-svg' 'mingw-w64-qtutilities-qt6' 'mingw-
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('2c9cc5bef94736688ce2862f987cc6732dee25768b61a33b24ff1258a0a66b7a'
+sha256sums=('fdea38ae68ff64bdfb00d09e2cccfb509bb44eafcd33f62998a3811a4910b9ea'
             'SKIP')
 options=(!buildflags staticlibs !strip !emptydirs)
 
@@ -35,6 +40,7 @@ options=(!buildflags staticlibs !strip !emptydirs)
 [[ $pkgname =~ .*-clang-.* ]] \
   && _enable_libsyncthing=${MINGW_W64_CLANG_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-OFF} \
   || _enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
+[[ $pkgname =~ .*-libst.* ]] && _enable_libsyncthing=ON
 if [[ $_enable_libsyncthing == ON ]]; then
   makedepends+=('git' 'go')
   source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
@@ -95,9 +101,32 @@ build() {
     for _cfg in "${_configurations[@]}"; do
       msg2 "${_arch}-${_cfg}"
       local arch_flags=()
+      # add arch-specific configuration
       [[ $_arch =~ aarch64-.* ]] && arch_flags+=(
         -DUSE_BOOST_PROCESS:BOOL=ON # supposed to work on Windows on ARM as of Boost 1.87.0
       )
+      # allow building experimental variants without mguard
+      if [[ $pkgname =~ .*-clang-.*-no-mguard-.* ]]; then
+        cppflags_no_mguard=${CPPFLAGS//-mguard=cf/}
+        cflags_no_mguard=${CFLAGS//-mguard=cf/}
+        cxxflags_no_mguard=${CXXFLAGS//-mguard=cf/}
+        ldflags_no_mguard=${LDFLAGS//-mguard=cf/}
+        if [[ $pkgname =~ .*-clang-.*-no-mguard-all.* ]]; then
+          arch_flags+=(
+            -DCMAKE_C_FLAGS="$cflags_no_mguard"
+            -DCMAKE_CXX_FLAGS="$cxxflags_no_mguard"
+            -DCMAKE_EXE_LINKER_FLAGS="$ldflags_no_mguard"
+            -DCMAKE_SHARED_LINKER_FLAGS="$ldflags_no_mguard"
+            -DCMAKE_MODULE_LINKER_FLAGS="$ldflags_no_mguard"
+          )
+        elif [[ $pkgname =~ .*-clang-.*-no-mguard-cgo.* ]]; then
+          arch_flags+=(
+            -DCGO_CFLAGS_OVERRIDE="$cflags_no_mguard"
+            -DCGO_CXXFLAGS_OVERRIDE="$cxxflags_no_mguard"
+            -DCGO_LDFLAGS_OVERRIDE="$ldflags_no_mguard"
+          )
+        fi
+      fi
       ${_arch}-cmake${_cfg_suffix[$_cfg]} \
         -G Ninja \
         -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \
@@ -121,7 +150,7 @@ build() {
         -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
         -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
         ${_config_flags[$_cfg]} \
-        ${arch_flags[@]}
+        "${arch_flags[@]}"
       VERBOSE=1 cmake --build "build-${_arch}-${_cfg}"
     done
   done

@@ -8,7 +8,7 @@ epoch=2
 pkgdesc="Vulkan header files"
 arch=(any)
 url="https://www.khronos.org/vulkan/"
-license=('APACHE')
+license=('Apache-2.0')
 makedepends=(static-compat-cmake git)
 provides=("static-compat-vulkan-hpp=${pkgver}")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KhronosGroup/Vulkan-Headers/archive/v${pkgver}.tar.gz")

@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=wasm-qt6-tools
-_qtver=6.8.1
+_qtver=6.8.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -18,8 +18,8 @@ groups=(wasm-qt6)
 _pkgfqn="qttools-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Enable-only-SQL-plugins-which-are-known-to-work.patch')
-sha256sums=('403115d8268503c6cc6e43310c8ae28eb9e605072a5d04e4a2de8b6af39981f7'
-            '1832c6aa05d193cbb7dbe6be70fb547bdb1869b2bac70370a81081933c5c0020')
+sha256sums=('326381b7d43f07913612f291abc298ae79bd95382e2233abce982cff2b53d2c0'
+            'd6bdb507b7aae7364ca6384cf454ca6d6b2b07bb581046b9aaab2fa7eef5f277')
 
 prepare () {
   cd $_pkgfqn

@@ -1,4 +1,4 @@
-From d86808ebaea9039d2008cadbe204dc17a949e4b3 Mon Sep 17 00:00:00 2001
+From fafca93bea890b2469b421de73626488cace7b8a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 9 Jun 2024 23:31:12 +0200
 Subject: [PATCH 18/20] Fix configuration when `EMSCRIPTEN_ROOT` is an absolute

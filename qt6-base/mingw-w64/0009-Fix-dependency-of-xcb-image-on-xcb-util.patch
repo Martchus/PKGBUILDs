@@ -1,4 +1,4 @@
-From 85b2822b7e27f2af455a3a762e4341928df5d6f1 Mon Sep 17 00:00:00 2001
+From 0ca05e7a569076631bdf958fa9e813e9c90e1a50 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 24 Apr 2022 23:49:36 +0200
 Subject: [PATCH 09/20] Fix dependency of xcb-image on xcb-util

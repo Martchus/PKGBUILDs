@@ -1,4 +1,4 @@
-From b2e37ce6e9af0ce7975d55de9ca103624ef65d36 Mon Sep 17 00:00:00 2001
+From e23994459a5ad11c367465a3c287d4e409963efe Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 16 Jan 2025 21:21:50 +0100
 Subject: [PATCH 20/20] Allow handling Android activity lifecycle by user
@@ -10,7 +10,7 @@ Change-Id: I52107fadaea431c2932c1a1948ca7d2c889abd6d
  1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/src/android/jar/src/org/qtproject/qt/android/QtActivityBase.java b/src/android/jar/src/org/qtproject/qt/android/QtActivityBase.java
-index 248c0696680..c1175c6d720 100644
+index 79c67d87823..cac5fb7200b 100644
 --- a/src/android/jar/src/org/qtproject/qt/android/QtActivityBase.java
 +++ b/src/android/jar/src/org/qtproject/qt/android/QtActivityBase.java
 @@ -73,7 +73,7 @@ public class QtActivityBase extends Activity

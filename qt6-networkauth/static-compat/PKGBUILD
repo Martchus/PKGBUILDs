@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-networkauth
-_qtver=6.8.1
+_qtver=6.8.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -16,7 +16,7 @@ makedepends=(static-compat-cmake ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtnetworkauth-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('118664ba929c5fbbdf822438bd69bd43674cfee82e504e143da600fe47c74024')
+sha256sums=('d495b4b527ec87aba65af1a8e20291eb0a4826ddfafa78b0cb0ac1ef4455b4d7')
 
 build() {
   check_buildoption ccache y && ccache_args='

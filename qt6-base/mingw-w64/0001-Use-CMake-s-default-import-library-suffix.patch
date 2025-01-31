@@ -1,4 +1,4 @@
-From 9230c43da2d9ae03a14cddc39ae1aa8b16336aa6 Mon Sep 17 00:00:00 2001
+From 89a14d7674193cbf134b842cda58bfe7873d4ff4 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 5 Nov 2020 22:08:10 +0100
 Subject: [PATCH 01/20] Use CMake's default import library suffix

@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=wasm-qt6-webview
-_qtver=6.8.1
+_qtver=6.8.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -17,7 +17,7 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(wasm-qt6)
 _pkgfqn="qtwebview-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('7cb89d41593876b176368b15c1cded3d5a3c4fdf7e0a10f0c61021e3e8c179f3')
+sha256sums=('86b436271193d958119bf8866dec16b6ad3879c8e3e06458e3f79ca846bed043')
 
 build() {
   export EMSDK=/usr/lib/emscripten

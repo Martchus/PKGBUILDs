@@ -1,4 +1,4 @@
-From bcb48a193109d94c8d288ec81443c597181c6cae Mon Sep 17 00:00:00 2001
+From d6593202375650617d010e5ba1cd773c8bf51416 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Tue, 7 Nov 2023 23:58:54 +0100
 Subject: [PATCH 12/20] Allow overriding preference for shared libzstd library

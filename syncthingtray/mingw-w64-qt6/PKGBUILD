@@ -31,9 +31,10 @@ depends=('mingw-w64-crt' 'mingw-w64-qt6-svg' 'mingw-w64-qtutilities-qt6' 'mingw-
 [[ $_js_provider == qml ]] && depends+=('mingw-w64-qt6-declarative' 'qt6-declarative')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
+        https://github.com/Martchus/syncthingtray/commit/bd4cbd10c10daa5cd71b464c3f14f13a55bf467f.patch)
 sha256sums=('fdea38ae68ff64bdfb00d09e2cccfb509bb44eafcd33f62998a3811a4910b9ea'
-            'SKIP')
+            'c8d1ec2394ec006e70ef54fc903655aef74e2e0b65fac9af700363b8b8109de4')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 # set whether libsyncthing should be enabled: either ON or OFF
@@ -44,6 +45,7 @@ options=(!buildflags staticlibs !strip !emptydirs)
 if [[ $_enable_libsyncthing == ON ]]; then
   makedepends+=('git' 'go')
   source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
+  sha256sums+=('SKIP')
 fi
 
 _architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})
@@ -61,6 +63,8 @@ fi
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  patch -p1 -i ../bd4cbd10c10daa5cd71b464c3f14f13a55bf467f.patch
 
   # ensure path where the libsyncthing Git submodule would be cloned into exists
   mkdir -p 'syncthing/go/src/github.com/syncthing'

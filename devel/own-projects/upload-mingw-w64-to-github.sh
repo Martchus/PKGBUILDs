@@ -35,7 +35,7 @@ if [[ $DRY_RUN ]]; then
     target=${DRY_RUN_TARGET:-$PWD} 
 fi
 
-projects=tageditor # (${PROJECTS:-${!versions[@]}})
+projects=(${PROJECTS:-${!versions[@]}})
 errors=()
 
 if [[ $EXPERIMENTAL ]]; then

@@ -1,7 +1,7 @@
-From a1640442d2ac1a69a7790d7906c0f131cf9a175e Mon Sep 17 00:00:00 2001
+From ef6fa30284a4a6f247004e0b54e95e8013f3b69c Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 8 Nov 2020 00:34:09 +0100
-Subject: [PATCH 07/20] Allow overriding CMAKE_FIND_LIBRARY_SUFFIXES to prefer
+Subject: [PATCH 07/18] Allow overriding CMAKE_FIND_LIBRARY_SUFFIXES to prefer
  static libraries
 
 Change-Id: Ibb688ac503ecdf1dd3bd838890efdfc01bf706aa

@@ -11,7 +11,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=mingw-w64-qt6-base
-_qtver=6.8.2
+_qtver=6.9.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -46,34 +46,30 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0011-Allow-using-properties-of-PkgConfig-targets-for-Wayl.patch'
         '0012-Allow-overriding-preference-for-shared-libzstd-libra.patch'
         '0013-Fix-errors-due-to-disabled-exceptions-with-cpp_winrt.patch'
-        '0014-Fix-setting-exception-flags-of-plugin-targets.patch'
-        '0015-Link-corelib-correctly-against-runtimeobject-when-co.patch'
-        '0016-Workaround-linker-error-about-missing-symbol-__sync_.patch'
-        '0017-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
-        '0018-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
-        '0019-Android-Quit-hosting-Context-only-when-app-is-entire.patch'
-        '0020-Allow-handling-Android-activity-lifecycle-by-user-pr.patch')
+        '0014-Link-corelib-correctly-against-runtimeobject-when-co.patch'
+        '0015-Workaround-linker-error-about-missing-symbol-__sync_.patch'
+        '0016-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
+        '0017-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
+        '0018-Allow-handling-Android-activity-lifecycle-by-user-pr.patch')
 sha256sums=('012043ce6d411e6e8a91fdc4e05e6bedcfa10fcb1347d3c33908f7fdd10dfe05'
-            '051cb9dcb386b105041ed6ae0a38e93065bde09d6b882d5447d8f1bd5670254b'
-            '039404d6756fb098f5903276121f1ad9e3d64f7eb3296b34cc8c1eebc5b63da6'
-            '43159d690844ed17335887d2114ecc9ac21f44fe57206e266e646108f5184dd8'
-            '2abdcfb3b908675f9ad5b4202ce049817921429a6c40098d084ec52468748973'
-            '89010fd80362c9f453a68217f4efa5555588694364cceb839912031ef058a937'
-            '7bf5497774491bfef0408009381de60bf6900636305e772adcfc5e45e1a3c0bb'
-            '024cf2b14e8684dbca4399eda2dd6f413e35c92f7233163ddf2f4308d76cfdc6'
-            'ca97fe8f78483922308c0d690fe8c68f865bc3993ed9aa392d4e0c8982534c2b'
-            '45aac954f872cb94801de47e959eb9ebcb160ff17e39669ad6d4e90443ca46dc'
-            '47dce10c6ee16971a38a0112ca2011f90c035f78c9ac66e948ff58f1cd7a4cf2'
-            '1a2fe9b452fbe72bd7216ef0dff760044579fd43c859c2e4d52c07cf8e336eab'
-            '0fe1cc0c25e72346c1f6659e37b3df8866b36e2df28a093697b01fdab32d5303'
-            '605d3460fa2a008d2be22f257595f9b39a6d5acd4bd2825f90dae50aecd26fa6'
-            '4f352e3e26d6eddf99782a4e492078c3d30f60f035a54ad6c12f054a016c201f'
-            '14f6ba22d257c815b7d75f5a68bbd24d9bb2eabfe97194b78a95a996f9e6ad65'
-            '33ab37d8b69cb3d69986ae993439a19daba04905c4222830b7c6c6bb0903e712'
-            '589127fc77d0a52952fda679953e085a13f8a63e1c871c3faf9a4fb61356bd3a'
-            '7b7497a62d4d0a259f53ff9e1edf2a4ade7260e9a94d00ce922f670424a9ecd2'
-            '77e5e4e3d2f32184fa615f8cd4c8e165f6122d822c4a74d3485554680a4f9aef'
-            '103d819d4b13d7c3354b66faddf74e01392091071e51011c52c8230376fe4463')
+            '58135340acdffeec71170189690e8260df9e82089b926dc6441d4d033f51b2b8'
+            'ff86c78591e64362ab7421d6dbd9eec1ab2fff086e3264028b1bb7a7ccd9994b'
+            '4fc4dcee82c6ad8f4651a0c499364431c8ddc6a8d34a4ebe41d98d6e7cb911b9'
+            '02e0e1ad18a07e0ad0fc08f8405b3b1a2f8be87a601ab03efedba03190930c27'
+            '58097d50446b6cc525cd619f94d6626b5973799475482bd78d5b4eb678983f77'
+            'bdee07473478b6b35c6a96cbd6a020af24af39ef7a94a185991a96d67390fe0f'
+            '87c06499a65960e455d630e6cfcee7276af8182eb2335d85595f43d3dbf2f61e'
+            '5caabc920b3387997485a4f4de76cfeec855e779516fae72cdd73bdfd936a2ed'
+            '4e107ed646a859ca2613d997e6be12494ca7c91e99aad47a9d41d32129d60d70'
+            'd38aba2771d148b766c7bff967796f3f8e5b7173530b8c226332920e436b61bb'
+            '1c5bb8e53e3e20f4d9bcf09a3bb1796e07c2533abf67a9bf23c8916e9471d21a'
+            'd463dd618d53dbf850df3e50ff2d0c4d1eda6e6a91728ea54ee7229292aaf90f'
+            'c7068f24eb1cf80cbcd044fd25201942ef29b505713cedeb1684f590b2fff759'
+            '0f52a24ba9a19fefb04c64d4bc1e4826915a32c814852c77c3b5e0d2ba79cdec'
+            'bad7fc5a526546943721a6fe8f6435288dae5b7e05f5b2b5e967631dae76284a'
+            '1d67fb4dde256cf763e37869717ef2f473e133237c715800ae243b9899539826'
+            'a1a00de0098c496d982298d880dbc2e3ecb7dee26eea83bb414432f2a794352f'
+            '3d271935b9b80f5187ed94a2fe0fb705b4e6c7e108556ba3b54fe824aef99f93')
 
 # disable i686 build because 32-bit Windows is generally not supported by upstream and
 # it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)

@@ -4,7 +4,7 @@ pkgrel=2
 arch=('any')
 pkgdesc="CMake wrapper to use gcc-static-compat"
 depends=('cmake' 'static-compat-environment')
-license=(GPL-2-or-later)
+license=(GPL-2.0-or-later)
 url="https://github.com/Martchus/PKGBUILDs"
 source=("static-compat-cmake.sh")
 #        "toolchain-static-compat.cmake")

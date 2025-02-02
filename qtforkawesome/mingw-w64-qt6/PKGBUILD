@@ -13,7 +13,7 @@ pkgver=0.3.0
 pkgrel=1
 arch=('any')
 pkgdesc='Library that bundles ForkAwesome for use within Qt applications (mingw-w64)'
-license=(GPL-2-or-later)
+license=(GPL-2.0-or-later)
 depends=('mingw-w64-crt' 'mingw-w64-qt6-base')
 optdepends=(
   'mingw-w64-qt6-declarative: Qt Quick integration'

@@ -4,7 +4,7 @@ pkgrel=6
 arch=('any')
 pkgdesc='CMake wrapper for MinGW (mingw-w64, static)'
 depends=('mingw-w64-cmake')
-license=(GPL-2-or-later)
+license=(GPL-2.0-or-later)
 url='https://github.com/martchus/pkgbuilds'
 source=(mingw-cmake-static.sh
         toolchain-mingw-static.cmake)

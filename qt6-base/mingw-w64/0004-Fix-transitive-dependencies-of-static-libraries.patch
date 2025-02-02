@@ -1,7 +1,7 @@
-From 91af3567b40edf3c86cabf831fd4a331e39dc443 Mon Sep 17 00:00:00 2001
+From ae672472b76b5c1ebcc43925fed6e6c5a1718560 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 5 Nov 2020 21:59:33 +0100
-Subject: [PATCH 04/20] Fix transitive dependencies (of static libraries)
+Subject: [PATCH 04/18] Fix transitive dependencies (of static libraries)
 
 The dependencies of these libraries are not reliably picked up by their
 corresponding find modules. This change allows adding the required

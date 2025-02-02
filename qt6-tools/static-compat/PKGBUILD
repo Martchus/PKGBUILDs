@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-tools
-_qtver=6.8.2
+_qtver=6.9.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -18,8 +18,8 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qttools-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Enable-only-SQL-plugins-which-are-known-to-work.patch')
-sha256sums=('326381b7d43f07913612f291abc298ae79bd95382e2233abce982cff2b53d2c0'
-            'd6bdb507b7aae7364ca6384cf454ca6d6b2b07bb581046b9aaab2fa7eef5f277')
+sha256sums=('fa645589cc3f939022401a926825972a44277dead8ec8607d9f2662e6529c9a4'
+            '366eb72473986f07203aeddd457ef2821756cdfc90e0d35752d617098bea6191')
 
 prepare () {
   cd $_pkgfqn
@@ -58,7 +58,7 @@ build() {
   ln -frs --target-directory=prefix/lib /usr/lib/clang
   # ensure targets linking against system LLVM are also linked against system libc/libdl/libm
   echo 'set_target_properties(LLVM PROPERTIES
-  INTERFACE_LINK_LIBRARIES "/usr/lib/libpthread.so.0;/usr/lib/libm.so.6;/usr/lib/libmvec.so.1;/usr/lib/libdl.so.2;/usr/lib/libc.so.6;/usr/lib/libc_nonshared.a;/usr/lib/ld-linux-x86-64.so.2")' \
+  INTERFACE_LINK_LIBRARIES "/usr/lib/libpthread.so.0;/usr/lib/libm.so.6;/usr/lib/libmvec.so.1;/usr/lib/libdl.so.2;/usr/lib64/ld-linux-x86-64.so.2;/usr/lib/libc.so.6;/usr/lib/libc_nonshared.a;/usr/lib/ld-linux-x86-64.so.2")' \
     >> prefix/lib/cmake/llvm/LLVMExports-release.cmake
   static-compat-cmake -G Ninja -B build -S $_pkgfqn \
     $ccache_args \
@@ -71,7 +71,7 @@ build() {
     -DLLVM_DIR="$PWD/prefix/lib/cmake/llvm" \
     -DClang_DIR="$PWD/prefix/lib/cmake/clang"
   # ensure system libc/libdl/libm is present on the linker-line before other libs
-  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja
+  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib64/ld-linux-x86-64.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja
   VERBOSE=1 cmake --build build
 }
 

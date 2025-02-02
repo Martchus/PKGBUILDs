@@ -1,0 +1,30 @@
+From a775657dcb384772b65da36f700ef8b879bd3e19 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 17 Feb 2024 21:39:39 +0100
+Subject: [PATCH 14/19] Link corelib correctly against runtimeobject when
+ compiling for Windows
+
+This library is included by mingw-w64 and also needs to be linked against
+for code in `qlocale_win.cpp` enabled via the `cpp_winrt` feature flag.
+
+Change-Id: I9f06f3845165afaf305a0fc7771a1093cba08811
+---
+ src/corelib/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/corelib/CMakeLists.txt b/src/corelib/CMakeLists.txt
+index df7aa0eed2b..428c1bc2771 100644
+--- a/src/corelib/CMakeLists.txt
++++ b/src/corelib/CMakeLists.txt
+@@ -868,7 +868,7 @@ qt_internal_extend_target(Core CONDITION WASM
+         text/qlocale_wasm.cpp
+ )
+ 
+-qt_internal_extend_target(Core CONDITION MSVC
++qt_internal_extend_target(Core CONDITION WIN32
+     LIBRARIES
+         runtimeobject
+ )
+-- 
+2.48.1
+

@@ -6,6 +6,7 @@
 
 pkgname=mingw-w64-sqlite
 _amalgamationver=3490100
+_snapshotver=202502212246
 pkgver=3.49.1
 pkgrel=2
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
@@ -17,7 +18,8 @@ options=('!strip' '!buildflags' 'staticlibs')
 license=('custom:Public Domain')
 url="https://www.sqlite.org/"
 source=("https://www.sqlite.org/2025/sqlite-autoconf-${_amalgamationver}.tar.gz")
-sha256sums=('106642d8ccb36c5f7323b64e4152e9b719f7c0215acf5bfeac3d5e7f97b59254')
+[[ $_snapshotver ]] && source=("https://wasm-testing.sqlite.org/tmp/sqlite-snapshot-$_snapshotver.tar.gz")
+sha256sums=('e785fe384655a9304603f81cb29db8570578cfefb5199e5230937151c5d8b0f5')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 _cflags=(
@@ -42,7 +44,10 @@ _cflags=(
 build() {
 	CFLAGS+=" ${_cflags[*]}" CXXFLAGS+=" ${_cflags[*]}"
 
-	cd "${srcdir}/sqlite-autoconf-${_amalgamationver}"
+	[[ $_snapshotver ]] && \
+		cd "${srcdir}/sqlite-snapshot-${_snapshotver}" || \
+		cd "${srcdir}/sqlite-autoconf-${_amalgamationver}"
+
 	for _arch in ${_architectures}; do
 		mkdir -p build-${_arch} && pushd build-${_arch}
 
@@ -53,7 +58,8 @@ build() {
 			--fts5 \
 			--rtree \
 			--session \
-			--out-implib \
+			--out-implib=libsqlite3 \
+			--dll-basename \
 			--disable-load-extension
 
 		make
@@ -62,12 +68,15 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/sqlite-autoconf-${_amalgamationver}"
+	[[ $_snapshotver ]] && \
+		cd "${srcdir}/sqlite-snapshot-${_snapshotver}" || \
+		cd "${srcdir}/sqlite-autoconf-${_amalgamationver}"
 	for _arch in ${_architectures}; do
 		pushd build-${_arch}
 		make DESTDIR="${pkgdir}" install
 		rm -r "${pkgdir}/usr/${_arch}/share"
-		mv "$pkgdir"/usr/${_arch}/lib/*.dll "$pkgdir"/usr/${_arch}/bin/
+		#mv "$pkgdir"/usr/${_arch}/lib/*.dll "$pkgdir"/usr/${_arch}/bin/
+		install libsqlite3.dll.a "$pkgdir"/usr/${_arch}/lib/libsqlite3.dll.a
 		${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.exe
 		${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
 		${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a

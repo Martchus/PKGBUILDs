@@ -14,7 +14,7 @@ license=('custom:Public Domain')
 url="https://www.sqlite.org/"
 depends=(static-compat-zlib static-compat-readline)
 makedepends=(static-compat-configure static-compat-tcl patchelf)
-source=(https://www.sqlite.org/2022/sqlite-src-${_srcver}.zip
+source=(https://www.sqlite.org/2025/sqlite-src-${_srcver}.zip
         sqlite-lemon-system-template.patch
         license.txt)
 options=('!emptydirs' 'staticlibs')
@@ -57,9 +57,7 @@ build() {
 	--enable-fts4 \
 	--enable-fts5 \
 	--enable-rtree \
-	--enable-json1 \
 	TCLLIBDIR="$static_compat_prefix"/lib/sqlite$pkgver
-  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
 

@@ -6,9 +6,9 @@
 
 pkgname=mingw-w64-sqlite
 _amalgamationver=3490100
-_snapshotver=202502212246
+_snapshotver=202502220001
 pkgver=3.49.1
-pkgrel=2
+pkgrel=4
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
 arch=('any')
 groups=(mingw-w64)
@@ -19,7 +19,7 @@ license=('custom:Public Domain')
 url="https://www.sqlite.org/"
 source=("https://www.sqlite.org/2025/sqlite-autoconf-${_amalgamationver}.tar.gz")
 [[ $_snapshotver ]] && source=("https://wasm-testing.sqlite.org/tmp/sqlite-snapshot-$_snapshotver.tar.gz")
-sha256sums=('e785fe384655a9304603f81cb29db8570578cfefb5199e5230937151c5d8b0f5')
+sha256sums=('61f421faae357cb3612821c8a8f93d02c6757ba68d3fa7badd61328b4146e35b')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 _cflags=(
@@ -58,7 +58,7 @@ build() {
 			--fts5 \
 			--rtree \
 			--session \
-			--out-implib=libsqlite3 \
+			--out-implib \
 			--dll-basename \
 			--disable-load-extension
 
@@ -75,8 +75,6 @@ package() {
 		pushd build-${_arch}
 		make DESTDIR="${pkgdir}" install
 		rm -r "${pkgdir}/usr/${_arch}/share"
-		#mv "$pkgdir"/usr/${_arch}/lib/*.dll "$pkgdir"/usr/${_arch}/bin/
-		install libsqlite3.dll.a "$pkgdir"/usr/${_arch}/lib/libsqlite3.dll.a
 		${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.exe
 		${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
 		${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a

@@ -3,42 +3,44 @@
 
 _pkgname=xz
 pkgname=static-compat-$_pkgname
-pkgver=5.4.3
+pkgver=5.6.4
 pkgrel=1
 pkgdesc='Library and command line tools for XZ and LZMA compressed files'
 arch=('x86_64')
 url='https://tukaani.org/xz/'
 license=('GPL' 'LGPL' 'custom')
 depends=('glibc-static-compat')
-makedepends=('static-compat-configure')
+makedepends=('static-compat-configure' 'git' 'po4a')
 options=(!emptydirs staticlibs)
 validpgpkeys=('3690C240CE51B4670D30AD1C38EE757D69184620')  # Lasse Collin <lasse.collin@tukaani.org>
-source=("https://tukaani.org/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"{,.sig})
-sha256sums=('1c382e0bc2e4e0af58398a903dd62fff7e510171d2de47a1ebe06d1528e9b7e9'
-            'SKIP')
-sha512sums=('aff0fe166af6df4491a6f5df2372cab100b081452461a0e8c6fd65b72af3f250f16c64d9fb8fd309141e9b9ae4e41649f48687cc29e63dd82f27f2eab19b4023'
-             'SKIP')
+source=("git+https://github.com/tukaani-project/xz#tag=v${pkgver}")
+b2sums=('264604298ee025ef01ec0439b6a339f25f4b18131b3f222eca2764df98bb41de5a22439b91349760b436b2ded31c132983cdcb277ec54b0097dd51063b4c0cd8')
+
+prepare() {
+  cd ${_pkgname}
+  ./autogen.sh
+}
 
 build() {
-	source static-compat-environment
-	cd "${srcdir}/${_pkgname}-${pkgver}"
+  source static-compat-environment
+  cd ${_pkgname}
 
-	static-compat-configure --disable-shared --enable-static --disable-rpath
-	make
+  static-compat-configure --disable-shared --enable-static --disable-rpath --disable-doxygen
+  make
 }
 
 check() {
-	source static-compat-environment
-	cd "${srcdir}/${_pkgname}-${pkgver}"
-	make check
+  source static-compat-environment
+  cd ${_pkgname}
+  make check
 }
 
 package() {
-	source static-compat-environment
-	cd "${srcdir}/${_pkgname}-${pkgver}"
-	make DESTDIR="${pkgdir}" install
-	install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}/"
-	ln -sf /usr/static/share/doc/xz/COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
-	rm -r "$pkgdir/$static_compat_prefix"/bin
-	rm -r "$pkgdir/$static_compat_prefix"/share/{man,doc,locale}
+  source static-compat-environment
+  cd ${_pkgname}
+  make DESTDIR="${pkgdir}" install
+  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}/"
+  ln -sf /usr/static/share/doc/xz/COPYING "${pkgdir}/usr/share/licenses/${pkgname}/"
+  rm -r "$pkgdir/$static_compat_prefix"/bin
+  rm -r "$pkgdir/$static_compat_prefix"/share/{man,doc,locale}
 }

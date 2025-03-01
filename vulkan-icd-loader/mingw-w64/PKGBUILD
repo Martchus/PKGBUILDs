@@ -3,20 +3,20 @@
 _pkgname=vulkan-icd-loader
 pkgname=mingw-w64-${_pkgname}
 _dirname=Vulkan-Loader
-pkgver=1.4.303
+pkgver=1.4.304.1
 pkgrel=1
 pkgdesc='Vulkan Installable Client Driver (ICD) Loader (mingw-w64)'
 arch=(any)
-url='https://www.khronos.org/vulkan/'
+url="https://www.vulkan.org/"
 groups=('mingw-w64-vulkan-devel')
 license=('Apache-2.0')
-makedepends=(mingw-w64-cmake mingw-w64-vulkan-headers python-lxml ninja)
+makedepends=(mingw-w64-cmake mingw-w64-vulkan-headers python-lxml ninja git)
 depends=(mingw-w64-crt)
 options=(!buildflags staticlibs !strip)
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/KhronosGroup/${_dirname}/archive/v${pkgver}.tar.gz")
-sha256sums=('248a5f7dbf990609f61dac34d19e43f441ccc31fd5ec49b64e807740099057a9')
+source=("git+https://github.com/KhronosGroup/Vulkan-Loader#tag=vulkan-sdk-$pkgver")
+b2sums=('537e5a325d1833aece5ff69af9b8118934581fbb58d5b1885d2b0d3d55f2ff3ef2db6c3a686c40c9e068c9b80194030cf936cba45fee70f55a6185f6c93ffffd')
 
-_srcdir="${_dirname}-${pkgver}"
+_srcdir="${_dirname}"
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 _flags=(
   -Wno-dev

@@ -3,19 +3,19 @@
 _pkgname=vulkan-headers
 pkgname=mingw-w64-${_pkgname}
 _dirname=Vulkan-Headers
-pkgver=1.4.303
+pkgver=1.4.304.1
 pkgrel=1
 pkgdesc='Vulkan header files (mingw-w64)'
 arch=(any)
-url='https://www.khronos.org/vulkan/'
-license=('Apache-2.0')
-makedepends=(mingw-w64-cmake ninja)
+url="https://www.vulkan.org/"
+license=("Apache-2.0 OR MIT")
+makedepends=(mingw-w64-cmake ninja git)
 groups=('mingw-w64-vulkan-devel')
 options=(!buildflags staticlibs !strip)
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/KhronosGroup/${_dirname}/archive/v${pkgver}.tar.gz")
-sha256sums=('fdf0e2e05356b455137ff97f837c9689ba253ec7d20f87ad81575b9bdbe7fdd4')
+source=("git+https://github.com/KhronosGroup/Vulkan-Headers#tag=vulkan-sdk-$pkgver")
+b2sums=('b9fe40dc7f431a7ec0cd125e4b00d1f704bf5782d22da8ae888b1110a76dbf271fedcaef6c6018aa361b1a2950865d6f638929be8fd1ff14495a297a002998b2')
 
-_srcdir="${_dirname}-${pkgver}"
+_srcdir="${_dirname}"
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
 build() {
@@ -29,4 +29,6 @@ package() {
   for _arch in ${_architectures}; do
     DESTDIR="${pkgdir}" cmake --install "build-${_arch}"
   done
+  install -Dm644 Vulkan-Headers/LICENSES/MIT.txt \
+    -t "$pkgdir/usr/share/licenses/$pkgname"
 }

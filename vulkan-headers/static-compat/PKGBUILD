@@ -2,30 +2,31 @@
 
 pkgname=static-compat-vulkan-headers
 _pkgname=Vulkan-Headers
-pkgver=1.4.303
+pkgver=1.4.304.1
 pkgrel=1
 epoch=2
 pkgdesc="Vulkan header files"
 arch=(any)
-url="https://www.khronos.org/vulkan/"
-license=('Apache-2.0')
-makedepends=(static-compat-cmake git)
+url="https://www.vulkan.org/"
+license=("Apache-2.0 OR MIT")
+makedepends=(static-compat-cmake git ninja)
 provides=("static-compat-vulkan-hpp=${pkgver}")
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/KhronosGroup/Vulkan-Headers/archive/v${pkgver}.tar.gz")
-sha256sums=('fdf0e2e05356b455137ff97f837c9689ba253ec7d20f87ad81575b9bdbe7fdd4')
+source=("git+https://github.com/KhronosGroup/Vulkan-Headers#tag=vulkan-sdk-$pkgver")
+b2sums=('b9fe40dc7f431a7ec0cd125e4b00d1f704bf5782d22da8ae888b1110a76dbf271fedcaef6c6018aa361b1a2950865d6f638929be8fd1ff14495a297a002998b2')
 
 build() {
   source static-compat-environment
-  cd Vulkan-Headers*
+  static-compat-cmake -S Vulkan-Headers -B build -G Ninja
+  cmake --build build
+}
 
-  rm -rf build ; mkdir build ; cd build
-  static-compat-cmake ..
-  make
+check() {
+  ctest --test-dir build --output-on-failure --stop-on-failure
 }
 
 package() {
   source static-compat-environment
-  cd Vulkan-Headers*/build
-  
-  make DESTDIR="${pkgdir}" install
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 Vulkan-Headers/LICENSES/MIT.txt \
+    -t "$pkgdir/usr/share/licenses/$pkgname"
 }

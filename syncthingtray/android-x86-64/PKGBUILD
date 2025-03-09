@@ -1,0 +1,77 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+# FIXME: Set versions of the various repositories.
+
+_arch=x86-64
+_pkgver_cpputilities=
+_pkgver_qtutilities=
+_pkgver_qtforkawesome=
+_pkgver_syncthing=
+_pkgver_forkawesome=1.2.0
+_reponame=syncthingtray
+_reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
+pkgname=$_arch-syncthingtray
+pkgver=1.7.3alpha
+pkgrel=1
+arch=('any')
+pkgdesc="Tray application for Syncthing (Android, $_arch)"
+license=(GPL-2.0-or-later)
+depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl")
+makedepends=('android-cmake' 'android-ndk' 'ninja' 'git' 'go' 'clang' 'perl-yaml-libyaml'
+             'qt6-tools' 'qt6-declarative' "android-$_arch-qt6-tools")
+url="https://github.com/Martchus/${_reponame}"
+_github_url=git+https://github.com/Martchus
+_git_url=${MARTCHUS_GIT_URL_PREFIX:-$_github_url}
+source=(
+  "c++utilities::$_git_url/cpp-utilities" #tag=v$_pkgver_cpputilities"
+  "qtutilities::$_git_url/qtutilities" #tag=v$_pkgver_qtutilities"
+  "qtforkawesome::$_git_url/qtforkawesome" #tag=v$_pkgver_qtforkawesome"
+  "syncthing::$_github_url/syncthing#branch=libsyncthing-latest" #tag=v$_pkgver_syncthing"
+  "syncthingtray::$_git_url/${_reponame}" #tag=v$pkgver"
+  "subdirs::$_git_url/subdirs"
+  "keystore::keystore"
+  "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz"
+)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '23fba5f191f204e0414c547bf4c9b10fd7ca42c151260e8f64698449a75fbdb3')
+options=(!buildflags staticlibs !strip !emptydirs)
+
+prepare() {
+  cd $_reponame
+  mkdir -p syncthing/go/src/github.com/syncthing
+  cd syncthing/go/src/github.com/syncthing
+  [[ -d syncthing ]] && rm -r syncthing
+  ln -sf "$srcdir/syncthing" .
+}
+
+build() {
+  source android-env $_arch
+  export BUILD_DIR=$srcdir/build
+  export QT_ANDROID_KEYSTORE_PATH=$srcdir/keystore
+
+  cd subdirs/$_reponame
+  cmake --preset arch-android \
+    -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.woff2" \
+    -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml"
+  cmake --build --preset arch-android
+}
+
+package() {
+  source android-env $_arch
+  export BUILD_DIR=$srcdir/build
+  local apk_dir=$pkgdir/$ANDROID_PREFIX/apk
+  DESTDIR=$pkgdir cmake --install "$BUILD_DIR/$_reponame"/arch-android-*
+  mkdir -p "$apk_dir"
+  find "$BUILD_DIR" -iname '*-signed.apk' -exec cp -v --target-directory="$apk_dir" {} \+
+  find "$pkgdir" -name 'lib*.so' -type f -exec "$ANDROID_STRIP" --strip-unneeded {} \;
+  find "$pkgdir" -name 'lib*.a' -type f -exec "$ANDROID_STRIP" -g {} \;
+}

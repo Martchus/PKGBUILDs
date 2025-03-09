@@ -14,6 +14,7 @@ colorize
 # declare (variant-specific) variables to be preserved
 variables_to_preserve=(
     pkgname
+    _arch
     _pkg_arch
     _android_arch
     _android_cflags

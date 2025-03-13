@@ -23,7 +23,8 @@ license=(GPL3 LGPL3 FDL custom)
 pkgdesc='A cross-platform application and UI framework (android)'
 depends=('java-runtime-headless-openjdk=17' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
          'android-sdk-platform-tools' 'android-platform-34' "android-${_android_arch}-libjpeg-turbo"
-         "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib")
+         "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib"
+         "android-${_android_arch}-sqlite")
 makedepends=('android-cmake<%= $static_suffix %>' 'android-pkg-config'
              'java-environment-openjdk=17' 'qt6-base' 'ninja')
 optdepends=('qt6-base: development tools')
@@ -75,7 +76,7 @@ build() {
       -DFEATURE_system_pcre2=OFF \\
       -DFEATURE_system_freetype=OFF \\
       -DFEATURE_system_harfbuzz=OFF \\
-      -DFEATURE_system_sqlite=OFF \\
+      -DFEATURE_system_sqlite=ON \\
       -DFEATURE_system_libjpeg=ON \\
       -DFEATURE_system_libpng=ON \\
       -DFEATURE_system_zlib=ON \\

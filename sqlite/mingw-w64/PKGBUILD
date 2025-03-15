@@ -8,7 +8,7 @@ pkgname=mingw-w64-sqlite
 _amalgamationver=3490100
 _snapshotver=202502220001
 pkgver=3.49.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
 arch=('any')
 groups=(mingw-w64)
@@ -59,8 +59,7 @@ build() {
 			--rtree \
 			--session \
 			--out-implib \
-			--dll-basename \
-			--disable-load-extension
+			--dll-basename
 
 		make
 		popd

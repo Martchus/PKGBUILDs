@@ -2,7 +2,7 @@
 
 pkgname=static-compat-vulkan-headers
 _pkgname=Vulkan-Headers
-pkgver=1.4.304.1
+pkgver=1.4.309.0
 pkgrel=1
 epoch=2
 pkgdesc="Vulkan header files"
@@ -12,7 +12,7 @@ license=("Apache-2.0 OR MIT")
 makedepends=(static-compat-cmake git ninja)
 provides=("static-compat-vulkan-hpp=${pkgver}")
 source=("git+https://github.com/KhronosGroup/Vulkan-Headers#tag=vulkan-sdk-$pkgver")
-b2sums=('b9fe40dc7f431a7ec0cd125e4b00d1f704bf5782d22da8ae888b1110a76dbf271fedcaef6c6018aa361b1a2950865d6f638929be8fd1ff14495a297a002998b2')
+b2sums=('d4703fab34991fd81e5c44c7ba5aa15aca30dacc6ddfec82972cda16e8598e0c8180d4612adca9063efc57b1f32c87f11c3e8f6e87df7b4785d055e0f441ea68')
 
 build() {
   source static-compat-environment

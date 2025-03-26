@@ -18,7 +18,7 @@ pkgname=mingw-w64-syncthingtray-qt6
 _reponame=syncthingtray
 _name=${pkgname#mingw-w64-}
 _name=${_name%-qt6*}
-pkgver=1.7.3
+pkgver=1.7.4
 pkgrel=1
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
@@ -32,7 +32,8 @@ depends=('mingw-w64-crt' 'mingw-w64-qt6-svg' 'mingw-w64-qtutilities-qt6' 'mingw-
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('e411ef5aca5d564d218d8bbe9db1df18289996443a5ccd61d30a7fd26050c9f3')
+sha256sums=('9a3532a5dcef5e4ac147f8afa6e7ff6399ea42287d294fe6aa5af3f534b609b9'
+            'SKIP')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 # set whether libsyncthing should be enabled: either ON or OFF
@@ -43,7 +44,6 @@ options=(!buildflags staticlibs !strip !emptydirs)
 if [[ $_enable_libsyncthing == ON ]]; then
   makedepends+=('git' 'go')
   source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
-  sha256sums+=('SKIP')
 fi
 
 _architectures=(${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32})

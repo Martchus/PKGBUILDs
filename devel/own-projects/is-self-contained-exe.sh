@@ -5,11 +5,7 @@ shopt -s nullglob
 shopt -s extglob
 source "$(dirname $0)/../versions.sh"
 
-if [[ $EXPERIMENTAL ]]; then
-    repo_dir=${PATH_REPO_OWNSTUFF_EXPERIMENTAL}
-else
-    repo_dir=${PATH_REPO_OWNSTUFF}
-fi
+repo_dir=${PATH_REPO_OWNSTUFF}
 if ! [[ $repo_dir ]]; then
     echo "\$PATH_REPO_OWNSTUFF is empty."
     exit -1

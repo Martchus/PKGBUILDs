@@ -1,0 +1,43 @@
+pkgname=mingw-w64-protobuf
+_pkgname=protobuf
+pkgver=30.1
+pkgrel=1
+pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
+arch=('any')
+url='https://developers.google.com/protocol-buffers/'
+license=('BSD-3-Clause')
+depends=(mingw-w64-zlib mingw-w64-abseil-cpp)
+makedepends=(mingw-w64-cmake-static protobuf)
+options=(!strip !buildflags staticlibs)
+source=("https://github.com/protocolbuffers/${_pkgname}/releases/download/v$pkgver/${_pkgname}-$pkgver.tar.gz"
+        "https://patch-diff.githubusercontent.com/raw/protocolbuffers/${_pkgname}/pull/20025.patch")
+sha256sums=('1451b03faec83aed17cdc71671d1bbdfd72e54086b827f5f6fd02bf7a4041b68'
+            '696cb266acc6a5dc4769c56ed5ba4f1b9f92b12d9683dfe1248c13a72549c875')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+  patch -p1 -i ../20025.patch
+}
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  local flags=(-Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_ABSL_PROVIDER=package)
+  for _arch in ${_architectures}; do
+    ${_arch}-cmake -B build-${_arch} "${flags[@]}" .
+    cmake --build build-${_arch}
+    ${_arch}-cmake-static -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static "${flags[@]}" .
+    cmake --build build-static-${_arch}
+  done
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  for _arch in ${_architectures}; do
+    DESTDIR=$pkgdir cmake --install build-${_arch}
+    DESTDIR=$pkgdir cmake --install build-static-${_arch}
+    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
+  done
+}

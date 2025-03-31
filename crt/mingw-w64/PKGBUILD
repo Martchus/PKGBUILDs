@@ -9,7 +9,7 @@ url='https://www.mingw-w64.org'
 license=('LicenseRef-custom')
 groups=('mingw-w64-toolchain' 'mingw-w64')
 makedepends=("mingw-w64-headers=${pkgver}")
-[[ $pkgname =~ .*-clang-.* ]] && makedepends+=('clang' 'llvm' 'lld') || makedepends+=('mingw-w64-gcc' 'mingw-w64-binutils')
+[[ $pkgname =~ .*-clang-.* ]] && makedepends+=('mingw-w64-configure') || makedepends+=('mingw-w64-gcc' 'mingw-w64-binutils')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
 source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
@@ -31,13 +31,6 @@ build() {
     fi
     if [[ $pkgname =~ .*-clang-.* ]]; then
         _crt_configure_args+=" --enable-cfguard"
-
-        export AR=llvm-ar ASM=clang LD=lld-link CC=clang CXX=clang++ RANLIB=llvm-ranlib DLLTOOL=llvm-dlltool
-        export ARFLAGS=""
-        export ASMFLAGS="-rtlib=compiler-rt -fuse-ld=lld -mguard=cf -target $_target -Xclang -triple -Xclang $_target"
-        export LDFLAGS="-target $_target -Xclang -triple -Xclang $_target"
-        export CFLAGS="-rtlib=compiler-rt -fuse-ld=lld -target $_target -Xclang -triple -Xclang $_target"
-        export CXXFLAGS="-rtlib=compiler-rt -fuse-ld=lld -stdlib=libc++ -target $_target -Xclang -triple -Xclang $_target"
     fi
     if [[ $pkgname =~ .*-clang-.* ]] || [[ $pkgname =~ .*-ucrt-.* ]]; then
       _crt_configure_args+=" --with-default-msvcrt=ucrt --disable-dependency-tracking"

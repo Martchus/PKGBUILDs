@@ -8,6 +8,7 @@ arch=('any')
 url="https://www.mingw-w64.org"
 license=('LicenseRef-custom')
 groups=('mingw-w64-toolchain' 'mingw-w64')
+[[ $pkgname =~ .*-clang-.* ]] && makedepends=('mingw-w64-configure')
 options=('!strip' '!libtool' '!emptydirs')
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
 source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
@@ -22,13 +23,6 @@ build() {
     mkdir -p "$srcdir"/headers-${_target} && cd "$srcdir"/headers-${_target}
     if [[ $pkgname =~ .*-clang-.* ]]; then
         _configure_args+=" --enable-cfguard"
-
-        export AR=llvm-ar ASM=clang LD=lld-link CC=clang CXX=clang++ RANLIB=llvm-ranlib DLLTOOL=llvm-dlltool
-        export ARFLAGS=""
-        export ASMFLAGS="-rtlib=compiler-rt -fuse-ld=lld -mguard=cf -target $_target -Xclang -triple -Xclang $_target"
-        export LDFLAGS="-target $_target -Xclang -triple -Xclang $_target"
-        export CFLAGS="-rtlib=compiler-rt -fuse-ld=lld -target $_target -Xclang -triple -Xclang $_target"
-        export CXXFLAGS="-rtlib=compiler-rt -fuse-ld=lld -stdlib=libc++ -target $_target -Xclang -triple -Xclang $_target"
     fi
     if [[ $pkgname =~ .*-clang-.* ]] || [[ $pkgname =~ .*-ucrt-.* ]]; then
       _configure_args+=" --enable-idl --with-default-win32-winnt=0x601 --with-default-msvcrt=ucrt"
@@ -42,11 +36,9 @@ package() {
     echo "Installing ${_target} headers"
     cd "$srcdir"/headers-${_target}
     make DESTDIR="$pkgdir" install
-    if ! [[ $pkgname =~ .*-clang-.* ]]; then
-      rm "$pkgdir"/usr/${_target}/include/pthread_signal.h
-      rm "$pkgdir"/usr/${_target}/include/pthread_time.h
-      rm "$pkgdir"/usr/${_target}/include/pthread_unistd.h
-    fi
+    rm "$pkgdir"/usr/${_target}/include/pthread_signal.h
+    rm "$pkgdir"/usr/${_target}/include/pthread_time.h
+    rm "$pkgdir"/usr/${_target}/include/pthread_unistd.h
   done
 
   echo "Installing MinGW-w64 licenses"

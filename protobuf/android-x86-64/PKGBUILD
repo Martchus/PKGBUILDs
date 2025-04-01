@@ -1,0 +1,64 @@
+# Contributor: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
+# Contributor: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: David Runge <dvzrv@archlinux.org>
+# Contributor: Aleksey Filippov <sarum9in@gmail.com>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: Thomas S Hatch <thatch45@gmail.com>
+# Contributor: Geoffroy Carrier <geoffroy@archlinux.org>
+# Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
+
+_android_arch=x86-64
+
+pkgname=android-${_android_arch}-protobuf
+pkgver=30.1
+pkgrel=1
+arch=('any')
+pkgdesc="Protocol Buffers - Google's data interchange format (Android ${_android_arch})"
+url='https://developers.google.com/protocol-buffers/'
+license=('BSD-3-Clause')
+groups=('android-protobuf')
+depends=("android-${_android_arch}-zlib" "android-${_android_arch}-abseil-cpp")
+makedepends=('android-cmake')
+options=(!strip !buildflags staticlibs !emptydirs)
+source=("https://github.com/protocolbuffers/protobuf/archive/v${pkgver}/protobuf-${pkgver}.tar.gz")
+sha256sums=('1451b03faec83aed17cdc71671d1bbdfd72e54086b827f5f6fd02bf7a4041b68')
+
+prepare() {
+  cd "${srcdir}/protobuf-${pkgver}"
+}
+
+build() {
+  source android-env ${_android_arch}
+  android-${_android_arch}-cmake \
+    -S protobuf-${pkgver} \
+    -B build-static \
+    -Dprotobuf_BUILD_SHARED_LIBS=OFF \
+    -Dprotobuf_ABSL_PROVIDER=package \
+    -Dprotobuf_BUILD_CONFORMANCE=OFF \
+    -Dprotobuf_BUILD_EXAMPLES=OFF \
+    -Dprotobuf_BUILD_TESTS=OFF \
+    -Dabsl_DIR="${ANDROID_PREFIX_LIB}/cmake/absl" \
+    -Wno-dev
+  cmake --build build-static
+
+  android-${_android_arch}-cmake \
+    -S protobuf-${pkgver} \
+    -B build-shared \
+    -Dprotobuf_BUILD_SHARED_LIBS=ON \
+    -Dprotobuf_ABSL_PROVIDER=package \
+    -Dprotobuf_BUILD_CONFORMANCE=OFF \
+    -Dprotobuf_BUILD_EXAMPLES=OFF \
+    -Dprotobuf_BUILD_TESTS=OFF \
+    -Dabsl_DIR="${ANDROID_PREFIX_LIB}/cmake/absl" \
+    -Wno-dev
+  cmake --build build-shared
+}
+
+package() {
+  source android-env ${_android_arch}
+  DESTDIR=${pkgdir} cmake --install build-static
+  DESTDIR=${pkgdir} cmake --install build-shared
+  ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
+  ${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a
+}

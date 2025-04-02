@@ -1,5 +1,5 @@
-prefix=/usr/static
-exec_prefix=/usr/static
+prefix=/usr/static-compat
+exec_prefix=/usr/static-compat
 bindir=${exec_prefix}/bin
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

@@ -1,0 +1,107 @@
+pkgname=mingw-w64-grpc
+_pkgname=grpc
+_protover=30.1
+_opencensus_proto_ver=0.4.1
+pkgver=1.71.0
+pkgrel=1
+pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
+arch=('any')
+url='https://grpc.io'
+license=('Apache-2.0')
+depends=(mingw-w64-zlib mingw-w64-abseil-cpp mingw-w64-c-ares mingw-w64-re2 mingw-w64-protobuf mingw-w64-openssl)
+makedepends=(mingw-w64-cmake-static protobuf grpc ninja)
+options=(!strip !buildflags staticlibs)
+source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
+        "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz"
+        001-fix-building-shared-libraries-with-clang.patch
+        002-fix-building-python-module.patch
+        003-fix-build-shared-libs-on-mingw.patch)
+sha256sums=('0d631419e54ec5b29def798623ee3bf5520dac77abeab3284ef7027ec2363f91'
+            'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3'
+            'cf4064ad294bbddf15ac0611a4920dfa133a54ccaebbf813ed4faef6b20d142b'
+            'c08e9a6a4dd569155452660825c8b42a06bbc6eb1e924af98796b138e6698e93'
+            'd1b8334fbd97c833f37f03f222bd443a77772409586c1324cb5bb1b5d85037b3')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+
+  if ! pkgconf protobuf --exact-version=$_protover.0; then
+    echo "protobuf version mismatch"
+    exit 1
+  fi
+
+  rm -rf third_party/opencensus-proto
+  mv "${srcdir}"/opencensus-proto-${_opencensus_proto_ver} third_party/opencensus-proto
+
+  patch -p1 -i ../001-fix-building-shared-libraries-with-clang.patch
+  patch -p1 -i ../002-fix-building-python-module.patch
+  patch -p1 -i ../003-fix-build-shared-libs-on-mingw.patch
+}
+
+build() {
+  cd ${_pkgname}-${pkgver}
+
+  # remove __USE_MINGW_ANSI_STDIO=1 define, it breaks grpc string handling for
+  # cases like 'gpr_log(GPR_DEBUG, "Failed to free %" PRIuPTR ...'
+  export CFLAGS=${CFLAGS//-Wp,-D__USE_MINGW_ANSI_STDIO=1/}
+  export CXXFLAGS=${CXXFLAGS//-Wp,-D__USE_MINGW_ANSI_STDIO=1/}
+
+  # add STRSAFE_NO_DEPRECATE define, otherwise strsafe breaks libc++ headers
+  export CXXFLAGS+=" -DSTRSAFE_NO_DEPRECATE"
+
+  local flags=(
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DCMAKE_DLL_NAME_WITH_SOVERSION=ON
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -D_WIN32_WINNT=0x600 -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor"
+    -DgRPC_INSTALL=ON
+    -DCMAKE_SKIP_RPATH=ON
+    -DCMAKE_CXX_STANDARD=17
+    -DgRPC_BUILD_TESTS=OFF
+    -DgRPC_ZLIB_PROVIDER='package'
+    -DgRPC_CARES_PROVIDER='package'
+    -DgRPC_RE2_PROVIDER='package'
+    -DgRPC_SSL_PROVIDER='package'
+    -DgRPC_PROTOBUF_PROVIDER='package'
+    -DgRPC_ABSL_PROVIDER:STRING='package'
+    -DgRPC_USE_PROTO_LITE=OFF
+    -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=ON
+    -GNinja
+  )
+  for _arch in ${_architectures}; do
+    if $_arch =~ x86_64-.* ]]; then
+      # https://github.com/msys2/MINGW-packages/issues/8984
+      extra_ldflags=-Wl,--disable-dynamicbase,--default-image-base-low
+    else
+      extra_ldflags=
+    fi
+
+    # disabling shared libs as it otherwise runs into linker errors, e.g. `undefined reference to `gpr_parse_bool_value(char const*, bool*)'`
+    # note: Not sure how this is supposed to work as these symbols are in fact simply not exported.
+    LDFLAGS="$LDFLAGS $extra_ldflags" ${_arch}-cmake -B build-${_arch} -DBUILD_SHARED_LIBS=OFF "${flags[@]}" .
+    # note: Not sure why working around this with `Wl,--export-all-symbols` works for MSYS2 as the following runs into
+    # `error: export ordinal too large: 78101` on 32-bit and 64-bit builds:
+    #LDFLAGS="$LDFLAGS $extra_ldflags -Wl,--export-all-symbols" ${_arch}-cmake -B build-${_arch} "${flags[@]}" .
+    cmake --build build-${_arch}
+
+    LDFLAGS="$LDFLAGS $extra_ldflags" ${_arch}-cmake-static -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static "${flags[@]}" .
+    cmake --build build-static-${_arch}
+  done
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  for _arch in ${_architectures}; do
+    DESTDIR=$pkgdir cmake --install build-${_arch}
+    DESTDIR=$pkgdir cmake --install build-static-${_arch}
+    #${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
+  done
+}

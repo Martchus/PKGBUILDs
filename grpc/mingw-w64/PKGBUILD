@@ -1,0 +1,69 @@
+pkgname=mingw-w64-grpc
+_pkgname=grpc
+_protover=30.1
+pkgver=1.17.0
+pkgrel=1
+pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
+arch=('any')
+url='https://grpc.io'
+license=('Apache-2.0')
+depends=(mingw-w64-zlib mingw-w64-abseil-cpp mingw-w64-protobuf mingw-w64-openssl)
+makedepends=(mingw-w64-cmake-static protobuf grpc ninja)
+options=(!strip !buildflags staticlibs)
+source=("https://github.com/grpc/grpc/archive/v$pkgver/$pkgbase-$pkgver.tar.gz")
+sha256sums=('0d631419e54ec5b29def798623ee3bf5520dac77abeab3284ef7027ec2363f91')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+
+  if ! pkgconf protobuf --exact-version=$_protover.0; then
+    echo "protobuf version mismatch"
+    exit 1
+  fi
+
+}
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  local flags=(
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor"
+    -DgRPC_INSTALL=ON
+    -DCMAKE_CXX_STANDARD=17
+    -DgRPC_BUILD_TESTS=OFF
+    -DgRPC_ZLIB_PROVIDER='package'
+    -DgRPC_CARES_PROVIDER='package' # TODO: package this (mingw-w64-c-ares exists but has no static library)
+    -DgRPC_RE2_PROVIDER='module' # TODO: package this
+    -DgRPC_SSL_PROVIDER='package'
+    -DgRPC_PROTOBUF_PROVIDER='package'
+    -DgRPC_BENCHMARK_PROVIDER:STRING='module'
+    -DgRPC_ABSL_PROVIDER:STRING='package'
+    -DgRPC_USE_PROTO_LITE=OFF
+    -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=ON
+    -GNinja
+  )
+  for _arch in ${_architectures}; do
+    ${_arch}-cmake -B build-${_arch} "${flags[@]}" .
+    cmake --build build-${_arch}
+    ${_arch}-cmake-static -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static "${flags[@]}" .
+    cmake --build build-static-${_arch}
+  done
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  for _arch in ${_architectures}; do
+    DESTDIR=$pkgdir cmake --install build-${_arch}
+    DESTDIR=$pkgdir cmake --install build-static-${_arch}
+    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
+  done
+}

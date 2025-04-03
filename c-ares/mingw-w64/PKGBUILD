@@ -1,0 +1,71 @@
+pkgname=mingw-w64-c-ares
+_pkgname=c-ares
+_protover=30.1
+pkgver=1.34.4
+pkgrel=1
+pkgdesc="A C library for asynchronous DNS requests (mingw-w64)"
+arch=('any')
+url="https://c-ares.org/"
+_url=https://github.com/c-ares/c-ares
+license=(MIT)
+depends=(mingw-w64-crt)
+makedepends=(mingw-w64-cmake-static git)
+options=(!strip !buildflags staticlibs)
+source=(
+  git+$_url.git?signed#tag=v$pkgver
+)
+sha512sums=('17a50051b73a6690b616fba45da1151c412c3112808c2636533a0b94b94fa8c34ecc0118d8fadaefa88423b6a66c66530bcd36a575aa2a7ae80b4e80c161d96b')
+b2sums=('3c9f414a842911dca79cb2b550dd12eda073683b91537c2a205311cc0c75c97ed9ea86aa018cdf5909fed7e468d04b6a436700a0a7cbd0bd33c9517c136a3b80')
+validpgpkeys=(
+  27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2  # Daniel Stenberg <daniel@haxx.se>
+  DA7D64E4C82C6294CB73A20E22E3D13B5411B7CA  # Brad House <brad@brad-house.com>
+)
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+}
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  local flags=(
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor"
+    -DgRPC_INSTALL=ON
+    -DCMAKE_CXX_STANDARD=17
+    -DgRPC_BUILD_TESTS=OFF
+    -DgRPC_ZLIB_PROVIDER='package'
+    -DgRPC_CARES_PROVIDER='package' # TODO: package this (mingw-w64-c-ares exists but has no static library)
+    -DgRPC_RE2_PROVIDER='module' # TODO: package this
+    -DgRPC_SSL_PROVIDER='package'
+    -DgRPC_PROTOBUF_PROVIDER='package'
+    -DgRPC_BENCHMARK_PROVIDER:STRING='module'
+    -DgRPC_ABSL_PROVIDER:STRING='package'
+    -DgRPC_USE_PROTO_LITE=OFF
+    -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=ON
+    -GNinja
+  )
+  for _arch in ${_architectures}; do
+    ${_arch}-cmake -B build-${_arch} "${flags[@]}" .
+    cmake --build build-${_arch}
+    ${_arch}-cmake-static -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static "${flags[@]}" .
+    cmake --build build-static-${_arch}
+  done
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  for _arch in ${_architectures}; do
+    DESTDIR=$pkgdir cmake --install build-${_arch}
+    DESTDIR=$pkgdir cmake --install build-static-${_arch}
+    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
+  done
+}

@@ -1,0 +1,56 @@
+pkgname=mingw-w64-c-ares
+_pkgname=c-ares
+_protover=30.1
+pkgver=1.34.5
+pkgrel=1
+pkgdesc="A C library for asynchronous DNS requests (mingw-w64)"
+arch=('any')
+url="https://c-ares.org/"
+_url=https://github.com/c-ares/c-ares
+license=(MIT)
+depends=(mingw-w64-crt)
+makedepends=(mingw-w64-cmake-static git ninja)
+options=(!strip !buildflags staticlibs)
+source=(
+  git+$_url.git?signed#tag=v$pkgver
+)
+sha512sums=('5703fb5153e6c4d026e7fcfe63a3626c1fb1464d10642f4b5657368eb0b0bf17dab949a84ca4c3fa3053c1b0013588bd6de23bea9c3eaf2fc1cece4eeff1c67c')
+b2sums=('6c50af22f564c3a9ef5c16f1f383a4a632bf32844d6b19bc1cda7a6a418f473ebead447420d744d0cb3f9b1e472fab95322c87837e0ad54e966e869a2192af7f')
+validpgpkeys=(
+  27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2  # Daniel Stenberg <daniel@haxx.se>
+  DA7D64E4C82C6294CB73A20E22E3D13B5411B7CA  # Brad House <brad@brad-house.com>
+)
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+build() {
+  local flags=(
+    -GNinja
+    -S "$_pkgname"
+    -DCMAKE_DLL_NAME_WITH_SOVERSION=ON
+    -Wno-dev
+  )
+  for _arch in ${_architectures}; do
+    ${_arch}-cmake -B build-${_arch} "${flags[@]}" \
+      -DCARES_STATIC=OFF -DCARES_SHARED=ON \
+      .
+    cmake --build build-${_arch}
+    ${_arch}-cmake-static -B build-static-${_arch} "${flags[@]}" \
+      -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static \
+      -DCARES_STATIC=ON -DCARES_SHARED=OFF \
+      .
+    cmake --build build-static-${_arch}
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    DESTDIR=$pkgdir cmake --install build-${_arch}
+    DESTDIR=$pkgdir cmake --install build-static-${_arch}
+    rm -vr "$pkgdir"/usr/${_arch}/share/man
+    rm -vr "$pkgdir"/usr/${_arch}/static/share/man
+    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
+  done
+  install -vDm 644 $_pkgname/LICENSE.md -t "$pkgdir/usr/share/licenses/$pkgname/"
+}

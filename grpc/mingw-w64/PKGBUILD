@@ -1,0 +1,80 @@
+pkgname=mingw-w64-grpc
+_pkgname=grpc
+_protover=30.1
+_opencensus_proto_ver=0.4.1
+pkgver=1.17.0
+pkgrel=1
+pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
+arch=('any')
+url='https://grpc.io'
+license=('Apache-2.0')
+depends=(mingw-w64-zlib mingw-w64-abseil-cpp mingw-w64-c-ares mingw-w64-re2 mingw-w64-protobuf mingw-w64-openssl)
+makedepends=(mingw-w64-cmake-static protobuf grpc ninja)
+options=(!strip !buildflags staticlibs)
+source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
+        "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz"
+        "003-fix-build-shared-libs-on-mingw.patch")
+sha256sums=('d98d41399783c8f9f0cd8d8fec3920c8378d3a77ec4b7bdf228832cac4ab8617'
+            'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3'
+            'd1b8334fbd97c833f37f03f222bd443a77772409586c1324cb5bb1b5d85037b3')
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+
+  if ! pkgconf protobuf --exact-version=$_protover.0; then
+    echo "protobuf version mismatch"
+    exit 1
+  fi
+
+  #patch -Nbp1 -i ../003-fix-build-shared-libs-on-mingw.patch
+
+  rm -rf third_party/opencensus-proto
+  mv "${srcdir}"/opencensus-proto-${_opencensus_proto_ver} third_party/opencensus-proto
+}
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  local flags=(
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DCMAKE_DLL_NAME_WITH_SOVERSION=ON
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -D_WIN32_WINNT=0x600 -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor"
+    -DgRPC_INSTALL=ON
+    -DCMAKE_SKIP_RPATH=ON
+    -DCMAKE_CXX_STANDARD=17
+    -DgRPC_BUILD_TESTS=OFF
+    -DgRPC_ZLIB_PROVIDER='package'
+    -DgRPC_CARES_PROVIDER='package'
+    -DgRPC_RE2_PROVIDER='package'
+    -DgRPC_SSL_PROVIDER='package'
+    -DgRPC_PROTOBUF_PROVIDER='package'
+    -DgRPC_BENCHMARK_PROVIDER:STRING='module'
+    -DgRPC_ABSL_PROVIDER:STRING='package'
+    -DgRPC_USE_PROTO_LITE=OFF
+    -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=ON
+    -GNinja
+  )
+  for _arch in ${_architectures}; do
+    ${_arch}-cmake -B build-${_arch} "${flags[@]}" .
+    cmake --build build-${_arch}
+    ${_arch}-cmake-static -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static "${flags[@]}" .
+    cmake --build build-static-${_arch}
+  done
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}
+  for _arch in ${_architectures}; do
+    DESTDIR=$pkgdir cmake --install build-${_arch}
+    DESTDIR=$pkgdir cmake --install build-static-${_arch}
+    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
+  done
+}

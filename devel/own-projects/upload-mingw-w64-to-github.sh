@@ -40,6 +40,8 @@ errors=()
 
 if [[ $EXPERIMENTAL ]]; then
     repo_dir=${PATH_REPO_OWNSTUFF_EXPERIMENTAL}
+elif [[ $TESTING ]]; then
+    repo_dir=${PATH_REPO_OWNSTUFF_TESTING}
 else
     repo_dir=${PATH_REPO_OWNSTUFF}
 fi

@@ -1,21 +1,21 @@
 pkgname=mingw-w64-boost
-pkgver=1.87.0
+pkgver=1.88.0
 _boostver=${pkgver//./_}
 pkgrel=1
 pkgdesc="Free peer-reviewed portable C++ source libraries (mingw-w64)"
 arch=('any')
-url="http://www.boost.org/"
-license=('custom')
+url="https://www.boost.org/"
+license=('BSL-1.0')
 depends=('mingw-w64-zstd' 'mingw-w64-bzip2' 'mingw-w64-dlfcn')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'ninja')
 [[ $pkgname =~ .*-clang-.* ]] && makedepends+=('mingw-w64-binutils') # for windmc
 options=('!strip' '!buildflags' 'staticlibs')
 source=(https://github.com/boostorg/boost/releases/download/boost-${pkgver}/boost-${pkgver}-cmake.tar.xz
        0001-Fix-building-with-cmake-on-MINGW.patch
-       0003-fix-build-context-with-CMake-on-arm64.patch)
-sha256sums=('7da75f171837577a52bbf217e17f8ea576c7c246e4594d617bfde7fafd408be5'
-            'abc6c78a252165df1de504d854d942eb486d88f06a6423d8b99dfec6ab138170'
-            'ac6f996db2d5e2e5870b1a2d26c3b7d022f09d5be94945451d90875e8d4ecda4')
+       0003-include-missing-cstdint.patch)
+sha256sums=('f48b48390380cfb94a629872346e3a81370dc498896f16019ade727ab72eb1ec'
+            'c9ed544c7abe9e71587333cbecf73b89fe9815dd247a66407a06611c9de896cc'
+            'fb575db0a68861f11e5bc788d8c0a172e7ffdb5569376eb848ca0f91670d6ec5')
 
 _architectures=(i686-w64-mingw32 x86_64-w64-mingw32)
 
@@ -35,7 +35,7 @@ prepare() {
   sed -i "160i\ \ \ \ <target-os>windows:<library>dl" libs/stacktrace/build/Jamfile.v2
 
   patch -p1 -i ../0001-Fix-building-with-cmake-on-MINGW.patch
-  patch -p1 -i ../0003-fix-build-context-with-CMake-on-arm64.patch
+  patch -p1 -i ../0003-include-missing-cstdint.patch
 }
 
 build() {

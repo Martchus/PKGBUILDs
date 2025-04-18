@@ -2,19 +2,19 @@
  
 _realname=fluidsynth
 pkgname=mingw-w64-fluidsynth
-pkgver=2.4.1
+pkgver=2.4.5
 pkgrel=1
 pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications (mingw-w64)"
 url="https://www.fluidsynth.org/"
 license=(LGPL-2.1-or-later)
 arch=('any')
-#depends=('mingw-w64-sdl2' 'mingw-w64-glib2')
-depends=('mingw-w64-sdl2' 'mingw-w64-glib2' 'mingw-w64-libsndfile' 'mingw-w64-portaudio' 'mingw-w64-readline')
+depends=('mingw-w64-sdl2' 'mingw-w64-glib2' 'mingw-w64-readline')
+[[ $pkgname =~ .*-clang-.* ]] || depends+=('mingw-w64-libsndfile' 'mingw-w64-portaudio')
 makedepends=('mingw-w64-cmake' 'mingw-w64-pkg-config' 'ninja')
 options=('staticlibs' '!buildflags' '!strip')
 source=("${_realname}-${pkgver}.tar.gz::https://github.com/FluidSynth/${_realname}/archive/v${pkgver}.tar.gz")
-sha512sums=('d01d18c42ce98d0daa4e137118fc41f0a59047013870c09bacd9014baadf747e8e73571046781e34bc03eef454f2ef12ee59cf9b2c7f9517c586c08041ebe081')
-b2sums=('15ed3a808d0c0123226a087520564c2833d43c20fd8b6aa273a7467a74d92b8a67159fc960ad2f3a5d764b8e95ec25c1ec045c203058ceb83bfc276408d96b58')
+sha512sums=('cf41eb338fccaafaa6961b8ca9eec6e8f0e35d25ec8f1d6f621fc73bd4b43b301dfe027db4252424118d1772568b949542820777a74b651a3f32c5028a34ed61')
+b2sums=('5f20b1fbe9f01ab2f02746a285be66382a30eaea163be2df676a7ec79f436b6b3dc74fbe454e813e248fe5564a24c590afe6a26817641cbcc9c92d22bb38734a')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -24,13 +24,20 @@ build() {
   for _arch in ${_architectures}; do
     mkdir -p build-${_arch} && pushd build-${_arch}
     
+    [[ $pkgname =~ .*-clang-.* ]] & additional_deps=0 || additional_deps=1
+
     export CFLAGS="$cflags_base"
-    ${_arch}-cmake -G Ninja -S .. -B shared -DBUILD_SHARED_LIBS=1 -Denable-portaudio=1 -Denable-dbus=0
+    ${_arch}-cmake -G Ninja -S .. -B shared -DBUILD_SHARED_LIBS=1 \
+      -Denable-libsndfile=$additional_deps -Denable-portaudio=$additional_deps  -Denable-dbus=0
     sed -i -e "s|/usr/$_arch/lib/libSDL2main.a||g" shared/build.ninja
     VERBOSE=1 cmake --build shared
 
     export CFLAGS="$cflags_base -DGLIB_STATIC_COMPILATION=1 -DGMODULE_STATIC_COMPILATION=1"
-    ${_arch}-cmake -G Ninja -S .. -B static -DBUILD_SHARED_LIBS=0 -Denable-aufile=0 -Denable-dbus=0 -Denable-ipv6=0 -Denable-jack=0 -Denable-ladspa=0 -Denable-midishare=0 -Denable-opensles=0 -Denable-oboe=0 -Denable-oss=0 -Denable-readline=0 -Denable-winmidi=1 -Denable-waveout=0 -Denable-network=0 -Denable-pulseaudio=0 -Denable-dsound=0 -Denable-alsa=0 -Denable-libinstpatch=0 -Denable-portaudio=0 -Denable-wasapi=0 -Denable-openmp=1 -Denable-libsndfile=0 -Denable-sdl2=1
+    ${_arch}-cmake -G Ninja -S .. -B static -DBUILD_SHARED_LIBS=0 \
+      -Denable-aufile=0 -Denable-dbus=0 -Denable-ipv6=0 -Denable-jack=0 -Denable-ladspa=0 -Denable-midishare=0 \
+      -Denable-opensles=0 -Denable-oboe=0 -Denable-oss=0 -Denable-readline=0 -Denable-winmidi=1 -Denable-waveout=0 \
+      -Denable-network=0 -Denable-pulseaudio=0 -Denable-dsound=0 -Denable-alsa=0 -Denable-libinstpatch=0 \
+      -Denable-portaudio=0 -Denable-wasapi=0 -Denable-openmp=1 -Denable-libsndfile=0 -Denable-sdl2=1
     sed -i -e "s|/usr/$_arch/lib/libSDL2main.a||g" static/build.ninja
     VERBOSE=1 cmake --build static
     popd

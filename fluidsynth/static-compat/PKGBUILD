@@ -1,6 +1,6 @@
 _pkgname=fluidsynth
 pkgname=static-compat-$_pkgname
-pkgver=2.4.1
+pkgver=2.4.5
 pkgrel=1
 pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications"
 arch=(x86_64)
@@ -9,8 +9,8 @@ license=(LGPL-2.1-or-later)
 depends=(static-compat-glib2 static-compat-alsa-lib)
 makedepends=(static-compat-cmake ninja)
 source=($_pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/v$pkgver.tar.gz)
-sha512sums=('d01d18c42ce98d0daa4e137118fc41f0a59047013870c09bacd9014baadf747e8e73571046781e34bc03eef454f2ef12ee59cf9b2c7f9517c586c08041ebe081')
-b2sums=('15ed3a808d0c0123226a087520564c2833d43c20fd8b6aa273a7467a74d92b8a67159fc960ad2f3a5d764b8e95ec25c1ec045c203058ceb83bfc276408d96b58')
+sha512sums=('cf41eb338fccaafaa6961b8ca9eec6e8f0e35d25ec8f1d6f621fc73bd4b43b301dfe027db4252424118d1772568b949542820777a74b651a3f32c5028a34ed61')
+b2sums=('5f20b1fbe9f01ab2f02746a285be66382a30eaea163be2df676a7ec79f436b6b3dc74fbe454e813e248fe5564a24c590afe6a26817641cbcc9c92d22bb38734a')
 
 build() {
   export CFLAGS+=' -ldl'

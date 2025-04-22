@@ -17,7 +17,7 @@ makedepends=(static-compat-cmake ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtwebsockets-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('qtwebsockets-sha256.txt missing')
+sha256sums=('6b3add7cacf3a4e0b448d5e69d9dac42795fef63309038af1dc5a454ce514940')
 
 build() {
   check_buildoption ccache y && ccache_args='

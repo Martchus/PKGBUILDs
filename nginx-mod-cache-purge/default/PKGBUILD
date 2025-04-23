@@ -5,7 +5,7 @@ pkgname=nginx-mod-cache-purge
 pkgver=2.3
 pkgrel=16
 _dirname="ngx_cache_purge-${pkgver}"
-_nginxver=1.26.3
+_nginxver=1.28.0
 
 pkgdesc='NGINX module that adds ability to purge content from FastCGI, proxy, SCGI and uWSGI caches'
 arch=('x86_64')

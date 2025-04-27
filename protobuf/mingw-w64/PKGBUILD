@@ -1,6 +1,6 @@
 pkgname=mingw-w64-protobuf
 _pkgname=protobuf
-pkgver=30.1
+pkgver=30.2
 pkgrel=1
 pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
 arch=('any')
@@ -10,15 +10,21 @@ depends=(mingw-w64-zlib mingw-w64-abseil-cpp)
 makedepends=(mingw-w64-cmake-static protobuf)
 options=(!strip !buildflags staticlibs)
 source=("https://github.com/protocolbuffers/${_pkgname}/releases/download/v$pkgver/${_pkgname}-$pkgver.tar.gz"
-        "https://patch-diff.githubusercontent.com/raw/protocolbuffers/${_pkgname}/pull/20025.patch")
-sha256sums=('1451b03faec83aed17cdc71671d1bbdfd72e54086b827f5f6fd02bf7a4041b68'
-            '696cb266acc6a5dc4769c56ed5ba4f1b9f92b12d9683dfe1248c13a72549c875')
+        0001-fix-building-shared-libs-with-clang.patch
+        0002-windres-invocation.patch
+        0003-demote-error-about-buildtime-runtime-version-difference-to-warning.patch)
+sha256sums=('fb06709acc393cc36f87c251bb28a5500a2e12936d4346099f2c6240f6c7a941'
+            '04096f913c1fd5b8c6703e3f696ae7d068c1576ef14fadad2e372da4af188dd0'
+            '174f714b842d5153c79c5fda1ae775ee002aea11d53cb5d5f51cb5c4b9e63d29'
+            '2b680e1c642ccd5bb70b3dcf7217c27360bc0b74f63d8afb66dd668173d9b2dd')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd ${_pkgname}-${pkgver}
-  patch -p1 -i ../20025.patch
+  patch -p1 -i ../0001-fix-building-shared-libs-with-clang.patch
+  patch -p1 -i ../0002-windres-invocation.patch
+  patch -p1 -i ../0003-demote-error-about-buildtime-runtime-version-difference-to-warning.patch
 }
 
 build() {

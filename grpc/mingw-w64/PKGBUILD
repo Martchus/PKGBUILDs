@@ -51,10 +51,11 @@ build() {
   # add STRSAFE_NO_DEPRECATE define, otherwise strsafe breaks libc++ headers
   export CXXFLAGS+=" -DSTRSAFE_NO_DEPRECATE"
 
+  export CXXFLAGS+=" -DNDEBUG -D_WIN32_WINNT=0x600 -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor"
+
   local flags=(
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     -DCMAKE_DLL_NAME_WITH_SOVERSION=ON
-    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -D_WIN32_WINNT=0x600 -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor"
     -DgRPC_INSTALL=ON
     -DCMAKE_SKIP_RPATH=ON
     -DCMAKE_CXX_STANDARD=17
@@ -76,7 +77,7 @@ build() {
     -GNinja
   )
   for _arch in ${_architectures}; do
-    if $_arch =~ x86_64-.* ]]; then
+    if [[ $_arch =~ x86_64-.* ]]; then
       # https://github.com/msys2/MINGW-packages/issues/8984
       extra_ldflags=-Wl,--disable-dynamicbase,--default-image-base-low
     else

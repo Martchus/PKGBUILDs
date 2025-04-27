@@ -8,4 +8,5 @@ url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
 pkgdesc='Provides the modules QtGrpc and QtProtobuf (mingw-w64)'
 depends=(<%== qt6deps qw(base) %> 'mingw-w64-grpc')
-makedepends=('mingw-w64-cmake<%== $static_suffix %>' 'mingw-w64-protobuf' 'protobuf' 'qt6-base' 'ninja')
+optdepends=(<%== qt6optdeps declarative => 'QML bindings' %>)
+makedepends=('mingw-w64-cmake<%== $static_suffix %>' <%== qt6deps qw(declarative shadertools) %> 'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-protobuf' 'protobuf' 'qt6-grpc' 'qt6-declarative' 'qt6-shadertools' 'ninja')

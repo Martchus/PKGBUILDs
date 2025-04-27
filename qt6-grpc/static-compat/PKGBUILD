@@ -15,8 +15,20 @@ depends=(static-compat-qt6-base)
 makedepends=(static-compat-cmake protobuf ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtgrpc-everywhere-src-${_qtver}"
-source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('qtgrpc-sha256.txt missing')
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
+        '0001-Adapt-the-generator-code-to-be-compatible-with-proto.patch')
+sha256sums=('qtgrpc-sha256.txt missing'
+            '88a5a27cff250e8823bf11bfae21ec8739eaeed2ea375a6daa6eedffaac9bb77')
+
+prepare () {
+  cd $_pkgfqn
+
+  # apply patches; further descriptions can be found in patch files itself
+  for patch in "$srcdir/"*.patch; do
+    msg2 "Applying patch $patch"
+    patch -p1 -i "$patch"
+  done
+}
 
 build() {
   check_buildoption ccache y && ccache_args='

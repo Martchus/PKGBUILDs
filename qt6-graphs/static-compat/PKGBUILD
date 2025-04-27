@@ -3,21 +3,21 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-pkgname=static-compat-qt6-quick3d
+pkgname=static-compat-qt6-graphs
 _qtver=6.9.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
-license=(GPL3 LGPL3 FDL custom)
-pkgdesc='Qt module and API for defining 3D content in Qt Quick'
-depends=(static-compat-qt6-declarative)
+license=(GPL-3.0-only LGPL-3.0-only LicenseRef-Qt-Commercial Qt-GPL-exception-1.0)
+pkgdesc='Qt Graphs for data visualization'
+depends=(static-compat-qt6-declarative static-compat-qt6-quick3d)
 makedepends=(static-compat-cmake static-compat-vulkan-headers
              static-compat-qt6-shadertools ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
-_pkgfqn="qtquick3d-everywhere-src-${_qtver}"
+_pkgfqn="qtgraphs-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('a295268fdca5aeaab6bb4bb1a0a4d2720b19679ab5145c5185dac7ac3399e488')
+sha256sums=('9e5b08cdc1934b2525b5586a458861c180ee9f3aaccf6c36bac37b502afaa0c6')
 
 build() {
   check_buildoption ccache y && ccache_args='
@@ -34,8 +34,7 @@ build() {
     -DWAYLAND_USE_PKG_CONFIG=ON \
     -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     -DQT_FEATURE_static_runtime=ON \
-    -DFEATURE_pkg_config=ON \
-      -DFEATURE_quick3d_assimp=OFF
+    -DFEATURE_pkg_config=ON
   VERBOSE=1 cmake --build build
 }
 

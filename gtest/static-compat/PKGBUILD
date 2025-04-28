@@ -1,0 +1,41 @@
+pkgname=static-compat-gtest
+pkgver=1.16.0
+pkgrel=2
+pkgdesc='Google Test - C++ testing utility'
+url='https://github.com/google/googletest'
+arch=('x86_64')
+license=('BSD-3-Clause')
+depends=('gcc-static-compat')
+makedepends=('static-compat-cmake' 'python')
+optdepends=('python: gmock generator')
+_srcname=googletest-${pkgver}
+source=("${_srcname}.tar.gz::https://github.com/google/googletest/archive/v${pkgver}.tar.gz")
+sha512sums=('bec8dad2a5abbea8e9e5f0ceedd8c9dbdb8939e9f74785476b0948f21f5db5901018157e78387e106c6717326558d6642fc0e39379c62af57bf1205a9df8a18b')
+
+build() {
+ source static-compat-environment
+ static-compat-cmake -H${_srcname} -Bbuild \
+    -DCMAKE_INSTALL_PREFIX=/usr/static-compat \
+    -DCMAKE_BUILD_TYPE=None \
+    -Wno-dev \
+    -DBUILD_SHARED_LIBS=OFF \
+    -Dgtest_build_tests=ON \
+    -DGOOGLETEST_VERSION=$pkgver
+  cmake --build build
+}
+
+check() {
+  source static-compat-environment
+  cmake --build build --target test
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="${pkgdir}" cmake --install build
+
+  cd ${_srcname}
+  install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm 644 README.md CONTRIBUTORS -t "${pkgdir}/usr/share/doc/${pkgname}"
+}
+
+# vim: ts=2 sw=2 et:

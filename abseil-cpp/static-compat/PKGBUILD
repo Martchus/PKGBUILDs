@@ -1,0 +1,48 @@
+_pkgname=abseil-cpp
+pkgname=static-compat-$_pkgname
+pkgver=20250127.1
+pkgrel=1
+pkgdesc="Collection of C++ library code designed to augment the C++ standard library"
+arch=('x86_64')
+url='https://abseil.io'
+license=('Apache-2.0')
+depends=('static-compat-gtest')
+makedepends=('static-compat-cmake')
+source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/$_pkgname-$pkgver.tar.gz"
+         scoped-mock-log.patch)
+sha256sums=('b396401fd29e2e679cace77867481d388c807671dc2acc602a0259eeb79b7811'
+            'a6cbc612a2b96fcbd52d081e03e8581107ceb4827edb19d96510a31c568e1396')
+
+prepare() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  patch -p1 -i ../scoped-mock-log.patch # Install target needed by protobuf
+}
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  source static-compat-environment
+  static-compat-cmake -Bbuild \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG" \
+    -DCMAKE_INSTALL_PREFIX=/usr/static-compat \
+    -DCMAKE_CXX_STANDARD=17 \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DABSL_BUILD_TEST_HELPERS=ON \
+    -DABSL_USE_EXTERNAL_GOOGLETEST=ON \
+    -DABSL_FIND_GOOGLETEST=ON \
+    -DABSL_BUILD_TESTING=ON
+  cd build
+  cmake --build . --target all
+}
+
+check() {
+  cd "$srcdir/$_pkgname-$pkgver/build"
+  source static-compat-environment
+  ctest
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver/build"
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install .
+}

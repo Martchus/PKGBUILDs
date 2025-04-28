@@ -1,0 +1,58 @@
+_pkgname=abseil-cpp
+_android_arch=armv7a-eabi
+pkgname=android-$_android_arch-$_pkgname
+pkgver=20250127.1
+pkgrel=1
+pkgdesc="Collection of C++ library code designed to augment the C++ standard library (Android, $_android_arch)"
+arch=('x86_64')
+url='https://abseil.io'
+license=('Apache-2.0')
+depends=('android-ndk')
+checkdepends=("android-$_android_arch-gtest")
+makedepends=('android-cmake')
+options=(!strip !buildflags !libtool staticlibs !emptydirs)
+source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/$_pkgname-$pkgver.tar.gz"
+         scoped-mock-log.patch)
+sha256sums=('b396401fd29e2e679cace77867481d388c807671dc2acc602a0259eeb79b7811'
+            'a6cbc612a2b96fcbd52d081e03e8581107ceb4827edb19d96510a31c568e1396')
+
+prepare() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  #patch -p1 -i ../scoped-mock-log.patch # Install target needed by protobuf
+}
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  source android-env ${_android_arch}
+  android-$_android_arch-cmake -Bbuild \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG" \
+    -DCMAKE_CXX_STANDARD=17 \
+    -DBUILD_SHARED_LIBS=ON \
+    -DABSL_BUILD_TEST_HELPERS=OFF \
+    -DABSL_USE_EXTERNAL_GOOGLETEST=ON \
+    -DABSL_FIND_GOOGLETEST=ON \
+    -DABSL_BUILD_TESTING=OFF \
+    -DGTEST_INCLUDE_DIR="${ANDROID_PREFIX_INCLUDE}" \
+    -DGTEST_LIBRARY="${ANDROID_PREFIX_LIB}/libgtest_main.so" \
+    -DGTEST_MAIN_LIBRARY="${ANDROID_PREFIX_LIB}/libgtest.so" \
+    -DGMOCK_LIBRARY="${ANDROID_PREFIX_LIB}/libgmock_main.so" \
+    -DGMOCK_MAIN_LIBRARY="${ANDROID_PREFIX_LIB}/libgmock.so"
+  cd build
+  cmake --build . --target all
+}
+
+check() {
+  cd "$srcdir/$_pkgname-$pkgver/build"
+  source android-env ${_android_arch}
+  ctest
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver/build"
+  source android-env ${_android_arch}
+  DESTDIR="$pkgdir" cmake --install .
+  rm -rf "${pkgdir}/${ANDROID_PREFIX_SHARE}"
+  ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
+  #${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a
+}

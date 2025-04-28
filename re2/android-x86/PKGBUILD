@@ -1,0 +1,46 @@
+_pkgname=re2
+_android_arch=x86
+pkgname=android-$_android_arch-$_pkgname
+_re2ver=2024-07-02
+pkgrel=4
+epoch=1
+pkgver=${_re2ver//-}
+pkgdesc="Fast, safe, thread-friendly regular expression engine (Android, $_android_arch)"
+arch=('x86_64')
+url="https://github.com/google/re2"
+license=('BSD-3-Clause')
+depends=("android-$_android_arch-abseil-cpp")
+checkdepends=("android-$_android_arch-gtest")
+makedepends=('android-configure')
+options=(!strip !buildflags !libtool staticlibs !emptydirs)
+source=(re2-$pkgver.tar.gz::https://github.com/google/re2/archive/$_re2ver.tar.gz)
+sha256sums=('eb2df807c781601c14a260a507a5bb4509be1ee626024cb45acbd57cb9d4032b')
+
+prepare() {
+  cd $_pkgname-$_re2ver
+  sed -e 's|SOVER=.*|SOVER=so|g' \
+      -e 's|MAKE_SHARED_LIBRARY=.*|MAKE_SHARED_LIBRARY=$(CXX) -shared|g' \
+      -i Makefile
+}
+
+build() {
+  source android-env ${_android_arch}
+  cd $_pkgname-$_re2ver
+  make static shared
+}
+
+check() {
+  cd $_pkgname-$_re2ver
+  make static-test shared-test || true
+}
+
+
+package() {
+  source android-env ${_android_arch}
+  cd $_pkgname-$_re2ver
+  make prefix="${ANDROID_PREFIX}" DESTDIR="$pkgdir" static-install shared-install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  rm -rf "${pkgdir}/${ANDROID_PREFIX_SHARE}"
+  ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
+  ${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a
+}

@@ -32,7 +32,12 @@ my %patterns = (
         {se => 'for _target in ${_targets}; do', append => "\n    source mingw-clang-env \$_target"},
         {re => '.*source mingw-env.*', repl => ''},
         {re => 'install-mingw-w64-clang-aarch64-strip', repl => 'install-mingw-w64-strip'},
-    ]}
+    ]},
+    'android-aarch64' => {
+        'android-armv7a-eabi' => [{re => '_android_arch=aarch64', repl => '_android_arch=armv7a-eabi'}],
+        'android-x86-64' => [{re => '_android_arch=aarch64', repl => '_android_arch=x86-64'}],
+        'android-x86' => [{re => '_android_arch=aarch64', repl => '_android_arch=x86'}]
+    },
 );
 
 # allow conversion from mingw-w64-qt6 and *-static to mingw-w64-clang-aarch64-qt6 and *-static as well

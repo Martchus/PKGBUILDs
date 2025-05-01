@@ -1,0 +1,92 @@
+_pkgname=grpc
+pkgname=static-compat-$_pkgname
+pkgver=1.72.0
+_gtestver=2dd1c131950043a8ad5ab0d2dda0e0970596586a
+_protover=30.2
+pkgrel=1
+pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first"
+arch=('x86_64')
+url='https://grpc.io'
+license=('Apache-2.0')
+depends=(
+  'static-compat-abseil-cpp'
+  'static-compat-c-ares'
+  'static-compat-openssl'
+  'static-compat-protobuf'
+  'static-compat-re2'
+)
+makedepends=(
+  'static-compat-cmake'
+  'ninja'
+)
+source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
+        "https://github.com/google/googletest/archive/$_gtestver/googletest-$_gtestver.tar.gz"
+        "https://github.com/protocolbuffers/protobuf/archive/v$_protover/protobuf-$_protover.tar.gz")
+sha256sums=('4a8aa99d5e24f80ea6b7ec95463e16af5bd91aa805e26c661ef6491ae3d2d23c'
+            '31bf78bd91b96dd5e24fab3bb1d7f3f7453ccbaceec9afb86d6e4816a15ab109'
+            '07a43d88fe5a38e434c7f94129cad56a4c43a51f99336074d0799c2f7d4e44c5')
+
+prepare() {
+  source static-compat-environment
+  cd "$srcdir/$_pkgname-$pkgver"
+
+  ln -sf "$srcdir/googletest-$_gtestver/"{googlemock,googletest} \
+    third_party/googletest
+
+  # CMake only downloads third party depends when folder does not exist
+  rmdir third_party/{envoy-api,xds,googleapis,protoc-gen-validate}
+
+  # use system protobuf for grpcio_tools
+  sed -r -i \
+      -e '/^CC_FILES=\[/,/\]/{/^CC_FILES=\[/n;/\]/!d;}' \
+      -e '/^CC_INCLUDES=\[/,/\]/{/^CC_INCLUDES=\[/n;/\]/!d;}' \
+      -e "s@^(PROTO_INCLUDE=')[^']+'@\1/usr/include'@" \
+      -e '/^PROTOBUF_SUBMODULE_VERSION=/d' \
+      tools/distrib/python/grpcio_tools/protoc_lib_deps.py
+  ln -s ../../../.. tools/distrib/python/grpcio_tools/grpc_root
+
+  if ! pkgconf protobuf --exact-version=$_protover.0; then
+    echo "protobuf version mismatch"
+    exit 1
+  fi
+}
+
+build() {
+  source static-compat-environment
+  cd "$srcdir/$_pkgname-$pkgver"
+  static-compat-cmake -Bbuild \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor" \
+    -DgRPC_INSTALL=ON \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DCMAKE_CXX_STANDARD=17 \
+    -DCMAKE_INSTALL_PREFIX=/usr/static-compat \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DgRPC_BUILD_TESTS=OFF \
+    -DgRPC_BUILD_CODEGEN=ON \
+    -DgRPC_ZLIB_PROVIDER='package' \
+    -DgRPC_CARES_PROVIDER='package' \
+    -DgRPC_RE2_PROVIDER='package' \
+    -DgRPC_SSL_PROVIDER='package' \
+    -DgRPC_PROTOBUF_PROVIDER='package' \
+    -DgRPC_ABSL_PROVIDER:STRING='package' \
+    -DgRPC_USE_PROTO_LITE=OFF \
+    -DgRPC_USE_SYSTEMD=OFF \
+    -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON \
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=OFF \
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=OFF \
+    -GNinja
+
+  cd build
+  cmake --build .
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver/build"
+  DESTDIR="$pkgdir" cmake --install .
+  install -Dm644 ../LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

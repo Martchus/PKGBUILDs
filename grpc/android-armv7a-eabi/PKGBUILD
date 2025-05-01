@@ -1,0 +1,112 @@
+_android_arch=armv7a-eabi
+
+_pkgname=grpc
+pkgname=android-${_android_arch}-${_pkgname}
+_protover=30.2
+_opencensus_proto_ver=0.4.1
+pkgver=1.72.0
+pkgrel=1
+arch=('any')
+pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (Android ${_android_arch})"
+url='https://grpc.io'
+license=('Apache-2.0')
+groups=('android-grpc')
+depends=(
+  android-${_android_arch}-zlib
+  android-${_android_arch}-abseil-cpp
+  android-${_android_arch}-c-ares
+  android-${_android_arch}-re2
+  android-${_android_arch}-protobuf
+  android-${_android_arch}-openssl
+)
+makedepends=(
+  android-cmake
+  protobuf
+  grpc
+  ninja
+)
+options=(!strip !buildflags staticlibs !emptydirs)
+source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
+        "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz")
+sha256sums=('4a8aa99d5e24f80ea6b7ec95463e16af5bd91aa805e26c661ef6491ae3d2d23c'
+            'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3')
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+
+  if ! pkgconf protobuf --exact-version=$_protover.0; then
+    echo "protobuf version mismatch"
+    exit 1
+  fi
+
+  rm -rf third_party/opencensus-proto
+  mv "${srcdir}"/opencensus-proto-${_opencensus_proto_ver} third_party/opencensus-proto
+}
+
+build() {
+  source android-env ${_android_arch}
+
+  local flags=(
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DCMAKE_DLL_NAME_WITH_SOVERSION=ON
+    -DgRPC_INSTALL=ON
+    -DCMAKE_SKIP_RPATH=ON
+    -DCMAKE_CXX_STANDARD=17
+    -DgRPC_BUILD_TESTS=OFF
+    -DgRPC_ZLIB_PROVIDER='package'
+    -DgRPC_CARES_PROVIDER='package'
+    -DgRPC_RE2_PROVIDER='package'
+    -DgRPC_SSL_PROVIDER='package'
+    -DgRPC_PROTOBUF_PROVIDER='package'
+    -DgRPC_ABSL_PROVIDER:STRING='package'
+    -DgRPC_USE_PROTO_LITE=OFF
+    -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_NODE_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_OBJECTIVE_C_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PHP_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_PYTHON_PLUGIN=ON
+    -DgRPC_BUILD_GRPC_RUBY_PLUGIN=ON
+    -DgRPC_BUILD_CODEGEN=ON
+    -D_gRPC_CPP_PLUGIN:FILEPATH=/usr/bin/grpc_cpp_plugin
+    -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE:FILEPATH=/usr/bin/protoc
+    -Dc-ares_DIR="${ANDROID_PREFIX_LIB}/cmake/c-ares"
+    -Dutf8_range_DIR="${ANDROID_PREFIX_LIB}/cmake/utf8_range"
+    -Dabsl_DIR="${ANDROID_PREFIX_LIB}/cmake/absl"
+    -DProtobuf_DIR="${ANDROID_PREFIX_LIB}/cmake/protobuf"
+    -Dc-ares_INCLUDE_DIR="${ANDROID_PREFIX_INCLUDE}"
+    -DOPENSSL_INCLUDE_DIR="${ANDROID_PREFIX_INCLUDE}"
+    -Wno-dev
+    -GNinja
+  )
+
+  android-${_android_arch}-cmake \
+    -S ${_pkgname}-${pkgver} \
+    -B build-static \
+    -D BUILD_SHARED_LIBS=OFF \
+    -Dc-ares_LIBRARY="${ANDROID_PREFIX_LIB}/libcares.a" \
+    -DOPENSSL_CRYPTO_LIBRARY="${ANDROID_PREFIX_LIB}/libcrypto.a" \
+    -DOPENSSL_SSL_LIBRARY="${ANDROID_PREFIX_LIB}/libssl.a" \
+    "${flags[@]}"
+  cmake --build build-static
+
+  # disabled, see https://github.com/grpc/grpc/issues/36896
+  #android-${_android_arch}-cmake \
+  #  -S ${_pkgname}-${pkgver} \
+  #  -B build-shared \
+  #  -D BUILD_SHARED_LIBS=ON \
+  #  -Dc-ares_LIBRARY="${ANDROID_PREFIX_LIB}/libcares.so" \
+  #  -DOPENSSL_CRYPTO_LIBRARY="${ANDROID_PREFIX_LIB}/libcrypto.so" \
+  #  -DOPENSSL_SSL_LIBRARY="${ANDROID_PREFIX_LIB}/libssl.so" \
+  #  "${flags[@]}"
+  #cmake --build build-shared
+}
+
+package() {
+  source android-env ${_android_arch}
+
+  DESTDIR=${pkgdir} cmake --install build-static
+  #DESTDIR=${pkgdir} cmake --install build-shared
+  #${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
+  ${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a
+}

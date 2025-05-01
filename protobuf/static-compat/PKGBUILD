@@ -1,0 +1,66 @@
+_pkgname=protobuf
+pkgname=static-compat-$_pkgname
+pkgver=30.2
+pkgrel=2
+pkgdesc="Protocol Buffers - Google's data interchange format"
+arch=('x86_64')
+url='https://developers.google.com/protocol-buffers/'
+license=('BSD-3-Clause')
+depends=(
+  'static-compat-zlib'
+  'static-compat-abseil-cpp'
+)
+makedepends=(
+  'static-compat-cmake'
+  'static-compat-gtest'
+  'git'
+)
+source=(
+  git+https://github.com/protocolbuffers/protobuf.git#tag=v$pkgver
+  protobuf-fix-build-type-none.patch
+  # https://github.com/protocolbuffers/protobuf/issues/11935
+)
+sha512sums=('cbcd41de2e98404226b4c287ed39dce3260c4822ab5960253b54fae27ac9c683d0f57afa80961c331c1994968529c8b35286ba910b82234d3cde455c3a08150d'
+            '18bc71031bbcbc3810a9985fa670465040f06a6c104ab8079b56bdfc499bb6cec40805a0cefd455031142490a576dc60aa8000523877ac0353b93558e9beabbd'
+            '1ebdea4e533ee0f71baf1b3fe2623ca723b36a08c6b97475ea5996b10aeb6873cf94d9120596ddd1216bd2f6feb991f8c33078e8104008a5078ace5be5431efd')
+
+options=(!lto)
+
+_gemname=google-protobuf
+
+prepare() {
+  cd "$_pkgname"
+
+  patch -p1 < ../protobuf-fix-build-type-none.patch # Fix cmake config compatibility mode
+}
+
+build() {
+  source static-compat-environment
+  local cmake_options=(
+    -B build
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_PREFIX=/usr/static-compat
+    -D CMAKE_C_FLAGS="$CFLAGS -ffat-lto-objects"
+    -D CMAKE_CXX_FLAGS="$CXXFLAGS -ffat-lto-objects"
+    -D CMAKE_SKIP_RPATH=ON
+    -D protobuf_BUILD_SHARED_LIBS=OFF
+    -D protobuf_USE_EXTERNAL_GTEST=ON
+    -D protobuf_ABSL_PROVIDER=package
+    -S "$_pkgname"
+    -W no-dev
+  )
+
+  static-compat-cmake "${cmake_options[@]}"
+  cmake --build build --verbose
+}
+
+check() {
+  ctest --test-dir build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  cd $_pkgname
+  install -vDm 644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}

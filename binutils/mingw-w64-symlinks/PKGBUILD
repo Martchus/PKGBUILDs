@@ -1,11 +1,11 @@
 # Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
-# Same as official package but uses symlinks instead of hard links allowing
+# Same as mingw-w64-binutils package but uses symlinks instead of hard links allowing
 # installation when /usr/i686-w64-mingw32 and /usr/x86_64-w64-mingw32 are
 # bound from another partition.
 
 pkgname=mingw-w64-binutils-symlinks
-pkgver=2.42
+pkgver=2.44
 pkgrel=1
 pkgdesc="Cross binutils for the MinGW-w64 cross-compiler"
 arch=('x86_64')
@@ -13,19 +13,68 @@ url="http://www.gnu.org/software/binutils"
 license=(GPL-2.0-or-later GPL-3.0-or-later LGPL-2.0-or-later LGPL-3.0-or-later GFDL-1.3 FSFAP)
 groups=('mingw-w64-toolchain' 'mingw-w64')
 depends=('zlib')
-provides=('mingw-w64-binutils')
-conflicts=('mingw-w64-binutils');
 options=('!libtool' '!emptydirs')
 validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')  # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
-source=("https://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.gz"{,.sig})
-sha512sums=('1e4ee462513eadd3c540e4782f9661df62ecbcd4d6297d61dcc0845ae7d30243c57571787706af3bb4d561e4350609d7057307290e81d76290a301f159a6abc5'
-            'SKIP')
+source=(https://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.gz{,.sig}
+        0002-check-for-unusual-file-harder.patch
+        0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
+        0110-binutils-mingw-gnu-print.patch
+        2001-ld-option-to-move-default-bases-under-4GB.patch
+        2003-Restore-old-behaviour-of-windres-so-that-options-con.patch
+        reproducible-import-libraries.patch
+        libiberty-unlink-handle-windows-nul.patch
+        3001-hack-libiberty-link-order.patch
+)
+sha256sums=('f66390a661faa117d00fab2e79cf2dc9d097b42cc296bf3f8677d1e7b452dc3a'
+            'SKIP'
+            '2c99345fc575c3a060d6677537f636c6c4154fac0fde508070f3b6296c1060d4'
+            '4e8ac055df61b1b5d6ae29dc87e1154737c2e87c7b244b44866702cabf1a5d18'
+            '79eab27a3b0aeaddcdac49c93b5e3ee1bfac7e9782fc4d17d64061a52362e76a'
+            '9945635f4a67712616202f09cbb66cf70df01be168c2c8054c455bb58bf334dd'
+            'd584f1cd9e94cba0e9b27625c4acc8ad5242cd625c9b44839d42fc116072568c'
+            'a094660ec95996c00b598429843b7869037732146442af567ada9f539bd40480'
+            '7ccbd418695733c50966068fa9755a6abb156f53af23701d2bc097c63e9e0030'
+            '604628156c08f3e361de60329af250fab6839e23e61e289f8369a7e18a04e277')
 
 _targets="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd "$srcdir"/binutils-${pkgver}
-  #do not install libiberty
+
+  # Apply various patches from MSYS2
+  patch -p1 -i ../0002-check-for-unusual-file-harder.patch
+  patch -p1 -i ../0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
+  patch -p1 -i ../0110-binutils-mingw-gnu-print.patch
+
+  # Add an option to change default bases back below 4GB to ease transition
+  # https://github.com/msys2/MINGW-packages/issues/7027
+  # https://github.com/msys2/MINGW-packages/issues/7023
+  patch -p1 -i ../2001-ld-option-to-move-default-bases-under-4GB.patch
+
+  # https://github.com/msys2/MINGW-packages/pull/9233#issuecomment-889439433
+  patch -R -p1 -i "${srcdir}/2003-Restore-old-behaviour-of-windres-so-that-options-con.patch"
+
+  # patches for reproducibility from Debian:
+  # https://salsa.debian.org/mingw-w64-team/binutils-mingw-w64/-/tree/master/debian/patches
+  # confirmed with 2.42 that it's still required
+  patch -p2 -i "${srcdir}/reproducible-import-libraries.patch"
+
+  # Handle Windows nul device
+  # https://github.com/msys2/MINGW-packages/issues/1840
+  # https://github.com/msys2/MINGW-packages/issues/10520
+  # https://github.com/msys2/MINGW-packages/issues/14725
+
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108276
+  # https://gcc.gnu.org/pipermail/gcc-patches/2023-January/609487.html
+  patch -p1 -i "${srcdir}/libiberty-unlink-handle-windows-nul.patch"
+
+  # XXX: make sure we link against the just built libiberty, not the system one
+  # to avoid a linker error. All the ld deps contain system deps and system
+  # search paths, so imho if things link against the system lib or the just
+  # built one is just luck, and I don't know how that is supposed to work.
+  patch -p1 -i "${srcdir}/3001-hack-libiberty-link-order.patch"
+
+  # do not install libiberty
   sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
 }
 

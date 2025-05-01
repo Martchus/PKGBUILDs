@@ -1,5 +1,5 @@
 pkgname=mingw-w64-libxml2
-pkgver=2.13.8
+pkgver=2.14.2
 pkgrel=1
 arch=('any')
 pkgdesc='XML C parser and toolkit (mingw-w64)'
@@ -10,7 +10,7 @@ options=('!buildflags' '!strip' 'staticlibs')
 license=(MIT)
 # using GitHub mirror as https://gitlab.gnome.org/GNOME/libxml2.git seems broken right now
 source=("git+https://github.com/GNOME/libxml2.git#tag=v$pkgver")
-b2sums=('81e02da9df8ca795ab48a26e2c3f6e728f6eb0d24431034cedd62b37704b23c5f2691984b0b6b2db0990db76703f4a312226bfcc3a73719d974f2d975b63a018')
+b2sums=('711b2e11d09bba7d0c17237bdbf951208469ae910c47e8875ef17b03196d8e96595e831849c05c141d708418b8ec2dbe3957365623db25151ee2ca48bc68ce11')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -44,7 +44,6 @@ package() {
   for _arch in ${_architectures}; do
     cd "${srcdir}/libxml2/build-${_arch}"
     make install DESTDIR="${pkgdir}"
-    rm -r "${pkgdir}"/usr/${_arch}/share
     rm "${pkgdir}"/usr/${_arch}/bin/*.exe
     ${_arch}-strip --strip-unneeded "${pkgdir}"/usr/${_arch}/bin/*.dll
     ${_arch}-strip --strip-debug "${pkgdir}"/usr/${_arch}/lib/*.a

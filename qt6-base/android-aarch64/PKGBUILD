@@ -13,7 +13,7 @@ _android_arch=aarch64
 pkgname=android-aarch64-qt6-base
 _qtver=6.9.0
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=3
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -51,27 +51,29 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0016-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
         '0017-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
         '0018-Allow-handling-Android-activity-lifecycle-by-user-pr.patch'
-        '0019-Avoid-compile-error-due-to-inconsistent-use-of-noexc.patch')
+        '0019-Avoid-compile-error-due-to-inconsistent-use-of-noexc.patch'
+        '0020-Allow-keeping-Android-app-in-background-with-QtQuick.patch')
 sha256sums=('c1800c2ea835801af04a05d4a32321d79a93954ee3ae2172bbeacf13d1f0598c'
-            '33b840666d25b811793ab7036f283808985e25759a26fd7774a8a3806f3b6623'
-            'f98ea3a3dd22978ce810fd6905679dcc1a6169581370a5df271bfaafc321e171'
-            'a5ceea4ec85ff27584d3a037bfec6a6c781c262dc9f79bb85ab3330fb10222f2'
-            'cb3dca040644e16dcb793582da514ce05c6e30949e9970f9c6009baa5204d2c8'
-            'bdc57cd43bd43cc7f7314b974c2f350279808d8917bb9ececca0ad6c5d76cb4f'
-            'c15773c5aeddb6a7e5a64519b7fdecda41e18b3b1aef7636ed0f5c749ee4bc2b'
-            '24a1926b9846bb7f952b4a04c913d94bbdd9e467997bea64a5f8ff2c1bd7b393'
-            'c74c59c11fc00fe31c534bbe2ebf145130bfa126cdff949e1b0a0f0787cf0893'
-            'dadde9eeb666f67fda6b060a224cb38cb3cd4f5fdb7fb6ed3a2ddf51552ccc37'
-            '0573476620eca661c8c2857448e019dfac4a40b7f919a8243bb47771cf11ab08'
-            'e0b69a9c2bc2ab00357b8b7348695b460751dfa8bc3e3facf34250c9ec795185'
-            '4b1c4c95debb340a0aae66214f67074557cda9ff360334f01b89cc55ad397351'
-            '01c817322bbf9652e4566f002651dd3fb51cdc09fa6b1039615807f96afb5f1b'
-            '06e83450a1767fbff9c5621b9483989cccc14b2ff71727f503e37cd837f27777'
-            'af2616c13115a11edd9230110dd34443f8f8a51e894d053609f37224c084dd35'
-            'd2696b6df1e2c7aa1bc201c7e0176d77d5fd2a4ea177d263e7221486409a6e75'
-            '3c4beba49164d9d3b7d102a7eceb0057d8a226f4811aeaad19d1cfcbb987f900'
-            'd422db7b864b8158bc45d1049edf342915e7eb134aeb278eadd3158c8dd526de'
-            'c53b4c041bda08e637573d1c54857704e54bf4c36054a4aeb2d8b9c6ee0486d0')
+            '02f84f95a467ad166b8aa6c388238d1e11996cf34039ec86999902297e9bc30a'
+            '6b41d4b1f4da1980ab0ccd582e59309a4c0acf523dc274b783b04344b2d70e95'
+            'f9791666abf13ba6a2dcd93e1d5b0ece0383ba2ce7018c3830084af01ca6004d'
+            '5fa40b15521c39f8f8bb9cacfe10d3497ea72f24ea8f7bce7dc1b0f9eb5c4900'
+            '9bc80ffab2455bcbff546ffc849a9847c53f751745ee324016e0ae7d025c92dc'
+            '6c29da4b0d3859cd182696d7491366d66adabf925d29294e268fc5e3a16da9df'
+            'e49909c4c62d12414840485dcb8ae5ac939f8ff7253617f83ff193e867d61f5c'
+            '4b888e778a8e185b03eb90ab86bcb78cd1cde7d391b4f118390ddf97b9032b7b'
+            'b865efbf5dd2ce0c55be70038a70874989dc0e196e3b136e8464652d89cb67d2'
+            '9c5b8ddbf8a6c35eb9d0f1dc044cbdb47a8df7b53587ea6c57a4ce031d25bd3a'
+            '9fec8be40dc8ce30bc78423bda55813c53805eea0604d04f819e3ac90050d685'
+            'd08f469f6413ad56a23fe52aa2c2c4109f68ba4bf95f33788703353c6b840e97'
+            '61f93ee43282a0e6e3e8b7cf58c3decd0c504ae9fa223615021c23b67f77e513'
+            '03f99b896aa3d4bceb01bf5b8b396c596685aa90fae751fd6dbfa2fc172daded'
+            '1cfbfe103e083507cac9bc69b834644bcc8d7e61e3877284562621e1eee607ff'
+            '214e5e7c71e69d1e7036fa62d939c85ca2ceb3ad9873b82157a718b2893b1471'
+            '963f131116ff6675d8d48a82d53b23671c56a5eec264be48d02ab0ca0d2f7b7b'
+            '5850f7bbd9496470c4bf36dc19f52e5d50c8a3c37b9083f9a359efffe7c39602'
+            '981d3211b21242e9598649b23b7c0c2c91d2a906a59b2662dc6b6aad8424ddc0'
+            'fc81875f3c772ba9eab4283ffc30fc232c7086e70c11f8adf248370436e516fa')
 
 prepare () {
   cd $_pkgfqn

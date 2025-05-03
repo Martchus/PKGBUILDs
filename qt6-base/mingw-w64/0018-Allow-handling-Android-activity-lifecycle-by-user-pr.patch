@@ -1,7 +1,7 @@
 From 777ee23ce9235010234bd150b7ed410e4dd56268 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Thu, 16 Jan 2025 21:21:50 +0100
-Subject: [PATCH 18/19] Allow handling Android activity lifecycle by user
+Subject: [PATCH 18/20] Allow handling Android activity lifecycle by user
  provided methods
 
 Change-Id: I52107fadaea431c2932c1a1948ca7d2c889abd6d

@@ -101,8 +101,7 @@ build() {
       -DFEATURE_system_freetype=OFF \
       -DFEATURE_system_harfbuzz=OFF \
       -DFEATURE_system_sqlite=ON \
-      -DFEATURE_system_libjpeg=ON \
-      -DFEATURE_system_libpng=ON \
+      -DFEATURE_icu=OFF \
       -DFEATURE_system_zlib=ON \
       -DINSTALL_DOCDIR=share/doc/qt6 \
       -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \

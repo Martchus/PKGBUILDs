@@ -6,7 +6,7 @@
 _pkgname=rapidjson
 pkgname=$_pkgname-doc
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A fast JSON parser/generator for C++ with both SAX/DOM style API (documentation)'
 arch=('any')
 url="https://github.com/miloyip/$_pkgname"
@@ -25,6 +25,7 @@ build () {
       -G Ninja \
       -DCMAKE_BUILD_TYPE=None \
       -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+      -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
       -DRAPIDJSON_HAS_STDSTRING=ON \
       -DRAPIDJSON_BUILD_CXX11=ON \
       -DRAPIDJSON_ENABLE_INSTRUMENTATION_OPT=OFF \

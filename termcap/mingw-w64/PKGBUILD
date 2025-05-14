@@ -23,7 +23,7 @@ build() {
   autoconf
   for _arch in ${_architectures}; do
     mkdir -p build-${_arch} && pushd build-${_arch}
-    export CPPFLAGS='-fpermissive -fPIC -Wno-error=implicit-function-declaration'
+    export CPPFLAGS='-fpermissive -fPIC -Wno-error=implicit-function-declaration -std=c17'
     ${_arch}-configure
     make
     # Build a shared library.  No need for -fPIC on Windows.

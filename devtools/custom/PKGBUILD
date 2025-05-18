@@ -9,11 +9,11 @@
 pkgname=devtools-custom
 _pkgname=devtools
 epoch=1
-pkgver=1.3.0
+pkgver=1.3.2
 pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
-license=('GPL')
+license=('GPL-3.0-or-later')
 url='https://martchus.dyn.f3l.de/gitea/Martchus/devtools/src/branch/custom'
 conflicts=('devtools' 'devtools-alarm')
 provides=('devtools' 'devtools-alarm')
@@ -37,7 +37,7 @@ depends=(
   rsync
   sed
   util-linux
-
+  sudo
   breezy
   git
   mercurial

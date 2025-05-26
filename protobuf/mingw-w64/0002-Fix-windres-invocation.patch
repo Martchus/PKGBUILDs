@@ -1,6 +1,17 @@
+From 282730f0ed12a86a99b5b2e7cfdc9168369ba678 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Mon, 26 May 2025 17:41:19 +0200
+Subject: [PATCH 2/4] Fix windres invocation
+
+---
+ CMakeLists.txt | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7a8f9ba70..ac4c19e25 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -286,7 +286,21 @@
+@@ -249,7 +249,21 @@ if (MSVC)
  
    # Add the "lib" prefix for generated .lib outputs.
    set(LIB_PREFIX lib)
@@ -23,3 +34,6 @@
    # No version.rc file.
    set(protobuf_version_rc_file)
  
+-- 
+2.49.0
+

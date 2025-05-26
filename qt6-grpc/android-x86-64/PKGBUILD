@@ -19,7 +19,7 @@ groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtgrpc-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Adapt-the-generator-code-to-be-compatible-with-proto.patch')
-sha256sums=('qtgrpc-sha256.txt missing'
+sha256sums=('3957e076181ac0d9a8f9fca93ec49e1e5e143e39eee1ec3feee10ca13f64b137'
             '88a5a27cff250e8823bf11bfae21ec8739eaeed2ea375a6daa6eedffaac9bb77')
 
 prepare () {

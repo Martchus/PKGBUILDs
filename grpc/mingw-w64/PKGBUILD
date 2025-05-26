@@ -1,6 +1,6 @@
 pkgname=mingw-w64-grpc
 _pkgname=grpc
-_protover=30.2
+_protover=31.0
 _opencensus_proto_ver=0.4.1
 pkgver=1.72.0
 pkgrel=1

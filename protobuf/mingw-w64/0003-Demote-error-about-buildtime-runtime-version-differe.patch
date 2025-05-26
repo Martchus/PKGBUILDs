@@ -1,0 +1,26 @@
+From 252e1423d46ac5b725bf6ed449173159bbae03a7 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Mon, 26 May 2025 17:42:05 +0200
+Subject: [PATCH 3/4] Demote error about buildtime runtime version difference
+ to warning
+
+---
+ src/google/protobuf/stubs/common.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/google/protobuf/stubs/common.cc b/src/google/protobuf/stubs/common.cc
+index 3313150d1..a77c284c6 100644
+--- a/src/google/protobuf/stubs/common.cc
++++ b/src/google/protobuf/stubs/common.cc
+@@ -45,7 +45,7 @@ void VerifyVersion(int protobufVersionCompiledWith, const char* filename) {
+   // If the user's program is linked against a different version of Protobuf,
+   // GOOGLE_PROTOBUF_VERSION will have a different value.
+   if (GOOGLE_PROTOBUF_VERSION != protobufVersionCompiledWith) {
+-    ABSL_LOG(FATAL)
++    ABSL_LOG(WARNING)
+         << "This program was compiled with Protobuf C++ version "
+         << VersionString(protobufVersionCompiledWith)
+         << ", but the linked version is "
+-- 
+2.49.0
+

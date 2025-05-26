@@ -1,0 +1,24 @@
+From fe976ce331a527fd7abb428f1643e188544f2b3f Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Mon, 26 May 2025 18:01:03 +0200
+Subject: [PATCH 4/4] Fix build with GCC 15
+
+---
+ src/google/protobuf/port_def.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index edd6d5122..9ce9b746f 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -235,6 +235,7 @@ static_assert(PROTOBUF_ABSL_MIN(20230125, 3),
+ #error PROTOBUF_TAILCALL was previously defined
+ #endif
+ #if ABSL_HAVE_CPP_ATTRIBUTE(clang::musttail) && !defined(__arm__) &&  \
++    !(defined(__GNUC__) && __GNUC__ >= 15 ) &&                      \
+     !defined(_ARCH_PPC) && !defined(__wasm__) &&                      \
+     !(defined(_MSC_VER) && defined(_M_IX86)) && !defined(__i386__)
+ // Compilation fails on ARM32: b/195943306
+-- 
+2.49.0
+

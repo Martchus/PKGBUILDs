@@ -1,0 +1,25 @@
+From d3409cb8888210365736d3aa3ce5e2f1b80b9e4f Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Mon, 26 May 2025 17:40:30 +0200
+Subject: [PATCH 1/4] Fix building shared libs with clang
+
+---
+ src/google/protobuf/repeated_ptr_field.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/google/protobuf/repeated_ptr_field.h b/src/google/protobuf/repeated_ptr_field.h
+index e98f8df60..a50523bc5 100644
+--- a/src/google/protobuf/repeated_ptr_field.h
++++ b/src/google/protobuf/repeated_ptr_field.h
+@@ -805,7 +805,7 @@ inline void RepeatedPtrFieldBase::MergeFrom<Message>(
+ 
+ // Appends all `std::string` values from `from` to this instance.
+ template <>
+-void RepeatedPtrFieldBase::MergeFrom<std::string>(
++PROTOBUF_EXPORT void RepeatedPtrFieldBase::MergeFrom<std::string>(
+     const RepeatedPtrFieldBase& from);
+ 
+ 
+-- 
+2.49.0
+

@@ -4,7 +4,7 @@
 
 _pkgname=libxkbcommon
 pkgname=static-compat-$_pkgname
-pkgver=1.9.0
+pkgver=1.10.0
 pkgrel=1
 pkgdesc="Keymap handling library for toolkits and window systems"
 url="https://xkbcommon.org/"
@@ -15,7 +15,7 @@ makedepends=(xkeyboard-config wayland-protocols doxygen git static-compat-meson)
 checkdepends=(xorg-server-xvfb libgl)
 options=(!emptydirs !docs staticlibs)
 source=("git+https://github.com/xkbcommon/libxkbcommon#tag=xkbcommon-$pkgver")
-b2sums=('974dd98fad6cc068697889e88edba72be0cddfae923e83853a2eff96944b2aeca359498f673e04132ef7408a58941d0889487b5139467c128facc6b23db2c5eb')
+b2sums=('f5533437ced68d012f54e7cba2bd42e58c85f98db4018db358876f8fe097c9c0e5b0a77309e6f80ffcf7c03183c4828fdb29cb017d2790e49045c72b09eb90e1')
 
 pkgver() {
   cd $_pkgname
@@ -36,7 +36,10 @@ build() {
   printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
   chmod +x pkg-config
   static-compat-meson $_pkgname build \
-    -Denable-docs=false
+    -Denable-docs=false \
+    -Dxkb-config-root=/usr/share/X11/xkb \
+    -Dxkb-config-extra-path=/etc/xkb \
+    -Dx-locale-root=/usr/share/X11/locale
   meson compile -C build
 }
 

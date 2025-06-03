@@ -35,6 +35,10 @@ prepare () {
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
+
+    # workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120495
+    [[ $pkgname =~ .*-clang-.* ]] || export CXXFLAGS+=' -Wno-template-body -fcoroutines'
+
 <%== content_for 'before_build_config' %>\
     $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {

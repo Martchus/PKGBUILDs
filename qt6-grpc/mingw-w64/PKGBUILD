@@ -4,9 +4,9 @@
 # you also find the URL of a binary repository.
 
 pkgname=mingw-w64-qt6-grpc
-_qtver=6.9.0
+_qtver=6.9.1
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -17,26 +17,18 @@ makedepends=('mingw-w64-cmake' 'mingw-w64-qt6-declarative' 'mingw-w64-qt6-shader
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qtgrpc-everywhere-src-${_qtver}"
-source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-        '0001-Adapt-the-generator-code-to-be-compatible-with-proto.patch')
-sha256sums=('3957e076181ac0d9a8f9fca93ec49e1e5e143e39eee1ec3feee10ca13f64b137'
-            '88a5a27cff250e8823bf11bfae21ec8739eaeed2ea375a6daa6eedffaac9bb77')
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
+sha256sums=('c34c869e203289b0fd695a1e5391840bc51b919a8b55e1ed1ff36b4cb923a750')
 
 _architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
-
-prepare () {
-  cd $_pkgfqn
-
-  # apply patches; further descriptions can be found in patch files itself
-  for patch in "$srcdir/"*.patch; do
-    msg2 "Applying patch $patch"
-    patch -p1 -i "$patch"
-  done
-}
 
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
+
+    # workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120495
+    [[ $pkgname =~ .*-clang-.* ]] || export CXXFLAGS+=' -Wno-template-body -fcoroutines'
+
     $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \
       -DFEATURE_pkg_config=ON
     cmake --build build-$_arch

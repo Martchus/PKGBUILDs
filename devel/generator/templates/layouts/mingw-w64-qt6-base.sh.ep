@@ -14,7 +14,7 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.9.0
+_qtver=6.9.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -66,6 +66,9 @@ prepare () {
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
+
+    # workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120495
+    [[ $pkgname =~ .*-clang-.* ]] || export CXXFLAGS+=' -Wno-template-body -fcoroutines'
 
     local _enable_winrt_support=ON
     if [[ ! -e /usr/${_arch}/include/winrt/Windows.Foundation.h ]]; then

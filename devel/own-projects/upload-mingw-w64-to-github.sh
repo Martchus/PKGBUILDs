@@ -9,6 +9,10 @@ if ! [[ $DRY_RUN ]] && ! [[ $GITHUB_TOKEN ]]; then
     echo "Don't forget to set \$GITHUB_TOKEN."
     exit 1
 fi
+if ! [[ $DRY_RUN ]] && ! [[ $RELEASE_KEY_PW ]]; then
+    echo "Don't forget to set \$RELEASE_KEY_PW."
+    exit 1
+fi
 
 # determine GPGKEY to use and test signing
 if [[ -f /etc/makepkg.conf ]]; then
@@ -30,6 +34,31 @@ if [[ -n $GPGKEY ]]; then
     rm /tmp/signing-test*
     echo "Will sign archives with key ${GPGKEY}"
 fi
+
+# determine keyfile for signing via stsigtool
+stsigtool=stsigtool
+
+release_signing_keyfile_stsigtool_enc=$DOCS_DIR/keys/release-signing/private-stsigtool.pem.enc
+release_signing_keyfile_openssl_enc=$DOCS_DIR/keys/release-signing/private-openssl-secp521r1.pem.enc
+[[ ! -e $release_signing_keyfile_stsigtool_enc ]] && echo "Unable to find $release_signing_keyfile_stsigtool_enc" && exit 3
+[[ ! -e $release_signing_keyfile_openssl_enc ]] && echo "Unable to find $release_signing_keyfile_openssl_enc" && exit 3
+
+home_tmp=$HOME/tmp/release-signing
+mkdir -p "$home_tmp"
+chmod 700 "$home_tmp"
+release_signing_keyfile_stsigtool=$home_tmp/private-stsigtool.pem
+release_signing_keyfile_openssl=$home_tmp/private-openssl-secp521r1.pem
+trap "rm -f $release_signing_keyfile_stsigtool $release_signing_keyfile_openssl" EXIT
+
+openssl enc -d -aes-256-cbc -salt -pbkdf2 -pass env:RELEASE_KEY_PW -in "$release_signing_keyfile_stsigtool_enc" -out "$release_signing_keyfile_stsigtool"
+openssl enc -d -aes-256-cbc -salt -pbkdf2 -pass env:RELEASE_KEY_PW -in "$release_signing_keyfile_openssl_enc" -out "$release_signing_keyfile_openssl"
+
+sign_openssl() {
+    in=$1 out=$2
+    echo "-----BEGIN SIGNATURE-----" > "$out"
+    openssl dgst -sha256 -sign "$release_signing_keyfile_openssl" "$in" | base64 -w 64 >> "$out"
+    echo "-----END SIGNATURE-----" >> "$out"
+}
 
 if [[ $DRY_RUN ]]; then
     target=${DRY_RUN_TARGET:-$PWD} 
@@ -81,6 +110,7 @@ do
                 continue
             fi
             latest_pkg_file=${pkg_files[-1]}
+            echo "using package $latest_pkg_file for $project$variant_suffix"
 
             # extract arch linux package
             pkg_file_name=${latest_pkg_file##*/}
@@ -110,7 +140,7 @@ do
                     binary_name_cli=$base_name-cli.exe # used to be $base_name-$version-$arch-cli.exe
 
                     # check whether upload already exists
-                    zip_file="$binary_name.zip"
+                    zip_file=$base_name-$version-$arch.exe.zip
                     if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
                         echo "auto-skipping $project/v$version; $zip_file already present"
                         continue
@@ -133,10 +163,14 @@ do
                     # create zip file
                     echo "zipping $binary to $zip_file"
                     mv "$binary" "$binary_name"
-                    additional_files=()
+                    "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool-sig"
+                    sign_openssl "$binary_name" "$binary_name.openssl-sig"
+                    additional_files=("$binary_name.stsigtool-sig" "$binary_name.openssl-sig")
                     if [[ -f $binary_cli ]]; then
                         mv "$binary_cli" "$binary_name_cli"
-                        additional_files+=("$binary_name_cli")
+                        "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name_cli" > "$binary_name_cli.stsigtool-sig"
+                        sign_openssl "$binary_name_cli" "$binary_name_cli.openssl-sig"
+                        additional_files+=("$binary_name_cli" "$binary_name_cli.stsigtool-sig" "$binary_name_cli.openssl-sig")
                     fi
                     license_file_2=$project-$version-$arch-LICENSES.md
                     cp "$license_file" "$license_file_2"
@@ -154,6 +188,7 @@ do
         echo "no static-compat package for $project/v$version present"
     else
         latest_pkg_file=${pkg_files[-1]}
+        echo "using package $latest_pkg_file for $project"
 
         # extract arch linux package
         pkg_file_name=${latest_pkg_file##*/}
@@ -172,7 +207,7 @@ do
             binary_name=$base_name # used to be $base_name-$version-$arch
 
             # check whether upload already exists
-            zip_file="$binary_name.tar.xz"
+            zip_file=$base_name-$version-$arch.tar.xz
             if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
                 echo "auto-skipping $project/v$version; $zip_file already present"
                 continue
@@ -184,9 +219,11 @@ do
             # create zip file
             echo "zipping $binary to $zip_file"
             mv "$binary" "$binary_name"
+            "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool-sig"
+            sign_openssl "$binary_name" "$binary_name.openssl-sig"
             #license_file_2=$project-$version-$arch-LICENSES.md
             #cp "$license_file" "$license_file_2"
-            bsdtar acf "$zip_file" "$binary_name"
+            bsdtar acf "$zip_file" "$binary_name" "$binary_name.stsigtool-sig" "$binary_name.openssl-sig"
             zip_files+=("$zip_file")
         done
     fi

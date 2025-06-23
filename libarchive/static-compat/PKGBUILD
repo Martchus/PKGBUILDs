@@ -4,12 +4,13 @@
 _pkgname=libarchive
 pkgname=static-compat-$_pkgname
 pkgver=3.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Multi-format archive and compression library'
 arch=('x86_64')
 url='https://libarchive.org/'
 license=('BSD-2-Clause')
-depends=('static-compat-bzip2'
+depends=('static-compat-libb2'
+         'static-compat-bzip2'
          'static-compat-lz4'
          'static-compat-xz'
          'static-compat-zlib'
@@ -51,7 +52,7 @@ build() {
   cd "${_pkgname}"
 
   static-compat-configure \
-      --without-libb2 \
+      --with-libb2 \
       --without-lzo2 \
       --without-mbedtls \
       --without-openssl \

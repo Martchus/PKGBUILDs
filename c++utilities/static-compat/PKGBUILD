@@ -6,18 +6,18 @@
 _reponame=cpp-utilities
 pkgname=static-compat-c++utilities
 _name=${pkgname#static-compat-}
-pkgver=5.28.1
+pkgver=5.29.0
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
 license=(GPL-2.0-or-later)
-depends=('gcc-libs-static-compat')
+depends=('gcc-libs-static-compat' 'static-compat-libarchive')
 optdepends=("$_name-doc: API documentation")
-makedepends=('ninja' 'static-compat-cmake')
+makedepends=('ninja' 'static-compat-cmake' 'static-compat-openssl')
 checkdepends=('static-compat-cppunit')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('b5c0dab7ea0ca6bf016ae156877a9c1f238172b09765f499a5b6e174ffe6fc6a')
+sha256sums=('79342cc592a7a7458b1981ded1c5e83ff33003129673048fb259090b1ef719ec')
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
@@ -32,6 +32,8 @@ build() {
   static-compat-cmake \
     -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
+    -DSTATIC_LIBRARY_LINKAGE:BOOL=ON \
+    -DUSE_LIBARCHIVE:BOOL=ON \
     .
   ninja
 }

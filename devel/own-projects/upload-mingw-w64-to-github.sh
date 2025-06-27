@@ -100,16 +100,14 @@ do
                     binary_cli=${binary%-static.exe}-static-cli.exe
                     base_name=${binary##*/}
                     base_name=${base_name%-static.exe}
-                    symlink_name=$base_name-$arch.exe
-                    symlink_name_cli=$base_name-$arch-cli.exe
                     # consider Qt 6 the suffixless default and use suffix for Qt 5 version instead
                     if  [[ $base_name =~ .*-qt6 ]]; then
                         base_name=${base_name%-qt6}
                     else
                         base_name=${base_name}-qt5
                     fi
-                    binary_name=$base_name-$version-$arch.exe
-                    binary_name_cli=$base_name-$version-$arch-cli.exe
+                    binary_name=$base_name.exe # used to be $base_name-$version-$arch.exe
+                    binary_name_cli=$base_name-cli.exe # used to be $base_name-$version-$arch-cli.exe
 
                     # check whether upload already exists
                     zip_file="$binary_name.zip"
@@ -135,11 +133,9 @@ do
                     # create zip file
                     echo "zipping $binary to $zip_file"
                     mv "$binary" "$binary_name"
-                    ln -s "$binary_name" "$symlink_name"
                     additional_files=()
                     if [[ -f $binary_cli ]]; then
                         mv "$binary_cli" "$binary_name_cli"
-                        ln -s "$binary_name_cli" "$symlink_name_cli"
                         additional_files+=("$binary_name_cli")
                     fi
                     license_file_2=$project-$version-$arch-LICENSES.md
@@ -173,8 +169,7 @@ do
         arch=x86_64-pc-linux-gnu
         for binary in ${binaries[@]}; do
             base_name=${binary##*/}
-            symlink_name=$base_name-$arch
-            binary_name=$base_name-$version-$arch
+            binary_name=$base_name # used to be $base_name-$version-$arch
 
             # check whether upload already exists
             zip_file="$binary_name.tar.xz"
@@ -189,10 +184,9 @@ do
             # create zip file
             echo "zipping $binary to $zip_file"
             mv "$binary" "$binary_name"
-            ln -s "$binary_name" "$symlink_name"
             #license_file_2=$project-$version-$arch-LICENSES.md
             #cp "$license_file" "$license_file_2"
-            bsdtar acf "$zip_file" "$binary_name" "$symlink_name"
+            bsdtar acf "$zip_file" "$binary_name"
             zip_files+=("$zip_file")
         done
     fi

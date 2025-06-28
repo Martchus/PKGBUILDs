@@ -1,0 +1,51 @@
+pkgname=syncthing-devtools
+pkgver=1.29.7
+pkgrel=1
+pkgdesc='Development tools from Syncthing'
+arch=(x86_64)
+url='https://syncthing.net/'
+license=('MPL-2.0')
+depends=(glibc)
+makedepends=(git go)
+source=("https://github.com/syncthing/syncthing/releases/download/v$pkgver/syncthing-source-v$pkgver.tar.gz"{,.asc})
+options=(!lto) # https://github.com/golang/go/pull/53528
+validpgpkeys=('37C84554E7E0A261E4F76E1ED26E6ED000654A3E') # Syncthing Release Management
+sha256sums=('7b29b2bb1fb85adf6f3baf120ff725a19b06ed13b95011fe67dd952349e0e212'
+            'SKIP')
+
+_srcdir="src/github.com/syncthing"
+
+prepare() {
+  rm -rf "${_srcdir}"
+  install -d "${_srcdir}"
+  mv "syncthing" "${_srcdir}/syncthing"
+}
+
+
+build() {
+  cd "$_srcdir/syncthing/cmd/dev"
+  export CGO_ENABLED=1
+  export BUILD_HOST=archlinux
+  export BUILD_USER=${pkgbase}
+  export GOPATH="${srcdir}" GOROOT_FINAL="/usr/bin"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -ldflags=-linkmode=external -mod=readonly -modcacherw"
+
+  for dir in st*; do
+    pushd "$dir"
+    go build
+    popd
+  done
+}
+
+package() {
+  mkdir -p "${pkgdir}/usr/bin"
+  find "$_srcdir/syncthing/cmd/dev" -executable -type f -iname 'st*' -exec install -Dm755 {} "${pkgdir}/usr/bin/" \;
+
+  # license
+  cd "$_srcdir/syncthing"
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}

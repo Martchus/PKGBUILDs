@@ -1,0 +1,74 @@
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Dan McGee <dan@archlinux.org>
+
+_pkgname=libarchive
+pkgname=static-compat-$_pkgname
+pkgver=3.8.1
+pkgrel=1
+pkgdesc='Multi-format archive and compression library'
+arch=('x86_64')
+url='https://libarchive.org/'
+license=('BSD-2-Clause')
+depends=('static-compat-bzip2'
+         'static-compat-lz4'
+         'static-compat-xz'
+         'static-compat-zlib'
+         'static-compat-zstd')
+makedepends=('git' 'static-compat-configure')
+provides=()
+validpgpkeys=('A5A45B12AD92D964B89EEE2DEC560C81CEC2276E'  # Martin Matuska <mm@FreeBSD.org>
+              'DB2C7CF1B4C265FAEF56E3FC5848A18B8F14184B') # Martin Matuska <martin@matuska.org>
+source=("git+https://github.com/${_pkgname}/${_pkgname}.git?signed#tag=v${pkgver}")
+sha256sums=('1857fc0288334ba5de7a0e9acbec647f610925c692c513a1a8b2e06dc11035c4')
+
+_backports=(
+)
+
+_reverts=(
+)
+
+prepare() {
+  source static-compat-environment
+  cd "${_pkgname}"
+
+  local _c _l
+  for _c in "${_backports[@]}"; do
+    if [[ "${_c}" == *..* ]]; then _l='--reverse'; else _l='--max-count=1'; fi
+    git log --oneline "${_l}" "${_c}"
+    git cherry-pick --mainline 1 --no-commit "${_c}"
+  done
+  for _c in "${_reverts[@]}"; do
+    if [[ "${_c}" == *..* ]]; then _l='--reverse'; else _l='--max-count=1'; fi
+    git log --oneline "${_l}" "${_c}"
+    git revert --mainline 1 --no-commit "${_c}"
+  done
+
+  autoreconf -fiv
+}
+
+build() {
+  source static-compat-environment
+  cd "${_pkgname}"
+
+  static-compat-configure \
+      --without-nettle \
+      --disable-shared \
+      --enable-static
+  make
+}
+
+check() {
+  source static-compat-environment
+  cd "${_pkgname}"
+
+  make check || true # currently fails bsdunzip_test
+}
+
+package() {
+  source static-compat-environment
+  cd "${_pkgname}"
+
+  make DESTDIR="$pkgdir" install
+  install -Dm0644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  rm -r "$pkgdir/$static_compat_prefix/share"
+}

@@ -42,6 +42,6 @@ set(POSTGRESQL_DEPENDENCIES "-lpgcommon;-lpgport;-lintl;-lssl;-lcrypto;-lshell32
 set(MYSQL_DEPENDENCIES "-lzstd;-lshlwapi;-lgdi32;-lws2_32;-lbcrypt;-lcrypt32;-lsecur32;-ladvapi32;-lpthread;-lz;-lm" CACHE INTERNAL "dependencies of static MySQL/MariaDB libraries")
 set(LIBPNG_DEPENDENCIES "-lz" CACHE INTERNAL "dependencies of static libpng")
 set(GLIB2_DEPENDENCIES "-lintl;-lws2_32;-lole32;-lwinmm;-lshlwapi;-lm" CACHE INTERNAL "dependencies of static Glib2")
-set(FREETYPE_DEPENDENCIES "-lbz2;-lharfbuzz;-lfreetype;-lbrotlidec;-lbrotlicommon" CACHE INTERNAL "dependencies of static FreeType2 library")
-set(HARFBUZZ_DEPENDENCIES "-lglib-2.0;${GLIB2_DEPENDENCIES};-lintl;-lm;-lfreetype;-lgraphite2" CACHE INTERNAL "dependencies of static HarfBuzz library")
+set(FREETYPE_DEPENDENCIES "$<LINK_GROUP:RESCAN,-lbz2;-lharfbuzz;-lfreetype;-lbrotlidec;-lbrotlicommon>" CACHE INTERNAL "dependencies of static FreeType2 library")
+set(HARFBUZZ_DEPENDENCIES "$<LINK_GROUP:RESCAN,-lglib-2.0;${GLIB2_DEPENDENCIES};-lintl;-lm;-lfreetype;-lgraphite2>" CACHE INTERNAL "dependencies of static HarfBuzz library")
 set(DBUS1_DEPENDENCIES "-lws2_32;-liphlpapi;-ldbghelp" CACHE INTERNAL "dependencies of static D-Bus1 library")

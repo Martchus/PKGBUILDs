@@ -51,7 +51,12 @@ build() {
   cd "${_pkgname}"
 
   static-compat-configure \
+      --without-libb2 \
+      --without-lzo2 \
+      --without-mbedtls \
+      --without-openssl \
       --without-nettle \
+      --without-xml2 \
       --disable-shared \
       --enable-static
   make

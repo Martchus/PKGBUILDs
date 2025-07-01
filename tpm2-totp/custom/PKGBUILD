@@ -1,0 +1,42 @@
+pkgname=tpm2-totp-custom
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='Attest the trustworthiness of a device against a human using time-based one-time passwords (with custom patches)'
+arch=('x86_64')
+url='https://github.com/tpm2-software/tpm2-totp'
+license=('BSD')
+depends=('qrencode' 'tpm2-tss' 'libtss2-esys.so' 'libtss2-mu.so' 'libtss2-tctildr.so')
+checkdepends=('iproute2' 'oath-toolkit' 'swtpm' 'tpm2-tools')
+optdepends=('initramfs: dracut and mkinitcpio hooks to display the TOTP during boot')
+makedepends=('git' 'autoconf-archive' 'doxygen' 'pandoc' 'plymouth' 'procps-ng')
+conflicts=('tpm2-totp')
+provides=('tpm2-totp')
+source=("tpm2-totp::git+https://github.com/aylen384/tpm2-totp.git#commit=218f544c3017d400e0c97208bbcfd8f8973e175e")
+sha512sums=('SKIP')
+
+prepare() {
+	cd tpm2-totp
+	./bootstrap
+}
+
+build() {
+	cd tpm2-totp
+	./configure --prefix=/usr \
+	            --libexecdir=/usr/lib \
+	            --with-dracutmodulesdir=/usr/lib/dracut/modules.d \
+	            --with-mkinitcpiodir=/usr/lib/initcpio \
+	            $( ((CHECKFUNC)) && echo --enable-integration)
+	make
+}
+
+check() {
+	cd tpm2-totp
+	make check
+}
+
+package() {
+	cd tpm2-totp
+	make DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+

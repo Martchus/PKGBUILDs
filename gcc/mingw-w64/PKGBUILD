@@ -2,7 +2,7 @@
 # Maintainer of official package: Peter Jung <ptr1337@archlinux.org>
 
 pkgname=mingw-w64-gcc
-pkgver=15.1.0
+pkgver=15.1.1+r7+gf36ec88aa85a
 pkgrel=1
 pkgdesc="Cross GCC for the MinGW-w64 cross-compiler"
 arch=('x86_64')
@@ -28,23 +28,24 @@ depends=(
 # gcc-d doesn't build as of 13.1.0
 makedepends=(gcc-ada git)
 options=('!strip' 'staticlibs' '!emptydirs' '!buildflags')
-_commit=04696df09633baf97cdbbdd6e9929b9d472161d3
+_commit=f36ec88aa85a1a8f4ec300dfcd862fc4fbca1c53
 # using GitHub mirror as sourceware.org is very slow
 _repo=https://github.com/gcc-mirror/gcc.git
 #_repo=https://sourceware.org/git/gcc.git
-#source=(git+${_repo}#commit=${_commit})
-source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig})
+source=(git+${_repo}#commit=${_commit})
+#source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig})
 validpgpkeys=(F3691687D867B81B51CE07D9BBE43771487328A9  # bpiotrowski@archlinux.org
               86CFFCA918CF3AF47147588051E8B148A9999C34  # evangelos@foutrelis.com
               13975A70E63C361C73AE69EF6EEB81F8981C74C7  # richard.guenther@gmail.com
               D3A93CAD751C2AF4F8C7AD516C35B99309B5FA62) # Jakub Jelinek <jakub@redhat.com>
-sha512sums=('ddd35ca6c653dffa88f7c7ef9ee4cd806e156e0f3b30f4d63e75a8363361285cd566ee73127734cde6a934611de815bee3e32e24bfd2e0ab9f7ff35c929821c1'
-            'SKIP')
+#sha512sums=('ddd35ca6c653dffa88f7c7ef9ee4cd806e156e0f3b30f4d63e75a8363361285cd566ee73127734cde6a934611de815bee3e32e24bfd2e0ab9f7ff35c929821c1'
+#            'SKIP')
+sha512sums=('SKIP')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
-  ln -sf gcc-${pkgver/+/-} gcc
+  #ln -sf gcc-${pkgver/+/-} gcc
   cd gcc
 
   # mmapio.c:69:14: error: implicit declaration of function ‘getpagesize’

@@ -163,14 +163,14 @@ do
                     # create zip file
                     echo "zipping $binary to $zip_file"
                     mv "$binary" "$binary_name"
-                    "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool-sig"
-                    sign_openssl "$binary_name" "$binary_name.openssl-sig"
-                    additional_files=("$binary_name.stsigtool-sig" "$binary_name.openssl-sig")
+                    "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool.sig"
+                    sign_openssl "$binary_name" "$binary_name.openssl.sig"
+                    additional_files=("$binary_name.stsigtool.sig" "$binary_name.openssl.sig")
                     if [[ -f $binary_cli ]]; then
                         mv "$binary_cli" "$binary_name_cli"
-                        "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name_cli" > "$binary_name_cli.stsigtool-sig"
-                        sign_openssl "$binary_name_cli" "$binary_name_cli.openssl-sig"
-                        additional_files+=("$binary_name_cli" "$binary_name_cli.stsigtool-sig" "$binary_name_cli.openssl-sig")
+                        "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name_cli" > "$binary_name_cli.stsigtool.sig"
+                        sign_openssl "$binary_name_cli" "$binary_name_cli.openssl.sig"
+                        additional_files+=("$binary_name_cli" "$binary_name_cli.stsigtool.sig" "$binary_name_cli.openssl.sig")
                     fi
                     license_file_2=$project-$version-$arch-LICENSES.md
                     cp "$license_file" "$license_file_2"
@@ -219,11 +219,11 @@ do
             # create zip file
             echo "zipping $binary to $zip_file"
             mv "$binary" "$binary_name"
-            "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool-sig"
-            sign_openssl "$binary_name" "$binary_name.openssl-sig"
+            "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool.sig"
+            sign_openssl "$binary_name" "$binary_name.openssl.sig"
             #license_file_2=$project-$version-$arch-LICENSES.md
             #cp "$license_file" "$license_file_2"
-            bsdtar acf "$zip_file" "$binary_name" "$binary_name.stsigtool-sig" "$binary_name.openssl-sig"
+            bsdtar acf "$zip_file" "$binary_name" "$binary_name.stsigtool.sig" "$binary_name.openssl.sig"
             zip_files+=("$zip_file")
         done
     fi

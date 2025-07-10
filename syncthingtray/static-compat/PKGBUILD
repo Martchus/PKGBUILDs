@@ -29,7 +29,7 @@ _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
 pkgver=1.7.10
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=(GPL-2.0-or-later)
@@ -47,9 +47,11 @@ checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
 [[ $_enable_plasmoid ]] && makedepends+=('static-compat-plasma-framework' 'extra-cmake-modules')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
+        https://github.com/Martchus/syncthingtray/commit/1c29fe7ad63f8ebb1bb8ead4354617875f782de.patch)
 [[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
 sha256sums=('5cead81878fa03a981b741e2570acb13b63626a4b520f60bc2a1d8ed83b3a7c1'
+            '02c6ac84a75f5ff9fe9d8ef8f77a8ee6f96bfc3086b034f212996626282adfd7'
             'SKIP')
 
 [[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON
@@ -60,6 +62,9 @@ ephemeral_port() {
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+
+  patch -p1 -i ../1c29fe7ad63f8ebb1bb8ead4354617875f782de.patch
+
   [[ $_enable_libsyncthing == ON ]] || return 0
 
   # ensure path where the libsyncthing Git submodule would be cloned into exists
@@ -100,7 +105,7 @@ build() {
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
     -DJS_PROVIDER="${_js_provider}" \
     -DSYSTEMD_SUPPORT=ON \
-    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
     -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
     -DSVG_SUPPORT:BOOL=ON \
     -DSVG_ICON_SUPPORT:BOOL=ON \
@@ -115,7 +120,7 @@ build() {
     .
   # fix linker flags for libharfbuzz (setting HARFBUZZ_LIBRARIES does not work)
   sed -i -e 's|/usr/static-compat/lib/libharfbuzz.a|/usr/static-compat/lib/libharfbuzz.a /usr/static-compat/lib/libfreetype.a /usr/static-compat/lib/libbz2.a|g' build.ninja
-  ninja
+  cmake --build . --verbose
 }
 
 check() {

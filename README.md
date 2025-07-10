@@ -488,6 +488,16 @@ versions. Additionally, some projects (such as Qt) do not support installing
 shared and static libraries within the same prefix at the same time because the
 config files would clash.
 
+### Testing executables built with static-compat packages
+This can be done using a VM or a container. An image for a suitable test
+container can be found in this repository and used like this:
+
+```
+podman image build devel/container/ubuntu --tag static-compat-test-env
+podman run --rm -e DISPLAY -v ~/.Xauthority:/root/.Xauthority:Z --ipc=host --net=host \
+           -v "$PWD:/opt/bin" -it static-compat-test-env /opt/bin/syncthingtray
+```
+
 ## Copyright notice and license
 Copyright © 2015-2025 Marius Kittler
 

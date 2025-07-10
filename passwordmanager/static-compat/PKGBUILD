@@ -15,7 +15,7 @@ arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
 license=(GPL-2.0-or-later)
 depends=('static-compat-qt6-base' 'static-compat-qtutilities' 'static-compat-passwordfile')
-makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'numix-icon-theme-git' 'clang')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('3bc25f8b85a2957dd6da13371e2aa5306dd30d9b186a174b91f1ec35bb677123')
@@ -45,7 +45,7 @@ build() {
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
     -DJS_PROVIDER="${_js_provider}" \
-    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
     -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
     -DSVG_SUPPORT:BOOL=ON \
     -DSVG_ICON_SUPPORT:BOOL=ON \

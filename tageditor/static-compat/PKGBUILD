@@ -30,7 +30,7 @@ license=(GPL-2.0-or-later)
 [[ $_js_provider == qml ]] && depends+=('qt6-declarative')
 makedepends=('static-compat-cmake'  'static-compat-tagparser' 'ninja')
 [[ $_json_export == ON ]] && makedepends+=('reflective-rapidjson')
-[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'numix-icon-theme-git' 'clang')
+[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
 checkdepends=('static-compat-cppunit' 'jq')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -56,7 +56,7 @@ build() {
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
     -DJS_PROVIDER="${_js_provider}" \
-    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark;Numix' \
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
     -DIMAGE_FORMAT_SUPPORT:STRING='Gif;ICO;Jpeg' \
     -DSVG_SUPPORT:BOOL=ON \
     -DSVG_ICON_SUPPORT:BOOL=ON \

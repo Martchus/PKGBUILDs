@@ -40,7 +40,7 @@ if ! [[ $NO_SHARED_LIBS ]]; then
 fi
 if ! [[ $NO_STATIC_LIBS ]]; then
     _configurations+=('static')
-    makedepends+=('mingw-w64-qt5-base-static' 'mingw-w64-qt5-svg-static' 'mingw-w64-qt5-translations' 'breeze-icons' 'numix-icon-theme-git')
+    makedepends+=('mingw-w64-qt5-base-static' 'mingw-w64-qt5-svg-static' 'mingw-w64-qt5-translations' 'breeze-icons')
     [[ $_js_provider == script ]] && makedepends+=('mingw-w64-qt5-script-static')
     [[ $_js_provider == qml ]] && makedepends+=('mingw-w64-qt5-declarative-static')
 fi
@@ -62,7 +62,7 @@ build() {
         -DKF_PACKAGE_PREFIX=StaticKF5
         -DTAGEDITOR_CONFIGURATION_TARGET_SUFFIX:STRING=static
         -DBUILTIN_TRANSLATIONS:BOOL=ON
-        -DBUILTIN_ICON_THEMES:STRING=breeze;breeze-dark;Numix
+        -DBUILTIN_ICON_THEMES:STRING=breeze;breeze-dark
         -DIMAGE_FORMAT_SUPPORT:STRING=Gif;ICO;Jpeg
         -DSVG_SUPPORT:BOOL=ON
         -DSVG_ICON_SUPPORT:BOOL=ON

@@ -41,7 +41,7 @@ depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compa
 [[ $_js_provider == qml ]] && depends+=('static-compat-qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
-makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'numix-icon-theme-git' 'clang')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
 [[ $_enable_libsyncthing == ON ]] && makedepends+=('git' 'go')
 checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')

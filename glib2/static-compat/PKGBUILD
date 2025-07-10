@@ -3,7 +3,7 @@
 
 _pkgname=glib2
 pkgname=static-compat-$_pkgname
-pkgver=2.82.3
+pkgver=2.85.1
 pkgrel=1
 pkgdesc="Low level core library"
 url="https://gitlab.gnome.org/GNOME/glib"
@@ -16,10 +16,12 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/glib.git#tag=$pkgver"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git"
   0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
+  0002-gdesktopappinfo-Add-more-known-terminals.patch
 )
-b2sums=('9abb7878311f0df50affd3e308aa157ff711e8789e9f12b6b95f9cab198e3d662528fa1f8a48d5e489bfb1925886e9c5b1bcc5161d65e6323d04c5f3351df831'
+b2sums=('0806e198e6ccfe2c2e8b0e37c8887d95f6caae876c1cdfded4ff72371cf1ab08061307d07b44d1dc50d36cd1145d38794854a5487260f959079ba90864f7631c'
         'SKIP'
-        '94c73ca7070c239494873dd52d6ee09382bbb5b1201f7afd737cfa140b1a2fb0744b2c2831baf3943d1d072550c35888d21ce6f19f89481ff9d1a60d9a0b30e0')
+        '4ddbd31f5f466fce99d82890292ff922555a9ab379d22202aeea5127f58798668f871dea0485cc0f458069276ad512412285ede6c8f3e36bea899358f49e931a'
+        'bf57425e3081a8f5d36d6a54eff1bfa93ba6bab8f0a4d3f3bf1e319ebfa71d99ce6a0466166fc694f53c5bd151e9cc65339e222c48e963f0cdc075852d0e1f7c')
 
 pkgver() {
   cd glib
@@ -29,8 +31,18 @@ pkgver() {
 prepare() {
   cd glib
 
+  # Drop dep on libatomic
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/qemu/-/issues/6
+  git revert -n 4e6dc4dee0e1c6407113597180d9616b4f275f94
+  sed -i '/    atomic_dep,/d' glib/meson.build
+
   # Suppress noise from glib-compile-schemas.hook
   git apply -3 ../0001-glib-compile-schemas-Remove-noisy-deprecation-warnin.patch
+
+  # Add ghostty and ptyxis to known terminals list
+  # This is a downstream only patch; GNOME will not add new terminal emulators.
+  # https://gitlab.gnome.org/GNOME/glib/-/issues/338#note_1076172
+  git apply -3 ../0002-gdesktopappinfo-Add-more-known-terminals.patch
 
   git submodule init
   git submodule set-url subprojects/gvdb "$srcdir/gvdb"
@@ -44,8 +56,8 @@ build() {
   static-compat-meson glib build \
     -D selinux=disabled \
     -Dsysprof=disabled \
-    -D man=false \
-    -D gtk_doc=false
+    -D man-pages=disabled \
+    -D documentation=false
   meson compile -C build
 }
 

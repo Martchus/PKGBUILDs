@@ -1,6 +1,6 @@
 pkgname=(static-compat-{environment,pkgconf})
 pkgver=1
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc="Script providing common environment variables to use gcc-static-compat"
 license=(GPL-2.0-or-later)

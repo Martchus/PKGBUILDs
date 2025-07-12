@@ -58,6 +58,7 @@ for arg in "$@"; do
 done
 
 # add arguments from environment
+[[ $single_run ]] && cre_args+=(--rm)
 [[ $no_crlf ]] || cre_args+=(-it)
 if [[ $PACMAN_PKG_CACHE_DIR ]]; then
     cre_args+=(-v "$PACMAN_PKG_CACHE_DIR":/var/cache/pacman/pkg)

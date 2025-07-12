@@ -60,23 +60,14 @@ done
 # add arguments from environment
 [[ $single_run ]] && cre_args+=(--rm)
 [[ $no_crlf ]] || cre_args+=(-it)
-if [[ $PACMAN_PKG_CACHE_DIR ]]; then
-    cre_args+=(-v "$PACMAN_PKG_CACHE_DIR":/var/cache/pacman/pkg)
-fi
-if [[ $CONTAINER_BUILD_CFG_DIR ]]; then
-    cre_args+=(-v "$CONTAINER_BUILD_CFG_DIR":/cfg)
-fi
-if [[ $CONTAINER_BUILD_CCACHE_DIR ]]; then
-    cre_args+=(-v "$CONTAINER_BUILD_CCACHE_DIR":/ccache)
-    script_args+=' CCACHE_DIR=/ccache'
-fi
+[[ $PACMAN_PKG_CACHE_DIR ]] && cre_args+=(-v "$PACMAN_PKG_CACHE_DIR":/var/cache/pacman/pkg)
+[[ $CONTAINER_BUILD_CFG_DIR ]] && cre_args+=(-v "$CONTAINER_BUILD_CFG_DIR":/cfg)
+[[ $CONTAINER_BUILD_CCACHE_DIR ]] && cre_args+=(-v "$CONTAINER_BUILD_CCACHE_DIR":/ccache) script_args+=' CCACHE_DIR=/ccache'
 
 # load "containerbuild" and "containersync" script
 bindir=$(dirname "$0")
 script=$(cat "$bindir/containerbuild")
-if ! [[ $no_sync ]]; then
-    script_sync=$(cat "$bindir/containersync")
-fi
+[[ $no_sync ]] && script_sync= || script_sync=$(cat "$bindir/containersync")
 
 # invoke containerized build
 ec=0 cre=${CRE:-docker}

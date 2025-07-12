@@ -4,6 +4,7 @@ set -e
 # make tool to invoke configurable via environment variable to be able to invoke
 # other tools like `repo-add` or `updpkgsums` as well
 tool=${TOOL:-makepkg}
+no_crlf=
 [[ $tool == 'makepkg' ]] && single_run= no_sync= || single_run=1 no_sync=1
 
 # make basic arguments for cre
@@ -21,7 +22,7 @@ else
     uuid=$(cat /proc/sys/kernel/random/uuid)
     name=$tool-$pkgname-$uuid
 fi
-cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir -it)
+cre_args=(--name "$name" --workdir "/startdir" -v "$PWD":/startdir)
 cre_rm_args=(--force)
 
 # use "builduser" that has been created via the Dockerfile
@@ -42,6 +43,7 @@ for arg in "$@"; do
         if [[ $arg == '--nodeps' ]] || [[ $arg == '-d' ]]; then
             no_sync=1
         elif [[ $arg == '--printsrcinfo' ]] || [[ $arg == '--help' ]] || [[ $arg == '-h' ]]; then
+            no_crlf=1
             no_sync=1
             single_run=1
         fi
@@ -56,6 +58,7 @@ for arg in "$@"; do
 done
 
 # add arguments from environment
+[[ $no_crlf ]] || cre_args+=(-it)
 if [[ $PACMAN_PKG_CACHE_DIR ]]; then
     cre_args+=(-v "$PACMAN_PKG_CACHE_DIR":/var/cache/pacman/pkg)
 fi

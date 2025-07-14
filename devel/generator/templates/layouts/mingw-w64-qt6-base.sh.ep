@@ -79,6 +79,7 @@ build() {
     $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\
+      -DUSE_LINK_GROUP=OFF \\
       -DFEATURE_static_runtime=ON \\
       -DFEATURE_openssl_linked=ON \\
 % }

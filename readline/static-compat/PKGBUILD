@@ -5,8 +5,8 @@
 
 _pkgname=readline
 pkgname=static-compat-$_pkgname
-_basever=8.2
-_patchlevel=010
+_basever=8.3
+_patchlevel=001
 pkgver=${_basever}.${_patchlevel}
 pkgrel=1
 pkgdesc='GNU readline library'
@@ -56,26 +56,8 @@ package() {
   find "$pkgdir/$static_compat_prefix"/lib -iname '*.so*' -delete
 }
 
-md5sums=('4aa1b31be779e6b84f9a96cb66bc50f6'
+md5sums=('25a73bfb2a3ad7146c5e9d4408d9f6cd'
          'SKIP'
          '58d54966c1191db45973cb3191ac621a'
-         'b800ce35690436a995a4fadf939e53cc'
-         'SKIP'
-         '22dcbd9d174166bc0cfbd4a6957603a0'
-         'SKIP'
-         '94a336980c337d7bf54c0191988055f1'
-         'SKIP'
-         'dabdab80dc147cffc6d5ef275b6daf67'
-         'SKIP'
-         '9e847d8b5243c364138ad9475de8c9b9'
-         'SKIP'
-         '8812592f2df5ce441b61b92fb63dc91f'
-         'SKIP'
-         'e57991bb85e2f025119ba78dde994665'
-         'SKIP'
-         '2a61c084c3867d85b99811d14a181f1d'
-         'SKIP'
-         'f5980a8a847f8c31c8ba4781562408db'
-         'SKIP'
-         'e3a188e5425bd2e17b32bd8626bfed16'
+         '41a796b6dc957645deb3520f4125091a'
          'SKIP')

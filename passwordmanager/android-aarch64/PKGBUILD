@@ -3,15 +3,21 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-# FIXME: Set versions of the various repositories.
-
 _arch=aarch64
-_pkgver_cpputilities=
-_pkgver_qtutilities=
-_pkgver_passwordfile=
 _reponame=passwordmanager
 pkgname=android-$_arch-passwordmanager
 pkgver=4.2.4
+if [[ $BUILD_BEFORE_TAGGING ]]; then
+  _pkgver_pwmgr=branch=master
+  _pkgver_cpputilities=branch=master
+  _pkgver_qtutilities=branch=master
+  _pkgver_passwordfile=branch=master
+else
+  _pkgver_pwmgr=tag=v$pkgver
+  _pkgver_cpputilities=tag=v5.30.0
+  _pkgver_qtutilities=tag=v6.18.0
+  _pkgver_passwordfile=tag=v5.0.12
+fi
 pkgrel=1
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
@@ -24,10 +30,10 @@ url="https://github.com/Martchus/${_reponame}"
 _github_url=git+https://github.com/Martchus
 _git_url=${MARTCHUS_GIT_URL_PREFIX:-$_github_url}
 source=(
-  "c++utilities::$_git_url/cpp-utilities" #tag=v$_pkgver_cpputilities"
-  "qtutilities::$_git_url/qtutilities" #tag=v$_pkgver_qtutilities"
-  "passwordfile::$_git_url/passwordfile" #tag=v$_pkgver_passwordfile"
-  "passwordmanager::$_git_url/${_reponame}" #tag=v$pkgver"
+  "c++utilities::$_git_url/cpp-utilities#$_pkgver_cpputilities"
+  "qtutilities::$_git_url/qtutilities#$_pkgver_qtutilities"
+  "passwordfile::$_git_url/passwordfile#$_pkgver_passwordfile"
+  "passwordmanager::$_git_url/${_reponame}#$_pkgver_pwmgr"
   "subdirs::$_git_url/subdirs"
   "keystore::keystore"
 )
@@ -36,7 +42,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '912f86c4582aeecc2ebd5366acc0ea45bc6e293c9fefb5f2cca15a96aef5cb11')
+            'SKIP')
 options=(!buildflags staticlibs !strip !emptydirs)
 
 prepare() {

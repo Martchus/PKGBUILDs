@@ -28,8 +28,8 @@ _enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
-pkgver=1.7.10
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=(GPL-2.0-or-later)
@@ -47,11 +47,9 @@ checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
 [[ $_enable_plasmoid ]] && makedepends+=('static-compat-plasma-framework' 'extra-cmake-modules')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
-        https://github.com/Martchus/syncthingtray/commit/1c29fe7ad63f8ebb1bb8ead4354617875f782de.patch)
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 [[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
-sha256sums=('5cead81878fa03a981b741e2570acb13b63626a4b520f60bc2a1d8ed83b3a7c1'
-            '02c6ac84a75f5ff9fe9d8ef8f77a8ee6f96bfc3086b034f212996626282adfd7'
+sha256sums=('57d33524697003399f28f6da740b9474ef295d028663cb33760c58b64c6e2beb'
             'SKIP')
 
 [[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON
@@ -62,8 +60,6 @@ ephemeral_port() {
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
-  patch -p1 -i ../1c29fe7ad63f8ebb1bb8ead4354617875f782de.patch
 
   [[ $_enable_libsyncthing == ON ]] || return 0
 

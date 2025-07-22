@@ -3,34 +3,41 @@
 # All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
 # you also find the URL of a binary repository.
 
-# FIXME: Set versions of the various repositories.
-
 _arch=aarch64
-_pkgver_cpputilities=
-_pkgver_qtutilities=
-_pkgver_qtforkawesome=
-_pkgver_syncthing=
+pkgname=android-$_arch-syncthingtray
+pkgver=2.0.0
+if [[ $BUILD_BEFORE_TAGGING ]]; then
+  _pkgver_stt=branch=master
+  _pkgver_cpputilities=branch=master
+  _pkgver_qtutilities=branch=master
+  _pkgver_qtforkawesome=branch=master
+  _pkgver_syncthing=branch=libsyncthing-latest
+else
+  _pkgver_stt=tag=v$pkgver
+  _pkgver_cpputilities=tag=v5.30.0
+  _pkgver_qtutilities=tag=v6.18.0
+  _pkgver_qtforkawesome=tag=v0.3.1
+  _pkgver_syncthing=tag=libsyncthing-v2.0.1
+fi
 _pkgver_forkawesome=1.2.0
 _reponame=syncthingtray
 _reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
-pkgname=android-$_arch-syncthingtray
-pkgver=1.7.11
 pkgrel=1
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)
-depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl")
+depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl" "android-$_arch-sqlite")
 makedepends=('android-cmake' 'android-ndk' 'ninja' 'git' 'go' 'clang' 'perl-yaml-libyaml'
              'qt6-tools' 'qt6-declarative' "android-$_arch-qt6-tools")
 url="https://github.com/Martchus/${_reponame}"
 _github_url=git+https://github.com/Martchus
 _git_url=${MARTCHUS_GIT_URL_PREFIX:-$_github_url}
 source=(
-  "c++utilities::$_git_url/cpp-utilities" #tag=v$_pkgver_cpputilities"
-  "qtutilities::$_git_url/qtutilities" #tag=v$_pkgver_qtutilities"
-  "qtforkawesome::$_git_url/qtforkawesome" #tag=v$_pkgver_qtforkawesome"
-  "syncthing::$_github_url/syncthing#branch=libsyncthing-latest" #tag=v$_pkgver_syncthing"
-  "syncthingtray::$_git_url/${_reponame}" #tag=v$pkgver"
+  "c++utilities::$_git_url/cpp-utilities#$_pkgver_cpputilities"
+  "qtutilities::$_git_url/qtutilities#$_pkgver_qtutilities"
+  "qtforkawesome::$_git_url/qtforkawesome#$_pkgver_qtforkawesome"
+  "syncthing::$_github_url/syncthing#$_pkgver_syncthing"
+  "syncthingtray::$_git_url/${_reponame}#$_pkgver_stt"
   "subdirs::$_git_url/subdirs"
   "keystore::keystore"
   "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz"

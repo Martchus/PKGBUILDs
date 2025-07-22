@@ -11,10 +11,10 @@ From GCC 15:
  1 file changed, 1 deletion(-)
 
 diff --git a/tests/integration/CMakeLists.txt b/tests/integration/CMakeLists.txt
-index d120531a7aee..51f383cd0af9 100644
+index ea66a8d39565..be30ea4a3f23 100644
 --- a/tests/integration/CMakeLists.txt
 +++ b/tests/integration/CMakeLists.txt
-@@ -54,7 +54,6 @@ if(${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
+@@ -52,7 +52,6 @@ if(${CMAKE_C_COMPILER_ID} MATCHES "(GNU|Clang)")
          -Wpedantic
          -Wall
          -Wextra

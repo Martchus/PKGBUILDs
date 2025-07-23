@@ -9,6 +9,7 @@ if ! [[ $GITHUB_TOKEN ]]; then
 fi
 
 gh_user=Martchus
+#echo "$GITHUB_TOKEN" | gh auth login --with-token
 
 # release latest version of my projects on GitHub (if not already released yet)
 for project in "${!versions[@]}"
@@ -47,8 +48,8 @@ do
         continue
     fi
 
-    # check whether release already exists
-    if github-release info --user "$gh_user" --repo "$gh_name" --tag "v$version"; then
+    echo "check whether release already exists"
+    if gh release view "v$version" --repo "$gh_user/$gh_name" --json name --jq '"existing release: " + .name'; then
         echo "auto-skipping $project -> v$version; release already present"
         continue
     fi
@@ -59,7 +60,7 @@ do
     [[ $REPLY =~ ^[Yy]$ ]] || continue
 
     # create release
-    if github-release release --user "$gh_user" --repo "$gh_name" --tag "v$version"; then
+    if gh release create "v$version" --repo "$gh_user/$gh_name" --generate-notes; then
         echo "SUCCESS: released $project -> $version"
     else
         echo "FAILURE: unable to create release $project -> $version"

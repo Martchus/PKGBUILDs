@@ -13,6 +13,7 @@ if ! [[ $DRY_RUN ]] && ! [[ $RELEASE_KEY_PW ]]; then
     echo "Don't forget to set \$RELEASE_KEY_PW."
     exit 1
 fi
+#echo "$GITHUB_TOKEN" | gh auth login --with-token
 
 # determine GPGKEY to use and test signing
 if [[ -f /etc/makepkg.conf ]]; then
@@ -141,7 +142,7 @@ do
 
                     # check whether upload already exists
                     zip_file=$base_name-$version-$arch.exe.zip
-                    if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
+                    if ! [[ $DRY_RUN ]] && gh release view "v$version" --repo "$gh_user/$gh_name" --json assets --jq '.assets[] | .name' | grep "$zip_file"; then
                         echo "auto-skipping $project/v$version; $zip_file already present"
                         continue
                     elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
@@ -208,7 +209,7 @@ do
 
             # check whether upload already exists
             zip_file=$base_name-$version-$arch.tar.xz
-            if ! [[ $DRY_RUN ]] && github-release info --user martchus --repo "$gh_name" --tag "v$version" | grep "artifact: $zip_file"; then
+            if ! [[ $DRY_RUN ]] && gh release view "v$version" --repo "$gh_user/$gh_name" --json assets --jq '.assets[] | .name' | grep "$zip_file"; then
                 echo "auto-skipping $project/v$version; $zip_file already present"
                 continue
             elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
@@ -253,7 +254,7 @@ do
             mv --target-directory="$target" "$zip_file"
             continue
         fi
-        if github-release upload --user martchus --repo "$gh_name" --tag "v$version" --file "$zip_file" --name "$zip_file"; then
+        if gh release upload "v$version" "$zip_file" --repo "$gh_user/$gh_name"; then
             echo "SUCCESS: uploaded $project/v$version -> $zip_file"
         else
             echo "FAILURE: unable to upload $project/v$version -> $zip_file"

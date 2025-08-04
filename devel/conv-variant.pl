@@ -51,6 +51,7 @@ $from_mingw->{'mingw-w64-clang-aarch64-static'} = $from_mingw_to_clang_aarch64;
 my $from_patterns = $patterns{$from} // {};
 my $to_patterns = $from_patterns->{$to};
 my $force = $ENV{FORCE_VARIANT_CONVERSION} // 0;
+my $insecure = $ENV{INSECURE_VARIANT_CONVERSION} // 0;
 die "Conversion from $from to $to not defined\n" unless $to_patterns;
 
 my $log = Mojo::Log->new;
@@ -63,7 +64,7 @@ sub handle_package ($src_path, $dst_path, $always_copy = 0) {
         my $src_basename = $src_file->basename;
         my $dst_file = $dst_path->child($src_basename);
         if ($src_basename ne 'PKGBUILD') {
-            next if $src_basename =~ m/\.bak$/;
+            next if $src_basename =~ m/\.bak$/ || ($insecure && $src_basename eq 'from-aur');
             if (-l $dst_file) {
                 unlink($dst_file) or die "Unable to unlink $dst_file: $!\n";
             }

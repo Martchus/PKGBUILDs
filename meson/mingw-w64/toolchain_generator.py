@@ -13,7 +13,11 @@ class CrossFileGenerator:
 		self.cflags = os.environ['CFLAGS'] if 'CFLAGS' in os.environ else ''
 		self.cxxflags = os.environ["CXXFLAGS"] if 'CXXFLAGS' in os.environ else ''
 		self.ldflags = os.environ["LDFLAGS"] if 'LDFLAGS' in os.environ else ''
-		if self.arch == 'i686-w64-mingw32':
+		self.asmflags = os.environ["ASMFLAGS"] if 'ASMFLAGS' in os.environ else ''
+		if self.arch == 'aarch64-w64-mingw32':
+			self.cpu_family = "arm"
+			self.processor = 'aarch64'
+		elif self.arch == 'i686-w64-mingw32':
 			self.cpu_family = "x86"
 			self.processor = 'i686'
 		else:
@@ -71,7 +75,7 @@ if __name__ == '__main__':
 									add_help=False)
 	required = parser.add_argument_group('required arguments')
 	optional = parser.add_argument_group('optional arguments')
-	required.add_argument('--arch', type=str, required=True, choices=['i686-w64-mingw32', 'x86_64-w64-mingw32'],
+	required.add_argument('--arch', type=str, required=True, choices=['aarch64-w64-mingw32', 'i686-w64-mingw32', 'x86_64-w64-mingw32'],
 					help='Architecture to use for cross file generation')
 	required.add_argument('--output-file', type=str, required=True, help='Write the generated cross file to this path')
 	optional.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,

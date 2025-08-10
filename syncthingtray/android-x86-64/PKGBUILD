@@ -14,7 +14,7 @@ _pkgver_forkawesome=1.2.0
 _reponame=syncthingtray
 _reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
 pkgname=android-$_arch-syncthingtray
-pkgver=1.7.3
+pkgver=1.7.11
 pkgrel=1
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
@@ -60,7 +60,7 @@ build() {
 
   cd subdirs/$_reponame
   cmake --preset arch-android \
-    -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.woff2" \
+    -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.ttf" \
     -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml"
   cmake --build --preset arch-android
 }
@@ -74,4 +74,5 @@ package() {
   find "$BUILD_DIR" -iname '*-signed.apk' -exec cp -v --target-directory="$apk_dir" {} \+
   find "$pkgdir" -name 'lib*.so' -type f -exec "$ANDROID_STRIP" --strip-unneeded {} \;
   find "$pkgdir" -name 'lib*.a' -type f -exec "$ANDROID_STRIP" -g {} \;
+  mv -v "$apk_dir"/*.apk "$apk_dir/$_reponame.apk"
 }

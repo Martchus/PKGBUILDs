@@ -39,7 +39,7 @@ optdepends=('gnome-shell-extension-appindicator: tray icon support for GNOME She
 [[ $_js_provider == qml ]] && depends+=('qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('plasma-workspace: Plasmoid for Plasma 6 desktop')
-makedepends=('cmake' 'ninja' 'qt6-tools' 'git' 'boost' 'clang')
+makedepends=('cmake' 'ninja' 'qt6-tools' 'git' 'boost' 'clang' 'python-myst-parser')
 checkdepends=('cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('kio')
 [[ $_enable_plasmoid ]] && makedepends+=('libplasma' 'extra-cmake-modules')
@@ -89,6 +89,7 @@ build() {
     $additional_args \
     .
   ninja
+  ninja sphinxdoc
 }
 
 check() {
@@ -101,5 +102,5 @@ package() {
   depends+=('libqtutilities-git.so' 'libqtforkawesome-git.so' 'libc++utilities-git.so' 'libboost_filesystem.so')
 
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  DESTDIR="${pkgdir}" ninja install
+  DESTDIR="${pkgdir}" ninja install install-doc
 }

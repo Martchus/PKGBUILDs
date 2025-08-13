@@ -1,16 +1,16 @@
 pkgname=syncthing-devtools
-pkgver=1.29.7
+pkgver=2.0.0
 pkgrel=1
 pkgdesc='Development tools from Syncthing'
 arch=(x86_64)
 url='https://syncthing.net/'
 license=('MPL-2.0')
-depends=(glibc)
+depends=(glibc sqlite)
 makedepends=(git go)
 source=("https://github.com/syncthing/syncthing/releases/download/v$pkgver/syncthing-source-v$pkgver.tar.gz"{,.asc})
 options=(!lto) # https://github.com/golang/go/pull/53528
 validpgpkeys=('37C84554E7E0A261E4F76E1ED26E6ED000654A3E') # Syncthing Release Management
-sha256sums=('7b29b2bb1fb85adf6f3baf120ff725a19b06ed13b95011fe67dd952349e0e212'
+sha256sums=('c7384c91f4db62c7eb1d17bcbbd59f0d42686306a6eb0bf93031d0ba93ab787b'
             'SKIP')
 
 _srcdir="src/github.com/syncthing"
@@ -32,7 +32,7 @@ build() {
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
-  export GOFLAGS="-buildmode=pie -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  export GOFLAGS="-buildmode=pie -ldflags=-linkmode=external -mod=readonly -modcacherw -tags=libsqlite3"
 
   for dir in st*; do
     pushd "$dir"

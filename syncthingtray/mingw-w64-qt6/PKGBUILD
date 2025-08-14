@@ -129,9 +129,6 @@ build() {
           )
         fi
       fi
-      if [[ $_cfg == static ]]; then
-        additional_flags+=(-DSQLite3_LIBRARY="/usr/$_arch/lib/libsqlite3.a")
-      fi
       ${_arch}-cmake${_cfg_suffix[$_cfg]} \
         -G Ninja \
         -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \

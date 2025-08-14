@@ -22,7 +22,7 @@ set(BOOST_USE_STATIC_LIBS ON)
 set(Vulkan_LIBRARY "/usr/@TRIPLE@/lib/libvulkan.dll.a" CACHE FILEPATH "shared Vulkan IDC library")
 
 # workaround limitations in upstream pkg-config files and CMake find modules
-set(SQLite3_LIBRARY "${CMAKE_STATIC_PREFIX}/lib/libsqlite3.a" CACHE FILEPATH "static sqlite3")
+set(SQLite3_LIBRARY "${CMAKE_STATIC_PREFIX}/../lib/libsqlite3.a" CACHE FILEPATH "static sqlite3")
 set(pkgcfg_lib_PC_SQLite3_sqlite3 "${SQLite3_LIBRARY}" CACHE FILEPATH "static sqlite3")
 set(pkgcfg_lib_libbrotlicommon_brotlicommon "${CMAKE_STATIC_PREFIX}/lib/libbrotlicommon.a" CACHE INTERNAL "static libbrotlicommon")
 set(pkgcfg_lib_libbrotlienc_brotlienc "${CMAKE_STATIC_PREFIX}/lib/libbrotlienc.a;${CMAKE_STATIC_PREFIX}/lib/libbrotlicommon.a" CACHE INTERNAL "static libbrotliend")

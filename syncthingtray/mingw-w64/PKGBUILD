@@ -96,9 +96,6 @@ build() {
       msg2 "${_arch}-${_cfg}"
       mkdir -p "build-${_arch}-${_cfg}" && pushd "build-${_arch}-${_cfg}"
       local additional_flags=()
-      if [[ $_cfg == static ]]; then
-        additional_flags+=(-DSQLite3_LIBRARY="/usr/$_arch/lib/libsqlite3.a")
-      fi
       ${_arch}-cmake \
         -G Ninja \
         -DCMAKE_BUILD_TYPE:STRING='Release' \

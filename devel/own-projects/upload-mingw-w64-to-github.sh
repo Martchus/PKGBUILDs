@@ -67,6 +67,7 @@ if [[ $DRY_RUN ]]; then
 fi
 
 projects=(${PROJECTS:-${!versions[@]}})
+android_minimum_platform=28 # we build with ANDROID_MINIMUM_PLATFORM=24 (Android 7) but Qt needs 28 (Android 9)
 errors=()
 
 if [[ $EXPERIMENTAL ]]; then
@@ -99,10 +100,10 @@ do
     zip_files=()
     pushd "$temp_dir"
 
+    # handle mingw-w64 packages
     for variant in '' 'qt6'; do
         [[ $variant ]] && variant_suffix=-$variant || variant_suffix=
 
-        # handle mingw-w64 packages
         mingw_w64_pkg=(mingw-w64{,-clang-aarch64}-$project$variant_suffix)
         for pkg_name in "${mingw_w64_pkg[@]}"; do
             # determine file path of arch linux package
@@ -229,6 +230,64 @@ do
             zip_files+=("$zip_file")
         done
     fi
+
+    # handle android packages
+    for variant in ''; do
+        [[ $variant ]] && variant_suffix=-$variant || variant_suffix=
+
+        android_pkg=(android-{aarch64,x86-64}-$project$variant_suffix)
+        for pkg_name in "${android_pkg[@]}"; do
+            # determine file path of arch linux package
+            pkg_files=("$repo_dir/$pkg_name-$version"-*-*.pkg.tar.!(*.sig))
+            if [[ ${#pkg_files[@]} == 0 ]]; then
+                echo "no package $pkg_name for $project/v$version present"
+                continue
+            fi
+            latest_pkg_file=${pkg_files[-1]}
+            echo "using package $latest_pkg_file for $project$variant_suffix"
+
+            # extract arch linux package
+            pkg_file_name=${latest_pkg_file##*/}
+            bsdtar xJf "$latest_pkg_file"
+
+            # locate the license file
+            license_file=usr/share/licenses/$pkg_name/LICENSES-android-distribution.md
+            if [[ ! -f $license_file ]]; then
+                echo "the package $latest_pkg_file does not include the expected license file $license_file"
+                #continue FIXME: add licnese file for Android distribution
+            fi
+
+            # make a zip file for each statically linked binary
+            for arch in aarch64 x86-64; do
+                binaries=(opt/android-libs/$arch/apk/*.apk)
+                arch=${arch/-/_} # turn x86-64 into x86_64 for consistency with mingw32 and linux-gnu
+                for binary in ${binaries[@]}; do
+                    base_name=${binary##*/}
+                    base_name=${base_name%.apk}
+                    binary_name=$base_name.apk
+
+                    # check whether upload already exists
+                    zip_file=$base_name-$version-$arch-linux-android$android_minimum_platform.exe.zip
+                    if ! [[ $DRY_RUN ]] && gh release view "v$version" --repo "$gh_user/$gh_name" --json assets --jq '.assets[] | .name' | grep "$zip_file"; then
+                        echo "auto-skipping $project/v$version; $zip_file already present"
+                        continue
+                    elif [[ $DRY_RUN ]] && [[ -e $zip_file ]]; then
+                        echo "auto-skipping $project/v$version; $zip_file already present (dry-run)"
+                        continue
+                    fi
+
+                    # create zip file
+                    echo "zipping $binary to $zip_file"
+                    [[ $binary != "$binary_name" ]] && mv "$binary" "$binary_name"
+                    "$stsigtool" sign "$release_signing_keyfile_stsigtool" "$binary_name" > "$binary_name.stsigtool.sig"
+                    sign_openssl "$binary_name" "$binary_name.openssl.sig"
+                    additional_files=("$binary_name.stsigtool.sig" "$binary_name.openssl.sig")
+                    bsdtar acf "$zip_file" "$binary_name" "${additional_files[@]}"
+                    zip_files+=("$zip_file")
+                done
+            done
+        done
+    done
 
     # try next project and print warning if no files could be created
     if [[ ${#zip_files[@]} == 0 ]]; then

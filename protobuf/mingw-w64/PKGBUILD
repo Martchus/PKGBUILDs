@@ -1,6 +1,6 @@
 pkgname=mingw-w64-protobuf
 _pkgname=protobuf
-pkgver=31.1
+pkgver=32.0
 pkgrel=1
 pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
 arch=('any')
@@ -10,11 +10,9 @@ depends=(mingw-w64-zlib mingw-w64-abseil-cpp)
 makedepends=(mingw-w64-cmake-static protobuf)
 options=(!strip !buildflags staticlibs)
 source=("https://github.com/protocolbuffers/${_pkgname}/releases/download/v$pkgver/${_pkgname}-$pkgver.tar.gz"
-         0001-Fix-building-shared-libs-with-clang.patch
          0002-Fix-windres-invocation.patch
-         0003-Demote-error-about-buildtime-runtime-version-differe.patch
-         0004-Fix-build-with-GCC-15.patch)
-sha256sums=('12bfd76d27b9ac3d65c00966901609e020481b9474ef75c7ff4601ac06fa0b82'
+         0003-Demote-error-about-buildtime-runtime-version-differe.patch)
+sha256sums=('9dfdf08129f025a6c5802613b8ee1395044fecb71d38210ca59ecad283ef68bb'
             'f568109cf5c60839065552839db9fce557fe2abbd07bd6bf951f50f7abbf251b'
             '92ee16fe5fb198a345a40ded30ecce4fef0f86089545a300773b64bcc91eb9c2'
             'a5183b4028eb063e0f1d689b1197e45305368df74a2ea018dbea63b4ef925fae'
@@ -24,10 +22,8 @@ _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd ${_pkgname}-${pkgver}
-  patch -p1 -i ../0001-Fix-building-shared-libs-with-clang.patch
   patch -p1 -i ../0002-Fix-windres-invocation.patch
   patch -p1 -i ../0003-Demote-error-about-buildtime-runtime-version-differe.patch
-  patch -p1 -i ../0004-Fix-build-with-GCC-15.patch
 }
 
 build() {

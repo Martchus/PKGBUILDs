@@ -11,7 +11,7 @@
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-protobuf
-pkgver=31.1
+pkgver=32.0
 pkgrel=1
 arch=('any')
 pkgdesc="Protocol Buffers - Google's data interchange format (Android ${_android_arch})"
@@ -22,7 +22,7 @@ depends=("android-${_android_arch}-zlib" "android-${_android_arch}-abseil-cpp")
 makedepends=('android-cmake')
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://github.com/protocolbuffers/protobuf/archive/v${pkgver}/protobuf-${pkgver}.tar.gz")
-sha256sums=('12bfd76d27b9ac3d65c00966901609e020481b9474ef75c7ff4601ac06fa0b82')
+sha256sums=('9dfdf08129f025a6c5802613b8ee1395044fecb71d38210ca59ecad283ef68bb')
 
 prepare() {
   cd "${srcdir}/protobuf-${pkgver}"

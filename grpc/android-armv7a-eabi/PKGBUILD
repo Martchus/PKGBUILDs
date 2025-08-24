@@ -2,9 +2,9 @@ _android_arch=armv7a-eabi
 
 _pkgname=grpc
 pkgname=android-${_android_arch}-${_pkgname}
-_protover=31.1
+_protover=32.0
 _opencensus_proto_ver=0.4.1
-pkgver=1.73.0
+pkgver=1.74.1
 pkgrel=1
 arch=('any')
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (Android ${_android_arch})"
@@ -28,7 +28,7 @@ makedepends=(
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz")
-sha256sums=('00865dbc3d7689fd9c5c7d0a10822a4eae175ca692870433b64106abcb1294a0'
+sha256sums=('7bf97c11cf3808d650a3a025bbf9c5f922c844a590826285067765dfd055d228'
             'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3')
 
 prepare() {

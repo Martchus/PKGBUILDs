@@ -1,7 +1,7 @@
 _pkgname=re2
 pkgname=static-compat-$_pkgname
 _re2ver=2024-07-02
-pkgrel=4
+pkgrel=5
 epoch=1
 pkgver=${_re2ver//-}
 pkgdesc="Fast, safe, thread-friendly regular expression engine"

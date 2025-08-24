@@ -1,7 +1,7 @@
 _pkgname=abseil-cpp
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-$_pkgname
-pkgver=20250512.0
+pkgver=20250814.0
 pkgrel=1
 pkgdesc="Collection of C++ library code designed to augment the C++ standard library (Android, $_android_arch)"
 arch=('x86_64')
@@ -11,15 +11,8 @@ depends=('android-ndk')
 checkdepends=("android-$_android_arch-gtest")
 makedepends=('android-cmake')
 options=(!strip !buildflags !libtool staticlibs !emptydirs)
-source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/$_pkgname-$pkgver.tar.gz"
-         scoped-mock-log.patch)
-sha256sums=('7262daa7c1711406248c10f41026d685e88223bc92817d16fb93c19adb57f669'
-            'a6cbc612a2b96fcbd52d081e03e8581107ceb4827edb19d96510a31c568e1396')
-
-prepare() {
-  cd "$srcdir/$_pkgname-$pkgver"
-  #patch -p1 -i ../scoped-mock-log.patch # Install target needed by protobuf
-}
+source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/$_pkgname-$pkgver.tar.gz")
+sha256sums=('9b2b72d4e8367c0b843fa2bcfa2b08debbe3cee34f7aaa27de55a6cbb3e843db')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

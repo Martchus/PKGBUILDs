@@ -1,12 +1,12 @@
 % layout 'mingw-w64-qt6-module';
 \
-_qtver=6.9.1
+_qtver=6.9.2
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
 pkgdesc='Provides the modules QtGrpc and QtProtobuf (mingw-w64)'
-depends=(<%== qt6deps qw(base) %> 'mingw-w64-grpc')
+depends=(<%== qt6deps qw(base) %> 'mingw-w64-protobuf')
 optdepends=(<%== qt6optdeps declarative => 'QML bindings' %>)
-makedepends=('mingw-w64-cmake<%== $static_suffix %>' <%== qt6deps qw(declarative shadertools) %> 'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-protobuf' 'protobuf' 'qt6-grpc' 'qt6-declarative' 'qt6-shadertools' 'ninja')
+makedepends=('mingw-w64-cmake<%== $static_suffix %>' <%== qt6deps qw(declarative shadertools) %> 'mingw-w64-vulkan-headers' 'mingw-w64-vulkan-icd-loader' 'mingw-w64-grpc' 'protobuf' 'qt6-grpc' 'qt6-declarative' 'qt6-shadertools' 'ninja')

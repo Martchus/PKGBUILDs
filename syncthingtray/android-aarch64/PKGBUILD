@@ -26,7 +26,8 @@ pkgrel=1
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)
-depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl" "android-$_arch-sqlite")
+depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl" "android-$_arch-sqlite"
+         'android-platform-35')
 makedepends=('android-cmake' 'android-ndk' 'ninja' 'git' 'go' 'clang' 'perl-yaml-libyaml'
              'qt6-tools' 'qt6-declarative' "android-$_arch-qt6-tools")
 url="https://github.com/Martchus/${_reponame}"

@@ -6,7 +6,8 @@ include("/usr/share/mingw/toolchain-@TRIPLE@.cmake")
 
 # prefer libraries from "static" sub-prefix
 set(CMAKE_STATIC_PREFIX "/usr/@TRIPLE@/static")
-set(CMAKE_FIND_ROOT_PATH "${CMAKE_STATIC_PREFIX};${CMAKE_FIND_ROOT_PATH}")
+list (POP_BACK CMAKE_FIND_ROOT_PATH CMAKE_SHARED_PREFIX)
+list (APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_STATIC_PREFIX}" "${CMAKE_SHARED_PREFIX}")
 
 # prefer static libraries
 # note: It is of no use to set the real variable CMAKE_FIND_LIBRARY_SUFFIXES here because it gets overridden by CMake

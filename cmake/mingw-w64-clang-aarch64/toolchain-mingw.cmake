@@ -2,7 +2,7 @@ set (CMAKE_SYSTEM_NAME Windows)
 set (CMAKE_SYSTEM_PROCESSOR @PROCESSOR@)
 
 # where is the target environment
-set (CMAKE_FIND_ROOT_PATH /usr/@TRIPLE@)
+list (APPEND CMAKE_FIND_ROOT_PATH /usr/@TRIPLE@)
 
 # search for programs in the build host directories
 set (CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)

@@ -267,7 +267,7 @@ do
                     binary_name=$base_name.apk
 
                     # check whether upload already exists
-                    zip_file=$base_name-$version-$arch-linux-android$android_minimum_platform.exe.zip
+                    zip_file=$base_name-$version-$arch-linux-android$android_minimum_platform.apk.zip
                     if ! [[ $DRY_RUN ]] && gh release view "v$version" --repo "$gh_user/$gh_name" --json assets --jq '.assets[] | .name' | grep "$zip_file"; then
                         echo "auto-skipping $project/v$version; $zip_file already present"
                         continue

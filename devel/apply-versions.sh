@@ -14,9 +14,9 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     [ ${variant##*-} == 'git' ] && continue
 
     # skip android packages (for now)
-    qt6_pattern='qt6-.*' is_qt6=
-    [[ $project_name =~ $qt6_pattern ]] && is_qt6=1 
-    [ ${variant%%-*} == 'android' ] && [[ ! $is_qt6 ]] && continue
+    [[ $project_name =~ qt5-.* ]] && is_qt5=1 || is_qt5=
+    [[ $project_name =~ qt6-.* ]] && is_qt6=1 || is_qt6=
+    [ "${variant%%-*}" == 'android' ] && [[ $is_qt5 ]] && continue
 
     # skip some of the packages
     [[    $project_name == 'qt5-quick1'         # removed from official releases
@@ -44,7 +44,7 @@ for pkgbuild_file in "${PKGBUILD_DIR:-.}"/*/*/PKGBUILD; do
     source "$pkgbuild_file"
     [[ $version == $pkgver ]] && continue
     [[ $version == $_qtver ]] && continue
-    pattern='(apple-darwin-.*|android-.*-(c\+\+utilities|qtutilities|passwordfile|passwordmanager))'
+    pattern='(apple-darwin-.*|android-.*-(c\+\+utilities|qtutilities|passwordfile))'
     [[ $pkgname =~ $pattern ]] && continue
 
     # check if template exists and modify template instead

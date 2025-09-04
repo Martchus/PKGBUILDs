@@ -1,5 +1,5 @@
 pkgname=mingw-w64-clang-aarch64-compiler-rt
-pkgver=20.1.6
+pkgver=20.1.8
 pkgrel=1
 pkgdesc="Compiler runtime libraries for clang (mingw-w64)"
 arch=('any')
@@ -12,11 +12,11 @@ _source_base=https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkg
 source=($_source_base/compiler-rt-$pkgver.src.tar.xz{,.sig}
         $_source_base/cmake-$pkgver.src.tar.xz{,.sig}
 	$_source_base/llvm-$pkgver.src.tar.xz{,.sig})
-sha256sums=('34ff389ce2c34ac1fe8badcf842265295daa91fd1149d69a7ebaf131edf01e4d'
+sha256sums=('15277402f6fd63397c0917a5c7171cda82d16d226094b828c1ed0f58f73b9c69'
             'SKIP'
-            'b4b3efa5d5b01b3f211f1ba326bb6f0c318331f828202d332c95b7f30fca5f8c'
+            '3319203cfd1172bbac50f06fa68e318af84dcb5d65353310c0586354069d6634'
             'SKIP'
-            'f09e304ca98bb809f492ec34f94f587361b4b0d06ed783fb3a41e7fb218e47a1'
+            'e1363888216b455184dbb8a74a347bf5612f56a3f982369e1cba6c7e0726cde1'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A'  # Tom Stellard <tstellar@redhat.com>
               'D574BD5D1D0E98895E3BF90044F2485E45D59042') # Tobias Hieta <tobias@hieta.se>

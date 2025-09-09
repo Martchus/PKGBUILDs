@@ -1,5 +1,5 @@
 pkgname=syncthing-devtools
-pkgver=2.0.0
+pkgver=2.0.8
 pkgrel=1
 pkgdesc='Development tools from Syncthing'
 arch=(x86_64)
@@ -10,7 +10,7 @@ makedepends=(git go)
 source=("https://github.com/syncthing/syncthing/releases/download/v$pkgver/syncthing-source-v$pkgver.tar.gz"{,.asc})
 options=(!lto) # https://github.com/golang/go/pull/53528
 validpgpkeys=('37C84554E7E0A261E4F76E1ED26E6ED000654A3E') # Syncthing Release Management
-sha256sums=('c7384c91f4db62c7eb1d17bcbbd59f0d42686306a6eb0bf93031d0ba93ab787b'
+sha256sums=('ad583925c0934fcfe9976e544093203d7ced483bd5bad80cd02a3c93a04dfb8b'
             'SKIP')
 
 _srcdir="src/github.com/syncthing"

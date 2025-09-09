@@ -6,7 +6,7 @@
 
 _pkgname=libxml2
 pkgname=static-compat-$_pkgname
-pkgver=2.14.5
+pkgver=2.14.6
 pkgrel=1
 pkgdesc='XML C parser and toolkit'
 url='https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home'
@@ -20,7 +20,7 @@ source=(
   "git+https://github.com/GNOME/libxml2.git#tag=v$pkgver"
   https://www.w3.org/XML/Test/xmlts20130923.tar.gz
 )
-b2sums=('c4104e9f98671c591df9bd539c24c5dd232644750c3e8ec1664592638b01f61148150d44c50f919eacf4b63750a486ec87b4a5a65535d2872d42c7d9c9fd768a'
+b2sums=('977d9df5c784eaeb062ddf437eb112a4641ba3bde219d6a288965a04bee158560019c6e9987c1dcd8c6c6a664ea717325525294fff4352cfefdb876894fe1d40'
         '63a47bc69278ef510cd0b3779aed729e1b309e30efa0015d28ed051cc03f9dfddb447ab57b07b3393e8f47393d15473b0e199c34cb1f5f746b15ddfaa55670be')
 
 pkgver() {

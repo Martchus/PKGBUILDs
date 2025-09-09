@@ -1,11 +1,11 @@
-# Maintainer: pingplug < aur at pingplug dot me >
+# Maintainer of package in AUR: pingplug < aur at pingplug dot me >
 # Contributor: Schala Zeal < schalaalexiazeal at gmail dot com >
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 pkgbase=mingw-w64-harfbuzz
 pkgname=('mingw-w64-harfbuzz' 'mingw-w64-harfbuzz-icu')
-pkgver=11.3.3
+pkgver=11.4.5
 pkgrel=1
 pkgdesc="OpenType text shaping engine (mingw-w64)"
 arch=('any')
@@ -24,7 +24,7 @@ makedepends=('glib2-devel'
              'git')
 options=('!strip' 'staticlibs' '!buildflags')
 source=("git+https://github.com/harfbuzz/harfbuzz?signed#tag=$pkgver")
-b2sums=('cb0c33adc7a4565d86ebb6161494e43b992875f9d4006724ceba68f6d55efef34322a1fb189eed1410237ee97a79f72d64b53fe0d80afd17358d611e6bcb5811')
+b2sums=('fa618519aa441f842d8a475f2cb02ff3bff3d0d0ad7e180e07b14e3832468c70c8c5dc86793dbc223c95637e3bf2a234ad266c7a81ef1645dbf416c09e85882c')
 validpgpkeys=(
   053D20F17CCCA9651B2C6FCB9AB24930C0B997A2 # Khaled Hosny <khaled@aliftype.com> (@khaledhosny)
   9F377DDB6D3153A48EB3EB1E63CC496475267693 # Caleb Maclennan <caleb@alerque.com> (@alerque)

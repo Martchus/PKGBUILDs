@@ -3,50 +3,61 @@
 
 _pkgname=freetype2
 pkgname=static-compat-$_pkgname-bootstrap
-pkgver=2.12.0
+pkgver=2.14.0
 pkgrel=1
 pkgdesc="Font rasterization library"
 url="https://www.freetype.org/"
 arch=(x86_64)
-license=(GPL)
+license=('FTL OR GPL-2.0-or-later')
 # adding harfbuzz for improved OpenType features auto-hinting
 # introduces a cycle dep to harfbuzz depending on freetype wanted by upstream
-depends=(static-compat-zlib static-compat-bzip2 static-compat-libpng static-compat-brotli)
-makedepends=(static-compat-libx11 static-compat-meson)
-conflicts=(static-compat-$_pkgname)
-provides=(static-compat-$_pkgname)
+# note: The official package uses -D freetype2:harfbuzz=dynamic making harfbuzz a makedepends/optdepends
+# but this probably makes probably no sense for a static build.
+depends=(
+  static-compat-brotli
+  static-compat-bzip2
+  static-compat-harfbuzz
+  static-compat-libpng
+  static-compat-zlib
+)
+makedepends=(
+  static-compat-libx11
+  static-compat-meson
+)
 options=(staticlibs)
-source=(https://download-mirror.savannah.gnu.org/releases/freetype/freetype-$pkgver.tar.xz
-        0001-Enable-table-validation-modules.patch
-        0002-Enable-subpixel-rendering.patch
-        0003-Enable-infinality-subpixel-hinting.patch
-        0004-Enable-long-PCF-family-names.patch)
-sha256sums=('ef5c336aacc1a079ff9262d6308d6c2a066dd4d2a905301c4adda9b354399033'
-            '12c869eeba212c74d07d3d7815848b047ecb5282d5463dffb3bb6d219315d4da'
-            '2497dcb3650271db9bb7ad4f3379b5b3c6a19f5ca5388dd9ba7d42b5c15c8c4f'
-            'caa0bc7d3dfa3b4c6b9beecda6141405dafe540f99a655dc83d1704fa232ac20'
-            '8bf978cd1abd73f54c53f7d214c368b1fd8921cd9800d2cc84427c662ffbbdcb')
-validpgpkeys=(E30674707856409FF1948010BE6C3AAC63AD8E3F) # Werner Lemberg <wl@gnu.org>
+source=(
+  https://download-mirror.savannah.gnu.org/releases/freetype/freetype-$pkgver.tar.xz{,.sig}
+  0001-Enable-table-validation-modules.patch
+  0002-Enable-subpixel-rendering.patch
+  0003-Enable-long-PCF-family-names.patch
+)
+b2sums=('70b79290b16bc05e156032dc8a9136bddb21c1f9fc84692959c65f2bc3dc51df681587aee672de9eb393ec77edae05f8e4fdab642a9938dade9eb1186f6d010e'
+        'SKIP'
+        'f45ec7d03193b446d8b46c8d981f330843a1ab2c83a91a5011cb328b26b4fc4c4b5729f32f3270018cf5ba8a162712bd0ebc2cd67f97b906e46ce293aeda466f'
+        'b9481bfe770104b181a59be8cf30c90d329447d3ba04bd7dc641a54057cf2a9024c1a881d096b7ff940e9b467960ff3e08e611686d9a01136523fbb34299d057'
+        '1ced8e4ef522b111759953f6b4b38864b1a705e5b6705222282b0e6857a4ee7ac8bdcec35248f53dd8b628fabb8861ee82c4ac957f4c71229bac94d8aaf82984')
+validpgpkeys=(
+  E30674707856409FF1948010BE6C3AAC63AD8E3F  # Werner Lemberg <wl@gnu.org>
+)
 
 prepare() {
   cd freetype-$pkgver
   patch -Np1 -i ../0001-Enable-table-validation-modules.patch
   patch -Np1 -i ../0002-Enable-subpixel-rendering.patch
-  patch -Np1 -i ../0003-Enable-infinality-subpixel-hinting.patch
-  patch -Np1 -i ../0004-Enable-long-PCF-family-names.patch
+  patch -Np1 -i ../0003-Enable-long-PCF-family-names.patch
 
   # meson sucks
   sed -i 's|static: false|static: true|g' meson.build
-
-  # meson sucks a lot
-  sed -i 's|ftoption_command.*FT_CONFIG_OPTION_USE_HARFBUZZ.*||g' meson.build
-  sed -i 's|ft2_deps.*harfbuzz_dep.*||g' meson.build
 }
 
 build() {
   source static-compat-environment
   cd freetype-$pkgver
-  static-compat-meson build -D zlib=system -D bzip2=enabled -D png=enabled -D brotli=enabled -Dharfbuzz=disabled
+  static-compat-meson build \
+    -D zlib=system \
+    -D bzip2=enabled \
+    -D png=enabled \
+    -D brotli=enabled
   meson compile -C build
 }
 
@@ -63,4 +74,4 @@ package() {
   rm -rf "${pkgdir}"/usr/static/share/
 }
 
-# vim:set ts=2 sw=2 et:
+# vim:set sw=2 sts=-1 et:

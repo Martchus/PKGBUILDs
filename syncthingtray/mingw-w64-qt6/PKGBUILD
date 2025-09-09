@@ -18,8 +18,8 @@ pkgname=mingw-w64-syncthingtray-qt6
 _reponame=syncthingtray
 _name=${pkgname#mingw-w64-}
 _name=${_name%-qt6*}
-pkgver=2.0.1
-pkgrel=3
+pkgver=2.0.2
+pkgrel=1
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=(GPL-2.0-or-later)
@@ -33,7 +33,7 @@ depends=('mingw-w64-crt' 'mingw-w64-qt6-svg' 'mingw-w64-qtutilities-qt6' 'mingw-
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('3d1076beffb56dbfa70b6f7125e508de4c62a16b181b53fd467f40c045511500'
+sha256sums=('7eea1232814297033c345919e8af4a337c2e827ecbf887296d65017ca8afd352'
             'SKIP')
 options=(!buildflags staticlibs !strip !emptydirs)
 

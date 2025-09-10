@@ -2,7 +2,7 @@
 
 _pkgname=openssl
 pkgname=static-compat-$_pkgname
-_ver=3.5.1
+_ver=3.5.2
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 pkgrel=1
@@ -16,7 +16,7 @@ optdepends=('ca-certificates')
 options=(!emptydirs staticlibs)
 source=("https://github.com/openssl/openssl/releases/download/openssl-${pkgver}/openssl-${pkgver}.tar.gz"{,.asc}
         'ca-dir.patch')
-sha256sums=('529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f'
+sha256sums=('c53a47e5e441c930c3928cf7bf6fb00e5d129b630e0aa873b08258656e7345ec'
             'SKIP'
             '0a32d9ca68e8d985ce0bfef6a4c20b46675e06178cc2d0bf6d91bd6865d648b7')
 validpgpkeys=('EFC0A467D613CB83C7ED6D30D894E2CE8B3D79F5'

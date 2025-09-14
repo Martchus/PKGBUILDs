@@ -8,8 +8,8 @@ pkgname=android-${_android_arch}-sqlite
 # pkgbase=android-${_android_arch}-sqlite
 # pkgname=("android-${_android_arch}-sqlite")
 # pkgname+=("android-${_android_arch}-sqlite-tcl")
-_srcver=3500300
-pkgver=3.50.3
+pkgver=3.50.4
+_srcver=$(echo "$pkgver" | awk -F. '{ printf "%d%02d%02d00", $1, $2, $3 }')
 pkgrel=1
 arch=('any')
 pkgdesc="A C library that implements an SQL database engine (Android ${_android_arch})"
@@ -23,7 +23,7 @@ makedepends=('android-configure'
 #makedepends+=("android-${_android_arch}-tcl")
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://www.sqlite.org/2025/sqlite-src-${_srcver}.zip")
-sha256sums=('119862654b36e252ac5f8add2b3d41ba03f4f387b48eb024956c36ea91012d3f')
+sha256sums=('b7b4dc060f36053902fb65b344bbbed592e64b2291a26ac06fe77eec097850e9')
 
 build() {
     cd "${srcdir}/sqlite-src-${_srcver}"
@@ -37,7 +37,6 @@ build() {
         -DSQLITE_ENABLE_COLUMN_METADATA=1 \
         -DSQLITE_ENABLE_UNLOCK_NOTIFY \
         -DSQLITE_ENABLE_DBSTAT_VTAB=1 \
-        -DSQLITE_ENABLE_FTS3_TOKENIZER=1 \
         -DSQLITE_ENABLE_FTS3_PARENTHESIS \
         -DSQLITE_SECURE_DELETE \
         -DSQLITE_ENABLE_STMTVTAB \
@@ -57,6 +56,7 @@ build() {
         --includedir=${ANDROID_PREFIX_INCLUDE} \
         --enable-shared \
         --enable-static \
+        --enable-fts3 \
         --fts4 \
         --fts5 \
         --rtree \

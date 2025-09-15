@@ -2,7 +2,7 @@
 
 pkgname=mingw-w64-crt
 pkgver=13.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='MinGW-w64 CRT for Windows'
 arch=('any')
 url='https://www.mingw-w64.org'

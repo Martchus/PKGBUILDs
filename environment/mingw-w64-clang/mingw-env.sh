@@ -6,7 +6,7 @@ _arch_=${_target%%-*}
 [ $USE_COMPILER_WRAPPERS ] && \
   compiler_prefix=mingw- || \
   cross_clang_flags="-rtlib=compiler-rt -fuse-ld=lld -mguard=cf -target $_target -Xclang -triple -Xclang $_target"
-default_mingw_pp_flags="-D_FORTIFY_SOURCE=3"
+default_mingw_pp_flags=""
 default_mingw_compiler_flags="$cross_clang_flags $default_mingw_pp_flags -O2 -pipe -fexceptions --param=ssp-buffer-size=4 -Wformat -Werror=format-security -mguard=cf"
 default_mingw_cxx_compiler_flags="$default_mingw_compiler_flags -stdlib=libc++ -isystem/usr/$_target/include/c++/v1 -isystem/usr/$_target/include"
 default_mingw_linker_flags="$cross_clang_flags -Wl,-O1,--sort-common,--as-needed -fstack-protector"

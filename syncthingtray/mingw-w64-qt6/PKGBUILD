@@ -19,7 +19,7 @@ _reponame=syncthingtray
 _name=${pkgname#mingw-w64-}
 _name=${_name%-qt6*}
 pkgver=2.0.1
-pkgrel=2
+pkgrel=3
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=(GPL-2.0-or-later)
@@ -106,11 +106,6 @@ build() {
       # add arch-specific configuration
       [[ $_arch =~ aarch64-.* ]] && arch_flags+=(
         -DUSE_BOOST_PROCESS:BOOL=ON # supposed to work on Windows on ARM as of Boost 1.87.0
-      )
-      # workaround hangs on startup when compiling with LLVM/Clang/libc++
-      [[ $pkgname =~ .*-clang-.* ]] && additional_flags+=(
-        -DCMAKE_C_FLAGS="${CFLAGS//-D_FORTIFY_SOURCE=3/}"
-        -DCMAKE_CXX_FLAGS="${CXXFLAGS//-D_FORTIFY_SOURCE=3/}"
       )
       # allow building experimental variants without mguard
       if [[ $pkgname =~ .*-clang-.*-no-mguard-.* ]]; then

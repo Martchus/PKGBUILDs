@@ -32,7 +32,7 @@ build() {
   printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
   chmod +x pkg-config
 
-  static-compat-cmake -G Ninja -B build -S "${srcdir}/${_pkgname}"
+  static-compat-cmake -G Ninja -B build -S "${srcdir}/${_pkgname}" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   VERBOSE=1 cmake --build build
 }
 

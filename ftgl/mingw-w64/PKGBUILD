@@ -28,7 +28,7 @@ prepare() {
 build() {
   for _arch in ${_architectures}; do
     export PKG_CONFIG=/usr/bin/$_arch-pkg-config
-    $_arch-cmake -G Ninja -B build-$_arch -S $_pkgname
+    $_arch-cmake -G Ninja -B build-$_arch -S $_pkgname -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     VERBOSE=1 cmake --build build-$_arch
   done
 }

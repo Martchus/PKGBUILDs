@@ -8,21 +8,31 @@
 
 _name=subtitlecomposer
 pkgname=${_name}-git
-pkgver=0.7.1+git298.fe1477b5
-pkgrel=2
+pkgver=0.8.2
+pkgrel=1
 pkgdesc="A KDE subtitle editor (git version)"
 arch=('i686' 'x86_64')
 url="https://invent.kde.org/multimedia/${_name}"
-license=('GPL')
-depends=('kcoreaddons5' 'ktextwidgets5' 'kio5' 'sonnet5' 'kcodecs5' 'kxmlgui5' 'ki18n5' 'ffmpeg' 'openal')
-makedepends=('extra-cmake-modules' 'jack' 'blas' 'xorg-server-xvfb')
+license=(GPL-2.0-only)
+depends=('qt6-declarative' 'qt6-5compat' 'kcoreaddons' 'ktextwidgets' 'kio' 'sonnet' 'kcodecs' 'kxmlgui' 'ki18n' 'ffmpeg' 'openal')
+checkdepends=('xorg-server-xvfb')
+makedepends=('git' 'extra-cmake-modules' 'jack' 'blas')
 
 # Comment/uncomment the following dependency to disable/enable
-# building the speech recognition plugin
-makedepends+=('pocketsphinx')
+# building the pocketsphinx plugin
+# Currently commented-out by default as the library is not even detected as of the 5.0.0 release:
+#  ```
+#  -- Could NOT find PocketSphinx (missing: POCKETSPHINX_INCLUDE_DIR) (found suitable version "5.0.0", minimum required is "5")
+#  -- Have NOT Found PocketSphinx - Speech plugin will not be built
+#  ```
+#makedepends+=('pocketsphinx')
 
 # For consistency, also enable/disable the corresponding optdepends
-optdepends=('pocketsphinx: Pocketsphinx speech recognition backend')
+#  'pocketsphinx: Pocketsphinx speech recognition backend'
+optdepends=(
+  'ruby: scripting'
+  'python: scripting'
+)
 
 conflicts=(${_name})
 provides=(${_name})

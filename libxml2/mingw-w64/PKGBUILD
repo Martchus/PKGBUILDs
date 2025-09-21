@@ -1,5 +1,5 @@
 pkgname=mingw-w64-libxml2
-pkgver=2.14.6
+pkgver=2.15.0
 pkgrel=1
 arch=('any')
 pkgdesc='XML C parser and toolkit (mingw-w64)'
@@ -10,7 +10,7 @@ options=('!buildflags' '!strip' 'staticlibs')
 license=(MIT)
 # using GitHub mirror as https://gitlab.gnome.org/GNOME/libxml2.git seems broken right now
 source=("git+https://github.com/GNOME/libxml2.git#tag=v$pkgver")
-b2sums=('977d9df5c784eaeb062ddf437eb112a4641ba3bde219d6a288965a04bee158560019c6e9987c1dcd8c6c6a664ea717325525294fff4352cfefdb876894fe1d40')
+b2sums=('d5df5b57bc626b72eb8bcf8d2145c237373e4490cdea2b3a79d2a95d57b00c30613244e1d6206df416d3e5ba9ae044e7a923e689826e681a26c5d8a618e09b8a')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -20,10 +20,6 @@ prepare () {
   # avoid `ld.lld: error: unknown argument '--enable-auto-image-base'` when using LLVM-based toolchain
   [[ $pkgname =~ .*-clang-.* ]] && \
     find . -name 'libtool.m4' -exec sed -i -e 's|$wl--enable-auto-image-base||g' {} \+
-
-  # Revert bad Python fix
-  # https://gitlab.gnome.org/GNOME/libxml2/-/issues/917
-  git revert -n 381fb50113660418fb3520bde64084ecf122bf88
 
   # disable doc & examples
   sed -i "s| doc example | |g" Makefile.am

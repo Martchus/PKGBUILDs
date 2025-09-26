@@ -24,7 +24,7 @@ source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         "https://github.com/protocolbuffers/protobuf/archive/v$_protover/protobuf-$_protover.tar.gz")
 sha256sums=('31d6c01c3bfa0a3584532665715e487703eb10d76bb30b4875e57d139c13bbf9'
             '31bf78bd91b96dd5e24fab3bb1d7f3f7453ccbaceec9afb86d6e4816a15ab109'
-            '3ad017543e502ffaa9cd1f4bd4fe96cf117ce7175970f191705fa0518aff80cd')
+            'd2081ab9528292f7980ef2d88d2be472453eea4222141046ad4f660874d5f24e')
 
 prepare() {
   source static-compat-environment

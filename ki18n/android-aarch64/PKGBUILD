@@ -7,7 +7,7 @@ _pkgname=ki18n
 _android_arch=aarch64
 
 pkgname=android-${_android_arch}-${_pkgname}
-pkgver=6.10.0
+pkgver=6.18.0
 pkgrel=1
 pkgdesc="Advanced internationalization framework (Android, $_android_arch)"
 arch=('any')
@@ -16,7 +16,7 @@ license=(LGPL-2.0-only LGPL-3.0-only)
 depends=('iso-codes' "android-$_android_arch"-{qt6-base,qt6-declarative,qt6-tools,gettext})
 makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools')
 source=(https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz{,.sig})
-sha256sums=('2f59f093f8ce340ab46c556b35c2ead2b96dfeb2ff0024c553ac8c53e9b8a11a'
+sha256sums=('d0cbfbf3427c0368daa23f9f68b3cb5b03ad37b6820591491b3ea8a0a28bea61'
             'SKIP')
 validpgpkeys=(53E6B47B45CEA3E0D5B7457758D0EE648A48B3BB # David Faure <faure@kde.org>
               E0A3EB202F8E57528E13E72FD7574483BB57B18D # Jonathan Esk-Riddell <jr@jriddell.org>

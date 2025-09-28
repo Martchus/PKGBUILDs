@@ -7,7 +7,7 @@ _pkgname=qqc2-breeze-style
 _android_arch=armv7a-eabi
 
 pkgname=android-${_android_arch}-${_pkgname}
-pkgver=6.2.5
+pkgver=6.4.5
 _dirver=$(echo $pkgver | cut -d. -f1-3)
 pkgrel=1
 pkgdesc="Applications useful for Plasma development (Android, $_android_arch)"
@@ -17,7 +17,7 @@ license=(LGPL-2.0-or-later)
 depends=("android-$_android_arch"-{qt6-declarative,kcoreaddons,kguiaddons,kconfig,kirigami2,kcolorscheme,kquickcharts})
 makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig})
-sha256sums=('380cb63696ca2126265659c618e05636193f28e7f6a597341eb915af5dd1d10f'
+sha256sums=('df3575e943dd1846c078e4a70e457b0877820e5aa99ff5f2784330f0c97037ff'
             'SKIP')
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
               '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>

@@ -7,7 +7,7 @@ _pkgname=kcolorscheme
 _android_arch=x86-64
 
 pkgname=android-${_android_arch}-${_pkgname}
-pkgver=6.10.0
+pkgver=6.18.0
 pkgrel=1
 pkgdesc="Classes to read and interact with KColorScheme (Android, $_android_arch)"
 arch=('any')
@@ -17,7 +17,7 @@ depends=("android-$_android_arch"-{qt6-base,qt6-declarative,qt6-tools,kconfig,kg
 makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja'
              'qt6-base' 'qt6-declarative' 'qt6-tools')
 source=(https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz{,.sig})
-sha256sums=('f070ed593f1d4010af5a56e247532be96a2c7ca9befc922b084c16215af79bdf'
+sha256sums=('14e99e74cc636640ac8d705f2878d72d0379fff671e75c0f138302489898d651'
             'SKIP')
 validpgpkeys=(53E6B47B45CEA3E0D5B7457758D0EE648A48B3BB # David Faure <faure@kde.org>
               E0A3EB202F8E57528E13E72FD7574483BB57B18D # Jonathan Esk-Riddell <jr@jriddell.org>

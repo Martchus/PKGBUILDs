@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-tools
-_qtver=6.9.2
+_qtver=6.9.3
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -18,8 +18,8 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qttools-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Enable-only-SQL-plugins-which-are-known-to-work.patch')
-sha256sums=('d8b7f7e8e970cc0b975205fd6d5832ea917ef3e751df69b97439c1cddd67a489'
-            '6a3509cd0f4034cbfbe117531a436d92937be3d314670fab35b249b9c8da0122')
+sha256sums=('0cf7ab0e975fc57f5ce1375576a0a76e9ede25e6b01db3cf2339cd4d9750b4e9'
+            'a3437036e6a88f3baf26f21d3d2481357b64fed2de959a4a3821d13f1be74ddf')
 
 prepare () {
   cd $_pkgfqn

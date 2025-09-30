@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=mingw-w64-qt6-declarative
-_qtver=6.9.2
+_qtver=6.9.3
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -21,11 +21,9 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qtdeclarative-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-        '0001-Exclude-qmltime-when-cross-compiling.patch'
-        '0002-Revert-Make-AnimatedNodes-use-afterSynchronizing.patch')
-sha256sums=('477f2d2c0bd98916107818725e6d498206e033dfb2859c52121e01a06ac42664'
-            'aeb0c250bc652284c205437caa47fb5278cef4d3f44d9ca04cc26a7a3240c0ed'
-            '5a49f45f8d5f9b5fd9fda856a4000876b3433d91737020d03dd0f9a780a8a90d')
+        '0001-Exclude-qmltime-when-cross-compiling.patch')
+sha256sums=('5a071b227229afbf5c976b7b59a0d850818d06ae861fcdf6d690351ca3f8a260'
+            'd0a18dd7b0b7d02b6d6e9003be7693444e31ba44129d7ae24a2de4694ed6f4fa')
 
 _architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 

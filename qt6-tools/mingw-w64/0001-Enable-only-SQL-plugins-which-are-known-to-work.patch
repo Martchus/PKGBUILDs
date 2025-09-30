@@ -1,4 +1,4 @@
-From 9f6bc05b489f5f84e936ec09cc0cdb221fd56d4b Mon Sep 17 00:00:00 2001
+From 5df7c219aa608150f9a20f1a4a1d116eefa498b0 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Wed, 9 Jun 2021 17:25:27 +0200
 Subject: [PATCH] Enable only SQL plugins which are known to work

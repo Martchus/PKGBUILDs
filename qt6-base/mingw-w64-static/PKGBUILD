@@ -11,9 +11,9 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=mingw-w64-qt6-base-static
-_qtver=6.9.2
+_qtver=6.9.3
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -50,40 +50,34 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0015-Workaround-linker-error-about-missing-symbol-__sync_.patch'
         '0016-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
         '0017-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
-        '0018-Allow-handling-Android-activity-lifecycle-by-user-pr.patch'
-        '0019-Avoid-compile-error-due-to-inconsistent-use-of-noexc.patch'
-        '0020-Allow-keeping-Android-app-in-background-with-QtQuick.patch'
-        '0021-Allow-resuming-native-app-when-Android-activity-is-r.patch'
-        '0022-Enable-minimal-and-offscreen-plugins-when-compiling-.patch'
-        '0023-Allow-configuring-use-of-OpenSSL-in-QPasswordDigesto.patch'
-        '0024-Drop-CMAKE_SYSTEM_VERSION-from-modules-json-if-Linux.patch'
-        '0025-Revert-Re-land-Android-destroy-the-window-surface-on.patch')
-sha256sums=('44be9c9ecfe04129c4dea0a7e1b36ad476c9cc07c292016ac98e7b41514f2440'
-            '281d00a4a7d3e771be4ead82bf8b996f47f724fae861b0057a7ae7c495528aef'
-            'e7155b4fa342141cd8423f3412dad6d6232503ac4137bb5371e47ad6ce0b4066'
-            '800932929502bad92208b63934d2cf8b565111bdbde3e36fcb0e231423422ecf'
-            '614f6efd1c11f6fcad9594264ff54abf8a817d83c435246bf2cc2c13b03cd38d'
-            '578563b8203a49478bd00637d29caa580e4710f343ff3835dd022736adf10119'
-            '522fa789e2d866303602c917dbf9572e2a52b27b3bd5a6a2b99f58a16f0013f3'
-            '7bbdfd8b9ccf92b3a388725b3113a613c87da6907402796a9b9b57c525c3f4b0'
-            '17f796d8cdfa3fe2c84eaf2f213384d020c15fa2d06cfceb89495eb772db7dec'
-            '862a69d9c30a94c156189aecd6f689e07fb609b7af5ccf84f9412ccc227d9729'
-            'efb2647445553958e74a7954f41d38212dc1db3f071022887741aab87eca0b10'
-            '294077128425b51f6f5e01c444b51b1c0121ee8eb4ca2bcca295dc3c334e0eb2'
-            '5249b64232e74fd96d1171a7e7083f8af2e4cb8dd37b79d3ca273dbcb9c48159'
-            '16c36ae4aa2e5078eba55c9b510a88e89f50b514ad6b48fa866943246509d811'
-            '3a04d24b89195c55de3f7e7b566c050f60daa8942d0916a1772e9b1b570be40c'
-            '1711f706050799186e7d59d44e901a2f67669155d608dc8ca7f945a39af24844'
-            'd12d30bd680dc30b5cdc8844c2c1caeaccdaa8124433020118f9b3c0c8fd9061'
-            '8857aa6a48210f0c00ee7a066eb04340fc8fce97af58f1fb6f5c1a1a4652558c'
-            '117b802dfeecf64c54de83a1a8b40e1c7f70a55466870e684486d569c20ff2f0'
-            '2ab1cfe83d30da2f2b33fb8ad9bb7c252567c7fd9e9c569a4f8be41b385912fd'
-            '7a444d84daebdbce128441a331d275f26e95101e69e4bfc866edb419802b6f87'
-            '46e96e1b943e826de90c4d0fb0db6b4828e45bd622647b6977752aa65e22160a'
-            '7905bffa0c6f4d99eade26671012a1b55722a84ee747550ddf79e30440f18add'
-            '14911b44553e79510d394fc0a750a5b095df6825343b0ab40f024c873d7c0a89'
-            'aae9bd027404bf83dbda49edca08fa763f8f147f2c8ae0c627773542e7bc10a6'
-            '89a9ba6842ad518f05f08ab57542a63c1412c0f07a9a0289f2de8a42553797ae')
+        '0018-Avoid-compile-error-due-to-inconsistent-use-of-noexc.patch'
+        '0019-Allow-keeping-Android-app-in-background-with-QtQuick.patch'
+        '0020-Enable-minimal-and-offscreen-plugins-when-compiling-.patch'
+        '0021-Allow-configuring-use-of-OpenSSL-in-QPasswordDigesto.patch'
+        '0022-Drop-CMAKE_SYSTEM_VERSION-from-modules-json-if-Linux.patch')
+sha256sums=('c5a1a2f660356ec081febfa782998ae5ddbc5925117e64f50e4be9cd45b8dc6e'
+            '3380c8f417bc48741b560da43a74c87d5d142b4948da2a295fd1c125ed0578af'
+            'd05bfdbde4eacd438b2352bbc5962cd3be7b19cd9d20242cb926582a5ea9bb56'
+            '6ef6374ade368ddc5cf55688b9e42642bb477b5193b39d577a3e74c70ecb4d65'
+            '805382fce972ff866ef6385955ff70709eebffa57f2dd21182e9d2ec3fff97d8'
+            'ca8b544f8c34a2a3569684b59b81c35c1215a7248ea9fd7aa4e55681b124dea2'
+            'f7719475b9476ebac2cddfb0516fd8ba00443a5bb4e550a8dd715e5e7e5d7351'
+            '5928884d7a04bbbf12954f87312d0ffab3128116cda031030411fb931568959f'
+            '0d799ec8f204c6492ec6824e44ef2c6bcb2ad5af107c5fc1279fea4291eb866a'
+            'f98965168f03fe4a59e47d56c7e51deccd85c4a9ce6231019624064221cca594'
+            '84ca2ad4ec7e1770dabadc296b783176f2792c5881ff4a5b55fbd490610bd447'
+            '0560e639e95c5475d8ed1799e1f2d402717cd54ca5a17177f4f28cdef66f4ff4'
+            '6f4cd1232d2957d4217db1300f16edd59d2cb4ca71226221660235eb0c88cf28'
+            '0e3ebf4e3570616659af65e26cdbdda9876fd244712c93ebdd1bd21ae524bd4d'
+            'a15f22b3b8d9c790b41f24945d358fafd2107993e76aa5c3904075791fe7059c'
+            '661e4cdfff794c443c55fb29bcb70615e4b990e9e9df183bf1c3f7ea91d8e8ec'
+            '570042304cdc1d6bcfaaf1c9486b44afb9968577eb344f536bdb975cf6058774'
+            '7ff939e8238bda3f835a2e1b6ae33304ea7ae02906753fa92169e0538d7f0b74'
+            '5907e00ac3b73457d3cc448da1ce6fc7425942ff33406dae56c6c445c9eb34ab'
+            '073d91f02eb0d8bc252c98eb41e0fa4fc2b74a8b9ebae111a8353a6348163f17'
+            'fb27eba879f0c3382bb3a2f5da5a6b593cc6d9d6a798df899461966e661a3133'
+            'd8fdc52ba1d0454f6a357fdb3cf9573c98a5dc5d2b54f22ea0a4b37a5be7d288'
+            '5938f69f1d84bd4e0b1bff470b7518a24b0bfac20c3837b5881209535c5c5abc')
 
 # disable i686 build because 32-bit Windows is generally not supported by upstream and
 # it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)

@@ -1,6 +1,6 @@
 % layout 'static-compat-qt6-module';
 \
-_qtver=6.9.3
+_qtver=6.10.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -9,4 +9,4 @@ license=(GPL3 LGPL3 FDL custom)
 pkgdesc='A family of player software for a certain json-based file format for describing 2d vector graphics animations'
 depends=(<%== qt6deps qw(base) %>)
 optdepends=(<%== qt6optdeps declarative => 'QML bindings' %>)
-makedepends=(static-compat-cmake <%== qt6deps qw(declarative) %> static-compat-vulkan-headers ninja)
+makedepends=(static-compat-cmake <%== qt6deps qw(declarative svg) %> static-compat-vulkan-headers ninja)

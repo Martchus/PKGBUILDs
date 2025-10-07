@@ -9,7 +9,7 @@ use Mojo::Log;
 my $from = shift @ARGV or die "Variant to convert from needs to be specified as first argument\n";
 my $to = shift @ARGV or die "Variant to convert to needs to be specified as second argument\n";
 
-my $no_url = sub ($line) { index($line, 'http') < 0 && index($line, '$srcdir') < 0 };
+my $no_url = sub ($line) { index($line, 'http:') < 0 && index($line, 'htts:') < 0 && index($line, '$srcdir') < 0 };
 my $no_cond = sub ($line) { $line !~ m/if\s+(\[|test)/ };
 
 my %patterns = (

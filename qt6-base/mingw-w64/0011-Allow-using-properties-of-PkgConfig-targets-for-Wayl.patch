@@ -1,7 +1,7 @@
-From d93eba3b6c8f1ac6f39f1661d3de93a46aacc6ce Mon Sep 17 00:00:00 2001
+From 9d5ca6c45560e4e85b9ce9721be4b9d268346079 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 1 May 2022 23:28:26 +0200
-Subject: [PATCH 11/22] Allow using properties of PkgConfig targets for Wayland
+Subject: [PATCH 11/20] Allow using properties of PkgConfig targets for Wayland
  to handle deps of static libs
 
 Change-Id: I2a4acf0acaf5a363d551384bb4c33c48a3792f27

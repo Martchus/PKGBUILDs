@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-declarative
-_qtver=6.9.3
+_qtver=6.10.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -17,8 +17,8 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtdeclarative-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
         '0001-Exclude-qmltime-when-cross-compiling.patch')
-sha256sums=('5a071b227229afbf5c976b7b59a0d850818d06ae861fcdf6d690351ca3f8a260'
-            'd0a18dd7b0b7d02b6d6e9003be7693444e31ba44129d7ae24a2de4694ed6f4fa')
+sha256sums=('6efd35520902395d865bc12e89f8442c3c228d0374f13af9a1888b844f56f6b0'
+            '56840f3014eacb59f9c476b6dd820064343ab287b45084985f830e73e9656514')
 
 prepare () {
   cd $_pkgfqn

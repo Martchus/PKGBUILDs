@@ -1,4 +1,4 @@
-From 3b1a08c2cd979147911525afbed053fb86e88b62 Mon Sep 17 00:00:00 2001
+From 42cb84d540524f31ce9fca9391d2c132355e7aec Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 5 Feb 2021 02:22:45 +0100
 Subject: [PATCH] Exclude qmltime when cross compiling
@@ -14,7 +14,7 @@ That's likely also why upstream did not notice this problem so far.
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index 74f6452e61..4c715c11ff 100644
+index 7421376974..72154da224 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -35,7 +35,9 @@ if(NOT (ANDROID OR WASM OR IOS OR VISIONOS OR rtems))

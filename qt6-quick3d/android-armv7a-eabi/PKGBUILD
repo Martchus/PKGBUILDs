@@ -5,7 +5,7 @@
 
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-qt6-quick3d
-_qtver=6.9.3
+_qtver=6.10.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -18,7 +18,7 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtquick3d-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('91b270049f38ad2b7370c2e6edc72c19ed7d5d2281d914457586f29daccace73')
+sha256sums=('98258c1ea876e1f29fd73889f1de32008d13c91c9bff3fc8edfd92f663ecd488')
 
 build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH

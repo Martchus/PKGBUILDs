@@ -22,13 +22,17 @@ _enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID_STATIC_COMPAT:-0}
 # set whether libsyncthing should be enabled: either ON or OFF
 _enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
 
+# set whether the Qt Quick GUI should be enabled: either ON or OFF
+_enable_quick_gui=${SYNCTHING_TRAY_ENABLE_QUICK_GUI:-ON}
+
 [[ $_enable_kio_plugin == 0 ]] && _enable_kio_plugin=
 [[ $_enable_plasmoid == 0 ]] && _enable_plasmoid=
+[[ $_enable_quick_gui == 0 ]] && _enable_quick_gui=
 
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
-pkgver=2.0.2
+pkgver=2.0.3
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
@@ -39,6 +43,7 @@ depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compa
 [[ $_webview_provider == webengine ]] && depends+=('static-compat-qt6-webengine')
 [[ $_js_provider == script ]] && depends+=('static-compat-qt6-script')
 [[ $_js_provider == qml ]] && depends+=('static-compat-qt6-declarative')
+[[ $_enable_quick_gui ]] && depends+=('static-compat-qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
 makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
@@ -49,7 +54,7 @@ checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 [[ $_enable_libsyncthing == ON ]] && source+=("syncthing::git+https://github.com/Martchus/syncthing.git#branch=libsyncthing-latest")
-sha256sums=('7eea1232814297033c345919e8af4a337c2e827ecbf887296d65017ca8afd352'
+sha256sums=('46e43144a22d1b87465a012d7cff8b75a46cea35fd49ff40c733426411d8550e'
             'SKIP')
 
 [[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON
@@ -91,6 +96,7 @@ build() {
   local additional_args=
   [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
   [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
+  [[ $_enable_quick_gui ]] || additional_args+=' -DQUICK_GUI:BOOL=ON -DQUICK_GUI_CONTROLS_STYLE:STRING=Fusion'
 
   static-compat-cmake -G Ninja \
     $ccache_args \

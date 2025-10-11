@@ -6,7 +6,7 @@
 _reponame=qtutilities
 pkgname=static-compat-qtutilities
 _name=${pkgname#static-compat-}
-pkgver=6.18.2
+pkgver=6.18.3
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
@@ -16,7 +16,7 @@ makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'clang')
 optdepends=("$_name-doc: API documentation")
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('5abe8f71bcca527dc499ee94c2e28c01fa0ecaeb67b571da8bec62701d089dda')
+sha256sums=('00e53839c83595ffd8f5b7e634cf71b4595fe7c5cbb185ee39e1573523176070')
 
 build() {
   check_buildoption ccache y && ccache_args='
@@ -33,6 +33,8 @@ build() {
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DSVG_SUPPORT:BOOL=OFF \
     -DSVG_ICON_SUPPORT:BOOL=OFF \
+    -DGLIB2_USE_PKG_CONFIG:BOOL=ON \
+    -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
     -DSETUP_TOOLS:BOOL=ON \
     .
   ninja
@@ -40,6 +42,7 @@ build() {
 
 check() {
   source static-compat-environment
+  export PATH=$PWD:$PATH
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   QT_QPA_PLATFORM=offscreen ninja check
 }

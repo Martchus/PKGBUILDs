@@ -44,6 +44,8 @@ do
     cd "$project_dir"
 
     # check current release date
+
+    [[ -f CMakeLists.txt ]] || continue
     cmake_lists=$(cat CMakeLists.txt)
     if ! [[ $cmake_lists =~ $old_release_date_regex ]]; then
         echo "FAILURE: Unable to read current release date from CMakeLists.txt:\n$cmake_lists"

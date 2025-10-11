@@ -9,7 +9,10 @@ pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
-license=(GPL-3.0-only LGPL-3.0-only LicenseRef-Qt-Commercial Qt-GPL-exception-1.0)
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
 pkgdesc='Qt Graphs for data visualization'
 depends=(static-compat-qt6-declarative static-compat-qt6-quick3d)
 makedepends=(static-compat-cmake static-compat-vulkan-headers

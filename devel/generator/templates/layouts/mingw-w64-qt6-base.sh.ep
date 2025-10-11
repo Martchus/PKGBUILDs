@@ -19,7 +19,10 @@ pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
 url='https://www.qt.io'
-license=(GPL3 LGPL3 FDL custom)
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
 pkgdesc='A cross-platform application and UI framework (mingw-w64)'
 depends=('mingw-w64-crt' 'mingw-w64-cppwinrt' 'mingw-w64-zlib' 'mingw-w64-libjpeg-turbo' 'mingw-w64-sqlite'
          'mingw-w64-libpng' 'mingw-w64-openssl' 'mingw-w64-dbus' 'mingw-w64-harfbuzz'

@@ -10,7 +10,10 @@ pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
 url='https://www.qt.io'
-license=(GPL-3.0-only LGPL-3.0-only LicenseRef-Qt-Commercial Qt-GPL-exception-1.0)
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
 pkgdesc='Qt Graphs for data visualization (android)'
 depends=('android-aarch64-qt6-declarative' 'android-aarch64-qt6-quick3d')
 makedepends=('android-cmake' 'android-aarch64-qt6-shadertools' 'qt6-declarative' 'qt6-shadertools'  'qt6-quick3d' 'ninja')

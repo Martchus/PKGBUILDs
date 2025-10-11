@@ -10,7 +10,10 @@ pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
 url='https://www.qt.io'
-license=(GPL3 LGPL3 FDL custom)
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
 pkgdesc='Classes for audio, video, radio and camera functionality (android)'
 depends=('android-x86-qt6-base')
 optdepends=('android-x86-qt6-declarative: QML bindings')

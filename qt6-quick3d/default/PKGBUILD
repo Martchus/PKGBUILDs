@@ -9,7 +9,10 @@ pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
-license=(GPL3 LGPL3 FDL custom)
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
 pkgdesc='Qt module and API for defining 3D content in Qt Quick'
 depends=(qt6-declarative)
 makedepends=(cmake assimp qt6-shadertools vulkan-headers ninja)

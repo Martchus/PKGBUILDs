@@ -2,7 +2,7 @@
 
 pkgname=static-compat-vulkan-headers
 _pkgname=Vulkan-Headers
-pkgver=1.4.321.0
+pkgver=1.4.328.1
 pkgrel=1
 epoch=2
 pkgdesc="Vulkan header files"
@@ -15,7 +15,7 @@ source=(
   "git+https://github.com/KhronosGroup/Vulkan-Headers#tag=vulkan-sdk-$pkgver"
   0001-Remove-Werror.patch
 )
-b2sums=('e52d05a172489fca9aff2050f2e1f77699ef6673feef61538a32328cdb0182f835d7bbe0181148c13e53637cf94f15cc992a3931bf28f17c1e9eebea7b2879cb'
+b2sums=('3055d45fe4d276a771b148a24149275ee67cb844ec1a2853cc07bc5bb8cd847b3c1563c87929dcd5cee55c797f2e529dd50c57d2d31d04b05cb4de05d774a63b'
         'f40a6ca5aa9d80b598b0d04ae9171062152ede95d663189ae2617bf86a23a6885cc8bcf2923e3b75fa1eb8f9c8403eb79a6d9b33019a10261abc6707b76f0c29')
 
 prepare() {

@@ -6,7 +6,7 @@
 _name=passwordfile
 _reponame=passwordfile
 pkgname=$_name-doc
-pkgver=5.0.12
+pkgver=5.0.13
 pkgrel=1
 arch=('any')
 pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL (API documentation)'

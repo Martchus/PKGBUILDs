@@ -5,11 +5,12 @@
 
 _pkgname=libjpeg-turbo
 pkgname=static-compat-$_pkgname
-pkgver=3.1.0
+pkgver=3.1.2
 pkgrel=1
 pkgdesc="JPEG image codec with accelerated baseline compression and decompression"
 arch=(x86_64)
 url="https://libjpeg-turbo.org/"
+_url="https://github.com/libjpeg-turbo/libjpeg-turbo/"
 license=(
   BSD-3-Clause
   IJG
@@ -17,9 +18,13 @@ license=(
 depends=(glibc-static-compat)
 makedepends=(static-compat-cmake nasm ninja)
 options=(staticlibs)
-source=("https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$pkgver/libjpeg-turbo-$pkgver.tar.gz")
+source=(
+  $_url/releases/download/$pkgver/$_pkgname-$pkgver.tar.gz{,.sig}
+)
 validpgpkeys=('0338C8D8D9FDA62CF9C421BD7EC2DBB6F4DBF434') # The libjpeg-turbo Project (Signing key for official binaries) <information@libjpeg-turbo.org>
-sha512sums=('63231854529f59a95814cf2414fe384360a4ed96c572764fabc535c3770c559d26943e129c905a63d5949088fa79138b1ffdb175b817f2f4d36329a3cbb23ea7')
+sha512sums=('79271ae4ddc12e3753cc7323dc15617f1d82b2d554ef27b555712f6ab5de603323dd33747620815e3b55663a20e07b292a55172aee9f401f9fd3557145967abe')
+b2sums=('476280f1140977903e177667184452b8ec79a930cd0dbcfc10f46c682c85e2daf38ff8a4267590859eb845a9273fc91b19a61168b7e2c5229d7ed4c18100b2dd'
+         'SKIP')
 
 build() {
   source static-compat-environment

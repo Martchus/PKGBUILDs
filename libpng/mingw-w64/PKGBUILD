@@ -1,28 +1,31 @@
-pkgname=mingw-w64-libpng
-pkgver=1.6.44
+_pkgname=libpng
+pkgname=mingw-w64-$_pkgname
+pkgver=1.6.50
 _apngver=$pkgver
 pkgrel=1
-arch=('any')
 pkgdesc="A collection of routines used to create PNG format graphics (mingw-w64)"
-depends=('mingw-w64-zlib')
-makedepends=('mingw-w64-configure')
-license=('custom')
+arch=('any')
 url="http://www.libpng.org/pub/png/libpng.html"
+depends=('mingw-w64-zlib')
+makedepends=('git' 'mingw-w64-configure')
+license=('libpng-2.0')
 options=('!strip' '!buildflags' 'staticlibs')
-source=("https://downloads.sourceforge.net/sourceforge/libpng/libpng-$pkgver.tar.xz")
-sha256sums=('60c4da1d5b7f0aa8d158da48e8f8afa9773c1c8baa5d21974df61f1886b8ce8e')
+source=("git+https://github.com/pnggroup/libpng.git?signed#tag=v${pkgver}")
+sha256sums=('7def7cd90b18267c7d4242288e6aafc97077ff59b5454ab9a99ee8b6e9171047')
+validpgpkeys=('F57A55036A4D45837074FD92C9E384533403C2F8'  # Cosmin Truta <ctruta@gmail.com>
+              '1FED507E3236B4A6E53E922BB292C64843FF5BCF') # Cosmin Truta <ctruta@gmail.com>
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
-  cd "$srcdir/libpng-$pkgver"
+  cd "$srcdir/libpng"
 
   # autoreconf to get updated libtool files with clang support
   autoreconf -fiv
 }
 
 build() {
-  cd "$srcdir/libpng-$pkgver"
+  cd "$srcdir/libpng"
   for _arch in ${_architectures}; do
     mkdir -p build-${_arch} && pushd build-${_arch}
     ${_arch}-configure
@@ -33,7 +36,7 @@ build() {
 
 package () {
   for _arch in ${_architectures}; do
-    cd "${srcdir}/libpng-${pkgver}/build-${_arch}"
+    cd "${srcdir}/libpng/build-${_arch}"
     make install DESTDIR="${pkgdir}"
     rm -r "${pkgdir}"/usr/${_arch}/share
     rm "${pkgdir}"/usr/${_arch}/bin/*.exe

@@ -51,4 +51,16 @@ fi
 
 cd "$package/$variant"
 git -C "$regular_dir" diff "$basecomit..origin/main" -- "PKGBUILD" > regular.diff
-patch -p1 -i regular.diff
+if patch -p1 --forward -i regular.diff; then
+    echo "patch applied cleanly"
+    exit 0
+fi
+
+source /usr/share/devtools/lib/util/pkgbuild.sh
+source PKGBUILD
+[[ $pkgver == "$regularver" ]] && exit 1
+echo "trying to set version manually as patch didn't apply"
+pkgbuild_set_pkgver "$regularver"
+pkgbuild_set_pkgrel "1"
+echo "updated pkgver from $pkgver to $regularver manually"
+echo "check $regular_dir/PKGBUILD and $PWD/regular.diff for applying other changes manually"

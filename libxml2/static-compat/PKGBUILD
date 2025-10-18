@@ -6,7 +6,7 @@
 
 _pkgname=libxml2
 pkgname=static-compat-$_pkgname
-pkgver=2.15.0
+pkgver=2.15.1
 pkgrel=1
 pkgdesc='XML C parser and toolkit'
 url='https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home'
@@ -15,12 +15,12 @@ license=(MIT)
 depends=(static-compat-zlib static-compat-xz)
 makedepends=(git static-compat-configure python)
 options=(!emptydirs staticlibs)
-# using GitHub mirror as https://gitlab.gnome.org/GNOME/libxml2.git seems broken right now
+# use GitHub mirror https://github.com/GNOME/libxml2.git if https://gitlab.gnome.org/GNOME/libxml2.git is unavailable
 source=(
-  "git+https://github.com/GNOME/libxml2.git#tag=v$pkgver"
+  "git+https://gitlab.gnome.org/GNOME/libxml2.git#tag=v$pkgver"
   https://www.w3.org/XML/Test/xmlts20130923.tar.gz
 )
-b2sums=('d5df5b57bc626b72eb8bcf8d2145c237373e4490cdea2b3a79d2a95d57b00c30613244e1d6206df416d3e5ba9ae044e7a923e689826e681a26c5d8a618e09b8a'
+b2sums=('aaed705a19f7c238bd0eebc52536e7becb7c96b6a749fe7a4051a82bd311b918b14ddb996d5a0f07514d5abf6ad1287e8d6f4053a5a371afc6885bc98154e3cc'
         '63a47bc69278ef510cd0b3779aed729e1b309e30efa0015d28ed051cc03f9dfddb447ab57b07b3393e8f47393d15473b0e199c34cb1f5f746b15ddfaa55670be')
 
 pkgver() {

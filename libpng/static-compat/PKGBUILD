@@ -5,22 +5,23 @@
 
 _pkgname=libpng
 pkgname=static-compat-$_pkgname
-pkgver=1.6.44
+pkgver=1.6.50
 pkgrel=1
 pkgdesc='A collection of routines used to create PNG format graphics files'
 arch=('x86_64')
 url='http://www.libpng.org/pub/png/libpng.html'
-license=('custom')
+license=('libpng-2.0')
 depends=('static-compat-zlib' 'sh')
-makedepends=('static-compat-configure')
+makedepends=('git' 'static-compat-configure')
 options=(!emptydirs staticlibs)
-validpgpkeys=('8048643BA2C840F4F92A195FF54984BFA16C640F') # Glenn Randers-Pehrson (mozilla) <glennrp@gmail.com>
-source=("https://downloads.sourceforge.net/sourceforge/$_pkgname/$_pkgname-$pkgver.tar.xz")
-sha256sums=('60c4da1d5b7f0aa8d158da48e8f8afa9773c1c8baa5d21974df61f1886b8ce8e')
+source=("git+https://github.com/pnggroup/libpng.git?signed#tag=v${pkgver}")
+sha256sums=('7def7cd90b18267c7d4242288e6aafc97077ff59b5454ab9a99ee8b6e9171047')
+validpgpkeys=('F57A55036A4D45837074FD92C9E384533403C2F8'  # Cosmin Truta <ctruta@gmail.com>
+              '1FED507E3236B4A6E53E922BB292C64843FF5BCF') # Cosmin Truta <ctruta@gmail.com>
 
 build() {
   source static-compat-environment
-  cd $_pkgname-$pkgver
+  cd $_pkgname
   static-compat-configure \
     --disable-shared \
     --enable-static
@@ -29,14 +30,14 @@ build() {
 
 check() {
   source static-compat-environment
-  cd $_pkgname-$pkgver
+  cd $_pkgname
 
   make check
 }
 
 package() {
   source static-compat-environment
-  cd $_pkgname-$pkgver
+  cd $_pkgname
 
   make DESTDIR="$pkgdir" install
   rm -r "$pkgdir/$static_compat_prefix"/share/man

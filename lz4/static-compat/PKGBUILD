@@ -3,17 +3,17 @@
 _pkgname=lz4
 pkgname=static-compat-$_pkgname
 epoch=1
-pkgver=1.9.4
+pkgver=1.10.0
 pkgrel=1
 pkgdesc='Extremely fast compression algorithm'
 arch=('x86_64')
 url='https://lz4.github.io/lz4/'
-license=('GPL2')
+license=('GPL-2.0-or-later')
 makedepends=('git' 'static-compat-environment')
 depends=('glibc-static-compat')
 options=(!emptydirs staticlibs)
 source=("git+https://github.com/lz4/lz4.git#tag=v$pkgver")
-sha256sums=('SKIP')
+sha256sums=('487f9bc24fdaf589e2f4bb23dd98b1f21a71b643db09251145616587c9468555')
 
 prepare() {
   cd $_pkgname

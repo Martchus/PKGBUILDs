@@ -3,7 +3,7 @@
 
 _pkgname=fontconfig
 pkgname=static-compat-$_pkgname
-pkgver=2.14.2
+pkgver=2.17.1
 pkgrel=1
 epoch=2
 pkgdesc="Library for configuring and customizing font access"
@@ -14,24 +14,22 @@ depends=(static-compat-expat static-compat-freetype2)
 makedepends=(static-compat-meson git autoconf-archive gperf python-lxml python-six docbook-utils)
 checkdepends=(unzip)
 options=(!emptydirs !docs staticlibs)
-_commit=7861a719616b4b132b9cac089c6c64f47832edb1  # tags/2.14.2^0
-source=("git+https://gitlab.freedesktop.org/fontconfig/fontconfig.git#commit=$_commit")
-b2sums=('SKIP')
+source=("git+https://gitlab.freedesktop.org/fontconfig/fontconfig.git?signed#tag=$pkgver")
+b2sums=('2fbcf5b9df5d1d9c7ce2a02c7fe5d28631b2ad6ba56905b159dfd8a57224d10cb75e89ca4a1d5c9c07dc09949b384ced4e7fd6c8790aa196a2744ba8ca59c293')
+validpgpkeys=(
+  F77A64C4B5B45FF8763A278F65755979B34E1294 # Akira TAGOH <akira@tagoh.org>
+  ECFFBC3A6B365E721E5BD79830757AA21971A672 # Akira TAGOH <akira@tagoh.org>
+)
 
 # a nice page to test font matching:
 # http://zipcon.net/~swhite/docs/computers/browsers/fonttest.html
 # http://getemoji.com/
 
-pkgver() {
-  cd fontconfig
-  git describe --tags | sed 's/-/+/g'
-}
-
 build() {
   source static-compat-environment
 
   # Link against libstdc++ for __gxx_personality_v0 required by harfbuzz.a
-  export CFLAGS+=" $static_compat_prefix/lib/libstdc++.a"
+  export LDFLAGS+=" $static_compat_prefix/lib/libstdc++.a"
 
   # Invoke pkg-config with --static
   export PATH=$PWD:$PATH
@@ -39,8 +37,8 @@ build() {
   chmod +x pkg-config
 
   static-compat-meson $_pkgname build \
-    -D default-hinting=slight \
-    -D default-sub-pixel-rendering=rgb \
+    -D bitmap-conf=noinstall \
+    -D default-sub-pixel-rendering=noinstall \
     -D doc=disabled
   meson compile -C build
 }

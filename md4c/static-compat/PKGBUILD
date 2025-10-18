@@ -2,7 +2,7 @@
 
 _pkgname=md4c
 pkgname=static-compat-$_pkgname
-pkgver=0.4.8
+pkgver=0.5.2
 pkgrel=1
 pkgdesc='C Markdown parser'
 arch=(x86_64)
@@ -12,7 +12,7 @@ depends=(glibc-static-compat)
 makedepends=(static-compat-cmake)
 options=(staticlibs !emptydirs)
 source=($_pkgname-$pkgver.tar.gz::"https://github.com/mity/md4c/archive/release-$pkgver.tar.gz")
-sha256sums=('4a457df853425b6bb6e3457aa1d1a13bccec587a04c38c622b1013a0da41439f')
+sha256sums=('55d0111d48fb11883aaee91465e642b8b640775a4d6993c2d0e7a8092758ef21')
 
 build() {
   source static-compat-environment

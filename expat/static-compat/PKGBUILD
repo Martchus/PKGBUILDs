@@ -5,44 +5,43 @@
 
 _pkgname=expat
 pkgname=static-compat-$_pkgname
-pkgver=2.5.0
+pkgver=2.7.3
 pkgrel=1
 pkgdesc='An XML parser library'
 arch=('x86_64')
 url="https://libexpat.github.io/"
+_url="https://github.com/libexpat/libexpat"
 license=('MIT')
 depends=('glibc-static-compat')
-makedepends=('static-compat-cmake')
+makedepends=('git' 'static-compat-cmake')
 options=(staticlibs)
-source=(https://github.com/libexpat/libexpat/releases/download/R_${pkgver//./_}/$_pkgname-$pkgver.tar.bz2{,.asc})
-sha512sums=('22fd904d75aab7506a85c03519b9cf79e44898c8e1ba6abf6cb7f95de71b8e63a7e2d5cf4395e3627d46035ea29342b3e631a8809fef8aad3f59976dc075ad17'
-            'SKIP')
-b2sums=('15a5dcd3af17995fb4299301710b38d609c1fe7a8d6a6284581fedd96e89e0c16526d0342fb55773ac9d678cd65dc5cdb1532c764eeb3a20ccdf1e168b96e337'
-        'SKIP')
+source=($_pkgname::git+$_url?signed#tag=R_${pkgver//./_})
+sha512sums=('fe186f7ab59facee6b7af1ed03df89b3c778c8d2df9325bda7253a9eec20ba6530cf91910aea380b895dc7d5150a27e824242eca38685d9cffca00e0f4c61f80')
+b2sums=('5c8dfd631233e19520a19248dbe90f5413d864317d1d72a8c65b5697bee56d83a497b43165c3aafa5e635fe72f7393572e3d2d7e892de72b95e445018cad8331')
 validpgpkeys=(3176EF7DB2367F1FCA4F306B1F9B0E909AF37285) # Sebastian Pipping
 
 build() {
   source static-compat-environment
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname/$_pkgname"
   static-compat-cmake \
-	-DEXPAT_SHARED_LIBS=OFF \
-	-DEXPAT_BUILD_TOOLS=OFF \
-	-DEXPAT_BUILD_EXAMPLES=OFF \
-        -W no-dev \
-        -B build \
-        -S .
+    -DEXPAT_SHARED_LIBS=OFF \
+    -DEXPAT_BUILD_TOOLS=OFF \
+    -DEXPAT_BUILD_EXAMPLES=OFF \
+    -W no-dev \
+    -B build \
+    -S .
   make VERBOSE=1 -C build
 }
 
 check() {
   source static-compat-environment
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname/$_pkgname"
   make VERBOSE=1 -C build test
 }
 
 package() {
   source static-compat-environment
-  cd "$_pkgname-$pkgver"
+  cd "$_pkgname/$_pkgname"
   make VERBOSE=1 DESTDIR="$pkgdir" -C build install
   rm -r "$pkgdir/$static_compat_prefix"/share
   install -vDm 644 COPYING -t "${pkgdir}/usr/share/licenses/$pkgname/"

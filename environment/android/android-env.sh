@@ -18,7 +18,18 @@ if [ -z "${ANDROID_NDK_HOME}" ]; then
     export ANDROID_NDK_HOME=/opt/android-ndk
 fi
 
-export ANDROID_TOOLCHAIN="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64"
+if [ -z "${ANDROID_HOST_OS}" ]; then
+    case "$OS" in
+        Windows_NT)
+            ANDROID_HOST_OS=windows
+            ;;
+        *)
+            ANDROID_HOST_OS=linux
+            ;;
+    esac
+fi
+
+export ANDROID_TOOLCHAIN="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${ANDROID_HOST_OS}-x86_64"
 export ANDROID_SYSROOT="${ANDROID_TOOLCHAIN}/sysroot"
 export ANDROID_SYSROOT_INCLUDE="${ANDROID_SYSROOT}/usr/include"
 export ANDROID_CROSS_PREFIX="${ANDROID_TOOLCHAIN}/bin"
@@ -48,7 +59,7 @@ if [ -z "${ANDROID_MINIMUM_PLATFORM}" ]; then
             ;;
     esac
 
-    export ANDROID_MINIMUM_PLATFORM=$(find "${ANDROID_CROSS_PREFIX}" -type f -name "${ccArch}-linux-*-clang*" -exec basename {} \; \
+    export ANDROID_MINIMUM_PLATFORM=$(find "${ANDROID_CROSS_PREFIX}" -type f -name "${ccArch}-${ANDROID_HOST_OS}-*-clang*" -exec basename {} \; \
                                       | awk -F '-' '{print $3}' | sed 's/android//g' | sed 's/eabi//g' | sort -V | uniq | head -n 1)
 
     [ -z "${ANDROID_MINIMUM_PLATFORM}" ] && export ANDROID_MINIMUM_PLATFORM=24

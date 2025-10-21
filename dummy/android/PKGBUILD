@@ -1,0 +1,12 @@
+pkgname=android-dummy
+pkgver=1
+pkgrel=1
+pkgdesc='Dummy for installing Android packages with self-managed SDK/NDK and Java'
+arch=('any')
+url='https://github.com/Martchus/PKGBUILDs'
+license=('GPL-2.0-or-later')
+provides=(
+  ant
+  java-runtime-headless-openjdk=17
+  android-{ndk,sdk,sdk-build-tools,sdk-platform-tools,sdk-cmdline-tools,sdk-cmdline-tools-latest,platform,platform-35,platform-36}
+)

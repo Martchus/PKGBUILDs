@@ -6,7 +6,7 @@
 pkgname=static-compat-qt6-tools
 _qtver=6.10.0
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -80,6 +80,7 @@ build() {
 
 package() {
   source static-compat-environment
+  depends+=('libLLVM.so')
   DESTDIR="$pkgdir" cmake --install build
 
   # Drop QMAKE_PRL_BUILD_DIR because reference the build dir

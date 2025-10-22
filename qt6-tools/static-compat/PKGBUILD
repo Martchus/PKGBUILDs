@@ -6,7 +6,7 @@
 pkgname=static-compat-qt6-tools
 _qtver=6.10.0
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -72,9 +72,13 @@ build() {
     -DQT_FEATURE_static_runtime=ON \
     -DFEATURE_pkg_config=ON \
     -DLLVM_DIR="$PWD/prefix/lib/cmake/llvm" \
-    -DClang_DIR="$PWD/prefix/lib/cmake/clang"
+    -DClang_DIR="$PWD/prefix/lib/cmake/clang" \
+    -DFEATURE_clang=ON
   # ensure system libc/libdl/libm is present on the linker-line before other libs
-  sed -i -E 's|(LINK_LIBRARIES = )(.*libLLVM.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib64/ld-linux-x86-64.so.2 /usr/lib/libc.so.6 \2|g' build/build.ninja
+  # ensure we don't include headers from /usr/include
+  sed -i -E -e 's|(LINK_LIBRARIES = )(.*libLLVM.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib64/ld-linux-x86-64.so.2 /usr/lib/libc.so.6 \2|g' \
+            -e "s|-isystem /usr/include|-isystem $PWD/prefix/include|g" \
+    build/build.ninja
   VERBOSE=1 cmake --build build
 }
 

@@ -51,7 +51,7 @@ check() {
 package() {
   source static-compat-environment
   meson install -C build --destdir "$pkgdir"
-  rm -r "$pkgdir/$static_compat_prefix"/{bin,share/doc}
+  rm -r "$pkgdir/$static_compat_prefix"/{share/doc,share/man}
 
   # remove -DDBUS_STATIC_BUILD from pc file
   # note: Qt's build script adds this as compiler flag `-D-DDBUS_STATIC_BUILD` which breaks

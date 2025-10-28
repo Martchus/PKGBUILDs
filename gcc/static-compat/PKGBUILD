@@ -4,7 +4,7 @@
 pkgname=({gcc,gcc-libs,lib32-gcc-libs,gcc-fortran}-static-compat)
 pkgver=15.2.1+r22+gc4e96a094636
 _majorver=${pkgver%%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The GNU Compiler Collection'
 arch=(x86_64)
 license=(GPL3 LGPL FDL custom)
@@ -92,6 +92,8 @@ build() {
       --enable-plugin \
       --enable-shared \
       --enable-static \
+      --enable-libgomp \
+      --enable-static-libgomp \
       --enable-threads=posix \
       --disable-libssp \
       --disable-libstdcxx-pch \

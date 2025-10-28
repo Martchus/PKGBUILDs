@@ -221,21 +221,24 @@ package_gcc-static-compat() {
   ln -s /${_libdir}/liblto_plugin.so \
     "$pkgdir$_prefix/lib/bfd-plugins/"
 
-  make -C $CHOST/libgomp DESTDIR="$pkgdir" install-nodist_{libsubinclude,toolexeclib}HEADERS
-  make -C $CHOST/libitm DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
-  make -C $CHOST/libquadmath DESTDIR="$pkgdir" install-nodist_libsubincludeHEADERS
-  make -C $CHOST/libsanitizer DESTDIR="$pkgdir" install-nodist_{saninclude,toolexeclib}HEADERS
-  make -C $CHOST/libsanitizer/asan DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
-  make -C $CHOST/libsanitizer/tsan DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
-  make -C $CHOST/libsanitizer/lsan DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
-  make -C $CHOST/32/libgomp DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
-  make -C $CHOST/32/libitm DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
-  make -C $CHOST/32/libsanitizer DESTDIR="$pkgdir" install-nodist_{saninclude,toolexeclib}HEADERS
-  make -C $CHOST/32/libsanitizer/asan DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
+  # install libs using normal install target (and not -nodist_…) to install static libs as well
+  make -C $CHOST/libatomic DESTDIR="$pkgdir" install #-nodist_{libsubinclude,toolexeclib}HEADERS
+  make -C $CHOST/libgomp DESTDIR="$pkgdir" install #-nodist_{libsubinclude,toolexeclib}HEADERS
+  make -C $CHOST/libitm DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
+  make -C $CHOST/libquadmath DESTDIR="$pkgdir" install #-nodist_libsubincludeHEADERS
+  make -C $CHOST/libsanitizer DESTDIR="$pkgdir" install #-nodist_{saninclude,toolexeclib}HEADERS
+  make -C $CHOST/libsanitizer/asan DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
+  make -C $CHOST/libsanitizer/tsan DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
+  make -C $CHOST/libsanitizer/lsan DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libgomp DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libitm DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
+  make -C $CHOST/32/libsanitizer DESTDIR="$pkgdir" install #-nodist_{saninclude,toolexeclib}HEADERS
+  make -C $CHOST/32/libsanitizer/asan DESTDIR="$pkgdir" install #-nodist_toolexeclibHEADERS
 
   make -C gcc DESTDIR="$pkgdir" install-man install-info
   rm "$pkgdir"$_prefix/share/man/man1/gfortran.1
   rm "$pkgdir"$_prefix/share/info/gfortran.info
+  rm "$pkgdir"$_prefix/share/info/lib{gomp,itm,quadmath}.info
   rm -r "$pkgdir"$_prefix/share/info/dir
 
   make -C libcpp DESTDIR="$pkgdir" install
@@ -251,8 +254,11 @@ package_gcc-static-compat() {
   # install the libstdc++ man pages
   make -C $CHOST/libstdc++-v3/doc DESTDIR="$pkgdir" doc-install-man
 
+  # remove files provided by gcc-libs
+  rm -f "$pkgdir"$_prefix/lib/lib{atomic,gfortran,stdc++,gcc_s,gomp,quadmath,itm}.so* "$pkgdir"$_prefix/lib/lib*san.so*
+
   # remove files provided by lib32-gcc-libs
-  rm -f "$pkgdir"$_prefix/lib32/lib{stdc++,gcc_s}.so
+  rm -f "$pkgdir"$_prefix/lib32/lib{atomic,gfortran,stdc++,gcc_s,gomp,quadmath,itm}.so* "$pkgdir"$_prefix/lib32/lib*san.so*
 
   # byte-compile python libraries
   python -m compileall "$pkgdir$_prefix/share/gcc-${pkgver%%+*}/"

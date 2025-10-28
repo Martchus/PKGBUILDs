@@ -56,8 +56,7 @@ build () {
     -DWITH_MAN=OFF \
     -DUSE_FTGL=OFF \
     -DOpenGL_GL_PREFERENCE=GLVND \
-    -DCMAKE_EXE_LINKER_FLAGS='-fopenmp' \
-    -DUSER_DEFINED_ADDITIONAL_LIBRARIES='-lasound'
+    -DUSER_DEFINED_ADDITIONAL_LIBRARIES='-lasound /usr/static-compat/lib/libgomp.a'
   VERBOSE=1 cmake --build build
 }
 

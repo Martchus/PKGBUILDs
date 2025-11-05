@@ -40,6 +40,7 @@ build() {
         -DIMAGE_FORMAT_SUPPORT:STRING=Gif;ICO;Jpeg
         -DSVG_SUPPORT:BOOL=ON
         -DSVG_ICON_SUPPORT:BOOL=ON
+        -DSETUP_TOOLS:BOOL=ON
     '
   )
   declare -A _cfg_suffix=(

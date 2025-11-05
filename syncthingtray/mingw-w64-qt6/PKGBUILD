@@ -93,6 +93,7 @@ build() {
         -DSVG_SUPPORT:BOOL=ON
         -DSVG_ICON_SUPPORT:BOOL=ON
         -DWEBVIEW_PROVIDER:STRING=none
+        -DSETUP_TOOLS:BOOL=ON
     '
   )
   declare -A _cfg_suffix=(
@@ -151,7 +152,6 @@ build() {
         -DVERSIONED_MINGW_LIBRARIES:BOOL=ON \
         -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
         -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
-        -DSETUP_TOOLS:BOOL=ON \
         ${_config_flags[$_cfg]} \
         "${additional_flags[@]}" \
         "${arch_flags[@]}"

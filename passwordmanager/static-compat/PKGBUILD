@@ -54,6 +54,7 @@ build() {
     -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
     -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     -DQUICK_GUI="$_quick_gui" \
+    -DSETUP_TOOLS:BOOL=ON \
     .
   ninja
 }

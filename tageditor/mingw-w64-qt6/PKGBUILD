@@ -63,6 +63,7 @@ build() {
         -DSVG_SUPPORT:BOOL=ON
         -DSVG_ICON_SUPPORT:BOOL=ON
         -DWEBVIEW_PROVIDER:STRING=none
+        -DSETUP_TOOLS:BOOL=ON
     '
   )
   declare -A _cfg_suffix=(

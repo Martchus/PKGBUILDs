@@ -5,7 +5,7 @@
 
 _arch=x86-64
 pkgname=android-$_arch-syncthingtray
-pkgver=2.0.3
+pkgver=2.0.4
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_stt=branch=master
   _pkgver_cpputilities=branch=master

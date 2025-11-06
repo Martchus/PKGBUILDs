@@ -6,7 +6,7 @@
 _arch=x86-64
 _reponame=passwordmanager
 pkgname=android-$_arch-passwordmanager
-pkgver=4.2.6
+pkgver=4.2.7
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_pwmgr=branch=master
   _pkgver_cpputilities=branch=master

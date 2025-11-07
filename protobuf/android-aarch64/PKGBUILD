@@ -11,7 +11,7 @@
 _android_arch=aarch64
 
 pkgname=android-${_android_arch}-protobuf
-pkgver=32.1
+pkgver=33.0
 pkgrel=1
 arch=('any')
 pkgdesc="Protocol Buffers - Google's data interchange format (Android ${_android_arch})"
@@ -21,14 +21,18 @@ groups=('android-protobuf')
 depends=("android-${_android_arch}-zlib" "android-${_android_arch}-abseil-cpp")
 makedepends=('android-cmake')
 options=(!strip !buildflags staticlibs !emptydirs)
-source=("https://github.com/protocolbuffers/protobuf/archive/v${pkgver}/protobuf-${pkgver}.tar.gz")
-sha256sums=('d2081ab9528292f7980ef2d88d2be472453eea4222141046ad4f660874d5f24e')
+source=("https://github.com/protocolbuffers/protobuf/archive/v${pkgver}/protobuf-${pkgver}.tar.gz"
+        protobuf-33-patch-enum-traits-impl.patch)
+sha256sums=('cbc536064706b628dcfe507bef386ef3e2214d563657612296f1781aa155ee07'
+            '0627dce1d28f90607a45ce0148631dcb517157d67646167b55707f4bb3d9add4')
 
 prepare() {
   cd "${srcdir}/protobuf-${pkgver}"
+  patch -p1 -i ../protobuf-33-patch-enum-traits-impl.patch
 }
 
 build() {
+  export ANDROID_MINIMUM_PLATFORM=24
   source android-env ${_android_arch}
   android-${_android_arch}-cmake \
     -S protobuf-${pkgver} \
@@ -40,7 +44,7 @@ build() {
     -Dprotobuf_BUILD_TESTS=OFF \
     -Dabsl_DIR="${ANDROID_PREFIX_LIB}/cmake/absl" \
     -Wno-dev
-  cmake --build build-static
+  cmake --build build-static --verbose
 
   android-${_android_arch}-cmake \
     -S protobuf-${pkgver} \

@@ -2,7 +2,7 @@
 \
 _qtver=6.10.0
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -13,3 +13,7 @@ pkgdesc='Provides the modules QtGrpc and QtProtobuf (android)'
 depends=(<%== qt6deps qw(base) %> "android-${_android_arch}-protobuf")
 optdepends=(<%== qt6optdeps declarative => 'QML bindings' %>)
 makedepends=('android-cmake<%== $static_suffix %>' "android-${_android_arch}-grpc" 'protobuf' 'qt6-grpc' 'qt6-declarative' 'qt6-shadertools' 'ninja')
+% \
+% content_for before_env => begin
+  export ANDROID_MINIMUM_PLATFORM=24
+% end

@@ -7,7 +7,7 @@ _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-qt6-grpc
 _qtver=6.10.0
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -26,6 +26,7 @@ sha256sums=('fb722289066101ae08865378e7fb29a22b416a71f6b1c19ae5a957f53a91a445')
 
 build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
+  export ANDROID_MINIMUM_PLATFORM=24
   source android-env ${_android_arch}
   android-${_android_arch}-cmake -G Ninja -B build-$_android_arch -S $_pkgfqn \
     -DCMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}" \

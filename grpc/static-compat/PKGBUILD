@@ -1,8 +1,8 @@
 _pkgname=grpc
 pkgname=static-compat-$_pkgname
-pkgver=1.75.0
+pkgver=1.76.0
 _gtestver=2dd1c131950043a8ad5ab0d2dda0e0970596586a
-_protover=32.1
+_protover=33.0
 pkgrel=1
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first"
 arch=('x86_64')
@@ -22,9 +22,9 @@ makedepends=(
 source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         "https://github.com/google/googletest/archive/$_gtestver/googletest-$_gtestver.tar.gz"
         "https://github.com/protocolbuffers/protobuf/archive/v$_protover/protobuf-$_protover.tar.gz")
-sha256sums=('31d6c01c3bfa0a3584532665715e487703eb10d76bb30b4875e57d139c13bbf9'
+sha256sums=('0af37b800953130b47c075b56683ee60bdc3eda3c37fc6004193f5b569758204'
             '31bf78bd91b96dd5e24fab3bb1d7f3f7453ccbaceec9afb86d6e4816a15ab109'
-            'd2081ab9528292f7980ef2d88d2be472453eea4222141046ad4f660874d5f24e')
+            'b6b03fbaa3a90f3d4f2a3fa4ecc41d7cd0326f92fcc920a7843f12206c8d52cd')
 
 prepare() {
   source static-compat-environment

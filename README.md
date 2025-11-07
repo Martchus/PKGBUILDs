@@ -1,19 +1,19 @@
 # PKGBUILDs
-Contains PKGBUILD files for creating Arch Linux packages. If you like to improve one of
+Contains PKGBUILD files for creating Arch Linux packages. If you would like to improve one of
 my AUR packages, just create a PR here.
 
-## Overview over provided packages
+## Overview of provided packages
 * Packages for my own applications and libraries such as
-  [Syncthing  Tray](https://github.com/Martchus/syncthingtray),
+  [Syncthing Tray](https://github.com/Martchus/syncthingtray),
   [Tag Editor](https://github.com/Martchus/tageditor),
   [Password Manager](https://github.com/Martchus/passwordmanager), …
 * Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go)
   and many more:
-    * misc packages, eg. Subtitle Composer, openelec-dvb-firmware and ltunify
+    * Misc packages, e.g. Subtitle Composer, OpenELEC DVB firmware and ltunify
     * `mingw-w64-*` packages which allow to build for Windows (i686/x86_64, libstdc++)
-      under Arch Linux with GCC, e.g. Boost, Qt 5 and Qt 6 and may more
+      under Arch Linux with GCC, e.g. Boost, Qt 5, Qt 6 and many more
     * `mingw-w64-clang-aarch64-*` packages which allow to build for Windows (aarch64,
-      libc++) via LLVM/Clang as provided by Arch Linux, e.g. Boost, Qt 6 and may more
+      libc++) via LLVM/Clang as provided by Arch Linux, e.g. Boost, Qt 6 and many more
         * These packages are mainly converted on the fly from `mingw-w64-*` packages
           via `devel/conv-variant.pl`.
     * `mingw-w64-aarch64-*` packages which allow to build for Windows (aarch64,
@@ -25,12 +25,12 @@ my AUR packages, just create a PR here.
           as they share the same install prefix.
     * `static-compat-*` packages containing static libraries to build self-contained
       applications running on older GNU/Linux distributions under Arch Linux, so far the most
-      important Qt 6 modules and other important C/C++ libraries provided
+      important Qt 6 modules and other important C/C++ libraries are provided
     * `android-*` packages which allow to build for Android under Arch Linux using the Android
       SDK, e.g. iconv, Boost, OpenSSL, CppUnit, Qt 6 and Kirigami
     * `wasm-*` packages which allow to build for WebAssembly under Arch Linux using
       the official `emscripten` package; so far limited to a few Qt 6 modules
-    * `apple-darwin-*` packages which allow to build for MaxOS X under Arch
+    * `apple-darwin-*` packages which allow to build for macOS X under Arch
       Linux, e.g. osxcross and Qt 5 (still experimental, more or less discontinued)
 * Other packages imported from the AUR to build with slight modifications.
 
@@ -58,7 +58,7 @@ found in the official testing repository.)
 The repository is focusing on x86_64 but some packages are also provided for
 i686 and aarch64.
 
-Note that I can not assure that required rebuilds always happen fast enough
+Note that I cannot ensure that required rebuilds always happen fast enough
 (since the official developers obviously don't wait for me before releasing their
 packages from staging).
 
@@ -75,7 +75,7 @@ container runtime is available.
 It also contains a script called `makecontainerpkg` which behaves like
 `makechrootpkg` from Arch Linux's devtools but uses the previously mentioned
 container image. Therefore it does *not* require devtools, a chroot setup and
-systemd-nsapwn. Instead, any container runtime should be sufficient (tested with
+systemd-nspawn. Instead, any container runtime should be sufficient (tested with
 Docker and Podman).
 
 The usage of `makecontainerpkg` is very similar to `makechrootpkg`. Simply run
@@ -104,7 +104,7 @@ Example using podman on a non-Arch system:
 CRE=podman ../../devel/container/makecontainerpkg -v /hdd/cache/pacman/pkg:/var/cache/pacman/pkg -v /hdd/chroot/remote-config-x86_64:/cfg
 ```
 
-It makes still sense to specify a cache directory, even though pacman is not
+It still makes sense to specify a cache directory, even though pacman is not
 used on the host system. Here also a directory containing a custom `pacman.conf`
 and `makepkg.conf` is mounted into the container.
 
@@ -236,16 +236,16 @@ podman container rm archlinux-devel-container
 ```
 
 ### Other approaches
-There's also the 3rdparty repository
+There's also the 3rd party repository
 [docker-mingw-qt5](https://github.com/mdimura/docker-mingw-qt5) which contains
 an image with many mingw-w64 package pre-installed.
 
 ## Structure
-Each package is in its own subdirectoy:
+Each package is in its own subdirectory:
 ```
 default-pkg-name/variant
 ```
-where `default-pkg-name` is the default package name (eg. `qt5-base`) and
+where `default-pkg-name` is the default package name (e.g. `qt5-base`) and
 `variant` usually one of:
 
 * `default`: the regular package
@@ -253,14 +253,14 @@ where `default-pkg-name` is the default package name (eg. `qt5-base`) and
 * `mingw-w64`: the Windows version (i686/dw2 and x86_64/SEH)
 * `android-{aarch64,armv7a-eabi,x86-64,x86}`: the Android version (currently
   only aarch64 actively maintained/tested)
-* `apple-darwin`: the MacOS X version (still experimental)
+* `apple-darwin`: the macOS X version (still experimental)
 
 The repository does not contain `.SRCINFO` files.
 
 ---
 
-The subdirectoy `devel` contains additional files, mainly for development
-purposes. The subdirectoy `devel/archive` contains old packages that are no
+The subdirectory `devel` contains additional files, mainly for development
+purposes. The subdirectory `devel/archive` contains old packages that are no
 longer updated (at least not via this repository).
 
 ## Generated PKGBUILDs
@@ -275,7 +275,7 @@ within `generator/templates`.
 
 ### Documentation about the used templating system
 * [Syntax](https://mojolicious.org/perldoc/Mojo/Template#SYNTAX)
-* [Helper](https://mojolicious.org/perldoc/Mojolicious/Plugin/DefaultHelpers)
+* [Helpers](https://mojolicious.org/perldoc/Mojolicious/Plugin/DefaultHelpers)
 * [Utilities](https://mojolicious.org/perldoc/Mojo/Util)
 
 ## Contributing to patches
@@ -283,9 +283,9 @@ Patches for most packages are managed in a fork of the project under my GitHub
 profile. For instance, patches for `mingw-w64-qt5-base` are managed at
 [github.com/Martchus/qtbase](https://github.com/Martchus/qtbase).
 
-I usually create a dedicated branch for each version, eg. `5.10.1-mingw-w64`. It
+I usually create a dedicated branch for each version, e.g. `5.10.1-mingw-w64`. It
 contains all the patches based on Qt 5.10.1. When doing fixes later on, I
-usually preserve the original patches and create a new branch, eg.
+usually preserve the original patches and create a new branch, e.g.
 `5.10.1-mingw-w64-fixes`.
 
 So in this case it would make sense to contribute directly there. To fix an
@@ -325,7 +325,7 @@ static builds targeting mingw-w64. They are also relying a lot on their bundled
 libraries while my builds aim to build dependencies separately. So expect some
 rough edges when using my packaging.
 
-Nevertheless it make sense to follow the official documentation. For concrete
+Nevertheless it makes sense to follow the official documentation. For concrete
 examples how to use this packaging with CMake, just checkout the mingw-w64
 variants of e.g. `syncthingtray` within this repository. The Arch Wiki also has
 a [section about mingw-w64
@@ -349,19 +349,19 @@ static libraries or mxedeployqt might be an alternative to windeployqt.
 ### Tested build and deployment tools for mingw-w64-qt6 packages
 In order to build a Qt-based project using mingw-w64-qt6 packages one also needs
 to install the regular `qt6-base` package for development tools such as `moc`.
-The packages `qt6-tools`, `qt6-declarative` and `qt6-shadertools` contain also
-native binaries which might be required by some projects. At this point the
+The packages `qt6-tools`, `qt6-declarative` and `qt6-shadertools` also
+contain native binaries which might be required by some projects. At this point the
 setup can break if the version of regular packages and the versions of the
 mingw-w64 packages differ. I cannot do anything about it except trying to
 upgrade the mingw-w64 packages as fast as possible. There's actually a lengthy
 discussion about this topic on the
-[Qt development mailinglist](https://lists.qt-project.org/pipermail/development/2021-September/041732.html)
+[Qt development mailing list](https://lists.qt-project.org/pipermail/development/2021-September/041732.html)
 so the situation might improve in the future. Note that as of
 qtbase commit `5ffc744b791a114a3180a425dd26e298f7399955` (requires Qt > 6.2.1)
 one can specify `-DQT_NO_PACKAGE_VERSION_CHECK=TRUE` to ignore the strict
 versioning check.
 
-Currently, I test only CMake. It is possible to use either the shared or the
+Currently, I only test CMake. It is possible to use either the shared or the
 static libraries. The static libraries are installed into a nested prefix
 (`/usr/i686-w64-mingw32/static` and `/usr/x86_64-w64-mingw32/static`) so this
 prefix needs to be prepended to `CMAKE_FIND_ROOT_PATH` for using the static
@@ -374,7 +374,7 @@ enable them.
 
 Note that windeployqt needed to be enabled by the official/regular `qt6-tools`
 package but would likely not work very well anyways. Using the static libraries
-or mxdeployqt might be an alternative for windeployqt.
+or mxedeployqt might be an alternative for windeployqt.
 
 ### Static plugins and CMake
 Qt 5 initially didn't support it so I added patches to make it work. After Qt 5
@@ -385,15 +385,15 @@ documentation](https://doc.qt.io/qt-5/qtcore-cmake-qt-import-plugins.html) does
 wanted static plugins manually.
 
 However, for Qt 6 I dropped my patches and the official documentation applies. I
-would still recommended to set the target property `QT_DEFAULT_PLUGINS` of
+would still recommend to set the target property `QT_DEFAULT_PLUGINS` of
 relevant targets to `0` and link against wanted plugin targets manually. At
 least in my cases the list of plugins selected by default seemed needlessly
-long. I would also recommended to set the CMake variable
-`QT_SKIP_AUTO_QML_PLUGIN_INCLUSION` to a falsy value because this pulls in a lot
+long. I would also recommend to set the CMake variable
+`QT_SKIP_AUTO_QML_PLUGIN_INCLUSION` to a false value because this pulls in a lot
 of dependencies which are likely not needed.
 
 ### Further documentation
-The directory `qt5-base/mingw-w64` contains also a README with more Qt 5
+The directory `qt5-base/mingw-w64` also contains a README with more Qt 5
 specific information.
 
 ## Running Windows executables built using mingw-w64 packages with WINE
@@ -402,7 +402,7 @@ It is recommended to use the scripts `x86_64-w64-mingw32-wine` and
 are a wrapper around the regular `wine` binary ensuring all the DLLs provided by
 `mingw-w64-*`-packages of the relevant architecture can be located. It also uses
 a distinct `wine` prefix so your usual configuration (e.g. tailored to run
-certain games) does not go into the way and is also not messed with.
+certain games) does not get in the way and is also not messed with.
 
 Here are nevertheless some useful hints to run WINE manually:
 
@@ -421,7 +421,7 @@ Here are nevertheless some useful hints to run WINE manually:
     3. Add/modify the variable, e.g. set
        `PATH=C:\windows\system32;C:\windows;Z:\usr\x86_64-w64-mingw32\bin` and
        `QT_PLUGIN_PATH=Z:/usr/x86_64-w64-mingw32/lib/qt6/plugins`
-* It is possible to run apps in an headless environment but be aware that WINE
+* It is possible to run apps in a headless environment but be aware that WINE
   is not designed for this. For instance, when an application crashes WINE
   still attempts to show the crash window and the application stays stuck in
   that state.
@@ -429,7 +429,7 @@ Here are nevertheless some useful hints to run WINE manually:
 
 ### Running aarch64 binaries compiled via mingw-w64-clang-aarch64 packages
 It is possible to run aarch64 binaries on an x86_64 host using WINE and QEMU,
-checkout [the linaro blog](https://www.linaro.org/blog/emulate-windows-on-arm)
+checkout [the Linaro blog](https://www.linaro.org/blog/emulate-windows-on-arm)
 for details. They also provide a container image that is easy to use:
 
 ```
@@ -463,7 +463,7 @@ providing build system wrappers such as `static-compat-cmake`.
 
 It would be conceivable to make fully statically linked executables. However, it
 would not be possible to support OpenGL because glvnd and vendor provided OpenGL
-libraries are always dynamic libraries. It makes also no sense to link against
+libraries are always dynamic libraries. It also makes no sense to link against
 glibc (and possibly other core libraries) statically as they might use `dlopen`.
 Therefore this setup aims for a partially statically linked build instead, where
 stable core libraries like glibc/pthreads/OpenGL/… are assumed to be provided by

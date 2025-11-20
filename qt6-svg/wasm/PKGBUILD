@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=wasm-qt6-svg
-_qtver=6.10.0
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -20,7 +20,7 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(wasm-qt6)
 _pkgfqn="qtsvg-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('5ed2c0e04d5e73ff75c2a2ed92db5dc1788ba70f704fc2b71bc21644beda2533')
+sha256sums=('c02f355a58f3bbcf404a628bf488b6aeb2d84a94c269afdb86f6e529343ab01f')
 
 build() {
   export EMSDK=/usr/lib/emscripten
@@ -33,7 +33,8 @@ build() {
       -DFEATURE_static_runtime=ON \
       -DFEATURE_thread=ON \
       -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \
-      -DQT_HOST_PATH=/usr
+      -DQT_HOST_PATH=/usr \
+      -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE
   VERBOSE=1 cmake --build build
 }
 

@@ -47,6 +47,7 @@ build() {
       -DUSE_LINK_GROUP=OFF \\
       -DFEATURE_static_runtime=ON \\
 % }
+      -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \\
       -DFEATURE_pkg_config=ON<%== content_for 'additional_cmake_args' %>
     cmake --build build-$_arch
   done

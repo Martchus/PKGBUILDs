@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-charts
-_qtver=6.10.0
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -19,7 +19,7 @@ makedepends=(static-compat-cmake static-compat-vulkan-headers ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtcharts-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('1bff529320e7bf4da19984d70492b19149168be58aa1e77b0868779fb3437f6b')
+sha256sums=('17992278017cfb8fafef74b61e35559d29482df959ba469327a45b3bb66e2af4')
 
 build() {
   check_buildoption ccache y && ccache_args='

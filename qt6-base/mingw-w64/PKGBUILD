@@ -11,7 +11,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=mingw-w64-qt6-base
-_qtver=6.10.0
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -55,30 +55,28 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0017-Allow-configuring-use-of-OpenSSL-in-QPasswordDigesto.patch'
         '0018-Drop-CMAKE_SYSTEM_VERSION-from-modules-json-if-Linux.patch'
         '0019-Workaround-linker-error-about-missing-symbol-__sync_.patch'
-        '0020-Fix-Android-build-after-ec2e3e7ac92d000e0df0c693b9a6.patch'
-        '0021-Disable-position-resize-Automatic-on-first-expose.patch')
-sha256sums=('ead4623bcb54a32257c5b3e3a5aec6d16ec96f4cda58d2e003f5a0c16f72046d'
-            'b0753c1f9318366b7002e68110678a8a4310707736bcc88877956ce4e376fe3b'
-            'df145ca3edfa8e1619a2379ae9797ac8c02524bacc898c11378d93b66903e78b'
-            'fc5376b9e727a2e344a7ac8d6f47796566732ca6dda6cddc56e2c9e85d72be09'
-            '328f0bb3dcccbe745cde9cb6633de3d1d298cb6965668cfd1e4244c3bc40da46'
-            'ae4e4f1dfa9592e0151f76e361e4abf2ebc817e4fe0a0a354cf8c0135e3a804b'
-            '129a9376bf1bdc1c8ee55605593e38ca241ca1721ea20bb9707c650bcf005a9c'
-            '560e873245f813862dd537c1f048a73edcece42ed92593d62915d489f842398a'
-            '01fe85c33f50fc39c8f83ee9d8128e854ab03e98c4e6d5e8e3b69729bf02df5b'
-            'f0e530ad7b68ee4e5e6637bdaffd5f2a2aaf3a9c42863b03e692a81c96f73da2'
-            '8a030fb9887f9da7f50a4fd58c39e25cc25cb5641fea30cc67ba6032268dd6dd'
-            '18b43d103aab9567ddd37ac7dd8271fd7f20bd97d74d522c943534d607893df5'
-            'f2b9e3d96f4fe463daf242b42e3b92143df72b33714aab3488a5d2d9375c0520'
-            '4df08867d481388e5e2c4fd1ff1827feea8f77e13c330a8298749d9d4b61f1a3'
-            'a1d469a8ee3d664b1cb5d63c6ed7b2cf8743e7853875617655d5ed2bc413e273'
-            'c315e732de2caffca346a0f07396cc4818c26694dcc899f8ef232d0d5b6fd3c4'
-            'e47e0defda4a3c6f921e2ab40f9f2b582766e9191840209822704e29e5840d90'
-            '6bf4e2159aff0d74a6d245476be33cbf7fe22c3b92ae1f93856b400d74cbf17e'
-            'e4602138789f8da52c9ab70e416078c728ad3815da09dc0e2eafc207d808b405'
-            '7cadfbb34e45b512709b4c85fce86743f2e94aec0d1850514fed8f612afb9274'
-            'f341fedad4729246c7d6a6df1f3091116c0f808bfded2f731d4d9f82520833cc'
-            '2b9c89a294b96706fd6210cc9ff84a515f2203f7214c75def3507465e8fe4691')
+        '0020-Fix-Android-build-after-ec2e3e7ac92d000e0df0c693b9a6.patch')
+sha256sums=('5a6226f7e23db51fdc3223121eba53f3f5447cf0cc4d6cb82a3a2df7a65d265d'
+            '0f03776b94757fa171b10410870142627886f428a7d1c148eada92e4b378ea55'
+            '0c2b64aa5fe1aef64ce2cf755451ec4759b88b073afb877468f4b507e9a1d205'
+            '530461532946fce52c9c68aff1ba4ec9cb0a14a76ede5aad7715663900833b89'
+            '766fdcf5f760007617c851293d6c500b04f74c3c2fd7d011d757d370c5d661fe'
+            '532a54e7d952184ce3d57c0264a8e884bba6e5b42defea5caa7903c07b4a2a65'
+            'c9aac3871b4cc8e362bf17ba32eafd7709e8d680cd0d21d43a4c43ee2e3fe452'
+            '3c232d2b1f772d269ec0cb20862679b0691c35b36dac681d4d42cd9c11f059d4'
+            '083a28fd5c64bdc65974c86d1c253bfd36bcba41e1b023a0ba6ca26167a54011'
+            '49b3a49812aa4b52231e99c9989cb5b3fb27e4d465699ba96ba476a3d84f16a5'
+            '0ce2efbddd69a9fc8cd23cf975663c5add4d1ec4d414436ebfbee3e5c9b131bd'
+            '3e709a2e268e6d65ccd467d6c7b0f89b532070c8db72ff2a048a7ad0ac75067c'
+            '8a69dfde420ac520616828d0eb81af6ede1f2d274807199c56549374f3ff58b6'
+            'd4df5a66dbe460a5d17e3acc7e3007cb9d1a2815def091d65cb879763744058a'
+            '498257c1b259e46bdf569b37d9c0bd3194751c4c35ec75b42b2deb15c171fc49'
+            'c25f1941eac2241140f942fb6c1aad5509c94fb8e34008772259f1b01593d75e'
+            '117ca3f87dad78d79cce494e42cd4395663c10e9ae6ef16f2789ed49b28a94fb'
+            '13ce923c2735c2d7097330aea6d137237354469c4df1b04aba4e3ff12466ac6a'
+            '74ca87c89118560aa6a4feaee9cd668996c17da7e66bc4e3ea6594f843e584ee'
+            '760788b8eb19e876515e05b59381d322419ba9be3615e0da922a06c0f0d277ed'
+            '6e1fb73a571158dca4c7d32e75ed71b1ea9beae2d3dfa7c67ba1d8f56d5a10e9')
 
 # disable i686 build because 32-bit Windows is generally not supported by upstream and
 # it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)
@@ -137,6 +135,7 @@ build() {
       -DINSTALL_INCLUDEDIR=include/qt6 \
       -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \
       -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
+      -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
       -DINPUT_openssl=runtime \
       "${additional_flags[@]}"
     VERBOSE=1 cmake --build build-$_arch

@@ -42,7 +42,8 @@ build() {
       -DFEATURE_static_runtime=ON \\
       -DFEATURE_thread=ON \\
       -DQT_INCLUDE_DIRS_NO_SYSTEM=ON \\
-      -DQT_HOST_PATH=/usr
+      -DQT_HOST_PATH=/usr \\
+      -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE
   VERBOSE=1 cmake --build build
 }
 

@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-5compat
-_qtver=6.10.0
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -20,7 +20,7 @@ makedepends=(static-compat-cmake static-compat-qt6-declarative static-compat-qt6
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qt5compat-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('d025c59d658b5e1f5fa1650bf01f23ddec15ce8f4c6ae5f6bc343f8427b02b7e')
+sha256sums=('72396d160a153dee01b41cf0cae9ad46204cf613adb791b3ee85a7efeadffe24')
 
 build() {
   check_buildoption ccache y && ccache_args='

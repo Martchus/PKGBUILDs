@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-lottie
-_qtver=6.10.0
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -20,7 +20,7 @@ makedepends=(static-compat-cmake static-compat-qt6-declarative static-compat-qt6
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtlottie-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('70a413af5bc20a28d79c74a4182a1bb23f0709306721dc4878106891e5a87b25')
+sha256sums=('bc9c363c48486d790a998d25119bc0e7d2499266c3be96e61e3032422b0457c2')
 
 build() {
   check_buildoption ccache y && ccache_args='

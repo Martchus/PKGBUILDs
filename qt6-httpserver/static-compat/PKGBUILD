@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-httpserver
-_qtver=6.10.0
+_qtver=6.10.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -20,7 +20,7 @@ makedepends=(static-compat-cmake ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qthttpserver-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('e4705701db5f425e8f7025b3f74bf87b43af83742a615a20d4aa171d03251fc5')
+sha256sums=('a26c8d96d34bb4d4e2455e2c5df6e684aafb530927763eab84794ef71944e93b')
 
 build() {
   check_buildoption ccache y && ccache_args='

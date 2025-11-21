@@ -26,7 +26,8 @@ pkgrel=1
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)
-depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl" "android-$_arch-sqlite")
+depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl" "android-$_arch-sqlite"
+         'android-platform-35')
 makedepends=('android-cmake' 'android-ndk' 'ninja' 'git' 'go' 'clang' 'perl-yaml-libyaml'
              'qt6-tools' 'qt6-declarative' "android-$_arch-qt6-tools")
 url="https://github.com/Martchus/${_reponame}"
@@ -67,6 +68,7 @@ build() {
 
   cd subdirs/$_reponame
   cmake --preset arch-android \
+    -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
     -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.ttf" \
     -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml"
   cmake --build --preset arch-android

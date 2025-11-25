@@ -1,4 +1,5 @@
-# Maintainer: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
+# Maintainer of AUR version: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
+# Contributor: Martchus < martchus at gmx DOT net >
 # Contributor: pingplug < aur at pingplug dot me >
 # Contributor: Schala Zeal < schalaalexiazeal at gmail dot com >
 
@@ -7,7 +8,7 @@ _android_arch=x86-64
 pkgbase=android-${_android_arch}-harfbuzz
 pkgname=("android-${_android_arch}-harfbuzz"
          "android-${_android_arch}-harfbuzz-icu")
-pkgver=11.2.1
+pkgver=12.2.0
 pkgrel=1
 pkgdesc="OpenType text shaping engine (Android ${_android_arch})"
 arch=('any')
@@ -21,13 +22,20 @@ makedepends=('android-meson'
              "android-${_android_arch}-cairo"
              "android-${_android_arch}-icu"
              'python'
-             'ragel')
+             'ragel'
+             'git')
 options=(!strip !buildflags staticlibs !emptydirs)
-source=("https://github.com/harfbuzz/harfbuzz/archive/refs/tags/${pkgver}.tar.gz")
-md5sums=('d286c7ba7d7a4c1c59a5579dbcec1a1d')
+source=("git+https://github.com/harfbuzz/harfbuzz?signed#tag=$pkgver")
+b2sums=('988b06606dad96d520fe74b5e64072aa9dc129fede677def677e88d0574c860930e92ae48cc567e779041ff0efc002a667393f22f3918387919975079b4d4a2b')
+validpgpkeys=(
+  053D20F17CCCA9651B2C6FCB9AB24930C0B997A2 # Khaled Hosny <khaled@aliftype.com> (@khaledhosny)
+  9F377DDB6D3153A48EB3EB1E63CC496475267693 # Caleb Maclennan <caleb@alerque.com> (@alerque)
+  2277650A4E8BDFE4B7F6BE419FEE04E5D3531115 # Ebrahim Byagowi <ebrahim@gnu.org> (@ebraminio)
+  EACF64F53455E2771BA661A4803B21859F015E4E # Behdad Esfahbod <behdad@behdad.org> (@behdad)
+)
 
 build() {
-    cd "${srcdir}/harfbuzz-${pkgver}"
+    cd harfbuzz
     source android-env ${_android_arch}
 
     android-${_android_arch}-meson build-shared \
@@ -49,7 +57,7 @@ build() {
 }
 
 package_android-x86-64-harfbuzz() {
-    cd "${srcdir}/harfbuzz-${pkgver}"
+    cd harfbuzz
     source android-env ${_android_arch}
 
     DESTDIR="${pkgdir}" ninja -C build-shared install
@@ -72,5 +80,5 @@ package_android-x86-64-harfbuzz-icu() {
              "android-${_android_arch}-icu")
 
     mkdir -p "${pkgdir}/${ANDROID_PREFIX}"
-    mv -vf "${srcdir}/harfbuzz-${pkgver}/hb-icu/${ANDROID_PREFIX}"/* "${pkgdir}/${ANDROID_PREFIX}"
+    mv -vf "${srcdir}/harfbuzz/hb-icu/${ANDROID_PREFIX}"/* "${pkgdir}/${ANDROID_PREFIX}"
  }

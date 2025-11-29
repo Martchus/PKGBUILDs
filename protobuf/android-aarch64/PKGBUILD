@@ -11,7 +11,7 @@
 _android_arch=aarch64
 
 pkgname=android-${_android_arch}-protobuf
-pkgver=33.0
+pkgver=33.1
 pkgrel=1
 arch=('any')
 pkgdesc="Protocol Buffers - Google's data interchange format (Android ${_android_arch})"
@@ -23,7 +23,7 @@ makedepends=('android-cmake')
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://github.com/protocolbuffers/protobuf/archive/v${pkgver}/protobuf-${pkgver}.tar.gz"
         protobuf-33-patch-enum-traits-impl.patch)
-sha256sums=('cbc536064706b628dcfe507bef386ef3e2214d563657612296f1781aa155ee07'
+sha256sums=('fda132cb0c86400381c0af1fe98bd0f775cb566cb247cdcc105e344e00acc30e'
             '0627dce1d28f90607a45ce0148631dcb517157d67646167b55707f4bb3d9add4')
 
 prepare() {

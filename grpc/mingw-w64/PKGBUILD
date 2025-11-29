@@ -1,9 +1,9 @@
 pkgname=mingw-w64-grpc
 _pkgname=grpc
-_protover=33.0
+_protover=33.1
 _opencensus_proto_ver=0.4.1
 pkgver=1.76.0
-pkgrel=1
+pkgrel=2
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (mingw-w64)"
 arch=('any')
 url='https://grpc.io'

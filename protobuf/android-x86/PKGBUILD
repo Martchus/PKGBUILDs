@@ -11,7 +11,7 @@
 _android_arch=x86
 
 pkgname=android-${_android_arch}-protobuf
-pkgver=33.0
+pkgver=33.1
 pkgrel=1
 arch=('any')
 pkgdesc="Protocol Buffers - Google's data interchange format (Android ${_android_arch})"

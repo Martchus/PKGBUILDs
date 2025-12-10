@@ -10,7 +10,7 @@ pkgname=devtools-custom
 _pkgname=devtools
 epoch=1
 pkgver=1.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Tools for Arch Linux package maintainers (patches from ALARM and custom ones)'
 arch=('any')
 license=('GPL-3.0-or-later')
@@ -34,6 +34,7 @@ depends=(
   jq
   openssh
   parallel
+  reuse
   rsync
   sed
   util-linux
@@ -45,7 +46,6 @@ depends=(
 )
 makedepends=(
   asciidoctor
-  shellcheck
 )
 checkdepends=(
   bats

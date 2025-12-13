@@ -1,6 +1,6 @@
 _pkgname=c-ares
 pkgname=static-compat-$_pkgname
-pkgver=1.34.5
+pkgver=1.34.6
 pkgrel=1
 pkgdesc="A C library for asynchronous DNS requests"
 arch=(x86_64)
@@ -15,8 +15,8 @@ makedepends=(
 source=(
   git+$_url.git?signed#tag=v$pkgver
 )
-sha512sums=('5703fb5153e6c4d026e7fcfe63a3626c1fb1464d10642f4b5657368eb0b0bf17dab949a84ca4c3fa3053c1b0013588bd6de23bea9c3eaf2fc1cece4eeff1c67c')
-b2sums=('6c50af22f564c3a9ef5c16f1f383a4a632bf32844d6b19bc1cda7a6a418f473ebead447420d744d0cb3f9b1e472fab95322c87837e0ad54e966e869a2192af7f')
+sha512sums=('31b306dde129efa6c9e063d456a0941517fbf9ed95f3e1442ace41f31f5214cdcebd4dba6113c6de317d4ce91027d06fe13347470bb08d368274068c43a0902f')
+b2sums=('0389469a2732385be87c841f95f719e2c20c98d78fe1c68b7588f2241dc3f57aa2bd5bbdd3f8b468fde4fe332179449ad67c5ef0bacd0e9fe210275344be7186')
 validpgpkeys=(
   27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2  # Daniel Stenberg <daniel@haxx.se>
   DA7D64E4C82C6294CB73A20E22E3D13B5411B7CA  # Brad House <brad@brad-house.com>

@@ -5,7 +5,7 @@
 
 _arch=x86-64
 pkgname=android-$_arch-syncthingtray
-pkgver=2.0.5
+pkgver=2.0.6
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_stt=branch=master
   _pkgver_cpputilities=branch=master
@@ -69,6 +69,7 @@ build() {
   cd subdirs/$_reponame
   cmake --preset arch-android \
     -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
+    -DEXTENDED_CLIENT_AREA=ON \
     -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.ttf" \
     -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml"
   cmake --build --preset arch-android

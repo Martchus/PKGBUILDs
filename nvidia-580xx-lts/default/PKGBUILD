@@ -1,0 +1,36 @@
+# Contributor: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Contributor: Peter Jung <ptr1337@archlinux.org>
+# Contributor: Eric Bélanger <eric@archlinux.org>
+
+pkgname=nvidia-580xx-lts
+epoch=1
+pkgver=580.119.02
+pkgrel=1
+pkgdesc="NVIDIA drivers for linux-lts (580xx)"
+arch=('x86_64')
+url="https://www.nvidia.com/"
+makedepends=('linux-lts-headers' "nvidia-580xx-dkms=$pkgver")
+provides=('NVIDIA-MODULE')
+license=('LicenseRef-custom')
+options=('!strip')
+
+build() {
+    _kernver=$(</usr/src/linux-lts/version)
+
+    fakeroot dkms build --dkmstree "${srcdir}" -m nvidia/${pkgver} -k ${_kernver}
+}
+
+package() {
+    _kernver="$(</usr/src/linux-lts/version)"
+
+    depends=("linux-lts=${_kernver%-lts}" "nvidia-580xx-utils=${pkgver}" 'libglvnd')
+    provides=('nvidia-lts')
+    conflicts=('nvidia-lts')
+
+    install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 nvidia/${pkgver}/${_kernver}/${CARCH}/module/*.ko
+
+    # compress each module individually
+    find "$pkgdir" -name '*.ko' -exec zstd --rm -19 {} +
+
+    install -Dm644 /usr/share/licenses/nvidia-580xx-dkms/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

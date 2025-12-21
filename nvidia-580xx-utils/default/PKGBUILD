@@ -7,7 +7,7 @@
 pkgbase=nvidia-580xx-utils
 pkgname=('nvidia-580xx-utils' 'opencl-nvidia-580xx' 'nvidia-580xx-dkms' 'nvidia-580xx-open-dkms')
 pkgver=580.119.02
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="http://www.nvidia.com/"
 license=('custom')
@@ -118,7 +118,7 @@ package_opencl-nvidia-580xx() {
 
 package_nvidia-580xx-dkms() {
     pkgdesc="NVIDIA kernel modules - module sources (580xx)"
-    depends=('dkms' "nvidia-utils=$pkgver" 'libglvnd')
+    depends=('dkms' "nvidia-580xx-utils=$pkgver" 'libglvnd')
     provides=('NVIDIA-MODULE' 'nvidia' 'nvidia-dkms')
     conflicts=('NVIDIA-MODULE' 'nvidia' 'nvidia-dkms')
 
@@ -319,7 +319,7 @@ END
 
 package_nvidia-580xx-open-dkms() {
   pkgdesc="NVIDIA open kernel modules - module sources (580xx)"
-  depends+=('dkms' "nvidia-utils=$pkgver")
+  depends+=('dkms' "nvidia-580xx-utils=$pkgver")
   license=('MIT AND GPL-2.0-only')
   conflicts=('nvidia-open' 'nvidia-open-dkms' 'NVIDIA-MODULE')
   provides=('nvidia-open' 'nvidia-open-dkms' 'NVIDIA-MODULE')

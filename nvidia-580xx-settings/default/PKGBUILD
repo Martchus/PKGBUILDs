@@ -6,7 +6,7 @@
 pkgbase=nvidia-580xx-settings
 pkgname=('nvidia-580xx-settings' 'libxnvctrl-580xx')
 pkgver=580.119.02
-pkgrel=1
+pkgrel=2
 pkgdesc='Tool for configuring the NVIDIA graphics driver (580xx)'
 url='https://github.com/NVIDIA/nvidia-settings'
 arch=('x86_64')
@@ -34,7 +34,7 @@ build() {
 }
 
 package_nvidia-580xx-settings() {
-  depends=('jansson' 'gtk3' 'libxv' 'libvdpau' 'nvidia-utils-580xx' 'libxnvctrl-580xx')
+  depends=('jansson' 'gtk3' 'libxv' 'libvdpau' 'nvidia-580xx-utils' 'libxnvctrl-580xx')
   provides=('nvidia-settings')
   conflicts=('nvidia-settings')
 

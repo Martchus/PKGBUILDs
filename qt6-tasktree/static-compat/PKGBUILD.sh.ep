@@ -1,0 +1,15 @@
+% layout 'static-compat-qt6-module';
+\
+_qtver=6.10.1
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
+pkgdesc='A generic framework for automatic management of asynchronous tasks'
+depends=(<%== qt6deps qw(base) %>)
+makedepends=('ninja')
+makedepends=(static-compat-cmake)

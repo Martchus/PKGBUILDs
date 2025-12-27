@@ -1,0 +1,15 @@
+% layout 'static-compat-qt6-module';
+\
+_qtver=6.10.1
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
+pkgdesc='Accelerated 2D painting solution for Qt Quick and QRhi-based render targets'
+depends=(<%== qt6deps qw(base declarative) %>)
+makedepends=(static-compat-cmake static-compat-vulkan-headers
+             <%== qt6deps qw(shadertools) %> ninja)

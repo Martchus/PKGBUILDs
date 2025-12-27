@@ -1,0 +1,54 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
+# you also find the URL of a binary repository.
+
+pkgname=static-compat-qt6-canvaspainter
+_qtver=6.10.1
+pkgver=${_qtver/-/}
+pkgrel=1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
+pkgdesc='Accelerated 2D painting solution for Qt Quick and QRhi-based render targets'
+depends=(static-compat-qt6-base static-compat-qt6-declarative)
+makedepends=(static-compat-cmake static-compat-vulkan-headers
+             static-compat-qt6-shadertools ninja)
+options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
+_pkgfqn="qtcanvaspainter-everywhere-src-${_qtver}"
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
+sha256sums=('qtcanvaspainter-sha256.txt missing')
+
+build() {
+  check_buildoption ccache y && ccache_args='
+    -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    -DCMAKE_CXX_COMPILER_LAUNCHER=ccache'
+  source static-compat-environment
+  export PATH=$PWD:$PATH
+  printf '#!/usr/bin/bash\nexec /usr/bin/pkg-config --static "$@"\n' > pkg-config
+  chmod +x pkg-config
+  static-compat-cmake -G Ninja -B build -S $_pkgfqn \
+    $ccache_args \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DGLIB2_USE_PKG_CONFIG=ON \
+    -DWAYLAND_USE_PKG_CONFIG=ON \
+    -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
+    -DQT_FEATURE_static_runtime=ON \
+    -DFEATURE_pkg_config=ON
+  VERBOSE=1 cmake --build build
+}
+
+package() {
+  source static-compat-environment
+  DESTDIR="$pkgdir" cmake --install build
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/$static_compat_prefix/lib" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  install -d "$pkgdir"/usr/share/licenses
+  ln -s /usr/share/licenses/static-compat-qt6-base "$pkgdir"/usr/share/licenses/$pkgname
+}

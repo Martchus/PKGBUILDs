@@ -3,14 +3,11 @@
 
 pkgname=nginx-mod-substitutions-filter
 pkgver=0.6.4.115.e12e965
-pkgrel=2
+pkgrel=3
 _dirname="$pkgname"
-_nginxver=1.28.0 # FIXME: fix build against NGINX 1.20.0
-
 pkgdesc='NGINX filter module which can do both regular expression and fixed string substitutions'
 arch=('x86_64')
-depends=("nginx=$_nginxver")
-makedepends=("nginx-src" "git")
+makedepends=('nginx' 'nginx-src' 'git')
 url='https://github.com/yaoweibin/ngx_http_substitutions_filter_module'
 license=('BSD')
 
@@ -36,6 +33,9 @@ build() {
 }
 
 package() {
+  _nginxver=$(pacman -Q nginx | sed 's|nginx \([^-]*\).*|\1|')
+  depends+=("nginx=$_nginxver")
+
   install -Dm755 "$srcdir/$_dirname/README" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" # license is part of the README
   cd "$srcdir"/nginx/objs
   for mod in ngx_*.so; do

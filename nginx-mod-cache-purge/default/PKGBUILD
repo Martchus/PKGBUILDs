@@ -3,14 +3,11 @@
 
 pkgname=nginx-mod-cache-purge
 pkgver=2.3
-pkgrel=16
+pkgrel=17
 _dirname="ngx_cache_purge-${pkgver}"
-_nginxver=1.28.0
-
 pkgdesc='NGINX module that adds ability to purge content from FastCGI, proxy, SCGI and uWSGI caches'
 arch=('x86_64')
-depends=("nginx=$_nginxver")
-makedepends=("nginx-src")
+makedepends=('nginx' 'nginx-src')
 url='http://labs.frickle.com/nginx_ngx_cache_purge'
 license=('CUSTOM')
 
@@ -36,6 +33,9 @@ build() {
 }
 
 package() {
+  _nginxver=$(pacman -Q nginx | sed 's|nginx \([^-]*\).*|\1|')
+  depends+=("nginx=$_nginxver")
+
   install -Dm755 "$srcdir/$_dirname/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
   cd "$srcdir"/nginx/objs
   for mod in ngx_*.so; do

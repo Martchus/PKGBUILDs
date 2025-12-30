@@ -3,14 +3,11 @@
 
 pkgname=nginx-mod-fancyindex
 pkgver=0.5.2
-pkgrel=9
+pkgrel=10
 _dirname="ngx-fancyindex-${pkgver}"
-_nginxver=1.28.0
-
 pkgdesc='Fancy indexes module for the Nginx web server'
 arch=('x86_64')
-depends=("nginx=$_nginxver")
-makedepends=("nginx-src")
+makedepends=('nginx' 'nginx-src')
 url='https://github.com/aperezdc/ngx-fancyindex'
 license=('CUSTOM')
 
@@ -29,6 +26,9 @@ build() {
 }
 
 package() {
+  _nginxver=$(pacman -Q nginx | sed 's|nginx \([^-]*\).*|\1|')
+  depends+=("nginx=$_nginxver")
+
   install -Dm755 "$srcdir/$_dirname/LICENSE" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE"
   cd "$srcdir"/nginx/objs
   for mod in ngx_*.so; do

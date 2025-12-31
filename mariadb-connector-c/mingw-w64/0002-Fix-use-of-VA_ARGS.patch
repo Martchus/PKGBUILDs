@@ -1,7 +1,7 @@
-From 11db37c23af4217862df6b8f8b86c1e328d7f142 Mon Sep 17 00:00:00 2001
+From def7b60cbed5fcf83d11a19fd691eea0571c08ab Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sat, 10 Aug 2024 17:51:39 +0200
-Subject: [PATCH 2/2] Fix use of VA_ARGS
+Subject: [PATCH 2/3] Fix use of VA_ARGS
 
 This patch is taken from https://raw.githubusercontent.com/msys2/MINGW-packages/master/mingw-w64-libmariadbclient/003-gcc-fix-use_VA_ARGS.patch.
 ---
@@ -22,5 +22,5 @@ index baec8024..18ae6c26 100644
    } while (0)
  
 -- 
-2.51.2
+2.52.0
 

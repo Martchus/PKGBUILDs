@@ -13,7 +13,7 @@ license=(GPL-3.0-only
          LGPL-3.0-only
          LicenseRef-Qt-Commercial
          Qt-GPL-exception-1.0)
-pkgdesc='Network authentication module'
+pkgdesc='Provides access to hardware and virtual serial ports'
 depends=(static-compat-qt6-base)
 makedepends=(static-compat-cmake ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')

@@ -11,4 +11,4 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='Provides access to hardware and virtual serial ports'
 depends=(<%== qt6deps qw(base) %>)
-makedepends=('static-compat-cmake' 'qt6-base' 'ninja')
+makedepends=(static-compat-cmake ninja)

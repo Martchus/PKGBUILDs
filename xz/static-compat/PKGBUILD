@@ -3,7 +3,7 @@
 
 _pkgname=xz
 pkgname=static-compat-$_pkgname
-pkgver=5.8.1
+pkgver=5.8.2
 pkgrel=1
 pkgdesc='Library and command line tools for XZ and LZMA compressed files'
 arch=('x86_64')
@@ -14,8 +14,8 @@ makedepends=('static-compat-configure' 'git' 'po4a')
 options=(!emptydirs staticlibs)
 validpgpkeys=('3690C240CE51B4670D30AD1C38EE757D69184620')  # Lasse Collin <lasse.collin@tukaani.org>
 source=("git+https://github.com/tukaani-project/xz#tag=v${pkgver}")
-sha256sums=('cb78e69a09fd5002bc4ab31ca2665a1d20003c2f3ab39bfe081043f086bd8728')
-sha512sums=('b9a0f746215cd93c04fecd390ca44fc281d892b989e740ec6abbaa6a1eb457bbef40a33596dfe6e2285a319f2b09ae1994d778f0cf61114cbee9454a0eaa754b')
+sha256sums=('c340ab4c34626b505d86824f1b2365a0314791c8edcacb201b67d112c54b94c0')
+sha512sums=('328fe243e5701ac8216d21168a9e17ea9475cc08b27659c18b68230d8ddd0fffa9f831c576b08c160774fe2c4795604f82b64113e7f84db417b4bd26a4dae2c1')
 
 prepare() {
   cd ${_pkgname}

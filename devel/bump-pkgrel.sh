@@ -24,5 +24,9 @@ for pkg_dir in "$@"; do
     newpkgrel=$((oldpkgrel + 1))
     msg "Updating $pkgname: $pkgver-$oldpkgrel -> $pkgver-$newpkgrel"
     pkgbuild_set_pkgrel "$((pkgrel + 1))"
+    if [[ $COMMIT ]] || [[ $COMMIT_MESSAGE ]]; then
+        git add ./PKGBUILD
+        git commit -m "${COMMIT_MESSAGE:-Rebuild $pkgname}"
+    fi
     popd > /dev/null
 done

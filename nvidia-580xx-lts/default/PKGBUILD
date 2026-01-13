@@ -4,8 +4,8 @@
 
 pkgname=nvidia-580xx-lts
 epoch=1
-pkgver=580.119.02
-pkgrel=4
+pkgver=580.126.09
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-lts (580xx)"
 arch=('x86_64')
 url="https://www.nvidia.com/"

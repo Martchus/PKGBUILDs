@@ -13,7 +13,7 @@ _android_arch=aarch64
 pkgname=android-aarch64-qt6-base
 _qtver=6.10.1
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=3
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -60,33 +60,35 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0022-Use-a-more-reasonable-fallback-directory-for-fonts-o.patch'
         '0023-Undefine-mingw-stat.patch'
         '0024-Export-some-constexpr-variables.patch'
-        '0025-Android-don-t-enable-focus-for-QtEditText-when-added.patch')
+        '0025-Android-don-t-enable-focus-for-QtEditText-when-added.patch'
+        '0026-Android-avoid-a11y-operations-on-Qt-thread-without-a.patch')
 sha256sums=('5a6226f7e23db51fdc3223121eba53f3f5447cf0cc4d6cb82a3a2df7a65d265d'
-            'cbf8861c67c1b36e363048603823dd3bfaff6232f0317957594727256db51cf1'
-            '30b1182b6333171ea767a297cffe208a8cf9e757481d2c8295a87608fdb5985f'
-            'd8314b52da3fe6da6e6ef9e2c90d6d4e733abae1598310b6e2c2d426fa8c1d1e'
-            '259045105420457705a714b32a1d611de3661a747272572249fb952b3ae20203'
-            'daebf9f370cbf688c03f61d3db240b1ed84d13da686a4016cc75ac5b1e95ebae'
-            '97fd6a63d6da0b664144a378a9c32d4a828d9c530d809ff7230eea0b9eaadae6'
-            '3f6829de24b99e93dca68530021aedb373af947fec85681cf1c61accf529a5a0'
-            '79d97f9dd6e4b4e35b4f1dc824c15fbec1f8e23fff9033a19ae612406f749343'
-            'b769f05f2294a10231df90ec67b1c4332e54c2a287ac1218473c3fffba0a8445'
-            '321e1568059c33582db114cc35e606c0575acad3b095266b8a93d12c7d656261'
-            'a1586c788d052d407c42a29398cd2c362f30eb9425566754a582f5579d0c9890'
-            '70e58c765c59f9f6c607d026857594a8d52cfe2f9d0157c844c2f9f45fe35b1e'
-            '1190a270997757de791a75cc940a4df5ca446c8209e8508a7c357a3f02b5d25b'
-            'b9643727fd6c07a49e97046d6c034d33b65292dde2e9d4e0f2d71288c8587ac2'
-            '889d5fd270e44c42c3dc2f4c8bcf558d4c86334f880eaad6843f07d48bf671be'
-            'f9907d3984c463f861d29d109822df3b297ee90e0a66f50e9c8a8330c488fcbd'
-            '780d9e5f56afe82c4032908390a2711f9553200689637e481b0e45b5cf6894b5'
-            '6fa91a2797fb2843e8f85380c08f0f6958baa3a7e60d17a3e475d946be89d579'
-            '5ea7dc50ed540057d409c69ddeb7d55a662d883e1c928b86c568ef992dffb5db'
-            '0e91b48867d7ce964b33aff646526e56d65384a1798116b35c15fb018b702a17'
-            'ff9f57d437b4f268cd9a7ab4994e8dfb0709a4788f754225d295061a0250bb4f'
-            '4f485e64c0a1f341612890fd3fbdd22e2894049dcbf203bd7dba5de92ee2a242'
-            '2902c7b1f41ac24c75efeb92fc9cb29a2dd7b7962fb80554dc836e53d6cb4ff8'
-            '48e11d6865fef90e2d9f25523f5958451a75e65d133deb9df6ab1a9928919175'
-            'a6c84b600ccba63371bc59df501fd2e9406bd9a9ad40650d9da668706c01a919')
+            '3264e47e25cc9588956b8300d3205510f3b60054d4854f0351299a159172cba4'
+            'c72dbf4ffe0f8e0de916bf403130f059d8c238d80e720f1bbe534a72c02a4c69'
+            '5ace6c31738397fc4de457ebb1b50d409a48b5388cff654836e0d042d103dd1d'
+            '4617285282ca092e70d57331046ce2f1c3970094acc2d57391ddb5054f7f80bb'
+            'c56e70a8d5440fded4f1b06c64a30417ce76996f7d3bc6df76bcea163f8dfa7f'
+            'bcbc694b233cd6de74a150230984c6a8dee368d32a979a97f04edac8efebc2ab'
+            '70fc553321b18164189949dc76568e5d7dae1feffb530119fc705d7e5a41c84f'
+            'bef3d0f528440797b344e0756b7789314002db3104e12da718e77c6d91128f1b'
+            '246f117141accf28325156d01e9df40beb1bbc0362a908ed9487b9a79f31d4a1'
+            '6a17d9c29c643feff8c908d0c03d6cd14a24c004b96c8eca7839494455c8c8f5'
+            '9d495fb90f5721a8b621ccdc4c0a4880b4c8abd769d9be5b08d409b00c75d7e9'
+            'db05a3a3f1be3901e359086ba8719b7f9f05b1a504ecedf4ac4e8c7e1ff895fd'
+            'eb11f9ce19186079b4bb714350bf0578709fd85954e2a3f8b08e7e018f759df3'
+            '51bf497e71586542aa8d39f1403e47f35ee14fa84f8103f64b7f3b6277972ed1'
+            'bb3c8a496f28f63732e86c47d3df9a10bdff87af040504f4b01755d9f0def2f4'
+            '0c055a2a83e4fcd21c19193d02af02f3c85fb848e6a1ef3877efd661920643bd'
+            '7591896be74d5a2f76fda8244c89006440b52406545d1dd6bd8bcd316f95e6ec'
+            '46b5d9313e2f3234bbebb078e82f7356845d9c14eaacdc2fb58bec96110263a8'
+            '30ced1c0653f4b39ae334b29cd5db3e513865dce1e30ca38a41acd0dc7d33419'
+            'a4bc8133527ce47a6ec051f5e51ebfaa9fc3c53cba26239ebadf450835a49a36'
+            '486c52be82e9599c3c2daf2bfc93f8ce8f524ff405f8bebfe68d2646d0408c57'
+            'da1dd3a446374017c0a27f66733343d20a8e84d3eff00f03601dbcc11ad49d88'
+            'c7301c23b00c103e96a8f558c3fcb685f564f19555a3f20b8e2b4932bf6a651d'
+            '7df84091ad46fd25a1cd5e2d365a91b285f72a755824e01ee01e32687b59ff84'
+            'b2be0ed04393edef28c36346cac41ee2b44b624ec36725d71ce0e45b4d7c846a'
+            '4964d4a72b156d988a0e0529fb32848ca932d2012779e3a49ef075c48c958cdb')
 
 prepare () {
   cd $_pkgfqn

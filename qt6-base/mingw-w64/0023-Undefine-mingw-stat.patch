@@ -1,7 +1,7 @@
 From 7d4dbc44717bf79e24095012f6238eec4e4ac67a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Mon, 1 Dec 2025 11:28:49 +0100
-Subject: [PATCH 23/25] Undefine mingw stat
+Subject: [PATCH 23/26] Undefine mingw stat
 
 From MINGW-packages commit e5c4652cad95df5f6435b6c564c52a7ae7d8e5f7.
 

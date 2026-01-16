@@ -1,7 +1,7 @@
 From b87df900f5af2e99d64ef80b72b2ca01f6a475f2 Mon Sep 17 00:00:00 2001
 From: Assam Boudjelthia <assam.boudjelthia@qt.io>
 Date: Wed, 10 Dec 2025 21:45:03 +0200
-Subject: [PATCH 25/25] Android: don't enable focus for QtEditText when added
+Subject: [PATCH 25/26] Android: don't enable focus for QtEditText when added
  to the view
 
 This way we avoid having the QtInputConnection invoke any operations

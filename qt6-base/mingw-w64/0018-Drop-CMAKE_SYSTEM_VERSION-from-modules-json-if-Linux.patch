@@ -1,7 +1,7 @@
 From 401aa25e0da0908569820a6d18d7e4a7a11c5c67 Mon Sep 17 00:00:00 2001
 From: Cristian Le <cristian.le@qt.io>
 Date: Thu, 19 Jun 2025 17:12:46 +0200
-Subject: [PATCH 18/25] Drop CMAKE_SYSTEM_VERSION from modules json if Linux
+Subject: [PATCH 18/26] Drop CMAKE_SYSTEM_VERSION from modules json if Linux
 
 In order to make the project build reproducible it should not record
 transient information of the build host.

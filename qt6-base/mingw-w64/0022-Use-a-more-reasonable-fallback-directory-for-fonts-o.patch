@@ -1,7 +1,7 @@
 From 215c7f0b85fbfb1835d474f193946634b309461d Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Mon, 1 Dec 2025 11:26:18 +0100
-Subject: [PATCH 22/25] Use a more reasonable fallback directory for fonts on
+Subject: [PATCH 22/26] Use a more reasonable fallback directory for fonts on
  Windows
 
 The existing fallback points to a directory that no longer exists by default

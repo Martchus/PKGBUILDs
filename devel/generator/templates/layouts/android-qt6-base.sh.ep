@@ -16,7 +16,7 @@ _android_arch=<%= $variant_prefix_part =~ s/android-// && $variant_prefix_part %
 pkgname=<%= $package_name %>
 _qtver=6.10.1
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=3
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only

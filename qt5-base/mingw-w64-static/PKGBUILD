@@ -70,7 +70,7 @@ source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         '0030-Fix-linking-against-static-plugins-with-qmake.patch'
         '0031-Prevent-Cannot-find-feature-windows_vulkan_sdk.patch'
         '0032-Fix-crashes-in-rasterization-code-using-setjmp.patch')
-sha256sums=('cbdb84d9a35b01a958222493d92947f0166fa90a8c3d7af5e66c23f2cf3cfe6f'
+sha256sums=('SKIP'
             'ced89a858541b5f46778d308df5ab289f294eae039db59e097a8dbbc801bcb52'
             'd9b7d7b65141444dd9fc1bf0c24e5652d82d1b3b1b26dabab8917b2bcb595bd5'
             'e837b6ab5434dc6d7b79ffa3cc5d99739d4bbf144bcc6b09abb035b342da6f39'

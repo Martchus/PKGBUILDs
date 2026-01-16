@@ -1,0 +1,153 @@
+From f059f9e5d1f0e28e7ab910cc8a7e3475938a4dfb Mon Sep 17 00:00:00 2001
+From: Assam Boudjelthia <assam.boudjelthia@qt.io>
+Date: Thu, 15 Jan 2026 16:26:59 +0200
+Subject: [PATCH 26/26] Android: avoid a11y operations on Qt thread without a
+ valid surface
+
+In the case where the Android side has an a11y callback or operation
+that depends on the the Qt Gui thread while the app hasn't fully
+created a surface yet we will run into a deadlock because the a11y
+will be blocking the Gui thread while the platform window soon
+after tries to create a platform surface and won't be able to do it.
+
+Fixes: QTBUG-142460
+Fixes: QTBUG-140674
+Fixes: QTBUG-140501
+Fixes: QTBUG-102594
+Fixes: QTBUG-105958
+Pick-to: dev 6.11 6.10 6.8
+Change-Id: Ia453cd3494d60cebe9ae82f3d3c718c9fe94d878
+---
+ .../android/androidjniaccessibility.cpp       |  4 ++++
+ .../android/qandroidplatformopenglwindow.cpp  |  4 ++++
+ .../android/qandroidplatformvulkanwindow.cpp  |  4 ++++
+ .../android/qandroidplatformwindow.cpp        | 24 +++++++++++++++++++
+ .../android/qandroidplatformwindow.h          |  4 ++++
+ 5 files changed, 40 insertions(+)
+
+diff --git a/src/plugins/platforms/android/androidjniaccessibility.cpp b/src/plugins/platforms/android/androidjniaccessibility.cpp
+index 50eb3293c50..a175c476447 100644
+--- a/src/plugins/platforms/android/androidjniaccessibility.cpp
++++ b/src/plugins/platforms/android/androidjniaccessibility.cpp
+@@ -4,6 +4,7 @@
+ #include "androidjniaccessibility.h"
+ #include "androidjnimain.h"
+ #include "qandroidplatformintegration.h"
++#include "qandroidplatformwindow.h"
+ #include "qpa/qplatformaccessibility.h"
+ #include <QtGui/private/qaccessiblebridgeutils_p.h>
+ #include "qguiapplication.h"
+@@ -64,6 +65,9 @@ namespace QtAndroidAccessibility
+     template <typename Func, typename Ret>
+     void runInObjectContext(QObject *context, Func &&func, Ret *retVal)
+     {
++        if (QAndroidPlatformWindow::surfacesCount() == 0)
++            return;
++
+         QtAndroidPrivate::AndroidDeadlockProtector protector(
+             u"QtAndroidAccessibility::runInObjectContext()"_s);
+         if (!protector.acquire()) {
+diff --git a/src/plugins/platforms/android/qandroidplatformopenglwindow.cpp b/src/plugins/platforms/android/qandroidplatformopenglwindow.cpp
+index bb6b720e111..3fd1ba0460a 100644
+--- a/src/plugins/platforms/android/qandroidplatformopenglwindow.cpp
++++ b/src/plugins/platforms/android/qandroidplatformopenglwindow.cpp
+@@ -113,6 +113,8 @@ bool QAndroidPlatformOpenGLWindow::ensureEglSurfaceCreated(EGLConfig config)
+     // we've created another Surface, the window should be repainted
+     sendExpose();
+ 
++    incrementSurfacesCount();
++
+     return true;
+ }
+ 
+@@ -136,6 +138,8 @@ void QAndroidPlatformOpenGLWindow::clearSurface()
+         ANativeWindow_release(m_nativeWindow);
+         m_nativeWindow = nullptr;
+     }
++
++    decrementSurfacesCount();
+ }
+ 
+ QT_END_NAMESPACE
+diff --git a/src/plugins/platforms/android/qandroidplatformvulkanwindow.cpp b/src/plugins/platforms/android/qandroidplatformvulkanwindow.cpp
+index 01bba538675..445cba2c045 100644
+--- a/src/plugins/platforms/android/qandroidplatformvulkanwindow.cpp
++++ b/src/plugins/platforms/android/qandroidplatformvulkanwindow.cpp
+@@ -69,6 +69,8 @@ void QAndroidPlatformVulkanWindow::clearSurface()
+         ANativeWindow_release(m_nativeWindow);
+         m_nativeWindow = nullptr;
+     }
++
++    decrementSurfacesCount();
+ }
+ 
+ void QAndroidPlatformVulkanWindow::destroyAndClearSurface()
+@@ -134,6 +136,8 @@ VkSurfaceKHR *QAndroidPlatformVulkanWindow::vkSurface()
+     if (needsExpose)
+         sendExpose();
+ 
++    incrementSurfacesCount();
++
+     return &m_vkSurface;
+ }
+ 
+diff --git a/src/plugins/platforms/android/qandroidplatformwindow.cpp b/src/plugins/platforms/android/qandroidplatformwindow.cpp
+index 937839ace0c..1bebbfda7d8 100644
+--- a/src/plugins/platforms/android/qandroidplatformwindow.cpp
++++ b/src/plugins/platforms/android/qandroidplatformwindow.cpp
+@@ -468,6 +468,30 @@ QMutexLocker<QMutex> QAndroidPlatformWindow::destructionGuard()
+     return QMutexLocker(&m_destructionMutex);
+ }
+ 
++Q_CONSTINIT static QBasicAtomicInt g_surfacesCounter = Q_BASIC_ATOMIC_INITIALIZER(0);
++
++int QAndroidPlatformWindow::surfacesCount()
++{
++    return g_surfacesCounter.loadRelaxed();
++}
++
++void QAndroidPlatformWindow::incrementSurfacesCount()
++{
++    g_surfacesCounter.fetchAndAddRelaxed(1);
++}
++
++void QAndroidPlatformWindow::decrementSurfacesCount()
++{
++    int cur = g_surfacesCounter.loadRelaxed();
++    while (true) {
++        if (cur == 0)
++            return;
++
++        if (g_surfacesCounter.testAndSetRelaxed(cur, cur - 1))
++            return;
++    }
++}
++
+ bool QAndroidPlatformWindow::registerNatives(QJniEnvironment &env)
+ {
+     if (!env.registerNativeMethods(QtJniTypes::Traits<QtJniTypes::QtWindow>::className(),
+diff --git a/src/plugins/platforms/android/qandroidplatformwindow.h b/src/plugins/platforms/android/qandroidplatformwindow.h
+index 07f4e12b35c..448d4651add 100644
+--- a/src/plugins/platforms/android/qandroidplatformwindow.h
++++ b/src/plugins/platforms/android/qandroidplatformwindow.h
+@@ -73,6 +73,8 @@ public:
+     void lockSurface() { m_surfaceMutex.lock(); }
+     void unlockSurface() { m_surfaceMutex.unlock(); }
+ 
++    static int surfacesCount();
++
+ protected:
+     void setGeometry(const QRect &rect) override;
+     void createSurface();
+@@ -81,6 +83,8 @@ protected:
+     bool blockedByModal() const;
+     bool isEmbeddingContainer() const;
+     virtual void clearSurface() {}
++    static void incrementSurfacesCount();
++    static void decrementSurfacesCount();
+ 
+     Qt::WindowFlags m_windowFlags;
+     Qt::WindowStates m_windowState;
+-- 
+2.52.0
+

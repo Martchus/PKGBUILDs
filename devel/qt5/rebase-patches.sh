@@ -1,8 +1,14 @@
 #set -euxo pipefail
 set -e # abort on first error
 shopt -s nullglob
-source /usr/share/makepkg/util/message.sh
-colorize
+if [[ -e /usr/share/makepkg/util/message.sh ]]; then
+    source /usr/share/makepkg/util/message.sh
+    colorize
+else
+msg2() {
+    echo '-> ' "$@"
+}
+fi
 
 if ! [[ $1 ]] || ! [[ $2 ]]; then
     echo 'No version specified, must specify the new and old version, eg. 5.9.2 5.9.1'

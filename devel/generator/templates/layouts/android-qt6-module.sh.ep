@@ -35,6 +35,7 @@ build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
 <%== content_for 'before_env' %>\
   source android-env ${_android_arch}
+  export QT_ANDROID_JAR_PATH=${ANDROID_PREFIX}/jar
 <%== content_for 'before_build_config' %>\
   android-${_android_arch}-cmake<%== $static_suffix %> -G Ninja -B build-$_android_arch -S $_pkgfqn \\
 % if ($static_variant) {

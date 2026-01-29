@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-virtualkeyboard
-_qtver=6.10.1
+_qtver=6.10.2
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -19,7 +19,7 @@ makedepends=(static-compat-cmake static-compat-qt6-shadertools ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtvirtualkeyboard-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('5b9cde3188afbc01b602b9016cee95ccd536aea43a6e6cfd297b44f328b9b6df')
+sha256sums=('6273256091a83f3f283d1a91498964fd6a91256b667d7b9e98005d731fdb986b')
 
 build() {
   check_buildoption ccache y && ccache_args='

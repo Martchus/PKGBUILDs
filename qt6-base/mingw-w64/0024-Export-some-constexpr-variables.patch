@@ -1,7 +1,7 @@
-From 2dc9b947f20fc206e6d8614fc17939992e375828 Mon Sep 17 00:00:00 2001
+From 5aefba3133f53c0d1806f74261d223144778f974 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Mon, 1 Dec 2025 11:31:42 +0100
-Subject: [PATCH 24/26] Export some constexpr variables
+Subject: [PATCH 24/24] Export some constexpr variables
 
 From MINGW-packages commit e5c4652cad95df5f6435b6c564c52a7ae7d8e5f7.
 

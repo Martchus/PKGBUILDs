@@ -7,7 +7,7 @@
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 pkgname=mingw-w64-icu
-pkgver=78.1
+pkgver=78.2
 pkgrel=1
 pkgdesc="International Components for Unicode library (mingw-w64)"
 arch=('any')
@@ -23,11 +23,11 @@ source=("https://github.com/unicode-org/icu/releases/download/release-${pkgver}/
         "0015-debug.mingw.patch"
         "0016-icu-pkgconfig.patch"
         "0021-mingw-static-libraries-without-s.patch")
-sha256sums=('6217f58ca39b23127605cfc6c7e0d3475fe4b0d63157011383d716cb41617886'
+sha512sums=('92feddfe81c57336f386c7cbc9f6d976bf349db148a77a247c4559676f51116115c8c52c4d907feb50933f72ab75fd8e48be092bf9c8ca33a3e8fabc9372a5d6'
             'SKIP'
-            '0181f9ff8b7dd0a423869d8772da0a4feea64188347eb0dee7eb059aea92131c'
-            '87ebe8962f8c387714f2a697a664a0c49aed2331b988548069d0c211abc36e05'
-            'd8612f40b1731d9a94290afcf80c896184a2f15b8ae8f23b3643c64f6cabfa2f')
+            '72c2bfa46e0ddc2d373860b9e96cd01e3643fff2d1dc105296b5d1dab57c7fa129affd197d8b85f7501904629a6472fbf3786fd56736350c06cb70e717d215e6'
+            'fbbf2a78d9c8cc93eb039513ca049deb4c794c39a6e889a16d99990bf3dfcf52f5d77d5bf8a7ced72c076d40eeb37e9cc96ecf62c4d59f0e8da7782fa78335a8'
+            'bd0ccb7d9e8c2c783eb02fe17f98e41e0c4970443c94acd89cec1dec2eb939481b8096fcbfbb193d632c9f757003afb65d3be417f10cee059afa2e274fb66472')
 validpgpkeys=("FFA9129A180D765B7A5BEA1C9B432B27D1BA20D7"
               "3DA35301A7C330257B8755754058F67406EAA6AB"
               "0E51E7F06EF719FBD072782A5F56E5AFA63CCD33"

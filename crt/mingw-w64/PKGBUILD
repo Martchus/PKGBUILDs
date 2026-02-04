@@ -1,6 +1,7 @@
 # Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=mingw-w64-crt
+_name=mingw-w64
 pkgver=13.0.0
 pkgrel=2
 pkgdesc='MinGW-w64 CRT for Windows'
@@ -12,7 +13,7 @@ makedepends=("mingw-w64-headers=${pkgver}")
 [[ $pkgname =~ .*-clang-.* ]] && makedepends+=('mingw-w64-configure') || makedepends+=('mingw-w64-gcc' 'mingw-w64-binutils')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
-source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
+source=(https://sourceforge.net/projects/$_name/files/$_name/$_name-release/$_name-v${pkgver}.tar.bz2{,.sig})
 sha512sums=('39a22bd92465f571df1d90ac80b88dc6846998f71e4b7db79d1c9aa6e04cb3e41b632990a7238fc2c384ea67e4a77d103230db2c0d741869340d24ea79b6dda8'
             'SKIP')
 

@@ -2,7 +2,7 @@
 
 pkgname=mingw-w64-headers
 pkgver=13.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="MinGW-w64 headers for Windows"
 arch=('any')
 url="https://www.mingw-w64.org"
@@ -11,11 +11,20 @@ groups=('mingw-w64-toolchain' 'mingw-w64')
 [[ $pkgname =~ .*-clang-.* ]] && makedepends=('mingw-w64-configure')
 options=('!strip' '!libtool' '!emptydirs')
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
-source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
+source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig}
+        0002-mswsock-add-SIO_UDP_NETRESET.patch)
 sha512sums=('39a22bd92465f571df1d90ac80b88dc6846998f71e4b7db79d1c9aa6e04cb3e41b632990a7238fc2c384ea67e4a77d103230db2c0d741869340d24ea79b6dda8'
-            'SKIP')
+            'SKIP'
+            'de3fa3284e4a9ba07723dbcc44bc9f86980550061b9dde3d716743166696240893c0550191b07f4e1377eed2a870f7df8f95e04cf274e79086bbc4b834b641cc')
 
 _targets="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd "$srcdir"/mingw-w64-v${pkgver}
+
+  # add SIO_UDP_NETRESET required by OpenSSL since https://github.com/openssl/openssl/commit/4a7d9705f30842b402058324a6947938fe3486ec
+  patch -p1 -i ../0002-mswsock-add-SIO_UDP_NETRESET.patch
+}
 
 build() {
   for _target in ${_targets}; do

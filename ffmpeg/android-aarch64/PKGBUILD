@@ -9,12 +9,12 @@ if [ "${FFMPEG_FULL}" = 1 ]; then
     pkgname=${pkgname}-full
 fi
 
-pkgver=7.1
+pkgver=8.0.1
 pkgrel=1
 arch=('any')
 pkgdesc="Complete solution to record, convert and stream audio and video (Android ${_android_arch})"
-url="http://ffmpeg.org/"
-license=('GPL3')
+url='https://ffmpeg.org/'
+license=(GPL-3.0-only)
 groups=('android-ffmpeg')
 depends=("android-${_android_arch}-aom"
          "android-${_android_arch}-bzip2"
@@ -28,14 +28,12 @@ depends=("android-${_android_arch}-aom"
          "android-${_android_arch}-harfbuzz"
          "android-${_android_arch}-lame"
          "android-${_android_arch}-libass"
-         "android-${_android_arch}-libdrm"
+         "android-${_android_arch}-libidn2"
          "android-${_android_arch}-libtheora"
-         "android-${_android_arch}-libva"
          "android-${_android_arch}-libvorbis"
          "android-${_android_arch}-libvpx"
          "android-${_android_arch}-libwebp"
          "android-${_android_arch}-libxml2"
-         "android-${_android_arch}-libvpl"
          "android-${_android_arch}-openjpeg2"
          "android-${_android_arch}-opus"
          "android-${_android_arch}-speex"
@@ -50,8 +48,7 @@ makedepends=('android-configure'
              'git')
 
 if [ "${FFMPEG_FULL}" = 1 ]; then
-    depends+=("android-${_android_arch}-alsa-lib"
-              "android-${_android_arch}-cairo"
+    depends+=("android-${_android_arch}-cairo"
               "android-${_android_arch}-gnutls"
               "android-${_android_arch}-libavc1394"
               "android-${_android_arch}-libbluray"
@@ -63,19 +60,18 @@ if [ "${FFMPEG_FULL}" = 1 ]; then
               "android-${_android_arch}-libraw1394"
               "android-${_android_arch}-libvdpau"
               "android-${_android_arch}-libssh"
-              "android-${_android_arch}-libx11"
-              "android-${_android_arch}-libxcb"
-              "android-${_android_arch}-libxext"
-              "android-${_android_arch}-libxv"
               "android-${_android_arch}-snappy"
               "android-${_android_arch}-ocl-icd"
               "android-${_android_arch}-opencore-amr"
-              "android-${_android_arch}-rav1e"
               "android-${_android_arch}-rubberband"
               "android-${_android_arch}-sdl2"
               "android-${_android_arch}-srt"
               "android-${_android_arch}-svt-av1"
               "android-${_android_arch}-vid.stab")
+    if [ "${_android_arch}" != riscv64 ]; then
+    #    depends+=("android-${_android_arch}-librsvg")
+        depends+=("android-${_android_arch}-rav1e")
+    fi
     makedepends+=("android-${_android_arch}-opencl-headers")
 fi
 
@@ -100,16 +96,18 @@ else
 fi
 
 options=(!strip !buildflags staticlibs !emptydirs)
-_tag=507a51fbe9732f0f6f12f43ce12431e8faa834b7
+_commit=d22ecc4f6f3fca77b3e71b18641ceddb25973e97
 source=(
-    git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
+    #git+https://git.ffmpeg.org/ffmpeg.git#tag=${_commit}
+    git+https://github.com/FFmpeg/FFmpeg.git#tag=${_commit} # alternative if git.ffmpeg.org is down
     configure.patch
 )
-b2sums=('c7ec6b1db61608195117b79f3f0c8f6323c3abeb39721359da0f10e7d739da8301e04ff5fa83c022f86fc760f66e00066f9a50d97b771f797ccc679f9d912c40'
+b2sums=('0796d77c58d5db487ccda15454dadf129a6e0ae2a5a9cec562c86f2050b1e9314164c7f2dbf0a6c8cdae37dfd5e28f494d5ac248e970bc7f01b097100971fe8a'
         '59d451d94fecf7479b576c495d508d644061514942657c6a358600f0fa2cec5ccd65d897d8a5b84ae1d5a6061b9faff356d94872a70441965aa0ff40a5f6dcaa')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
+    [[ -d FFmpeg ]] && mv -v FFmpeg ffmpeg # repo is called FFmpeg on GitHub
     cd ffmpeg
     source android-env ${_android_arch}
 
@@ -128,31 +126,46 @@ build() {
     unset STRIP
     unset NM
 
-    case "$_android_arch" in
+    case "${_android_arch}" in
         aarch64)
             target_arch=aarch64
+            export LDFLAGS="${LDFLAGS} -ltheoraenc -ltheoradec -logg"
             ;;
         armv7a-eabi)
             target_arch=arm
+            export LDFLAGS="${LDFLAGS} -ltheoraenc -ltheoradec -logg"
+            ;;
+        riscv64)
+            target_arch=riscv64
             ;;
         x86)
             target_arch=x86_32
+            export LDFLAGS="${LDFLAGS} -ltheoraenc -ltheoradec -logg"
             ;;
         x86-64)
             target_arch=x86_64
+            export LDFLAGS="${LDFLAGS} -ltheoraenc -ltheoradec -logg"
             ;;
     esac
 
     extra_options=
 
     # Platform specific patches
-    case "$_android_arch" in
+    case "${_android_arch}" in
+        riscv64)
+             extra_options="${extra_options} --disable-asm"
+            ;;
         x86)
              extra_options="${extra_options} --disable-asm"
             ;;
         *)
             ;;
     esac
+
+    if [ "${_android_arch}" != riscv64 ] && [ "${FFMPEG_FULL}" = 1 ]; then
+#         extra_options="${extra_options} --enable-librsvg"
+        extra_options="${extra_options} --enable-librav1e"
+    fi
 
     # Not yet available.
     # extra_options="${extra_options} --enable-frei0r"
@@ -165,14 +178,6 @@ build() {
 
     # Disable this features because it makes fail when loading libavformat.
     if [ "${FFMPEG_FULL}" = 1 ]; then
-        if [ "${ANDROID_MINIMUM_PLATFORM}" -lt 26 ]; then
-            extra_options="${extra_options} --disable-libxcb --disable-xlib"
-
-        else
-            extra_options="${extra_options} --enable-libxcb"
-        fi
-
-        extra_options="${extra_options} --enable-alsa"
         extra_options="${extra_options} --enable-avisynth"
         extra_options="${extra_options} --enable-gnutls"
         extra_options="${extra_options} --enable-ladspa"
@@ -195,7 +200,6 @@ build() {
         extra_options="${extra_options} --enable-opencl"
         extra_options="${extra_options} --enable-sdl2"
     else
-        extra_options="${extra_options} --disable-alsa"
         extra_options="${extra_options} --disable-avisynth"
         extra_options="${extra_options} --disable-gnutls"
         extra_options="${extra_options} --disable-ladspa"
@@ -209,7 +213,6 @@ build() {
         extra_options="${extra_options} --disable-libsrt"
         extra_options="${extra_options} --disable-libssh"
         extra_options="${extra_options} --disable-librav1e"
-        extra_options="${extra_options} --disable-libxcb"
         extra_options="${extra_options} --disable-librubberband"
         extra_options="${extra_options} --disable-libsvtav1"
         extra_options="${extra_options} --disable-libopencore_amrnb"
@@ -250,13 +253,13 @@ build() {
         --disable-v4l2-m2m \
         --disable-indev=v4l2 \
         --disable-outdev=v4l2 \
+        --disable-alsa \
         --enable-lto \
         --enable-fontconfig \
         --enable-gmp \
         --enable-libaom \
         --enable-libass \
         --enable-libdav1d \
-        --enable-libdrm \
         --enable-libfreetype \
         --enable-libfribidi \
         --enable-libopus \
@@ -264,7 +267,6 @@ build() {
         --enable-libtheora \
         --enable-libvmaf \
         --enable-libvorbis \
-        --enable-libvpl \
         --enable-libvpx \
         --enable-libwebp \
         --enable-libx264 \
@@ -275,6 +277,19 @@ build() {
         --enable-libopenjpeg \
         --enable-libgsm \
         --enable-libharfbuzz \
+        --enable-jni \
+        --enable-mediacodec \
+        --disable-xlib \
+        --disable-large-tests \
+        --disable-cuda-llvm \
+        --disable-libdrm \
+        --disable-vaapi \
+        --disable-vdpau \
+        --disable-libvpl \
+        --disable-libxcb \
+        --disable-libxcb-shm \
+        --disable-libxcb-xfixes \
+        --disable-libxcb-shape \
         ${extra_options}
     make $MAKEFLAGS
 }
@@ -287,4 +302,6 @@ package() {
     rm -r "${pkgdir}/${ANDROID_PREFIX_SHARE}"
     ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
     ${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a || true
+
+    install -vDm 644 COPYING.GPLv3 -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

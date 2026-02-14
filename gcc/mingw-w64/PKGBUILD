@@ -11,10 +11,11 @@ license=(GPL-3.0-with-GCC-exception GFDL-1.3-or-later)
 groups=('mingw-w64-toolchain' 'mingw-w64')
 depends=(
   bash
-  gcc-libs
   glibc
   gmp
+  libgcc
   libisl
+  libstdc++
   libmpc
   mingw-w64-binutils
   mingw-w64-crt

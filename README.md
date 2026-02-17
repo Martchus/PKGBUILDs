@@ -502,6 +502,6 @@ podman run --rm -e DISPLAY -v ~/.Xauthority:/root/.Xauthority:Z --ipc=host --net
 ```
 
 ## Copyright notice and license
-Copyright © 2015-2025 Marius Kittler
+Copyright © 2015-2026 Marius Kittler
 
 All code is licensed under [GPL-2.0-or-later](LICENSE).

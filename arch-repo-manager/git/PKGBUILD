@@ -33,11 +33,10 @@ pkgver() {
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-
-  for submodule in tabulate lmdb-safe ; do
-    rm -r 3rdparty/$submodule
-    ln -sr ../$submodule 3rdparty/$submodule
-  done
+  git submodule init
+  git config submodule.3rdparty/lmdb-safe.url "$srcdir/lmdb-safe"
+  git config submodule.3rdparty/tabulate.url "$srcdir/tabulate"
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {

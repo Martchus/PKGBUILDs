@@ -55,10 +55,9 @@ options=(!buildflags staticlibs !strip !emptydirs)
 
 prepare() {
   cd $_reponame
-  mkdir -p syncthing/go/src/github.com/syncthing
-  cd syncthing/go/src/github.com/syncthing
-  [[ -d syncthing ]] && rm -r syncthing
-  ln -sf "$srcdir/syncthing" .
+  git submodule init
+  git config submodule.libsyncthing/go/src/github.com/syncthing/syncthing.url "$srcdir/syncthing"
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {

@@ -68,17 +68,9 @@ prepare() {
 
   [[ $_enable_libsyncthing == ON ]] || return 0
 
-  # ensure path where the libsyncthing Git submodule would be cloned into exists
-  mkdir -p 'syncthing/go/src/github.com/syncthing'
-  pushd 'syncthing/go/src/github.com/syncthing'
-
-  # delete empty sub directory of the Git submodule present in the archive from GitHub
-  [[ -d syncthing ]] && rm -r syncthing
-
-  # link libsyncthing repo where the Git submodule would have been cloned into
-  ln -sf "$srcdir/syncthing" .
-
-  popd
+  git submodule init
+  git config submodule.libsyncthing/go/src/github.com/syncthing/syncthing.url "$srcdir/syncthing"
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {

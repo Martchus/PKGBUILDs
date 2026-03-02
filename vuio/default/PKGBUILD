@@ -1,0 +1,46 @@
+# Maintainer: Martchus <martchus@gmx.net>
+
+# WIP
+# - seeking does not work
+# - always tries to create config directory next to executable (despite `-c` flag passed)
+# - no systemd unit provided
+
+pkgname=vuio
+pkgver=0.0.22
+pkgrel=1
+pkgdesc='DLNA Media Server written in Rust, x64/ARM, Linux, Mac, Windows and Docker support'
+url=https://vuio.dev/
+license=('MIT OR Apache-2.0')
+arch=(x86_64)
+depends=(
+  'glibc'
+  'libgcc'
+)
+makedepends=(
+  'cargo'
+  'git'
+)
+source=("git+https://github.com/vuiodev/vuio.git#tag=v$pkgver")
+b2sums=('ae2aa8d7cbc1f1890c52f21117e4d4be184d92998bb6e3e5e4cc8fd05899efc936fe2cbb58ad027b026fab241807039e89d1a032beb00e2ad1dce93c6ed7a49d')
+
+prepare() {
+  cd $pkgname
+  cargo fetch --target "$(rustc --print host-tuple)"
+}
+
+build() {
+  cd $pkgname
+  cargo build --release --frozen
+}
+
+check() {
+  cd $pkgname
+  cargo test --frozen -- --skip platform::filesystem::tests::path_normalizer_tests::test_windows_path_normalization_mixed_separators
+}
+
+package() {
+  cd $pkgname
+  install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
+  install -Dm644 LICENSE-MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-MIT"
+  install -Dt "$pkgdir/usr/share/doc/$pkgname" -m644 README.md
+}

@@ -96,6 +96,7 @@ build() {
   static-compat-cmake -G Ninja \
     $ccache_args \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DAPPEND_GIT_REVISION:BOOL=OFF \
     -DQT_PACKAGE_PREFIX:STRING='Qt6' \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \

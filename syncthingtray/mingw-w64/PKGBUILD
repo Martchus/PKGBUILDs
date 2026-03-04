@@ -97,6 +97,7 @@ build() {
         -G Ninja \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
+        -DAPPEND_GIT_REVISION:BOOL=OFF \
         -DCONFIGURATION_NAME:STRING="${_cfg}" \
         -DCONFIGURATION_DISPLAY_NAME="" \
         -DCONFIGURATION_PACKAGE_SUFFIX:STRING="-${_cfg}" \

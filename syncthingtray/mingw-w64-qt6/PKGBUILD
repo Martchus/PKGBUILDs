@@ -134,6 +134,7 @@ build() {
         -B "build-${_arch}-${_cfg}" \
         -DCMAKE_BUILD_TYPE:STRING='Release' \
         -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
+        -DAPPEND_GIT_REVISION:BOOL=OFF \
         -DCONFIGURATION_NAME:STRING="${_cfg}-qt6" \
         -DCONFIGURATION_DISPLAY_NAME="" \
         -DCONFIGURATION_PACKAGE_SUFFIX:STRING="-${_cfg}" \

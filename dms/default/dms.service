@@ -1,0 +1,17 @@
+[Unit]
+Description=DMS UPnP Media Server
+After=network.target
+
+[Service]
+Type=exec
+DynamicUser=yes
+ExecStart=/usr/bin/dms -config /etc/dms/config.json
+RuntimeDirectory=dms
+CacheDirectory=dms
+ProtectSystem=full
+ProtectHome=on
+PrivateDevices=on
+NoNewPrivileges=on
+
+[Install]
+WantedBy=multi-user.target

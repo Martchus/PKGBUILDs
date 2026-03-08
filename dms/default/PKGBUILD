@@ -1,0 +1,49 @@
+pkgname=dms
+pkgver=1.7.2
+pkgrel=2
+pkgdesc="UPnP DLNA Digital Media Server"
+arch=(x86_64)
+url=https://github.com/anacrolix/dms/
+license=(BSD)
+depends=(glibc)
+makedepends=(go git)
+backup=("etc/$pkgname/config.json")
+source=(
+  "dms::git+https://github.com/anacrolix/dms.git#tag=v$pkgver"
+  "dms.service"
+)
+sha256sums=('d95fca7c522b9b8d87abf4dba9c6dd94b9321b25d21157b120fdde73254921e8'
+            '31aabcd31ac2cf13673c3e7b7b460cba8bced0584d6404cd8db566ddc9ae97ab')
+
+prepare() {
+  cd dms
+  git cherry-pick -n 2fab4ebd2eab73861c5bd912d837c6d9d6b25861
+
+  export GOPATH="${srcdir}"
+  go mod download -modcacherw
+}
+
+build() {
+  cd dms
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  go build -o "$pkgname" .
+}
+
+check() {
+  cd dms
+  go test ./...
+}
+
+package() {
+  cd dms
+  mkdir -p "${pkgdir}/etc/$pkgname"
+  echo '{}' > "${pkgdir}/etc/$pkgname/config.json"
+  install -Dm0644 "$srcdir"/dms.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+  install -Dm755 "$pkgname" "${pkgdir}/usr/bin/$pkgname"
+  install -Dm644 README.rst "${pkgdir}/share/doc/$pkgname/README.rst"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}

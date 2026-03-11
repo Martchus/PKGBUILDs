@@ -20,9 +20,11 @@ optdepends=('clang: for qdoc and lupdate')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qttools-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-        '0001-Enable-only-SQL-plugins-which-are-known-to-work.patch')
+        '0001-Enable-only-SQL-plugins-which-are-known-to-work.patch'
+        '0002-Allow-using-LLVM-22.patch')
 sha256sums=('1e3d2c07c1fd76d2425c6eaeeaa62ffaff5f79210c4e1a5bc2a6a9db668d5b24'
-            '0760b47c4b77b3e9eccf8873c7c7ea1c1c43cadcb71fe5e03285651a605f8e9b')
+            'da8ef6bfe64d0d9a4e543e91fa73181921e90850ecfcf8d6a9be810c579dcd1e'
+            'ac756223ccfc2786e7cbff9f1eabf888f178d822dc28ae93c673d29bcceb2705')
 
 prepare () {
   cd $_pkgfqn

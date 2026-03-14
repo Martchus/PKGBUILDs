@@ -1,5 +1,5 @@
 pkgname=mingw-w64-clang-aarch64-compiler-rt
-pkgver=21.1.3
+pkgver=22.1.1
 pkgrel=1
 pkgdesc="Compiler runtime libraries for clang (mingw-w64)"
 arch=('any')
@@ -9,17 +9,8 @@ depends=('glibc' 'libstdc++' 'libgcc' 'clang' 'mingw-w64-clang-aarch64-headers' 
 makedepends=('cmake' 'ninja' 'python' 'lld' 'llvm')
 options=('!buildflags' 'staticlibs' '!strip')
 _source_base=https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver
-source=($_source_base/compiler-rt-$pkgver.src.tar.xz{,.sig}
-        $_source_base/cmake-$pkgver.src.tar.xz{,.sig}
-        $_source_base/llvm-$pkgver.src.tar.xz{,.sig}
-        $_source_base/third-party-$pkgver.src.tar.xz{,.sig})
-sha256sums=('143b6ac5278788a9010f2464e77627945c1633706bb571b664e14a5350670d93'
-            'SKIP'
-            '4db6f028b6fe360f0aeae6e921b2bd2613400364985450a6d3e6749b74bf733a'
-            'SKIP'
-            'a80f2dbfa24a0c4d81089e6245936dcd0c662c90f643d1706bb44e7bc8338ff1'
-            'SKIP'
-            '2bae76a7c7db4096b921589ae94c030727ee0dcb600bfe40353878937af61aa0'
+source=($_source_base/llvm-project-$pkgver.src.tar.xz{,.sig})
+sha256sums=('9c6f37f6f5f68d38f435d25f770fc48c62d92b2412205767a16dac2c942f0c95'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A'  # Tom Stellard <tstellar@redhat.com>
               'D574BD5D1D0E98895E3BF90044F2485E45D59042'  # Tobias Hieta <tobias@hieta.se>
@@ -28,14 +19,8 @@ validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A'  # Tom Stellard <tstell
 
 _targets="aarch64-w64-mingw32"
 
-prepare() {
-  mv cmake{-$pkgver.src,}
-  mv llvm{-$pkgver.src,}
-  mv third-party{-$pkgver.src,}
-}
-
 build() {
-  cd compiler-rt-$pkgver.src
+  cd llvm-project-$pkgver.src/compiler-rt
 
   for _target in ${_targets}; do
     export CC=clang CXX=clang++ ASM=clang AR=llvm-ar RANLIB=llvm-ranlib DLLTOOL=llvm-dlltool
@@ -80,7 +65,7 @@ build() {
 }
 
 package() {
-  cd compiler-rt-$pkgver.src
+  cd llvm-project-$pkgver.src/compiler-rt
 
   for _target in ${_targets}; do
     DESTDIR="$pkgdir" cmake --install build-${_target}

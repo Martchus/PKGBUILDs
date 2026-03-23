@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=static-compat-qt6-canvaspainter
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -20,7 +20,7 @@ makedepends=(static-compat-cmake static-compat-vulkan-headers
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qtcanvaspainter-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('qtcanvaspainter-sha256.txt missing')
+sha256sums=('545affe9cd65672a11e735a4b7959067f3c020c73456dd039236f38060fdafbe')
 
 build() {
   check_buildoption ccache y && ccache_args='

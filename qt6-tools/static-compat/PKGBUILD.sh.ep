@@ -1,6 +1,6 @@
 % layout 'static-compat-qt6-module', has_binaries => 1;
 \
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(x86_64)
@@ -47,6 +47,7 @@ optdepends=('clang: for qdoc and lupdate')
   # ensure we don't include headers from /usr/include
   sed -i -E -e 's|(LINK_LIBRARIES = )(.*libLLVM.*)|\1/usr/lib/libpthread.so.0 /usr/lib/libm.so.6 /usr/lib/libmvec.so.1 /usr/lib/libdl.so.2 /usr/lib64/ld-linux-x86-64.so.2 /usr/lib/libc.so.6 \2|g' \\
             -e "s|-isystem /usr/include|-isystem $PWD/prefix/include|g" \\
+            -e "s|$static_compat_prefix/lib/librt.so||g" \\
     build/build.ninja\
 % end
 % \

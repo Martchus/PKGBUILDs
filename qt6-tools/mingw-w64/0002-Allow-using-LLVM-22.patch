@@ -1,4 +1,4 @@
-From 7e07f36240ccd567f3be6358304c30aca39f406a Mon Sep 17 00:00:00 2001
+From 5a876d4cb67408cec82c044fa636fcbcd3a6abf3 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Wed, 11 Mar 2026 01:07:36 +0100
 Subject: [PATCH 2/2] Allow using LLVM 22
@@ -11,10 +11,10 @@ Change-Id: I17d37fbff1b3b75797e0fb22361252327f32fb8e
  3 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/src/qdoc/cmake/QDocConfiguration.cmake b/src/qdoc/cmake/QDocConfiguration.cmake
-index aceeb9279..c786cb7ca 100644
+index 72d27db9e..8a3cba463 100644
 --- a/src/qdoc/cmake/QDocConfiguration.cmake
 +++ b/src/qdoc/cmake/QDocConfiguration.cmake
-@@ -8,6 +8,6 @@ set(QDOC_MINIMUM_CLANG_VERSION "17")
+@@ -8,7 +8,7 @@ set(QDOC_MINIMUM_CLANG_VERSION "17")
  
  # List of explicitly supported Clang versions for QDoc
  set(QDOC_SUPPORTED_CLANG_VERSIONS
@@ -22,11 +22,12 @@ index aceeb9279..c786cb7ca 100644
 +    "22.1" "22.0" "21.1" "20.1" "19.1" "18.1" "17.0.6"
  )
  
+ # Check for QDoc coverage dependencies
 diff --git a/src/qdoc/qdoc/CMakeLists.txt b/src/qdoc/qdoc/CMakeLists.txt
-index 1897400d8..f42bb0436 100644
+index 729f6bbd9..ae504e085 100644
 --- a/src/qdoc/qdoc/CMakeLists.txt
 +++ b/src/qdoc/qdoc/CMakeLists.txt
-@@ -97,6 +97,7 @@ qt_internal_add_tool(${target_name}
+@@ -105,6 +105,7 @@ qt_internal_add_tool(${target_name}
      DEFINES
          # To provide the ability to workaround version-specific Clang issues.
          # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
@@ -35,10 +36,10 @@ index 1897400d8..f42bb0436 100644
  )
  qt_internal_return_unless_building_tools()
 diff --git a/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp b/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp
-index bd9a5fe12..c79e111b2 100644
+index dfcfdc382..18eb18d8f 100644
 --- a/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp
 +++ b/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp
-@@ -39,7 +39,12 @@
+@@ -42,7 +42,12 @@
  #include <clang/Lex/Lexer.h>
  #include <llvm/Support/Casting.h>
  

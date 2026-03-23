@@ -5,7 +5,7 @@
 
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-qt6-openapi
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -16,7 +16,7 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='OpenAPI Generator for the cpp-qt6-client library (android)'
 depends=('android-armv7a-eabi-qt6-base')
-makedepends=('android-cmake' 'qt6-openapi' 'ninja')
+makedepends=('android-cmake' 'android-armv7a-eabi-qt6-shadertools' 'android-armv7a-eabi-qt6-declarative' 'qt6-openapi' 'qt6-shadertools' 'qt6-declarative' 'ninja')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtopenapi-everywhere-src-${_qtver}"
@@ -42,10 +42,6 @@ build() {
 
 package() {
   DESTDIR="$pkgdir" cmake --install build-$_android_arch
-
-  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
-  find "$pkgdir/${ANDROID_PREFIX}" -type f -name '*.prl' \
-    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
   find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.so' -exec ${ANDROID_STRIP} -g --strip-unneeded {} \;
   find ${pkgdir}/${ANDROID_PREFIX} -type f -name 'lib*.a' -exec ${ANDROID_STRIP} -g {} \;

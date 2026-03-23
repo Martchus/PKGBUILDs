@@ -5,7 +5,7 @@
 
 _android_arch=aarch64
 pkgname=android-$_android_arch-qt6-canvaspainter
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -16,12 +16,12 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='Accelerated 2D painting solution for Qt Quick and QRhi-based render targets (android)'
 depends=('android-aarch64-qt6-base' 'android-aarch64-qt6-declarative')
-makedepends=('android-cmake' 'android-aarch64-qt6-shadertools' 'qt6-declarative' 'qt6-shadertools' 'ninja')
+makedepends=('android-cmake' 'android-aarch64-qt6-shadertools' 'qt6-declarative' 'qt6-shadertools' 'qt6-canvaspainter' 'ninja')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtcanvaspainter-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('qtcanvaspainter-sha256.txt missing')
+sha256sums=('545affe9cd65672a11e735a4b7959067f3c020c73456dd039236f38060fdafbe')
 
 build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH

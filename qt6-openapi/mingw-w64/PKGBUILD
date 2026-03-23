@@ -4,7 +4,7 @@
 # you also find the URL of a binary repository.
 
 pkgname=mingw-w64-qt6-openapi
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -15,12 +15,12 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='OpenAPI Generator for the cpp-qt6-client library (mingw-w64)'
 depends=('mingw-w64-qt6-base')
-makedepends=('mingw-w64-cmake' 'mingw-w64-qt6-shadertools' 'qt6-openapi' 'ninja')
+makedepends=('mingw-w64-cmake' 'mingw-w64-qt6-shadertools' 'mingw-w64-qt6-declarative' 'qt6-openapi' 'qt6-declarative' 'qt6-shadertools' 'ninja')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(mingw-w64-qt6)
 _pkgfqn="qtopenapi-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('qtopenapi-sha256.txt missing')
+sha256sums=('8fc2206b6b724ab34cc355c99084c73d34748cdc66687b3260d18b130d6657c0')
 
 _architectures=${MINGW_W64_QT6_ARCHS:-x86_64-w64-mingw32}
 
@@ -41,16 +41,6 @@ build() {
 package() {
   for _arch in ${_architectures}; do
     DESTDIR="$pkgdir" cmake --install build-$_arch
-
-    # Add symlinks of DLLs in usual bin directory
-    mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/$_arch/bin"
-    for dll in "$pkgdir"/usr/$_arch/lib/qt6/bin/*.dll; do
-        ln -rs "$dll" "$pkgdir/usr/$_arch/bin/${dll##*/}"
-    done
-
-    # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
-    find "$pkgdir/usr/$_arch/lib" -type f -name '*.prl' \
-      -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
     find "$pkgdir/usr/$_arch" -iname '*.exe' -exec $_arch-strip --strip-all {} \;
     find "$pkgdir/usr/$_arch" -iname '*.dll' -exec $_arch-strip --strip-unneeded {} \;

@@ -10,7 +10,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=wasm-qt6-base
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -42,42 +42,36 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0013-Workaround-Unknown-CMake-command-_qt_test_emscripten.patch'
         '0014-Fix-configuration-when-EMSCRIPTEN_ROOT-is-an-absolut.patch'
         '0015-Allow-keeping-Android-app-in-background-with-QtQuick.patch'
-        '0016-Enable-minimal-and-offscreen-plugins-when-compiling-.patch'
-        '0017-Allow-configuring-use-of-OpenSSL-in-QPasswordDigesto.patch'
-        '0018-Drop-CMAKE_SYSTEM_VERSION-from-modules-json-if-Linux.patch'
-        '0019-Workaround-linker-error-about-missing-symbol-__sync_.patch'
-        '0020-Fix-Android-build-after-ec2e3e7ac92d000e0df0c693b9a6.patch'
-        '0021-Fix-inclusion-of-OpenGL-header-after-Qt-6-header.patch'
-        '0022-Use-a-more-reasonable-fallback-directory-for-fonts-o.patch'
-        '0023-Undefine-mingw-stat.patch'
-        '0024-Export-some-constexpr-variables.patch'
-        '0025-Revert-Windows-Add-default-SysMenu-Buttons-in-case-o.patch')
-sha256sums=('aeb78d29291a2b5fd53cb55950f8f5065b4978c25fb1d77f627d695ab9adf21e'
-            '7970b087b7303a3921d2ad3d3dccc3e9fda8465433e7bc141b398e0c85925226'
-            '3302c3ebb938308462102268aecb5f8ed4251d98765dd10d9ffe079340ad8b17'
-            '5d63caad95bf903cdbc6be9a9446c6e03b79e8f4c26ae102354715b99bf547c2'
-            'dddd042b5799f37a8e8697eca9353209920dcc574f5dd73a03eb870c34b7c37b'
-            '68216c5c95a64f32042fd83ddbe9ccaa1d0f65608f00a25eef13e30439913142'
-            'd5035c9e57aefe2693c4b6f07c4bb8bb164e86ba670cc6d892cfb29c222150d6'
-            'b6c98adeb371531fb7405d8f88891bbed3127e0aa812b800c1c644b3e836c136'
-            '414383a1a2e7fca0db2d40a293a68ec5ce5a09c6d06c173e252b2edbeb80d029'
-            '85bdcfed1bc5b356a53914b2cedb471ec1e0e3afdda43e7dafa634778d03585c'
-            'd908911592ebe67e5a7eb797e399b618fea5f38d5c9aa5ce9c98740bf08f74d7'
-            'fd2e2cf40af88c8bba23e57ddcd2cda0ab2f53346ed089c4a44e8fb51cfd519c'
-            '0c6c4a69ec02f38f5bba9cd1d755c87cb90bf2fece5833fc2bb7367a529f3603'
-            '27e11053878fc1b240df83cd6d5f15fe6de032674c6b8c0d94ab8ffb68f09c94'
-            'c541b34cb5bc21a15a5c072f07ddd736d02c732e2365d3513fcd7258ea7c68ce'
-            'b8fce13b355dcee1fe095205d0b18d510cbbae7b3344afb3a5e23cd4d9c6d084'
-            '042be0ac874f932837bd4916c704a8808bf728236c20ee96afe44bd7cd7e2dcc'
-            'aa0f8b6beb688516038316700b1311dd524b57b8332522d2c7f1be58b8f3285c'
-            'ffc70aa41b48086ecbfc33ed90c9c8389abea1b8960bfaed443b47f97f9abd48'
-            'ad7e74c5b27daa1d531aa8f71a52fe3613651364c6421637633c07331455554f'
-            'ef6217cc0e3d5d8eddb0283f6bc0d25e7f0dc2d1fb66ea39617a86045235555e'
-            'b971e701f6fc67aa5f1da5901cbada81f69ca7e7782ced7b3f1ffef7bff2fa28'
-            '3c1fd507d1dcd308d925faf974d0af4aad4a7a9bff896c021e7e58ca4a324b77'
-            '0203e9d4f64c7dd7b3a888a1a229e2da17a8266df189dcbcb41ae71b2678be8e'
-            '7bbc7f5816ee82438b114a8f80f38955688322d173284f25d2dedc0122e33681'
-            'c55e2c087f6c95bd926ae524517ac92ab38290bb4638a29fa0e4477ce39b1d3f')
+        '0016-Allow-configuring-use-of-OpenSSL-in-QPasswordDigesto.patch'
+        '0017-Workaround-linker-error-about-missing-symbol-__sync_.patch'
+        '0018-Fix-Android-build-after-ec2e3e7ac92d000e0df0c693b9a6.patch'
+        '0019-Fix-inclusion-of-OpenGL-header-after-Qt-6-header.patch'
+        '0020-Use-a-more-reasonable-fallback-directory-for-fonts-o.patch'
+        '0021-Undefine-mingw-stat.patch'
+        '0022-Export-some-constexpr-variables.patch')
+sha256sums=('231ad85979864d914dc9568a1b71c91d6cf20d7b2021d059103bf0eb51cb755e'
+            '51770077bc624f0cd881652dc738f5da41beca541e5779a1e6f0b48ac873e2de'
+            'd1fe1b9d8f06addf7b0073a3a5ce58ac72b886cbcdbdbd0a9a9693029d53ac55'
+            '7e54b794f2f3f4270a658f2f2d070d0e98e9397c689e51fc63b6ea54baf0391c'
+            'ad084eb1db782b4a2d6b17e554056106990c9be6d519146d43eeaac0c6fc7145'
+            'fa62c396a126c98c25ebd1dc647ac0dc66ac849ad5c0bba45be318f09ab76a96'
+            '8f1270d0dbf88920cf6acb4e4f250ae31aee802b82d8857be74a11ac1054e248'
+            '564b699ee661be2c3867fcbf9c75513c66302496faf9b095ab01f20bb875833d'
+            'aa04136e4e2cbd28f03ae9a48ee93b768c2e85fda9d5dfcb32df9d5388e6c5c2'
+            'd9c230d9d3806abbdcfc956a824c1ff36aa2939c7563dd9ee9bf561def42429f'
+            '31484002ca04d43fff2110831c396a33eb75fdf2eca873c1096aad82dd84e8fd'
+            'f6e250f56dd3896670003ba526eb81b64d88fb370d5681335deaa38875df2f1c'
+            '253a83010ff1844a41f4b5aaabe44981c621a2cb0c32a4f17ddd67229a2438b7'
+            'e769092f472301caafa7bae0f6fa95bcd9dc87685748597be8dff9734b2a0ee6'
+            'ff8faba0a15fd78a997b464e12f54b43c3cd84a9d6679bd0ad6492e3d53ed9d6'
+            '50c9f62e5e69ca517f07d10de6a30590387a4bc5dd5ec38a0672aedbaaa88223'
+            'e82db34752ef521f55f16bb3a6cebe90a52a2790e8f9bb58e2782cca46a4f89b'
+            'c0f6e33a32a0f929ac39d02b8e5e8099fe4c6642e8b1996071031967718b5ef4'
+            'f3ffbc74658c8aacecb36774993086c06286671869b8d4fc3abeede887af5f23'
+            '591d519805c8207effe49c283d65fe7922bae938a94aa090c81f7b3c4ee04dff'
+            '44dad3e8fd05e33196cb471f2cb1e526ab9aa2061c6ad9c7c9b8fc35c1a02abe'
+            '11d23702e10d4d54b558dbef5f3a9b96cbdffa31ba5a783d6c08cf0578742c0d'
+            '8ed7c8b3cca3e77704e18d1badb1ecb862e6ad056c353c52fc6c90dfc6783faa')
 
 prepare () {
   cd $_pkgfqn

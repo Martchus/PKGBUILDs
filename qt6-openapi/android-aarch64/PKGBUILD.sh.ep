@@ -1,6 +1,6 @@
-% layout 'android-qt6-module';
+% layout 'android-qt6-module', no_libs => 1;
 \
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -11,4 +11,4 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='OpenAPI Generator for the cpp-qt6-client library (android)'
 depends=(<%== qt6deps qw(base) %>)
-makedepends=('android-cmake<%== $static_suffix %>' 'qt6-openapi' 'ninja')
+makedepends=('android-cmake<%== $static_suffix %>' <%== qt6deps qw(shadertools declarative) %> 'qt6-openapi' 'qt6-shadertools' 'qt6-declarative' 'ninja')

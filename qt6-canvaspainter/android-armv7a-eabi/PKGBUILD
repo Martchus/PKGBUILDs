@@ -5,7 +5,7 @@
 
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-qt6-canvaspainter
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -16,7 +16,7 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='Accelerated 2D painting solution for Qt Quick and QRhi-based render targets (android)'
 depends=('android-armv7a-eabi-qt6-base' 'android-armv7a-eabi-qt6-declarative')
-makedepends=('android-cmake' 'android-armv7a-eabi-qt6-shadertools' 'qt6-declarative' 'qt6-shadertools' 'ninja')
+makedepends=('android-cmake' 'android-armv7a-eabi-qt6-shadertools' 'qt6-declarative' 'qt6-shadertools' 'qt6-canvaspainter' 'ninja')
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtcanvaspainter-everywhere-src-${_qtver}"

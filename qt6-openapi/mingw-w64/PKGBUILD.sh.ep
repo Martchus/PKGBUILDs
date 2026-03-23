@@ -1,6 +1,6 @@
-% layout 'mingw-w64-qt6-module';
+% layout 'mingw-w64-qt6-module', no_libs => 1;
 \
-_qtver=6.10.2
+_qtver=6.11.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -11,4 +11,4 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='OpenAPI Generator for the cpp-qt6-client library (mingw-w64)'
 depends=(<%== qt6deps qw(base) %>)
-makedepends=('mingw-w64-cmake<%== $static_suffix %>' <%== qt6deps qw(shadertools) %> 'qt6-openapi' 'ninja')
+makedepends=('mingw-w64-cmake<%== $static_suffix %>' <%== qt6deps qw(shadertools declarative) %> 'qt6-openapi' 'qt6-declarative' 'qt6-shadertools' 'ninja')

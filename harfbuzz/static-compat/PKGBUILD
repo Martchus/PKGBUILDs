@@ -43,6 +43,7 @@ build() {
   echo '' > harfbuzz/test/threads/meson.build
   echo '' > harfbuzz/test/shape/meson.build
   echo '' > harfbuzz/test/subset/meson.build
+  echo '' > harfbuzz/test/vector/meson.build
   static-compat-meson harfbuzz build \
     -Dgraphite=enabled \
     -Dcairo=disabled \

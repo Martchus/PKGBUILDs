@@ -26,7 +26,7 @@ _reponame=syncthingtray
 pkgname=syncthingtray-git
 _name=${pkgname%-git}
 pkgver=1714.7846301
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=(GPL-2.0-or-later)
@@ -95,7 +95,7 @@ build() {
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   # https://github.com/syncthing/syncthing/issues/8785
-  HOME="$(mktemp -p . -d testhome.XXX)" QT_QPA_PLATFORM=offscreen SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 ninja check
+  HOME="$(mktemp -p "$PWD" -d testhome.XXX)" QT_QPA_PLATFORM=offscreen SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 ninja check
 }
 
 package() {

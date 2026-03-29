@@ -1,45 +1,64 @@
 _pkgname=re2
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-$_pkgname
-_re2ver=2024-07-02
-pkgrel=5
+pkgrel=1
 epoch=1
-pkgver=${_re2ver//-}
+pkgver=2025.11.05
 pkgdesc="Fast, safe, thread-friendly regular expression engine (Android, $_android_arch)"
 arch=('x86_64')
 url="https://github.com/google/re2"
 license=('BSD-3-Clause')
 depends=("android-$_android_arch-abseil-cpp")
-checkdepends=("android-$_android_arch-gtest")
-makedepends=('android-configure')
+#checkdepends=("android-$_android_arch-gtest")
+makedepends=('android-cmake' 'git')
 options=(!strip !buildflags !libtool staticlibs !emptydirs)
-source=(re2-$pkgver.tar.gz::https://github.com/google/re2/archive/$_re2ver.tar.gz)
-sha256sums=('eb2df807c781601c14a260a507a5bb4509be1ee626024cb45acbd57cb9d4032b')
-
-prepare() {
-  cd $_pkgname-$_re2ver
-  sed -e 's|SOVER=.*|SOVER=so|g' \
-      -e 's|MAKE_SHARED_LIBRARY=.*|MAKE_SHARED_LIBRARY=$(CXX) -shared|g' \
-      -i Makefile
-}
+source=("$_pkgname::git+https://github.com/google/re2.git#tag=${pkgver//./-}")
+sha256sums=('13cb4ba61567d496fc8ed0bc31369e81bbe9ef34ce8c7dffe5219093a576e385')
 
 build() {
   source android-env ${_android_arch}
-  cd $_pkgname-$_re2ver
-  make static shared
+    local cmake_options=(
+    -B build
+    -S $_pkgname
+    -W no-dev
+    -D CMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}"
+    -D BUILD_SHARED_LIBS=ON
+    -D RE2_BUILD_TESTING=OFF
+  )
+  android-$_android_arch-cmake "${cmake_options[@]}"
+  cmake --build build
+  local cmake_options=(
+    -B build-static
+    -S $_pkgname
+    -W no-dev
+    -D CMAKE_FIND_ROOT_PATH="${ANDROID_PREFIX}"
+    -D BUILD_SHARED_LIBS=OFF
+    -D RE2_BUILD_TESTING=OFF
+  )
+  android-$_android_arch-cmake "${cmake_options[@]}"
+  cmake --build build-static
 }
 
 check() {
-  cd $_pkgname-$_re2ver
-  make static-test shared-test || true
+  return # needed "benchmark"
+  local excluded_tests=""
+  local ctest_flags=(
+    --test-dir build
+    # show the stdout and stderr when the test fails
+    --output-on-failure
+    # execute tests in parallel
+    --parallel $(nproc)
+    # exclude problematic tests
+    --exclude-regex "$excluded_tests"
+  )
+  ctest "${ctest_flags[@]}" || true
 }
-
 
 package() {
   source android-env ${_android_arch}
-  cd $_pkgname-$_re2ver
-  make prefix="${ANDROID_PREFIX}" DESTDIR="$pkgdir" static-install shared-install
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  DESTDIR="$pkgdir" cmake --install build
+  DESTDIR="$pkgdir" cmake --install build-static
+  install -Dm644 $_pkgname/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   rm -rf "${pkgdir}/${ANDROID_PREFIX_SHARE}"
   ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
   ${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a

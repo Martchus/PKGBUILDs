@@ -1,8 +1,7 @@
 pkgname=mingw-w64-re2
 _pkgname=re2
-_re2ver=2024-07-02
-pkgver=${_re2ver//-}
-pkgrel=2
+pkgver=2025.11.05
+pkgrel=1
 pkgdesc="Fast, safe, thread-friendly regular expression engine (mingw-w64)"
 arch=('any')
 url="https://github.com/google/re2"
@@ -10,22 +9,21 @@ license=('BSD-3-Clause')
 depends=(mingw-w64-crt mingw-w64-abseil-cpp)
 makedepends=(mingw-w64-cmake-static git ninja)
 options=(!strip !buildflags staticlibs)
-source=(re2-$pkgver.tar.gz::https://github.com/google/re2/archive/$_re2ver.tar.gz
+source=("$_pkgname::git+https://github.com/google/re2.git#tag=${pkgver//./-}"
         001-fix-pkgconfig-file.patch)
-sha256sums=('eb2df807c781601c14a260a507a5bb4509be1ee626024cb45acbd57cb9d4032b'
+sha256sums=('13cb4ba61567d496fc8ed0bc31369e81bbe9ef34ce8c7dffe5219093a576e385'
             '97d1aedfa763b162219d71144a8806e841c5e502048ad823e8bddc7fdad3dbcf')
-
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
-  cd $_pkgname-$_re2ver
+  cd $_pkgname
   patch -p1 -i ../001-fix-pkgconfig-file.patch
 }
 
 build() {
   local flags=(
     -GNinja
-    -S "$_pkgname-$_re2ver"
+    -S "$_pkgname"
     -DRE2_BUILD_TESTING=OFF
     -DCMAKE_DLL_NAME_WITH_SOVERSION=ON
   )
@@ -46,6 +44,6 @@ package() {
     DESTDIR=$pkgdir cmake --install build-static-${_arch}
     ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
     ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a "$pkgdir"/usr/${_arch}/static/lib/*.a
-    install -Dm644 "$_pkgname-$_re2ver"/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 "$_pkgname"/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   done
 }

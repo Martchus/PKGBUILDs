@@ -1,34 +1,49 @@
 _pkgname=re2
 pkgname=static-compat-$_pkgname
-_re2ver=2024-07-02
-pkgrel=5
+pkgrel=1
 epoch=1
-pkgver=${_re2ver//-}
+pkgver=2025.11.05
 pkgdesc="Fast, safe, thread-friendly regular expression engine"
 arch=('x86_64')
 url="https://github.com/google/re2"
 license=('BSD-3-Clause')
 depends=('static-compat-abseil-cpp')
 checkdepends=('static-compat-gtest')
-makedepends=('static-compat-configure')
-source=(re2-$pkgver.tar.gz::https://github.com/google/re2/archive/$_re2ver.tar.gz)
-sha256sums=('eb2df807c781601c14a260a507a5bb4509be1ee626024cb45acbd57cb9d4032b')
+makedepends=('static-compat-cmake' 'git')
+source=("$_pkgname::git+https://github.com/google/re2.git#tag=${pkgver//./-}")
+sha256sums=('13cb4ba61567d496fc8ed0bc31369e81bbe9ef34ce8c7dffe5219093a576e385')
 
 build() {
   source static-compat-environment
-  cd $_pkgname-$_re2ver
-  make static
+  local cmake_options=(
+    -B build
+    -S $_pkgname
+    -W no-dev
+    -D BUILD_SHARED_LIBS=OFF
+    -D RE2_BUILD_TESTING=OFF
+  )
+  static-compat-cmake "${cmake_options[@]}"
+  cmake --build build
 }
 
 check() {
-  cd $_pkgname-$_re2ver
-  make static-test
+  return # needed "benchmark"
+  local excluded_tests=""
+  local ctest_flags=(
+    --test-dir build
+    # show the stdout and stderr when the test fails
+    --output-on-failure
+    # execute tests in parallel
+    --parallel $(nproc)
+    # exclude problematic tests
+    --exclude-regex "$excluded_tests"
+  )
+  ctest "${ctest_flags[@]}"
 }
 
 
 package() {
   source static-compat-environment
-  cd $_pkgname-$_re2ver
-  make prefix=/usr/static-compat DESTDIR="$pkgdir" static-install
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $_pkgname/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

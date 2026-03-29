@@ -1,9 +1,9 @@
 _pkgname=grpc
 pkgname=static-compat-$_pkgname
-pkgver=1.76.0
+pkgver=1.80.0
 _gtestver=2dd1c131950043a8ad5ab0d2dda0e0970596586a
-_protover=33.1
-pkgrel=2
+_protover=34.1
+pkgrel=1
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first"
 arch=('x86_64')
 url='https://grpc.io'
@@ -21,14 +21,18 @@ makedepends=(
 )
 source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         "https://github.com/google/googletest/archive/$_gtestver/googletest-$_gtestver.tar.gz"
-        "https://github.com/protocolbuffers/protobuf/archive/v$_protover/protobuf-$_protover.tar.gz")
-sha256sums=('0af37b800953130b47c075b56683ee60bdc3eda3c37fc6004193f5b569758204'
+        "https://github.com/protocolbuffers/protobuf/archive/v$_protover/protobuf-$_protover.tar.gz"
+        "protobuf-34-build-fix.patch")
+sha256sums=('38f58596277fa632064cc0719b9ece4381c8c77461cb51e9b66ca149574b7865'
             '31bf78bd91b96dd5e24fab3bb1d7f3f7453ccbaceec9afb86d6e4816a15ab109'
-            '0c98bb704ceb4e68c92f93907951ca3c36130bc73f87264e8c0771a80362ac97')
+            'a83103b7ed3afaeedee9a212c8f65825444f58144f5e075b73c83f2b4ff27b62'
+            '2c126e40c54bdc88ab57fad12cbd860fc999aceb0e2787263edcbf024097ecec')
 
 prepare() {
   source static-compat-environment
   cd "$srcdir/$_pkgname-$pkgver"
+
+  patch -p1 -i "$srcdir/protobuf-34-build-fix.patch"
 
   ln -sf "$srcdir/googletest-$_gtestver/"{googlemock,googletest} \
     third_party/googletest
@@ -54,6 +58,14 @@ prepare() {
 build() {
   source static-compat-environment
   cd "$srcdir/$_pkgname-$pkgver"
+
+  # Workaround for protobuf 34.0+ until https://github.com/grpc/grpc/issues/41755 has been fixed.
+  if [[ "$(pacman -Q static-compat-protobuf | grep -Po '(?<= )[0-9.]+(?=-)')" != "$_protover" ]]; then
+    echo 'error: protobuf version mismatch, please update $_protover in the PKGBUILD' >&2
+    exit 1
+  fi
+  export CXXFLAGS+=" -isystem${srcdir}/protobuf-${_protobuf_ver}/src"
+
   static-compat-cmake -Bbuild \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG -Wno-attributes -Wno-deprecated-declarations -Wno-return-type -Wno-non-virtual-dtor" \

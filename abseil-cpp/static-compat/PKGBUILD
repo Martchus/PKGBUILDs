@@ -1,6 +1,6 @@
 _pkgname=abseil-cpp
 pkgname=static-compat-$_pkgname
-pkgver=20250814.1
+pkgver=20260107.1
 pkgrel=1
 pkgdesc="Collection of C++ library code designed to augment the C++ standard library"
 arch=('x86_64')
@@ -10,7 +10,7 @@ depends=('static-compat-gtest')
 makedepends=('static-compat-cmake')
 source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/$_pkgname-$pkgver.tar.gz"
          scoped-mock-log.patch)
-sha256sums=('1692f77d1739bacf3f94337188b78583cf09bab7e420d2dc6c5605a4f86785a1'
+sha256sums=('4314e2a7cbac89cac25a2f2322870f343d81579756ceff7f431803c2c9090195'
             'a6cbc612a2b96fcbd52d081e03e8581107ceb4827edb19d96510a31c568e1396')
 
 prepare() {

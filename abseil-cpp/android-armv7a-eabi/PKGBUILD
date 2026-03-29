@@ -1,7 +1,7 @@
 _pkgname=abseil-cpp
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-$_pkgname
-pkgver=20250814.1
+pkgver=20260107.1
 pkgrel=1
 pkgdesc="Collection of C++ library code designed to augment the C++ standard library (Android, $_android_arch)"
 arch=('x86_64')
@@ -12,7 +12,7 @@ checkdepends=("android-$_android_arch-gtest")
 makedepends=('android-cmake')
 options=(!strip !buildflags !libtool staticlibs !emptydirs)
 source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/$_pkgname-$pkgver.tar.gz")
-sha256sums=('1692f77d1739bacf3f94337188b78583cf09bab7e420d2dc6c5605a4f86785a1')
+sha256sums=('4314e2a7cbac89cac25a2f2322870f343d81579756ceff7f431803c2c9090195')
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"

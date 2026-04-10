@@ -5,7 +5,7 @@
 
 _arch=aarch64
 pkgname=android-$_arch-syncthingtray
-pkgver=2.0.10
+pkgver=2.0.11
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_stt=branch=master
   _pkgver_cpputilities=branch=master
@@ -74,7 +74,6 @@ build() {
     -DEXTENDED_CLIENT_AREA=ON \
     -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.ttf" \
     -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml"
-  sed -i -e 's|-lNOTFOUND||g' "$BUILD_DIR/$_reponame"/arch-android-*/build.ninja
   cmake --build --preset arch-android
 }
 

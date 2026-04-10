@@ -388,10 +388,10 @@ documentation](https://doc.qt.io/qt-5/qtcore-cmake-qt-import-plugins.html) does
 wanted static plugins manually.
 
 However, for Qt 6 I dropped my patches and the official documentation applies. I
-would still recommend to set the target property `QT_DEFAULT_PLUGINS` of
+would still recommend setting the target property `QT_DEFAULT_PLUGINS` of
 relevant targets to `0` and link against wanted plugin targets manually. At
 least in my cases the list of plugins selected by default seemed needlessly
-long. I would also recommend to set the CMake variable
+long. I would also recommend setting the CMake variable
 `QT_SKIP_AUTO_QML_PLUGIN_INCLUSION` to a false value because this pulls in a lot
 of dependencies which are likely not needed.
 

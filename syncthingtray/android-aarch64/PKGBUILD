@@ -5,7 +5,7 @@
 
 _arch=aarch64
 pkgname=android-$_arch-syncthingtray
-pkgver=2.0.10
+pkgver=2.0.11
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_stt=branch=master
   _pkgver_cpputilities=branch=master
@@ -71,21 +71,28 @@ build() {
   cd "$srcdir/subdirs/$_reponame"
   cmake --preset arch-android \
     -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
+    -DANDROID_DO_NOT_STRIP=ON \
+    -DENABLE_STACK_TRACE_FLAGS=ON \
     -DEXTENDED_CLIENT_AREA=ON \
     -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.ttf" \
     -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml"
-  sed -i -e 's|-lNOTFOUND||g' "$BUILD_DIR/$_reponame"/arch-android-*/build.ninja
   cmake --build --preset arch-android
 }
 
 package() {
   source android-env $_arch
   export BUILD_DIR=$srcdir/build
-  local apk_dir=$pkgdir/$ANDROID_PREFIX/apk
   DESTDIR=$pkgdir cmake --install "$BUILD_DIR/$_reponame"/arch-android-*
-  mkdir -p "$apk_dir"
-  find "$BUILD_DIR" -iname '*-signed.apk' -exec cp -v --target-directory="$apk_dir" {} \+
+
+  # install "outputs" to preserve additional information about the build and the archive with debug info
+  local outputs_dir=$pkgdir/$ANDROID_PREFIX/outputs/$_reponame apk_dir=$pkgdir/$ANDROID_PREFIX/apk
+  mkdir -p "$outputs_dir" "$apk_dir"
+  cp -vr --target-directory="$outputs_dir" "$srcdir"/build/$_reponame/arch-android-*/$_reponame/tray/android-build/build/outputs/*
+
+  # move the APK under its own dir so it is easier to find
+  find "$outputs_dir" -iname '*-signed.apk' -exec mv -v --target-directory="$apk_dir" {} \+
+  mv -v "$apk_dir"/*.apk "$apk_dir/$_reponame.apk"
+
   find "$pkgdir" -name 'lib*.so' -type f -exec "$ANDROID_STRIP" --strip-unneeded {} \;
   find "$pkgdir" -name 'lib*.a' -type f -exec "$ANDROID_STRIP" -g {} \;
-  mv -v "$apk_dir"/*.apk "$apk_dir/$_reponame.apk"
 }

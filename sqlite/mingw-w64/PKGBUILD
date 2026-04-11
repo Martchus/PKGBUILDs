@@ -7,7 +7,7 @@
 pkgname=mingw-w64-sqlite
 pkgver=3.53.0
 _srcver=$(echo "$pkgver" | awk -F. '{ printf "%d%02d%02d00", $1, $2, $3 }')
-pkgrel=1
+pkgrel=2
 pkgdesc="A C library that implements an SQL database engine (mingw-w64)"
 arch=('any')
 groups=(mingw-w64)
@@ -47,6 +47,7 @@ build() {
 
     # remove '--target=...' from mingw's configure
     bash <(sed 's/--target[^ ]* //' $(command -v "${_arch}-configure")) \
+      --enable-session \
       --enable-fts3 \
       --disable-tcl \
       --fts4 \

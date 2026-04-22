@@ -5,7 +5,7 @@
 
 _pkgname=libpng
 pkgname=static-compat-$_pkgname
-pkgver=1.6.50
+pkgver=1.6.58
 pkgrel=1
 pkgdesc='A collection of routines used to create PNG format graphics files'
 arch=('x86_64')
@@ -15,7 +15,7 @@ depends=('static-compat-zlib' 'sh')
 makedepends=('git' 'static-compat-configure')
 options=(!emptydirs staticlibs)
 source=("git+https://github.com/pnggroup/libpng.git?signed#tag=v${pkgver}")
-sha256sums=('7def7cd90b18267c7d4242288e6aafc97077ff59b5454ab9a99ee8b6e9171047')
+sha256sums=('07900c2e616ce58dda6b30ec444bbe662b51c0bdd0bc7e02ba053ec83f009df5')
 validpgpkeys=('F57A55036A4D45837074FD92C9E384533403C2F8'  # Cosmin Truta <ctruta@gmail.com>
               '1FED507E3236B4A6E53E922BB292C64843FF5BCF') # Cosmin Truta <ctruta@gmail.com>
 

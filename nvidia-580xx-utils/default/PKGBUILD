@@ -24,7 +24,8 @@ source=('nvidia-drm-outputclass.conf'
         "https://download.nvidia.com/XFree86/NVIDIA-kernel-module-source/${_pkg_open}.tar.xz"
         0001-Enable-atomic-kernel-modesetting-by-default.patch
         0002-Add-IBT-support.patch
-        0002-Fix-hardware-cursor-crash.patch)
+        0002-Fix-hardware-cursor-crash.patch
+        0003-kernel-7.0.patch)
 sha512sums=('de7116c09f282a27920a1382df84aa86f559e537664bb30689605177ce37dc5067748acf9afd66a3269a6e323461356592fdfc624c86523bf105ff8fe47d3770'
             '1bcf2c6ee71686c0d32625e746ec8c0f7cf42fc63c76c3076ff2526b2661e8b9e9f76eaa2c4b213c7cc437a6f06006cc07672c4974d7f4515b2de2fd7c47a891'
             'f8f071f5a46c1a5ce5188e104b017808d752e61c0c20de1466feb5d693c0b55a5586314411e78cc2ab9c0e16e2c67afdd358da94c0c75df1f8233f54c280762c'
@@ -35,7 +36,8 @@ sha512sums=('de7116c09f282a27920a1382df84aa86f559e537664bb30689605177ce37dc50677
             'fd1276f64114dcd2fea13800d01e810adc0b4ff3d17e46a5b32e6778907426b35c71dddf48343c8141be97a035d7b277a2d1f72a2c9f249c2ad0aae30d541850'
             '98ff06b32bac4297b4ca68e069750114ab5caf41d2a58f945488b52acf97c34dd3b64a6af609f8972e688bd646fe3ee598e699534001230d6f0154cebe6ff5d1'
             '3c4d87686cc79f09feca29df1a8c1973412b48077870b0d3424d575500234e9522b93df53bb6ecd72afd8dc69ecb4a8e7bd3e206080348d30a48c00e62f42943'
-            '7ca9d40b9a734f685da89115131618954149ae28ca5d007139ebb91c3f9d0187c84779fea0ae438ebf6eda13bca9f980d76b151772571375859d48b3e2fc22c3')
+            '7ca9d40b9a734f685da89115131618954149ae28ca5d007139ebb91c3f9d0187c84779fea0ae438ebf6eda13bca9f980d76b151772571375859d48b3e2fc22c3'
+            'ef9f5da406933b3120070125e2eefde6fdb8ca3eea4aa72b7f8b37450748cc645f195078186c6a8203db6ad2f87ef8399d675d9a35adaf8002661187645140c0')
 
 
 create_links() {
@@ -67,6 +69,9 @@ prepare() {
     # Author: thesword53
     # https://forums.developer.nvidia.com/t/580-release-feedback-discussion/341205/1058
     patch -Np1 -i "${srcdir}/0002-Fix-hardware-cursor-crash.patch" -d "${srcdir}/${_pkg}/kernel"
+
+    # Fix compilation for 7.0
+    patch -Np1 -i "${srcdir}/0003-kernel-7.0.patch" -d "${srcdir}/${_pkg}/kernel"
 
     # Attempt to make builds reproducible
     sed -i "s/^  HOSTNAME.*/  HOSTNAME = echo archlinux/" "${srcdir}/${_pkg_open}/utils.mk"

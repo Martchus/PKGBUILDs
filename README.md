@@ -9,7 +9,7 @@ my AUR packages, just create a PR here.
   [Password Manager](https://github.com/Martchus/passwordmanager), …
 * Packages [I maintain in the AUR](https://aur.archlinux.org/packages/?O=0&SeB=M&K=Martchus&outdated=&SB=v&SO=d&PP=50&do_Search=Go)
   and many more:
-    * Misc packages, e.g. Subtitle Composer, OpenELEC DVB firmware and ltunify
+    * Misc packages, e.g. `ltunify`, `roccat-tools-*`, `dms`, `hotspot`, …
     * `mingw-w64-*` packages which allow to build for Windows (i686/x86_64, libstdc++)
       under Arch Linux with GCC, e.g. Boost, Qt 5, Qt 6 and many more
     * `mingw-w64-clang-aarch64-*` packages which allow to build for Windows (aarch64,

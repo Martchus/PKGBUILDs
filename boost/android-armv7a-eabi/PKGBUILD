@@ -19,14 +19,17 @@ depends=("android-${_android_arch}-bzip2"
 makedepends=('android-environment')
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://archives.boost.io/release/${pkgver}/source/${_srcname}.tar.bz2"
-        "disable-version-check.patch")
+        "disable-version-check.patch"
+        "fix-android-x64-fp-traits.patch")
 sha256sums=('de5e6b0e4913395c6bdfa90537febd9028ea4c0735d2cdb0cd9b45d5f51264f5'
-            '63d12e7d703b471882608b4225c489f6a35ab425602783a4f9c4ea99a10f9c4b')
+            '63d12e7d703b471882608b4225c489f6a35ab425602783a4f9c4ea99a10f9c4b'
+            'a7d1f66b813e64f3865fed1046451d838674e1d7ba3da0183ea0dd90d844f536')
 
 prepare() {
   cd "${srcdir}/$_srcname"
   source android-env ${_android_arch}
   patch -p1 -i ../disable-version-check.patch
+  patch -p1 -i ../fix-android-x64-fp-traits.patch
 }
 
 build() {

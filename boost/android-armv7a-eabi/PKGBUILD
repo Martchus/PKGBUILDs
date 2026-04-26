@@ -103,6 +103,10 @@ EOF
       --with-wave \
       --with-stacktrace \
       -sICONV_PATH="${ANDROID_PREFIX}" \
+      -sZLIB_BINARY="${ANDROID_PREFIX_LIB}/libz.so" \
+      -sZSTD_BINARY="${ANDROID_PREFIX_LIB}/libzstd.so" \
+      -sBZIP2_BINARY="${ANDROID_PREFIX_LIB}/libbz2.so" \
+      -sLZMA_BINARY="${ANDROID_PREFIX_LIB}/liblzma.so" \
       variant=release \
       debug-symbols=off \
       runtime-link=shared \

@@ -24,11 +24,12 @@ my AUR packages, just create a PR here.
         * Note that these packages will conflict with `mingw-w64-clang-aarch64-*` packages
           as they share the same install prefix.
     * `static-compat-*` packages containing static libraries to build self-contained
-      applications running on older GNU/Linux distributions under Arch Linux, so far the most
-      important Qt 6 modules and other important C/C++ libraries are provided
+      applications running on older GNU/Linux distributions under Arch Linux. So far the most
+      important Qt 6 modules and other important C/C++ libraries are provided.
     * `nvidia-580xx` and `nvidia-580xx-lts` packages for building/installing the 580xx version
-      of the NVIDIA driver for `linux` and `linux-lts` kernels without having to rely on dkms
-      (`nvidia-580xx-dkms` is also provided, though)
+      of the NVIDIA driver for `linux` and `linux-lts` kernels without having to rely on building
+      them via [DKMS](https://wiki.archlinux.org/title/Dynamic_Kernel_Module_Support) as pacman
+      hook (`nvidia-580xx-dkms` is also provided, though)
     * `android-*` packages which allow to build for Android under Arch Linux using the Android
       SDK, e.g. iconv, Boost, OpenSSL, CppUnit, Qt 6 and Kirigami
     * `wasm-*` packages which allow to build for WebAssembly under Arch Linux using

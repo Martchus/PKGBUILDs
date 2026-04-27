@@ -174,7 +174,7 @@ check() {
 package() {
   install \
     -D --target-directory="$pkgdir/usr/share/licenses/$pkgname" \
-    "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}/LICENSES-windows-distribution.md"
+    "$srcdir/${PROJECT_DIR_NAME:-$_reponame}/LICENSES-windows-distribution.md"
 
   cd "$srcdir/$_reponame"
   for _arch in "${_architectures[@]}"; do

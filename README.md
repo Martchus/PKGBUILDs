@@ -67,8 +67,8 @@ Note that I cannot ensure that required rebuilds always happen fast enough
 packages from staging).
 
 Requests regarding binary packages can be tracked on the issue tracker of this
-GitHub project as well, e.g. within the [general discussion
-issue](https://github.com/Martchus/PKGBUILDs/issues/94).
+GitHub project as well, e.g. within the
+[general discussion about mingw-w64 packages](https://github.com/Martchus/PKGBUILDs/discussions/145).
 
 ## Container image, building packages within a container
 The directory `devel/container` contains the script `imagebuild` to build a

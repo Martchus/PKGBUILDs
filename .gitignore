@@ -46,3 +46,6 @@ Makefile*
 
 # directory to store generator output when testing
 devel/generator/output
+
+# files downloaded by devel/update-android-kde.sh
+/*/android-*/*.tar.xz*

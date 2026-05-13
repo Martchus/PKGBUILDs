@@ -11,9 +11,9 @@
 
 _android_arch=x86
 pkgname=android-x86-qt6-base
-_qtver=6.11.0
+_qtver=6.11.1
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -59,36 +59,32 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0021-Undefine-mingw-stat.patch'
         '0022-Export-some-constexpr-variables.patch'
         '0023-Android-implement-system-locale-in-QtCore-directly.patch'
-        '0024-QDBusMetaObject-ensure-custom-types-are-normalized.patch'
-        '0025-freetype-Handle-failing-glyph-rendering.patch'
-        '0026-Android-refresh-QLocale-system-on-OS-language-change.patch')
-sha256sums=('231ad85979864d914dc9568a1b71c91d6cf20d7b2021d059103bf0eb51cb755e'
-            '974170a27e6831246ae70569ade1cc16a4e8cf25ea8415d711851b8c2946af12'
-            'e4bed62a15858cadaf956ad65b7d069a521947febb284a561b4bef7e5b74e2d2'
-            '2a8241eae3f1e3e0a797a2f123e44bd595ebfad84bb67073695292b96e2711a5'
-            '96858bd3cacb655e109443b36204b6c3b78821a7df39b5e15c781db2591cb69b'
-            '42cddcdd5f4a4d80a30d8e44be07699aed1115c65cba7704f4df5764d4d8f372'
-            'dd0f17b132c3b17f9923d0ff63c094256bc9eb3c08ed423698e6088b22d37dbf'
-            '5aaca5c6d9e2f045b40eef414ef9770de6f6571710a0e5809f2d807bb4448166'
-            '7322d2dfa23297bcd8e3082792341eea9db5b160bc23247b180e53568bcab9a8'
-            '9c32f75cce4d53114470534c044f6f6b3581c9dc630b5feae779db841a237a34'
-            '53c217ea0cd39aad020588d09ead99bc0714a50621d3b4e9e8a2bed8d9f983c2'
-            'eb5bc8e24c0a68849b8fc3a8096f5236f3b5d74c560395cc3c8d83efd02d3bd7'
-            '05e62362e53799c36da901530639a995c94d2f47da4a4918e341b1b580c114ba'
-            'ca52c2c8ee52c59cadb8a4c4a1ab1c6d7037db66087be12384b3c4419b7a97d3'
-            '75a31b777bef91622939cb6e7aed5bc410bb0718357b89269dd6c98c1388bf9b'
-            'fa9253921d18fec0def1500376f9140a12247313c4139d662222ebe5412727fc'
-            'a954350ead5d696fbaf1c76fbda5f154a75de5ae86c24e410f27b8874ad95673'
-            '5702181d5a0fc38d2e1ad7e74e8e23aad2078f609e02b3f91bcc271c0ffac80e'
-            'cb9bf5ca7c5326ae78b254fafaf9fa6e66decf864c553809cf6451bb8578ab9c'
-            '35023ddfc6f56c5c4e06bd2534f61fa278ccb1c4b6a5927bc45bf22869dcc475'
-            '5284beb0d4f53e95cc255fc16be5dc6e22ee4db90b6c5791af648ee3162b7aef'
-            'fa8cbec0905627f007d15246062e90c2150e3d3bf7e7cf640da459df82f28f45'
-            '975fe210c81280eef25b29c58aec009b135ee005eff1e080c3f627e3ef853a96'
-            '99f6cd8e7f224b9e0477a4515423f37404f4764332c81e08d450566d928ef377'
-            '5158d31bfbb4109f09f71beb59f6c806b3913b559ada81eef17daed9d3f00e7a'
-            'e4f3a8c2b3d9b831e265165a2756876955c469f970bdda99cfdfb4feedcb7576'
-            '34b41cf654b5bb1e01d956cd926db5e8c7bfbb68cd8459ceed13f3255b4c5aad')
+        '0024-Android-refresh-QLocale-system-on-OS-language-change.patch')
+sha256sums=('d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac'
+            'fdfd25570db3e0dc0320734fb45bc36d4f3efe61bea75b463b3b2b01921fd967'
+            '86e8d00e3b75f99b21a4d416532a20e93f92ccd7be95457105d8393aa9b0f4a7'
+            'a1965ebe1d39a099729154f2e0b65625c79866f1836ffe04461741a767b3a876'
+            '7ec1e631debfb5222c7cfdbe18bad0ef87b2dd611505b25960cd9d074a9b8938'
+            '3e5f9550c89a3098eb9628a36c35660d3a84049240d54d1c5e4b25e62f3822de'
+            'c7654b13f9dff5a43b4c57d4506810b812c65c80beb4429d9bdbf24b602ec2bf'
+            'd03e8a33b8a757ccf3bac20eb61e91e7d59bab00fe14481f79a8181213c94928'
+            '169fd1d7d994f6c36b54dce23d52626328a366f927939f5b96b3a0298376127e'
+            '1a2be049189c0af10c1f68bf5be0a7ff3b2747a1ea6a03b40f44751708f62dde'
+            '114f8b26ffaed24942187213357a0110a966e1c89883c2aa43eaa29c9610246f'
+            '79d8bb70d59d9c98bb435808fe1b45b6662dbaac2c033e624e3c49f06ca966fd'
+            '3c46b0718f5e39616d066a382b80170a3aecdc9070e400879daa2139b724d047'
+            'd4c90b383ddf88e1f4eef05cd4367d3be52b358e432ca39257abb7ef072e0cf7'
+            'd63498ca26d6c20fe8a8e8db615921c1b797b067b2d5d396d505c6ab9a3da010'
+            'b501c200c6bd8712a1cc9c8094c41df100c279b056d0369e9c968f127ac4c0b2'
+            'a79ef3b226edc7a2b0dc57c7284ca2c55c44770c633c48eeba7666ca64884782'
+            '723ec21e1e9a0101aa6c99331f8af413ddab9d18aaf178b011356aff713737c2'
+            '719d4e6439835add9d7d2883717d0be79ad82313a3fb35c2e21925ce30330270'
+            '90f62a121e92b5e95c06a93c16dbe5169820d9dc0a1c4508b6ccf13e544fa6d4'
+            'e172ba8f76e12308b12ac404a254d2584c08444d4e3df09b18f6d06b12ea2750'
+            '8772a13917b437be2d733d3025812100996119f95d50ca8535b9149bf2a1d938'
+            'e85a55fe00fc8d9ee2b78ace75770007bbddfece92451dc2c3568dd24d8f158e'
+            '13fa456f70480df48e484cf406a9cce884b3a6c03ca0ea384793e5084505657c'
+            '11a7f6ed72cb34ebffce4d994e1f4593286c43950957c9b74d5268e14b34c5fa')
 
 prepare () {
   cd $_pkgfqn

@@ -1,7 +1,7 @@
-From bfdd0341abe1fe45b0fefbb7cd6712f43dafdb0d Mon Sep 17 00:00:00 2001
+From cf56f4a678a9d47b73aef89f158db3bedfb2663e Mon Sep 17 00:00:00 2001
 From: Assam Boudjelthia <assam.boudjelthia@qt.io>
 Date: Tue, 28 Apr 2026 19:02:41 +0300
-Subject: [PATCH 26/26] Android: refresh QLocale::system() on OS language
+Subject: [PATCH 24/24] Android: refresh QLocale::system() on OS language
  change
 
 QtActivityBase.onConfigurationChanged() calls back into
@@ -31,7 +31,7 @@ Change-Id: I05a55d8b99b1f77c1f1514cae6ad75db4c0c9345
  1 file changed, 5 insertions(+)
 
 diff --git a/src/plugins/platforms/android/androidjnimain.cpp b/src/plugins/platforms/android/androidjnimain.cpp
-index c1f77f41406..7a8aaea7bba 100644
+index eff52c2fdba..9425b3a5a1a 100644
 --- a/src/plugins/platforms/android/androidjnimain.cpp
 +++ b/src/plugins/platforms/android/androidjnimain.cpp
 @@ -32,6 +32,7 @@
@@ -42,7 +42,7 @@ index c1f77f41406..7a8aaea7bba 100644
  #include <QtCore/qbasicatomic.h>
  #include <QtCore/qjnienvironment.h>
  #include <QtCore/qjniobject.h>
-@@ -635,6 +636,10 @@ static void updateApplicationState(JNIEnv */*env*/, jobject /*thiz*/, jint state
+@@ -634,6 +635,10 @@ static void updateApplicationState(JNIEnv */*env*/, jobject /*thiz*/, jint state
  
  static void updateLocale(JNIEnv */*env*/, jobject /*thiz*/)
  {

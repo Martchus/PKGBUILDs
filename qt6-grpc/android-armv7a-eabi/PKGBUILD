@@ -5,9 +5,9 @@
 
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-qt6-grpc
-_qtver=6.11.0
+_qtver=6.11.1
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -22,7 +22,7 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtgrpc-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('9dedcb51836cd0e8703764f0c89ef5a7da414e0c9a0d67d0d8d6ab17bb94a879')
+sha256sums=('437b04f0c550ccdb1739ca5f9119b73dfa0376564815e8bfc199890643e2a250')
 
 build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH

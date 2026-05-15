@@ -2,7 +2,7 @@ _pkgname='pianobooster'
 pkgname='mingw-w64-pianobooster'
 pkgdesc='A MIDI file player that teaches you how to play the piano (mingw-w64, with custom and experimental patches, statically linked)'
 pkgver=1395.244e411
-pkgrel=2
+pkgrel=3
 depends=()
 makedepends=('mingw-w64-qt6-base-static' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities'
              'git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static'
@@ -27,7 +27,7 @@ build () {
   for _arch in "${_architectures[@]}"; do
     ${_arch}-cmake-static \
           -B "build-${_arch}-static" \
-	  -G Ninja \
+          -G Ninja \
           -DCMAKE_BUILD_TYPE:STRING='Release' \
           -DCMAKE_INSTALL_PREFIX="/usr/${_arch}" \
           -DCONFIGURATION_NAME:STRING="static-qt6" \

@@ -2,7 +2,7 @@
  
 _realname=fluidsynth
 pkgname=mingw-w64-fluidsynth
-pkgver=2.5.0
+pkgver=2.5.4
 pkgrel=1
 pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications (mingw-w64)"
 url="https://www.fluidsynth.org/"
@@ -10,11 +10,11 @@ license=(LGPL-2.1-or-later)
 arch=('any')
 depends=('mingw-w64-sdl2' 'mingw-w64-glib2' 'mingw-w64-readline')
 [[ $pkgname =~ .*-clang-.* ]] || depends+=('mingw-w64-libsndfile' 'mingw-w64-portaudio')
-makedepends=('mingw-w64-cmake' 'mingw-w64-pkg-config' 'ninja')
+makedepends=('mingw-w64-cmake-static' 'mingw-w64-pkg-config' 'ninja')
 options=('staticlibs' '!buildflags' '!strip')
 source=("${_realname}-${pkgver}.tar.gz::https://github.com/FluidSynth/${_realname}/archive/v${pkgver}.tar.gz")
-sha512sums=('8f326db4049b3241c7a0472aa5db8c715dcfc0a1ce9c5fda492bf84e6c17e27a2298131a58a51e275797259a434e59bfe3f53d85358f903652dca8de753a3376')
-b2sums=('318de46cffe82689ec2eac64e3a074a86521c96e37df27bff5ac3d84f141cad2001b7e6902db5bfb5845916819eb239ed07c48068802b1ea081250fa3c721a24')
+sha512sums=('7539e32a56309ce61c4178dad38ac8aae82ebab37398e1a7b6d1e2d5abd0af73ae7af35358e655a935666c7e6fde30885a0d6e4b7ad8b129ab02f6aad8f18dd0')
+b2sums=('a0c9d228d71479436b78ecd34c3e3df4fa58599189b929f1497afaa1add2ce757cdc957f3a2c9044545ca36d4886b080ea1f3aa2ec6596ea38a68af74fa6b1b7')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -27,13 +27,15 @@ build() {
     [[ $pkgname =~ .*-clang-.* ]] & additional_deps=0 || additional_deps=1
 
     export CFLAGS="$cflags_base"
+    export CXXFLAGS=$CFLAGS
     ${_arch}-cmake -G Ninja -S .. -B shared -DBUILD_SHARED_LIBS=1 \
       -Denable-libsndfile=$additional_deps -Denable-portaudio=$additional_deps  -Denable-dbus=0
     sed -i -e "s|/usr/$_arch/lib/libSDL2main.a||g" shared/build.ninja
     VERBOSE=1 cmake --build shared
 
     export CFLAGS="$cflags_base -DGLIB_STATIC_COMPILATION=1 -DGMODULE_STATIC_COMPILATION=1"
-    ${_arch}-cmake -G Ninja -S .. -B static -DBUILD_SHARED_LIBS=0 \
+    export CXXFLAGS=$CFLAGS
+    ${_arch}-cmake-static -G Ninja -S .. -B static -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" -DBUILD_SHARED_LIBS=0 \
       -Denable-aufile=0 -Denable-dbus=0 -Denable-ipv6=0 -Denable-jack=0 -Denable-ladspa=0 -Denable-midishare=0 \
       -Denable-opensles=0 -Denable-oboe=0 -Denable-oss=0 -Denable-readline=0 -Denable-winmidi=1 -Denable-waveout=0 \
       -Denable-network=0 -Denable-pulseaudio=0 -Denable-dsound=0 -Denable-alsa=0 -Denable-libinstpatch=0 \

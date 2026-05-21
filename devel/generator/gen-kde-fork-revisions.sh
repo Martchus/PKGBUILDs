@@ -14,6 +14,8 @@ for pkgbuild in qt5-*/mingw-w64/PKGBUILD ; do
 done
 popd
 
+echo "repos: ${repos[@]}"
+
 # change into the specified directory containing Arch PKGBUILD repos 
 arch_pkgbuilds=$1
 [[ $arch_pkgbuilds ]] && cd "$arch_pkgbuilds"

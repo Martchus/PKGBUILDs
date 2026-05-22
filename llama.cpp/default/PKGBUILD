@@ -1,0 +1,135 @@
+# Maintainer of AUR version: fabse
+# Contributor: txtsd <aur.archlinux@ihavea.quest>
+# Contributor: envolution
+
+# Differences to the package from the AUR:
+# - Always use "-DGGML_NATIVE=OFF"; never create unportable packages as I want to use the package on different
+#   machines.
+# - Build the Vulkan, OpenCL and CUDA backends to be able to use the best backend depending on the situation
+#   without having to switch between different variants.
+# - Remove `-j` flag; rely on Ninja's default.
+
+pkgname=llama.cpp
+pkgver=b9285 # renovate: datasource=github-releases depName=ggml-org/llama.cpp
+pkgrel=1
+pkgdesc="Port of Facebook's LLaMA model in C/C++"
+arch=(x86_64 armv7h aarch64)
+url='https://github.com/ggml-org/llama.cpp'
+license=('MIT')
+depends=(
+  curl
+  gcc-libs
+  glibc
+  python
+)
+makedepends=(
+  cmake
+  git
+  shaderc
+  spirv-headers
+  ninja
+  # vulkan backend
+  vulkan-headers
+  vulkan-icd-loader
+  # cuda backend
+  cuda
+  # rocm backend
+  #rocm-hip-sdk
+)
+optdepends=(
+  'vulkan-icd-loader: Vulkan backend'
+  'cuda: CUDA backend'
+  'nccl: multi-GPU parallelism with CUDA backend'
+  #'hip-runtime-amd: hip backend'
+  #'hipblas: hip backend'
+  #'openmp: hip backend'
+  #'rocblas: hip backend'
+  'python-numpy: convert_hf_to_gguf.py'
+  'python-safetensors: convert_hf_to_gguf.py'
+  'python-sentencepiece: convert_hf_to_gguf.py'
+  'python-pytorch: convert_hf_to_gguf.py'
+  'python-transformers: convert_hf_to_gguf.py'
+  'python-gguf: convert_hf_to_gguf.py'
+)
+provides=(${pkgname})
+conflicts=(${pkgname} libggml ggml)
+options=(lto !debug)
+backup=("etc/conf.d/llama.cpp")
+install='llama.cpp.install'
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/ggml-org/llama.cpp/archive/refs/tags/${pkgver}.tar.gz"
+  'llama.cpp.conf'
+  'llama.cpp.service'
+  'llama.cpp.install'
+  'sysusers.conf'
+  'tmpfiles.conf'
+)
+sha256sums=('5f9500d90384e55aefd530025ba1cdd4403b1f598e5694971cab378a4b77a766'
+            '53fa70cfe40cb8a3ca432590e4f76561df0f129a31b121c9b4b34af0da7c4d87'
+            '48d6b261315c9175b4b4cea4900bd4d76f2f27112804934db656537485510cd2'
+            'c534b4c37ff8ac9174a2f6f410daa96d991e8c638f338383ffb07613c771724b'
+            'e687106ee9f6a5f0de4f286015f85a60e68d884e8100c67810b709960c354148'
+            '402a44f609785fbabc7afca6e8a486ff517933661e9e7f4955fed6574eac9875')
+
+prepare() {
+  ln -sf "${pkgname}-${pkgver}" llama.cpp
+}
+
+build() {
+  export HIP_PATH="$(hipconfig -R)"
+  export HIPCXX="$(hipconfig -l)/clang"
+  export HIP_PLATFORM=amd
+
+  local _cmake_options=(
+    -G Ninja
+    -B build
+    -S "${pkgname}"
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DBUILD_SHARED_LIBS=ON
+    -DLLAMA_BUILD_TESTS=OFF
+    -DLLAMA_USE_SYSTEM_GGML=OFF
+    -DGGML_ALL_WARNINGS=OFF
+    -DGGML_ALL_WARNINGS_3RD_PARTY=OFF
+    -DGGML_BUILD_EXAMPLES=OFF
+    -DGGML_BUILD_TESTS=OFF
+    -DGGML_LTO=ON
+    -DGGML_RPC=ON
+    -DLLAMA_BUILD_NUMBER="${pkgver#b}"
+    -DGGML_BACKEND_DL=ON
+    # build universal package
+    -DGGML_CPU_ALL_VARIANTS=ON
+    -DGGML_NATIVE=OFF
+    # enable Vulkan and OpenCL
+    -DGGML_VULKAN=ON
+    -DGGML_OPENCL=ON
+    # enable CUDA
+    -DGGML_CUDA=ON
+    -DGGML_CUDA_FA_ALL_QUANTS=ON
+    -DGGML_CUDNN=ON
+    # configure hip
+    #-DGGML_HIP=ON
+    #-DGGML_HIP_GRAPHS=ON
+    #-DGGML_HIP_ROCWMMA_FATTN=ON
+    #-DHIP_PLATFORM=amd
+    #-DAMDGPU_TARGETS="gfx906;gfx1010;gfx1030;gfx1031;gfx1100;gfx1101;gfx1102;gfx1151;gfx1200;gfx1201"
+    -Wno-dev
+  )
+  # Allow user-specified additional flags
+  if [[ -n "$LLAMA_BUILD_EXTRA_ARGS" ]]; then
+    echo "Applied custom CMake build args: $LLAMA_BUILD_EXTRA_ARGS"
+    _cmake_options+=($LLAMA_BUILD_EXTRA_ARGS)
+  fi
+  cmake "${_cmake_options[@]}"
+  cmake --build build
+}
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+
+  install -Dm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "llama.cpp.conf" "${pkgdir}/etc/conf.d/llama.cpp"
+  install -Dm644 "llama.cpp.service" "${pkgdir}/usr/lib/systemd/system/llama.cpp.service"
+  install -Dm644 "sysusers.conf" "${pkgdir}/usr/lib/sysusers.d/llama-cpp.conf"
+  install -Dm644 "tmpfiles.conf" "${pkgdir}/usr/lib/tmpfiles.d/llama-cpp.conf"
+}
+# vim:set ts=2 sw=2 et:

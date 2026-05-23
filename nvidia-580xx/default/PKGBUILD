@@ -3,7 +3,8 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-580xx
-pkgver=580.159.03
+pkgver=580.159.04
+
 pkgrel=1
 pkgdesc="NVIDIA kernel modules (580xx)"
 arch=('x86_64')

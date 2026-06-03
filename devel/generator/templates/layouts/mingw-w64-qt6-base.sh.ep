@@ -79,6 +79,9 @@ build() {
       _enable_winrt_support=OFF
     fi
 
+    # disable `-mguard=cf` as this *perhaps* avoids crashes
+    [[ $pkgname =~ .*-clang-.* ]] && export NO_MGUARD=1
+
     $_arch-cmake<%== $static_suffix %> -G Ninja -B build-$_arch -S $_pkgfqn \\
 % if ($static_variant) {
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \\

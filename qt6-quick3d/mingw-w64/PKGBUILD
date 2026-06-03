@@ -32,6 +32,9 @@ build() {
     # workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120495
     [[ $pkgname =~ .*-clang-.* ]] || export CXXFLAGS+=' -Wno-template-body -fcoroutines'
 
+    # disable `-mguard=cf` as this *perhaps* avoids crashes
+    [[ $pkgname =~ .*-clang-.* ]] && export NO_MGUARD=1
+
     $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \
       -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
       -DFEATURE_pkg_config=ON \

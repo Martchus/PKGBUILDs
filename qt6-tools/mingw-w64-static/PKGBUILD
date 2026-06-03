@@ -45,6 +45,9 @@ build() {
     # workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120495
     [[ $pkgname =~ .*-clang-.* ]] || export CXXFLAGS+=' -Wno-template-body -fcoroutines'
 
+    # disable `-mguard=cf` as this *perhaps* avoids crashes
+    [[ $pkgname =~ .*-clang-.* ]] && export NO_MGUARD=1
+
     $_arch-cmake-static -G Ninja -B build-$_arch -S $_pkgfqn \
       -DCMAKE_INSTALL_PREFIX:PATH="/usr/$_arch/static" \
       -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \

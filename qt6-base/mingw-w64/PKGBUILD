@@ -117,17 +117,6 @@ build() {
       _enable_winrt_support=OFF
     fi
 
-    # workaround hangs on startup when compiling with LLVM/Clang/libc++
-    local additional_flags=()
-    if [[ $pkgname =~ .*-clang-.* ]]; then
-      # the culprit seems to be fortifying sources which has to be disabled completely (setting to 1 or 2 does
-      # not help)
-      additional_flags+=(
-        -DCMAKE_C_FLAGS="${CFLAGS//-D_FORTIFY_SOURCE=3/}"
-        -DCMAKE_CXX_FLAGS="${CXXFLAGS//-D_FORTIFY_SOURCE=3/}"
-      )
-    fi
-
     $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \
       -DFEATURE_cxx20=ON \
       -DFEATURE_cpp_winrt=$_enable_winrt_support \

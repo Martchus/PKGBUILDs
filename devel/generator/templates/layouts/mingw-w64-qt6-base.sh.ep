@@ -90,7 +90,6 @@ build() {
 % }
       -DFEATURE_cxx20=ON \\
       -DFEATURE_cpp_winrt=$_enable_winrt_support \\
-      -DFEATURE_windows_ioring=ON \\
       -DFEATURE_pkg_config=ON \\
       -DFEATURE_system_pcre2=ON \\
       -DFEATURE_system_freetype=ON \\

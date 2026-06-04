@@ -117,9 +117,6 @@ build() {
       _enable_winrt_support=OFF
     fi
 
-    # disable `-mguard=cf` as this *perhaps* avoids crashes
-    [[ $pkgname =~ .*-clang-.* ]] && export NO_MGUARD=1
-
     $_arch-cmake -G Ninja -B build-$_arch -S $_pkgfqn \
       -DFEATURE_cxx20=ON \
       -DFEATURE_cpp_winrt=$_enable_winrt_support \

@@ -1,16 +1,16 @@
 pkgname=mingw-w64-clang-environment
 pkgver=1
-pkgrel=8
+pkgrel=9
 arch=('any')
 pkgdesc="Script providing common environment variables and functions for targeting MinGW with Clang (mingw-w64)"
 license=('GPL-2.0-or-later')
 depends=('llvm' 'clang' 'lld')
 url='https://github.com/Martchus/PKGBUILDs'
 source=("mingw-env.sh" "lld.sh" "clang.sh" "clang++.sh" "windres.sh" "strip.sh")
-sha256sums=('1e9df13905a95dad9e9293d30f7709bbb744583f68860be82e9a11fe720ea65f'
+sha256sums=('a3865f8567c4a1508a28ae9af9c1015a768d5621e0b271d296b167f1578e4672'
             'db37ead09607a88a5b215687e106e6794fa1d0b4c9f50bfe4891b9b3840f1a0a'
-            'e90c0acd8a1a55e6f3bcc1c8b3033e19de7c5df16cba920dff67cc76c39cdbcf'
-            '8d2ae76fde13e46515ee099a96702b051445ffe9ab1a545eb55e431ae750024a'
+            '2e48a80a1d7ad74ddd7889330b79a847fc20871e895e8ee4292defdf7225f8ad'
+            '320521e801e799eebe650209c67a662ecfeba6a21e0ed939a3f45a9a85bfe648'
             '0f9e9833064742fe284eb97a09178c480634b0ece33af61f8399af69c49e9d8e'
             '14876fb3be2f0cfa95eef91a3799773882ec906d5deb5ac1a8c76733d22bf6b1')
 
@@ -22,4 +22,8 @@ package() {
   install -m 755 clang++.sh "${pkgdir}"/usr/bin/mingw-clang++
   install -m 755 windres.sh "${pkgdir}"/usr/bin/mingw-llvm-windres
   install -m 755 strip.sh "${pkgdir}"/usr/bin/mingw-llvm-strip
+  for _target in {i686,x86_64,aarch64}-w64-mingw32; do
+    ln -rs mingw-clang $_target-clang
+    ln -rs mingw-clang++ $_target-clang++
+  done
 }

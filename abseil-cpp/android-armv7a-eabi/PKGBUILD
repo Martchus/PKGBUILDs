@@ -1,7 +1,7 @@
 _pkgname=abseil-cpp
 _android_arch=armv7a-eabi
 pkgname=android-$_android_arch-$_pkgname
-pkgver=20260107.1
+pkgver=20260526.0
 pkgrel=1
 pkgdesc="Collection of C++ library code designed to augment the C++ standard library (Android, $_android_arch)"
 arch=('x86_64')

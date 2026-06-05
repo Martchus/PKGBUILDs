@@ -1,6 +1,6 @@
 pkgname=mingw-w64-protobuf
 _pkgname=protobuf
-pkgver=34.1
+pkgver=35.0
 pkgrel=1
 pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
 arch=('any')
@@ -11,12 +11,10 @@ makedepends=(mingw-w64-cmake-static protobuf)
 options=(!strip !buildflags staticlibs)
 source=("https://github.com/protocolbuffers/${_pkgname}/releases/download/v$pkgver/${_pkgname}-$pkgver.tar.gz"
          0002-Fix-windres-invocation.patch
-         0003-Demote-error-about-buildtime-runtime-version-differe.patch
-         protobuf-33-patch-enum-traits-impl.patch)
-sha256sums=('e4e6ff10760cf747a2decd1867741f561b216bd60cc4038c87564713a6da1848'
+         0003-Demote-error-about-buildtime-runtime-version-differe.patch)
+sha256sums=('8f907baca4b34a3b4854103ba5811e418fb6e2ff11fe0d8df9e8280b11d79926'
             '92ee16fe5fb198a345a40ded30ecce4fef0f86089545a300773b64bcc91eb9c2'
-            'a5183b4028eb063e0f1d689b1197e45305368df74a2ea018dbea63b4ef925fae'
-            '0627dce1d28f90607a45ce0148631dcb517157d67646167b55707f4bb3d9add4')
+            'a5183b4028eb063e0f1d689b1197e45305368df74a2ea018dbea63b4ef925fae')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -24,7 +22,6 @@ prepare() {
   cd ${_pkgname}-${pkgver}
   patch -p1 -i ../0002-Fix-windres-invocation.patch
   patch -p1 -i ../0003-Demote-error-about-buildtime-runtime-version-differe.patch
-  patch -p1 -i ../protobuf-33-patch-enum-traits-impl.patch
 }
 
 build() {

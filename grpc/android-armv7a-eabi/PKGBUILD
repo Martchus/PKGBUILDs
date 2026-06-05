@@ -2,9 +2,9 @@ _android_arch=armv7a-eabi
 
 _pkgname=grpc
 pkgname=android-${_android_arch}-${_pkgname}
-_protover=34.1
+_protover=35.0
 _opencensus_proto_ver=0.4.1
-pkgver=1.80.0
+pkgver=1.81.0
 pkgrel=1
 arch=('any')
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (Android ${_android_arch})"

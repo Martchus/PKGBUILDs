@@ -1,6 +1,6 @@
 _pkgname=re2
 pkgname=static-compat-$_pkgname
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgver=2025.11.05
 pkgdesc="Fast, safe, thread-friendly regular expression engine"

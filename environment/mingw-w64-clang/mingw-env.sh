@@ -2,10 +2,15 @@
 _target=$1
 _arch_=${_target%%-*}
 
-# add arch-specific flags in consistency with MSYS2-packages
-# https://github.com/msys2/MSYS2-packages: pacman/makepkg_mingw.d.clangarm64.conf, pacman/makepkg_mingw.d.clang64.conf
+# add arch-specific flags, partically in consistency with MSYS2-packages
+# see https://github.com/msys2/MSYS2-packages for MSYS2 config:
+# - pacman/makepkg_mingw.d.clangarm64.conf
+# - pacman/makepkg_mingw.d.clang64.conf
+# omit `-march=armv8.1-a` for now as this drops support for Windows 10 (see MSYS2 commit
+# 9c90a9236f0ef22fbcfd7d81e40e5590fccab47e) and also means one cannot run Qt apps with WINE
+# due to "Incompatible processor. This Qt build requires the following features: crc32 "
 arch_flags=()
-[[ $_arch_ == aarch64 ]] && arch_flags="-march=armv8.1-a"
+#[[ $_arch_ == aarch64 ]] && arch_flags="-march=armv8.1-a"
 [[ $_arch_ == x86_64 ]] && arch_flags="-march=nocona -msahf -mtune=generic"
 
 # configure clang flags to enable cross compilation or use compiler wrappers

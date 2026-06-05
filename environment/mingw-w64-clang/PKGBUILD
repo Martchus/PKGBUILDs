@@ -1,13 +1,13 @@
 pkgname=mingw-w64-clang-environment
 pkgver=1
-pkgrel=9
+pkgrel=10
 arch=('any')
 pkgdesc="Script providing common environment variables and functions for targeting MinGW with Clang (mingw-w64)"
 license=('GPL-2.0-or-later')
 depends=('llvm' 'clang' 'lld')
 url='https://github.com/Martchus/PKGBUILDs'
 source=("mingw-env.sh" "lld.sh" "clang.sh" "clang++.sh" "windres.sh" "strip.sh")
-sha256sums=('a3865f8567c4a1508a28ae9af9c1015a768d5621e0b271d296b167f1578e4672'
+sha256sums=('e5212d4337cae701ae1082b07a0adfe8969325c54e54cf1ad30b0e62eab44f26'
             'db37ead09607a88a5b215687e106e6794fa1d0b4c9f50bfe4891b9b3840f1a0a'
             '2e48a80a1d7ad74ddd7889330b79a847fc20871e895e8ee4292defdf7225f8ad'
             '320521e801e799eebe650209c67a662ecfeba6a21e0ed939a3f45a9a85bfe648'

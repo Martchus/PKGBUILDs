@@ -3,7 +3,7 @@
 _realname=fluidsynth
 pkgname=mingw-w64-fluidsynth
 pkgver=2.5.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications (mingw-w64)"
 url="https://www.fluidsynth.org/"
 license=(LGPL-2.1-or-later)

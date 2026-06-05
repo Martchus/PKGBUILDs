@@ -71,6 +71,7 @@ build() {
   cd "$srcdir/subdirs/$_reponame"
   cmake --preset arch-android \
     -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
+    -DAPPEND_GIT_REVISION:BOOL=OFF \
     -DANDROID_DO_NOT_STRIP=ON \
     -DENABLE_STACK_TRACE_FLAGS=ON \
     -DEXTENDED_CLIENT_AREA=ON \

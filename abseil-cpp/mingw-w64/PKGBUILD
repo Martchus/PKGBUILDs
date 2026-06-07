@@ -1,6 +1,6 @@
 pkgname=mingw-w64-abseil-cpp
 pkgver=20260526.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Collection of C++ library code designed to augment the C++ standard library (mingw-w64)'
 arch=('any')
 url='https://abseil.io'
@@ -16,9 +16,9 @@ _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 build() {
   cd abseil-cpp-$pkgver
   for _arch in ${_architectures}; do
-    ${_arch}-cmake -B build-${_arch} .
+    ${_arch}-cmake -DCMAKE_CXX_STANDARD=17 -B build-${_arch} .
     cmake --build build-${_arch}
-    ${_arch}-cmake-static -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static .
+    ${_arch}-cmake-static -DCMAKE_CXX_STANDARD=17 -B build-static-${_arch} -DCMAKE_INSTALL_PREFIX:PATH=/usr/$_arch/static .
     cmake --build build-static-${_arch}
   done
 }

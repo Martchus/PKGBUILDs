@@ -6,7 +6,7 @@ _ver=3.6.2
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 pkgrel=1
-pkgdesc='The Open Source toolkit for Secure Sockets Layer and Transport Layer Security'
+pkgdesc='The Open Source toolkit for cryptography and Transport Layer Security'
 arch=('x86_64')
 url='https://www.openssl.org'
 license=('Apache-2.0')

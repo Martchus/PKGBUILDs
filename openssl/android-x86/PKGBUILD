@@ -11,7 +11,7 @@ pkgname=android-$_pkg_arch-$_pkgname
 # use a pacman compatible version scheme
 pkgver=${_pkgver/[a-z]/.${_pkgver//[0-9.]/}}
 pkgrel=1
-pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (Android, $_pkg_arch)"
+pkgdesc="The Open Source toolkit for cryptography and Transport Layer Security (Android, $_pkg_arch)"
 arch=('any')
 url='https://www.openssl.org'
 license=('Apache-2.0')

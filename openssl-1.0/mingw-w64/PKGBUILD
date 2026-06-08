@@ -8,7 +8,7 @@ _ver=1.0.2u
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 pkgrel=1
-pkgdesc='The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64)'
+pkgdesc='The Open Source toolkit for cryptography and Transport Layer Security (mingw-w64)'
 arch=('any')
 depends=('mingw-w64-zlib')
 makedepends=('mingw-w64-gcc' 'mingw-w64-environment' 'perl')

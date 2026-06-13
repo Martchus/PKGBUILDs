@@ -39,7 +39,7 @@ optdepends=('gnome-shell-extension-appindicator: tray icon support for GNOME She
 [[ $_js_provider == qml ]] && depends+=('qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('plasma-workspace: Plasmoid for Plasma 6 desktop')
-makedepends=('cmake' 'ninja' 'qt6-tools' 'git' 'boost' 'clang' 'python-myst-parser')
+makedepends=('cmake' 'ninja' 'perl' 'qt6-tools' 'git' 'boost' 'clang' 'python-myst-parser')
 checkdepends=('cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('kio')
 [[ $_enable_plasmoid ]] && makedepends+=('libplasma' 'extra-cmake-modules')
@@ -86,16 +86,20 @@ build() {
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=OFF \
     -DQUICK_GUI=ON \
+    -DQUICK_GUI_CONTROLS_STYLE=dynamic \
     $additional_args \
     .
-  ninja
+  # try again due to "/usr/include/c++/16.1.1/span:170:24: internal compiler error: Segmentation fault"
+  ninja || ninja
   ninja sphinxdoc
 }
 
 check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
   # https://github.com/syncthing/syncthing/issues/8785
-  HOME="$(mktemp -p "$PWD" -d testhome.XXX)" QT_QPA_PLATFORM=offscreen SYNCTHING_PORT=$(ephemeral_port) SYNCTHING_TEST_TIMEOUT_FACTOR=3 ninja check
+  export HOME="$(mktemp -p "$PWD" -d testhome.XXX)" QT_QPA_PLATFORM=offscreen SYNCTHING_PORT=$(ephemeral_port)
+  export SYNCTHING_TEST_TIMEOUT_FACTOR=3
+  ninja check || ninja check
 }
 
 package() {

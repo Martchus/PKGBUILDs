@@ -32,7 +32,7 @@ _enable_quick_gui=${SYNCTHING_TRAY_ENABLE_QUICK_GUI_STATIC_COMPAT:-1}
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
-pkgver=2.1.2
+pkgver=2.1.3
 [[ $BUILD_BEFORE_TAGGING ]] && _pkgver=branch=master || _pkgver=tag=v$pkgver
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -47,7 +47,7 @@ depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compa
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
 makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang' 'git')
-[[ $_enable_libsyncthing == ON ]] && makedepends+=('go-mte')
+[[ $_enable_libsyncthing ]] && makedepends+=('go-mte')
 checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
 [[ $_enable_plasmoid ]] && makedepends+=('static-compat-plasma-framework' 'extra-cmake-modules')
@@ -55,11 +55,9 @@ url=https://github.com/Martchus/${_reponame}
 _github_url=git+https://github.com/Martchus
 _git_url=${MARTCHUS_GIT_URL_PREFIX:-$_github_url}
 source=("$_reponame::$_git_url/${_reponame}#$_pkgver")
-[[ $_enable_libsyncthing == ON ]] && source+=("syncthing::$_github_url/syncthing")
+[[ $_enable_libsyncthing ]] && source+=("syncthing::$_github_url/syncthing")
 sha256sums=('SKIP'
             'SKIP')
-
-[[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON
 
 ephemeral_port() {
   comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1
@@ -67,7 +65,7 @@ ephemeral_port() {
 
 prepare() {
   cd "$srcdir/$_reponame"
-  [[ $_enable_libsyncthing == ON ]] || return 0
+  [[ $_enable_libsyncthing ]] || return 0
   git submodule init
   git config submodule.libsyncthing/go/src/github.com/syncthing/syncthing.url "$srcdir/syncthing"
   git -c protocol.file.allow=always submodule update

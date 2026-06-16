@@ -7,7 +7,7 @@ _pkgname=kcoreaddons
 _android_arch=aarch64
 
 pkgname=android-${_android_arch}-${_pkgname}
-pkgver=6.26.0
+pkgver=6.27.0
 pkgrel=1
 pkgdesc="Addons to QtCore (Android, $_android_arch)"
 arch=('any')
@@ -16,7 +16,7 @@ license=(LGPL-2.0-only LGPL-3.0-only)
 depends=("android-$_android_arch-qt6"-{base,declarative,tools})
 makedepends=('cmake' 'android-ndk' 'android-sdk' 'android-cmake' 'extra-cmake-modules' 'ninja' 'qt6-base' 'qt6-declarative' 'qt6-tools')
 source=(https://download.kde.org/stable/frameworks/${pkgver%.*}/$_pkgname-$pkgver.tar.xz{,.sig})
-sha256sums=('92fdbfab68e52d9eacf44a992f01cb364d6395c24441e2fd47dd48a23b3281f6'
+sha256sums=('ad0d0147968dabdcf011425cf7764e71a0d0cfdc30e9e34b561ea5ba9a768001'
             'SKIP')
 validpgpkeys=(53E6B47B45CEA3E0D5B7457758D0EE648A48B3BB # David Faure <faure@kde.org>
               E0A3EB202F8E57528E13E72FD7574483BB57B18D # Jonathan Esk-Riddell <jr@jriddell.org>

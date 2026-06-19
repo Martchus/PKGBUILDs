@@ -17,9 +17,10 @@ arch=('any')
 pkgdesc="Plugins for additional image formats: TIFF, MNG, TGA, WBMP (mingw-w64)"
 depends=('mingw-w64-qt5-base')
 # these dependencies will enable further functionality
+#depends+=('mingw-w64-libtiff') # to avoid using bundled libtiff
 #depends+=('mingw-w64-jasper') # for JPEG-2000 Part-1
 #depends+=('mingw-w64-libmng') # for MNG
-#depends+=('mingw-w64-libwebp') # for WebP
+#depends+=('mingw-w64-libwebp') # for WebP, will pull-in mingw-w64-libtiff which should therefore be uncommented as well
 makedepends=('mingw-w64-gcc' 'mingw-w64-pkg-config')
 license=('GPL3' 'LGPL' 'FDL' 'custom')
 _commit=4076e38d68f05f5e1bcdedb79442d9008f18702c

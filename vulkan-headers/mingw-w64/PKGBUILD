@@ -3,7 +3,7 @@
 _pkgname=vulkan-headers
 pkgname=mingw-w64-${_pkgname}
 _dirname=Vulkan-Headers
-pkgver=1.4.350.0
+pkgver=1.4.350.1
 pkgrel=1
 pkgdesc='Vulkan header files (mingw-w64)'
 arch=(any)

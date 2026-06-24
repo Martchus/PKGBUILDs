@@ -162,12 +162,19 @@ podman container exec -it archlinux-devel-container bash
 #### Install stuff you want, e.g. Qt packages for targeting mingw-w64 or Android
 ```
 podman container exec -it archlinux-devel-container \
-  pacman -Syu ninja git mingw-w64-cmake qt6-{base,tools} mingw-w64-qt6-{base,tools,translations,svg,5compat}
+  pacman -Syu --needed ninja git \
+  mingw-w64-cmake qt6-{base,tools,declarative,shadertools} \
+  mingw-w64-qt6-{base,declarative,tools,translations,svg}
 ```
 
 ```
 podman container exec -it archlinux-devel-container \
-  pacman -Syu clang ninja git extra-cmake-modules android-cmake qt6-{base,tools,declarative,shadertools} android-aarch64-qt6-{base,declarative,tools,translations,svg,5compat} android-aarch64-{boost,libiconv,qqc2-breeze-style}
+  pacman -Syu --needed clang ninja git extra-cmake-modules android-tools \
+  android-cmake qt6-{base,tools,declarative,shadertools} \
+  android-aarch64-qt6-{base,declarative,tools,translations,svg} \
+  android-aarch64-{boost,libiconv,kirigami} \
+  android-x86-64-qt6-{base,declarative,tools,translations,svg} \
+  android-x86-64-{boost,libiconv,kirigami}
 ```
 
 #### Building for Windows using mingw-w64-* packages

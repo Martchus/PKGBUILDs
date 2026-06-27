@@ -11,12 +11,14 @@ url="http://www.gnu.org/software/gettext/"
 source=(http://ftp.gnu.org/pub/gnu/gettext/gettext-${pkgver}.tar.gz{,.sig}
         intl.pc
         0001-restore-DllMain-symbol.patch
-        0024-disable-gnu-format.patch)
+        0024-disable-gnu-format.patch
+        0030-fix-build-with-clang.patch)
 b2sums=('1e4b78979f780878472142f1c0baba468d60f4b5605eeb5db5c092901183e3128c79df94c2041de870920f079b4bf38e6dae056b731e4b2b4c5cc343940962d8'
         'SKIP'
         '9ceacac403a64800f46e2a5ba2e238454a781ac2fbc9508330f5269aee5a0e77066ac4c5e16d852fe101116a152fa79879b956930d0fffb0e4c992ca2f16a0e9'
         'ad82e06ba60e337c6b307824b0e64919fef736449192876a75eb483614debd413b31c9899c076614ca96ba611d5bb8209cd6044c26ad8ffa7945190d74ef6d7a'
-        'c3e5d735aa791b684f5111327d9d07fb54aa1f4ed0cacfdb98b47ff3e47edb037b786a2cb84b7db5a63aa25f371708843d48eea2e3d9b2f0ed6c02fd5ba0e16f')
+        'c3e5d735aa791b684f5111327d9d07fb54aa1f4ed0cacfdb98b47ff3e47edb037b786a2cb84b7db5a63aa25f371708843d48eea2e3d9b2f0ed6c02fd5ba0e16f'
+        'cf5c551ddccc122f4f86c868ea384b594f993c12a1c754924ed7612944e444dfbeac33fbf60ce32bb6d71657e5a626ecb0ae503b4b63a3f15d4d26c841106cb1')
 validpgpkeys=('462225C3B46F34879FC8496CD605848ED7E69871'  # Daiki Ueno
               '68D94D8AAEEAD48AE7DC5B904F494A942E4616C2'
               '9001B85AF9E1B83DF1BDA942F5BE8B267C6A406D'  # Bruno Haible
@@ -28,6 +30,7 @@ prepare() {
   cd gettext-$pkgver
   patch -p1 -i ../0001-restore-DllMain-symbol.patch
   patch -p1 -i ../0024-disable-gnu-format.patch
+  patch -p1 -i ../0030-fix-build-with-clang.patch
 }
 
 build() {

@@ -1,0 +1,45 @@
+# Maintainer of AUR package: pingplug < aur at pingplug dot me >
+# Contributor: Schala Zeal < schalaalexiazeal at gmail dot com >
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+pkgname=mingw-w64-libunistring
+pkgver=1.4.2
+pkgrel=1
+pkgdesc="Library for manipulating Unicode strings and C strings (mingw-w64)"
+arch=('any')
+url="https://www.gnu.org/software/libunistring/"
+license=('LGPL-3.0-or-later OR GPL-2.0-or-later')
+depends=('mingw-w64-crt'
+         'mingw-w64-libiconv')
+makedepends=('mingw-w64-configure')
+options=('!strip' 'staticlibs' '!buildflags')
+source=("https://ftp.gnu.org/gnu/libunistring/libunistring-${pkgver}.tar.xz"{,.sig})
+validpgpkeys=('462225C3B46F34879FC8496CD605848ED7E69871'  # Daiki Ueno <ueno@unixuser.org>
+              '9001B85AF9E1B83DF1BDA942F5BE8B267C6A406D'
+              'E0FFBD975397F77A32AB76ECB6301D9E1BBEAC08') # Bruno Haible (Open Source Development) <bruno@clisp.org>
+b2sums=('a03c51d3b1295642f5933e1b129f1b3f81705ef10422a30e6786d36e5788334ee6fbff1d70b31e1a95a65a6869db35f7ce77f6a59555eadf1ee31ecf19d92ccd'
+        'SKIP')
+
+build() {
+  cd "${srcdir}/libunistring-${pkgver}"
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+    ${_arch}-configure \
+      --enable-threads=win32
+    make DESTDIR="${srcdir}/install-${_arch}" install
+    popd
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "${srcdir}"
+    cp -r "install-${_arch}/"* "${pkgdir}"
+    find "${pkgdir}/usr/${_arch}" -name '*.dll' -exec ${_arch}-strip --strip-unneeded {} \;
+    find "${pkgdir}/usr/${_arch}" -name '*.a' -o -name '*.dll' | xargs ${_arch}-strip -g
+    rm "${pkgdir}/usr/${_arch}/share/info/dir"
+  done
+}
+
+# vim:set ts=2 sw=2 et:

@@ -1,9 +1,9 @@
 pkgname=mingw-w64-grpc
 _pkgname=grpc
-_protover=35.0
+_protover=35.1
 _opencensus_proto_ver=0.4.1
-pkgver=1.81.0
-pkgrel=2
+pkgver=1.81.1
+pkgrel=1
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (mingw-w64)"
 arch=('any')
 url='https://grpc.io'
@@ -17,7 +17,7 @@ source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         002-fix-building-python-module.patch
         003-fix-build-shared-libs-on-mingw.patch
         protobuf-34-build-fix.patch)
-sha256sums=('41b695614b26652ff9e97ce50cfd4a6c7a3d45a9fe598d1454407746499bbf2c'
+sha256sums=('48ae0d05f87206112d9e9144a923191ee1e482141a70686ec58dc86d0b40fddc'
             'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3'
             'cf4064ad294bbddf15ac0611a4920dfa133a54ccaebbf813ed4faef6b20d142b'
             'c08e9a6a4dd569155452660825c8b42a06bbc6eb1e924af98796b138e6698e93'

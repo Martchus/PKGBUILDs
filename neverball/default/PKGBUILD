@@ -1,5 +1,5 @@
-# Maintainer: SanskritFritz (gmail)
-# Maintainer: carstene1ns <arch carsten-teibes de> - http://git.io/ctPKG
+# Maintainer of AUR version: SanskritFritz (gmail)
+# Maintainer of AUR version: carstene1ns <arch carsten-teibes de> - http://git.io/ctPKG
 # Contributor: Eric Bélanger <eric@archlinux.org>
 # Contributor: useraur111 (AUR)
 
@@ -8,11 +8,10 @@ pkgver=1.6.0
 pkgrel=5
 pkgdesc="3D game similar to Super Monkey Ball or Marble Madness"
 arch=('x86_64')
-url="http://neverball.org/"
-license=('GPL')
-depends=('sdl2_ttf' 'libgl' 'libpng' 'libjpeg' 'libvorbis' 'physfs' \
-         'hicolor-icon-theme' 'xdg-utils')
-makedepends=('mesa')
+url=https://neverball.org
+license=(GPL-2.0-or-later)
+depends=('sdl2_ttf' 'physfs')
+makedepends=('libglvnd' 'libjpeg-turbo' 'libpng' 'libvorbis')
 source=(http://neverball.org/${pkgname}-${pkgver}.tar.gz
         neverball-filesystem.patch::"https://github.com/Neverball/neverball/commit/27279856.patch"
         neverball-gcc10.patch::"https://github.com/Neverball/neverball/commit/a42492b8db06934c7a794630db92e3ff6ebaadaa.patch")
@@ -22,8 +21,8 @@ sha256sums=('73fe63cca4f96e2d355480d03bc0b2904e83a0abdf65fe8c52db5cc3cca88fa0'
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -Np1 <../neverball-filesystem.patch # Fix creating settings dir
-  patch -Np1 <../neverball-gcc10.patch # Fix building with -fno-common
+  patch -Np1 -i ../neverball-filesystem.patch # Fix creating settings dir
+  patch -Np1 -i ../neverball-gcc10.patch # Fix building with -fno-common
 }
 
 build() {
@@ -33,6 +32,8 @@ build() {
 }
 
 package(){
+  depends+=('libGL.so' 'libjpeg.so' 'libpng16.so' 'libvorbisfile.so')
+
   cd ${pkgname}-${pkgver}
   install -d "${pkgdir}/usr/bin"
   install -d "${pkgdir}"/usr/share/{neverball,locale,applications,doc/neverball}

@@ -9,6 +9,10 @@ _webview_provider=${MINGW_W64_SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
 # set the JavaScript provider: either script, qml, auto or none
 _js_provider=${MINGW_W64_SYNCTHING_TRAY_JS_PROVIDER:-qml}
 
+# set whether the Qt Quick GUI should be enabled: either ON or OFF
+_enable_quick_gui=${MINGW_W64_SYNCTHING_TRAY_ENABLE_QUICK_GUI:-0}
+[[ $_enable_quick_gui == 0 ]] && _enable_quick_gui=
+
 # define package name with additional variants for experimentation that can be uncommented
 pkgname=mingw-w64-syncthingtray-qt6
 #pkgname=mingw-w64-syncthingtray-qt6-libst # enable libsyncthing regardless of env
@@ -30,7 +34,7 @@ depends=('mingw-w64-crt' 'mingw-w64-qt6-svg' 'mingw-w64-qtutilities-qt6' 'mingw-
 [[ $_webview_provider == webkit ]] && depends+=('mingw-w64-qt6-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('mingw-w64-qt6-webengine')
 [[ $_js_provider == script ]] && depends+=('mingw-w64-qt6-script')
-[[ $_js_provider == qml ]] && depends+=('mingw-w64-qt6-declarative' 'qt6-declarative')
+[[ $_js_provider == qml || $_enable_quick_gui ]] && depends+=('mingw-w64-qt6-declarative' 'qt6-declarative')
 makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja' 'git')
 url=https://github.com/Martchus/${_reponame}
 _github_url=git+https://github.com/Martchus
@@ -40,13 +44,14 @@ sha256sums=('SKIP'
             'SKIP')
 options=(!buildflags staticlibs !strip !emptydirs)
 
-# set whether libsyncthing should be enabled: either ON or OFF
+# enables the built-in Syncthing library
 [[ $pkgname =~ .*-clang-.* ]] \
-  && _enable_libsyncthing=${MINGW_W64_CLANG_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-OFF} \
-  || _enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
-[[ $pkgname =~ .*-libst.* ]] && _enable_libsyncthing=ON
-if [[ $_enable_libsyncthing == ON ]]; then
-  makedepends+=('go')
+  && _enable_libsyncthing=${MINGW_W64_CLANG_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-0} \
+  || _enable_libsyncthing=${MINGW_W64_SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-1}
+[[ $pkgname =~ .*-libst.* ]] && _enable_libsyncthing=1
+[[ $_enable_libsyncthing == 0 ]] && _enable_libsyncthing=
+if [[ $_enable_libsyncthing ]]; then
+  makedepends+=('go-mte')
   source+=("syncthing::$_github_url/syncthing")
 fi
 
@@ -59,9 +64,8 @@ if ! [[ $NO_STATIC_LIBS ]]; then
     _configurations+=('static')
     makedepends+=('mingw-w64-cmake-static' 'mingw-w64-qt6-base-static' 'mingw-w64-qt6-svg-static' 'mingw-w64-qt6-translations' 'breeze-icons')
     [[ $_js_provider == script ]] && makedepends+=('mingw-w64-qt6-script-static')
-    [[ $_js_provider == qml ]] && makedepends+=('mingw-w64-qt6-declarative-static')
+    [[ $_js_provider == qml || $_enable_quick_gui ]] && makedepends+=('mingw-w64-qt6-declarative-static')
 fi
-[[ $_enable_libsyncthing == ON ]] && _disable_libsyncthing=OFF || _disable_libsyncthing=ON
 
 prepare() {
   cd "$srcdir/$_reponame"
@@ -102,6 +106,11 @@ build() {
       msg2 "${_arch}-${_cfg}"
       local arch_flags=()
       local additional_flags=()
+      [[ $_enable_quick_gui ]] && \
+        additional_args+=' -DQUICK_GUI:BOOL=ON -DQUICK_GUI_CONTROLS_STYLE:STRING=FluentWinUI3'
+      [[ $_enable_libsyncthing ]] && \
+        additional_args+=' -DNO_LIBSYNCTHING:BOOL=OFF -DUSE_LIBSYNCTHING:BOOL=ON' || \
+        additional_args+=' -DNO_LIBSYNCTHING:BOOL=ON -DUSE_LIBSYNCTHING:BOOL=OFF'
       # add arch-specific configuration
       [[ $_arch =~ aarch64-.* ]] && arch_flags+=(
         -DUSE_BOOST_PROCESS:BOOL=ON # supposed to work on Windows on ARM as of Boost 1.87.0
@@ -149,8 +158,6 @@ build() {
         -DNO_FILE_ITEM_ACTION_PLUGIN=ON \
         -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
         -DVERSIONED_MINGW_LIBRARIES:BOOL=ON \
-        -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
-        -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
         ${_config_flags[$_cfg]} \
         "${additional_flags[@]}" \
         "${arch_flags[@]}"

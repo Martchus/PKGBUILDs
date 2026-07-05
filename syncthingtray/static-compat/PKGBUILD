@@ -6,28 +6,28 @@
 # if tests fail due to timeout, you can try to increase the timeout
 # by setting SYNCTHING_TEST_TIMEOUT_FACTOR
 
-# set the web view provider: either webkit, webengine, auto or none
-_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
+# set the web view provider: either webengine, auto or none
+_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER_STATIC_COMPAT:-none}
 
 # set the JavaScript provider: either script, qml, auto or none
-_js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
+_js_provider=${SYNCTHING_TRAY_JS_PROVIDER_STATIC_COMPAT:-qml}
 
-# set to non-empty string to enable KIO plugin to show Syncthing actions in
-# Dolphin file browser
+# enables KIO plugin to show Syncthing actions in Dolphin file browser
 _enable_kio_plugin=${SYNCTHING_TRAY_ENABLE_KIO_PLUGIN_STATIC_COMPAT:-0}
 
-# set to non-empty string to enable Plasmoid for Plasma 5 desktop
+# enables Plasmoid for Plasma desktop
 _enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID_STATIC_COMPAT:-0}
 
-# set whether libsyncthing should be enabled: either ON or OFF
-_enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING:-ON}
+# enables the built-in Syncthing library
+_enable_libsyncthing=${SYNCTHING_TRAY_ENABLE_LIBSYNCTHING_STATIC_COMPAT:-1}
 
-# set whether the Qt Quick GUI should be enabled: either ON or OFF
-_enable_quick_gui=${SYNCTHING_TRAY_ENABLE_QUICK_GUI:-ON}
+# enables "modern" UI
+_enable_quick_gui=${SYNCTHING_TRAY_ENABLE_QUICK_GUI_STATIC_COMPAT:-1}
 
 [[ $_enable_kio_plugin == 0 ]] && _enable_kio_plugin=
 [[ $_enable_plasmoid == 0 ]] && _enable_plasmoid=
 [[ $_enable_quick_gui == 0 ]] && _enable_quick_gui=
+[[ $_enable_libsyncthing == 0 ]] && _enable_libsyncthing=
 
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
@@ -43,12 +43,11 @@ depends=('static-compat-qtutilities' 'static-compat-qtforkawesome' 'static-compa
 [[ $_webview_provider == webkit ]] && depends+=('static-compat-qt6-webkit')
 [[ $_webview_provider == webengine ]] && depends+=('static-compat-qt6-webengine')
 [[ $_js_provider == script ]] && depends+=('static-compat-qt6-script')
-[[ $_js_provider == qml ]] && depends+=('static-compat-qt6-declarative')
-[[ $_enable_quick_gui ]] && depends+=('static-compat-qt6-declarative')
+[[ $_js_provider == qml || $_enable_quick_gui ]] && depends+=('static-compat-qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
 makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang' 'git')
-[[ $_enable_libsyncthing == ON ]] && makedepends+=('go')
+[[ $_enable_libsyncthing == ON ]] && makedepends+=('go-mte')
 checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
 [[ $_enable_plasmoid ]] && makedepends+=('static-compat-plasma-framework' 'extra-cmake-modules')
@@ -91,7 +90,11 @@ build() {
   local additional_args=
   [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
   [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
-  [[ $_enable_quick_gui ]] || additional_args+=' -DQUICK_GUI:BOOL=ON -DQUICK_GUI_CONTROLS_STYLE:STRING=Fusion'
+  [[ $_enable_quick_gui ]] && \
+    additional_args+=' -DQUICK_GUI:BOOL=ON -DQUICK_GUI_CONTROLS_STYLE:STRING=Fusion'
+  [[ $_enable_libsyncthing ]] && \
+    additional_args+=' -DNO_LIBSYNCTHING:BOOL=OFF -DUSE_LIBSYNCTHING:BOOL=ON' || \
+    additional_args+=' -DNO_LIBSYNCTHING:BOOL=ON -DUSE_LIBSYNCTHING:BOOL=OFF'
 
   static-compat-cmake -G Ninja \
     $ccache_args \
@@ -111,8 +114,6 @@ build() {
     -DGLIB2_USE_PKG_CONFIG:BOOL=ON \
     -DWAYLAND_USE_PKG_CONFIG:BOOL=ON \
     -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
-    -DNO_LIBSYNCTHING:BOOL="${_disable_libsyncthing}" \
-    -DUSE_LIBSYNCTHING:BOOL="${_enable_libsyncthing}" \
     -DSETUP_TOOLS:BOOL=ON \
     $additional_args \
     .

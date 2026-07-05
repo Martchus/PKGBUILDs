@@ -17,7 +17,7 @@
 # pkgctl build --offload --rebuild --testing --release go-tools delve gopls golangci-lint staticcheck
 # pkgctl db move extra-testing extra go go-tools delve gopls golangci-lint staticcheck
 
-pkgname=go
+pkgname=go-mte
 epoch=2
 pkgver=1.26.4
 pkgrel=1
@@ -27,7 +27,8 @@ url='https://go.dev/'
 license=(BSD-3-Clause)
 makedepends=(git go)
 replaces=(go-pie)
-provides=(go-pie)
+provides=(go-pie go)
+conflicts=(go)
 options=(!strip staticlibs)
 source=("https://go.dev/dl/go${pkgver}.src.tar.gz"{,.asc}
         fix-avx512ScanPackedReqsMet.patch
@@ -41,7 +42,7 @@ sha256sums=('4f668a32fbfc1132e6a881fb968c2f1dada631492a339211735fbb255a42602d'
             '76f29bed6911b3963c2720bf762c88db48656180501d8fa3dae114ec122d2655')
 
 prepare() {
-  cd $pkgname
+  cd "${pkgname%-*}"
   # It leaves some traces...
   rm -vf src/runtime/{os_plan9.go.orig,os_windows.go.orig,proc.go.orig,vgetrandom_linux.go.orig}
 
@@ -63,21 +64,21 @@ build() {
   # Disable dwarf5 until debugedit catches up
   export GOEXPERIMENT=nodwarf5
 
-  cd "$pkgname/src"
+  cd "${pkgname%-*}/src"
   ./make.bash -v
 }
 
 check() {
   export GO_TEST_TIMEOUT_SCALE=3
 
-  cd $pkgname/src
+  cd "${pkgname%-*}/src"
   # TODO: Disable LSAN tests as it's crashing and we don't want to wait for upstream.
   #       See: https://github.com/golang/go/issues/74476
   ./run.bash --no-rebuild -v -v -v -k -run "!cmd/cgo/internal/testsanitizers"
 }
 
 package() {
-  cd "$pkgname"
+  cd "${pkgname%-*}"
 
   install -d "$pkgdir/usr/bin" "$pkgdir/usr/lib/go" "$pkgdir/usr/share/doc/go" \
     "$pkgdir/usr/lib/go/pkg/linux_amd64_"{dynlink,race}

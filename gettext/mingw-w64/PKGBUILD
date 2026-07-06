@@ -28,6 +28,10 @@ prepare() {
   cd gettext-$pkgver
   patch -p1 -i ../0001-restore-DllMain-symbol.patch
   patch -p1 -i ../0024-disable-gnu-format.patch
+  patch -p1 -i ../0030-fix-build-with-clang.patch
+
+  #libtoolize --automake --copy --force
+  #WANT_AUTOMAKE=latest ./autogen.sh --skip-gnulib
 }
 
 build() {

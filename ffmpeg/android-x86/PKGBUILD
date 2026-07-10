@@ -128,7 +128,7 @@ build() {
     case "${_android_arch}" in
         aarch64)
             target_arch=aarch64
-            export LDFLAGS="${LDFLAGS} -lm -logg -lvorbis -lcrypto -lssl"
+            export LDFLAGS="${LDFLAGS} -lm -logg -lvorbis"
             ;;
         armv7a-eabi)
             target_arch=arm
@@ -162,7 +162,7 @@ build() {
     esac
 
     if [ "${_android_arch}" != riscv64 ] && [ "${FFMPEG_FULL}" = 1 ]; then
-#         extra_options="${extra_options} --enable-librsvg"
+        #extra_options="${extra_options} --enable-librsvg"
         extra_options="${extra_options} --enable-librav1e"
     fi
 

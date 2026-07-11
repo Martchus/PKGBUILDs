@@ -55,6 +55,7 @@ build() {
     -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     -DQUICK_GUI="$_quick_gui" \
     -DSETUP_TOOLS:BOOL=ON \
+    -DINJECT_ENV_LIST:STRING=OPENSSL_CONF= \
     .
   ninja
 }

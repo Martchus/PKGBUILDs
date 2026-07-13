@@ -1,0 +1,36 @@
+name: Bug report
+description: Issue with binary repository
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please read the following points before filing an issue:
+
+        * Make sure to have **followed the instructions** on https://martchus.dyn.f3l.de/repo/arch/ownstuff.
+        * Packages are always built against the latest Arch Linux repository so other distributions such as Manjaro are *not* supported.
+        * Please prefer the `ftp.f3l.de` mirror as `martchus.dyn.f3l.de` is self-hosted.
+
+  - type: textarea
+    attributes:
+      label: Affected package (name, version, architecture)
+      description: |
+        The list of concrete packages that are affected:
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Used mirror
+      description: |
+        The mirror being used:
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        Brief description of the problem:
+    validations:
+      required: true

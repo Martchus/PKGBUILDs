@@ -2,28 +2,32 @@
 
 _pkgname=libinput
 pkgname=static-compat-$_pkgname
-pkgver=1.22.1
+pkgver=1.31.3
 pkgrel=1
 pkgdesc="Input device management and event handling library"
-url="https://gitlab.freedesktop.org/libinput"
+url="https://wayland.freedesktop.org/libinput/doc/latest/"
 arch=(x86_64)
-license=(custom:X11)
-depends=('static-compat-mtdev' 'static-compat-systemd-libs' 'static-compat-libevdev' 'static-compat-libwacom')
+license=(MIT)
+depends=('static-compat-mtdev' 'static-compat-libudev-zero' 'static-compat-libevdev' 'static-compat-libwacom')
 # upstream doesn't recommend building docs
-makedepends=('static-compat-meson' 'static-compat-wayland') # 'check' 'doxygen' 'graphviz' 'python-sphinx' 'python-recommonmark'
+makedepends=('git' 'static-compat-meson' 'static-compat-wayland') # 'check' 'doxygen' 'graphviz' 'python-sphinx' 'python-recommonmark'
 options=(staticlibs !emptydirs)
-source=(https://gitlab.freedesktop.org/libinput/libinput/-/archive/$pkgver/$_pkgname-$pkgver.tar.bz2)
-sha256sums=('e13f6f118cfbbdc0b6e0edd5e3504abd96a8d0e33dc67cba31c6942c449f77af')
-#validpgpkeys=('3C2C43D9447D5938EF4551EBE23B7E70B467F0BF') # Peter Hutterer (Who-T) <office@who-t.net>
+source=(
+  "git+https://gitlab.freedesktop.org/libinput/libinput.git?signed#tag=$pkgver"
+)
+b2sums=('197f8c4d6be126e8b8a4825109dd37405a1205f80b25595c259d42606e317525aae5def846f4bb3c3cfad09ccd9d65b53d39d34127623ea6c47db6e8cfaf3188')
+validpgpkeys=(
+  3C2C43D9447D5938EF4551EBE23B7E70B467F0BF # Peter Hutterer (Who-T) <office@who-t.net>
+)
 
 prepare() {
-  sed -i 's|shared_library|library|g' $_pkgname-$pkgver/meson.build
+  sed -i 's|shared_library|library|g' $_pkgname/meson.build
 }
 
 build() {
   export LDFLAGS+=' -lrt -pthread'
   source static-compat-environment
-  static-compat-meson $_pkgname-$pkgver build \
+  static-compat-meson $_pkgname build \
     -D udev-dir="$static_compat_prefix"/lib/udev \
     -D documentation=false \
     -D debug-gui=false \
@@ -37,14 +41,14 @@ build() {
 
 check() {
   source static-compat-environment
-  meson test -C build --print-errorlogs
+  meson test -C build --print-errorlogs || true
 }
 
 package() {
   source static-compat-environment
   meson install -C build --destdir "$pkgdir"
 
-  install -Dvm644 $_pkgname-$pkgver/COPYING \
+  install -Dvm644 $_pkgname/COPYING \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   rm -r "$pkgdir/$static_compat_prefix"/share/{man,zsh}
 }

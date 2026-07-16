@@ -1,0 +1,25 @@
+_pkgname=libudev-zero
+pkgname=static-compat-$_pkgname
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='Daemonless replacement for libudev'
+arch=(x86_64)
+url='https://github.com/illiliti/libudev-zero'
+license=('ISC')
+depends=('gcc-libs-static-compat')
+makedepends=('static-compat-configure')
+conflicts=('static-compat-systemd-libs')
+options=('!emptydirs' staticlibs)
+source=(https://github.com/illiliti/${_pkgname}/archive/refs/tags/${pkgver}.tar.gz)
+sha256sums=('10148cfd6047d387bf71eca72cd19c177084224d96434a118d8def6e0a3d6316')
+
+build() {
+  source static-compat-environment
+  make -C "${_pkgname}-${pkgver}" libudev.a vPREFIX=$static_compat_prefix
+}
+
+package() {
+  source static-compat-environment
+  make -C "${_pkgname}-${pkgver}" DESTDIR="${pkgdir}" install-static install-pkgconfig install-headers  PREFIX=$static_compat_prefix
+  install -D -m644 "${_pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/license/$pkgname/LICENSE"
+}

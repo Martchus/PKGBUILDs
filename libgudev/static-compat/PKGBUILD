@@ -2,17 +2,16 @@
 
 _pkgname=libgudev
 pkgname=static-compat-$_pkgname
-pkgver=237
+pkgver=238
 pkgrel=1
 pkgdesc="GObject bindings for libudev"
-url="https://wiki.gnome.org/Projects/libgudev"
+url="https://gitlab.gnome.org/GNOME/libgudev"
 arch=(x86_64)
-license=(LGPL2.1)
-depends=(static-compat-systemd-libs static-compat-glib2)
+license=(LGPL-2.1-or-later)
+depends=(static-compat-libudev-zero static-compat-glib2)
 makedepends=(git umockdev vala static-compat-meson)
-_commit=dff7a794e55d6ad7a10e8edacd73aa047593e74c  # tags/237^0
-source=("git+https://gitlab.gnome.org/GNOME/libgudev.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+$url.git#tag=$pkgver")
+b2sums=('6da9512d87154fbd62aae044a39abd84bee451f5a21203180062c369ebedf2ee1bc7672408cf806918111397bc74be58314e6c3155e638137603d11012a4355f')
 
 pkgver() {
   cd $_pkgname
@@ -30,7 +29,7 @@ prepare() {
 
 build() {
   source static-compat-environment
-  static-compat-meson $_pkgname build -D gtk_doc=false
+  static-compat-meson $_pkgname build -D gtk_doc=false -D vapi=disabled
   meson compile -C build
 }
 

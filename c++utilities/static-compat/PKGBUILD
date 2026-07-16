@@ -7,7 +7,7 @@ _reponame=cpp-utilities
 pkgname=static-compat-c++utilities
 _name=${pkgname#static-compat-}
 pkgver=5.34.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
 license=(GPL-2.0-or-later)
@@ -16,11 +16,13 @@ optdepends=("$_name-doc: API documentation")
 makedepends=('ninja' 'static-compat-cmake' 'static-compat-openssl')
 checkdepends=('static-compat-cppunit')
 url="https://github.com/Martchus/${_reponame}"
-source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
+        https://github.com/Martchus/cpp-utilities/commit/19ba90509b2afec5535b7ecab702265eb25dd6b7.patch)
 sha256sums=('df3a63f99612046b0302fba4b7a217e31ec2becc0e5afa8937841b4d2241ff8d')
 
 prepare() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  patch -p1 -i ../19ba90509b2afec5535b7ecab702265eb25dd6b7.patch
 }
 
 build() {

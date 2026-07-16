@@ -31,7 +31,7 @@ depends=(shared-mime-info
          static-compat-libxxf86vm static-compat-md4c static-compat-pcre2
          static-compat-sqlite static-compat-xcb-util-image static-compat-xcb-util-keysyms
          static-compat-xcb-util-renderutil static-compat-xcb-util-cursor static-compat-vulkan-headers
-         static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans)
+         static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans static-compat-openssl)
 makedepends=(static-compat-cmake xdg-utils ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"

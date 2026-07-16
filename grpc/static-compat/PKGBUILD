@@ -22,17 +22,21 @@ makedepends=(
 source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         "https://github.com/google/googletest/archive/$_gtestver/googletest-$_gtestver.tar.gz"
         "https://github.com/protocolbuffers/protobuf/archive/v$_protover/protobuf-$_protover.tar.gz"
-        "protobuf-34-build-fix.patch")
+        "protobuf-34-build-fix.patch"
+        "https://patch-diff.githubusercontent.com/raw/grpc/grpc/pull/41932.patch")
 sha256sums=('48ae0d05f87206112d9e9144a923191ee1e482141a70686ec58dc86d0b40fddc'
             '31bf78bd91b96dd5e24fab3bb1d7f3f7453ccbaceec9afb86d6e4816a15ab109'
             '22775f9376938295efa2d59a59bde4cd075a42df5a9b4d27aa9b99fa6a413bd2'
-            '2c126e40c54bdc88ab57fad12cbd860fc999aceb0e2787263edcbf024097ecec')
+            '2c126e40c54bdc88ab57fad12cbd860fc999aceb0e2787263edcbf024097ecec'
+            '2c04e8acc26fda958c7ce36f256e867a941a9f9be7de9a3f8bebc832fd12182a')
 
 prepare() {
   source static-compat-environment
   cd "$srcdir/$_pkgname-$pkgver"
 
   patch -p1 -i "$srcdir/protobuf-34-build-fix.patch"
+
+  patch -p1 -i "$srcdir/41932.patch" # OpenSSL 4 support
 
   ln -sf "$srcdir/googletest-$_gtestver/"{googlemock,googletest} \
     third_party/googletest

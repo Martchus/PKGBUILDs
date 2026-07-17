@@ -18,6 +18,7 @@ depends=('mingw-w64-zlib')
 makedepends=('mingw-w64-gcc'
              'mingw-w64-environment'
              'perl')
+[[ $pkgname =~ .*-clang-.* ]] && makedepends+=('mingw-w64-compiler-rt')
 options=('!strip' 'staticlibs' '!buildflags' '!lto')
 source=("https://github.com/openssl/openssl/releases/download/openssl-${pkgver}/openssl-${pkgver}.tar.gz"{,.asc})
 sha256sums=('243a86649cf6f23eeb6a2ff2456e09e5d77dd9018a54d3d96b0c6bdd6ba6c7f1'

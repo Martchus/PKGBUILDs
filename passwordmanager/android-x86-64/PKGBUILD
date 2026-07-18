@@ -6,7 +6,7 @@
 _arch=x86-64
 _reponame=passwordmanager
 pkgname=android-$_arch-passwordmanager
-pkgver=4.3.2
+pkgver=4.4.0
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_pwmgr=branch=master
   _pkgver_cpputilities=branch=master
@@ -23,7 +23,7 @@ arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)
 depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_arch-openssl"
-         "android-$_arch-libiconv" "android-$_arch-boost" "android-$_arch-kirigami"
+         "android-$_arch-libiconv" "android-$_arch-boost"
          'android-platform-35')
 makedepends=('android-cmake' 'android-ndk' 'ninja' 'git' 'clang' 'qt6-tools' 'qt6-declarative'
              "android-$_arch-qt6-tools" 'breeze-icons')
@@ -53,13 +53,20 @@ prepare() {
 build() {
   source android-env $_arch
   export BUILD_DIR=$srcdir/build
+
+  # set keystore variable and make sanity check of keystore/env
   export QT_ANDROID_KEYSTORE_PATH=$srcdir/keystore
+  keytool -list \
+    -keystore "$QT_ANDROID_KEYSTORE_PATH" \
+    -alias "$QT_ANDROID_KEYSTORE_ALIAS" \
+    -storepass "$QT_ANDROID_KEYSTORE_STORE_PASS"
 
   cd subdirs/$_reponame
   cmake --preset arch-android \
     -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
     -DAPPEND_GIT_REVISION:BOOL=OFF \
-    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark'
+    -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
+    -DFORCE_EXTERNAL_ICONV=ON
   cmake --build --preset arch-android
 }
 

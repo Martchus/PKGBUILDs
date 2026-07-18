@@ -5,7 +5,7 @@
 
 _arch=x86-64
 pkgname=android-$_arch-syncthingtray
-pkgver=2.1.3
+pkgver=2.1.4
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_stt=branch=master
   _pkgver_cpputilities=branch=master
@@ -63,7 +63,13 @@ prepare() {
 build() {
   source android-env $_arch
   export BUILD_DIR=$srcdir/build
+
+  # set keystore variable and make sanity check of keystore/env
   export QT_ANDROID_KEYSTORE_PATH=$srcdir/keystore
+  keytool -list \
+    -keystore "$QT_ANDROID_KEYSTORE_PATH" \
+    -alias "$QT_ANDROID_KEYSTORE_ALIAS" \
+    -storepass "$QT_ANDROID_KEYSTORE_STORE_PASS"
 
   cd "$srcdir/$_reponame"
   echo "git rev: $(git rev-list --count HEAD).$(git rev-parse --short HEAD)"

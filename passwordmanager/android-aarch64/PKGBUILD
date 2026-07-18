@@ -53,7 +53,13 @@ prepare() {
 build() {
   source android-env $_arch
   export BUILD_DIR=$srcdir/build
+
+  # set keystore variable and make sanity check of keystore/env
   export QT_ANDROID_KEYSTORE_PATH=$srcdir/keystore
+  keytool -list \
+    -keystore "$QT_ANDROID_KEYSTORE_PATH" \
+    -alias "$QT_ANDROID_KEYSTORE_ALIAS" \
+    -storepass "$QT_ANDROID_KEYSTORE_STORE_PASS"
 
   cd subdirs/$_reponame
   cmake --preset arch-android \

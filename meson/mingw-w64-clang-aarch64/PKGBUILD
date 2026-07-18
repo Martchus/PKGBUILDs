@@ -3,12 +3,12 @@
 
 pkgname=mingw-w64-clang-aarch64-meson
 pkgver=1
-pkgrel=3
+pkgrel=4
 arch=('any')
 pkgdesc="Meson wrapper for MinGW (mingw-w64-clang-aarch64)"
 depends=('meson' 'mingw-w64-clang-aarch64-pkg-config' 'mingw-w64-clang-aarch64-libc++' 'mingw-w64-clang-environment')
 optdepends=('mingw-w64-clang-aarch64-wine: Set NEED_WINE env variable in your PKGBUILD to use wine support in meson')
-license=("GPL")
+license=(GPL-2.0-or-later)
 url="https://github.com/Martchus/PKGBUILDs"
 source=("toolchain_generator.py"
         "meson-mingw-wrapper")
@@ -32,7 +32,7 @@ build() {
 package() {
   install -d "${pkgdir}"/usr/bin
   install -d "${pkgdir}"/usr/share/mingw
-  install -m 755 "${srcdir}/toolchain_generator.py" "$pkgdir/usr/bin/meson-cross-file-generator"
+  install -m 755 "${srcdir}/toolchain_generator.py" "$pkgdir/usr/bin/meson-cross-file-generator-mingw-clang"
   for _arch in ${_architectures}; do
     source mingw-clang-env $_arch
     install -m 755 "${srcdir}/${_arch}-meson" "$pkgdir/usr/bin/${_arch}-meson"

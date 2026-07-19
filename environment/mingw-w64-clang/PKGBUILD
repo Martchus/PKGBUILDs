@@ -1,6 +1,6 @@
 pkgname=mingw-w64-clang-environment
 pkgver=1
-pkgrel=10
+pkgrel=11
 arch=('any')
 pkgdesc="Script providing common environment variables and functions for targeting MinGW with Clang (mingw-w64)"
 license=('GPL-2.0-or-later')
@@ -23,7 +23,8 @@ package() {
   install -m 755 windres.sh "${pkgdir}"/usr/bin/mingw-llvm-windres
   install -m 755 strip.sh "${pkgdir}"/usr/bin/mingw-llvm-strip
   for _target in {i686,x86_64,aarch64}-w64-mingw32; do
-    ln -rs mingw-clang $_target-clang
-    ln -rs mingw-clang++ $_target-clang++
+    for _bin in clang clang++; do
+      ln -vrs "${pkgdir}"/usr/bin/mingw-$_bin "${pkgdir}"/usr/bin/$_target-$_bin
+    done
   done
 }

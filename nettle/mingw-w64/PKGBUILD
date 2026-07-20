@@ -1,0 +1,41 @@
+# Maintainer of AUR version: drakkan <nicola.murino at gmail dot com>
+_pkgname=nettle
+pkgname=mingw-w64-$_pkgname
+pkgver=4.0
+pkgrel=1
+pkgdesc="A low-level cryptographic library (mingw-w64)"
+arch=(any)
+url="http://www.lysator.liu.se/~nisse/nettle"
+license=('LGPL-3.0-or-later OR GPL-2.0-or-later')
+makedepends=('mingw-w64-configure')
+depends=('mingw-w64-gmp')
+options=('staticlibs' '!strip' '!buildflags')
+source=(https://ftp.gnu.org/gnu/$_pkgname/$_pkgname-$pkgver.tar.gz{,.sig})
+sha256sums=('3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094'
+            'SKIP')
+validpgpkeys=('343C2FF0FBEE5EC2EDBEF399F3599FF828C67298') # Niels Möller <nisse@lysator.liu.se>
+
+_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+build() {
+  cd "$srcdir/nettle-$pkgver"
+  for _arch in ${_architectures}; do
+    mkdir -p build-${_arch} && pushd build-${_arch}
+    ${_arch}-configure
+    make
+    popd
+  done
+}
+
+package() {
+  for _arch in ${_architectures}; do
+    cd "${srcdir}/nettle-${pkgver}/build-${_arch}"
+    make DESTDIR="$pkgdir" install
+    rm "$pkgdir"/usr/${_arch}/bin/*.exe
+    ${_arch}-strip --strip-unneeded "$pkgdir"/usr/${_arch}/bin/*.dll
+    ${_arch}-strip -g "$pkgdir"/usr/${_arch}/lib/*.a
+    rm -r "$pkgdir/usr/${_arch}/share"
+  done
+}
+
+# vim: ts=2 sw=2 et:

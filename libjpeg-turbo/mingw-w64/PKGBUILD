@@ -3,7 +3,7 @@
 
 _pkgname=libjpeg-turbo
 pkgname=mingw-w64-$_pkgname
-pkgver=3.1.2
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="JPEG image codec with accelerated baseline compression and decompression (mingw-w64)"
 arch=(any)
@@ -21,10 +21,11 @@ options=(staticlibs !strip !buildflags)
 source=(
   $_url/releases/download/$pkgver/$_pkgname-$pkgver.tar.gz{,.sig}
 )
+sha512sums=('13536db56c16e5364690ae2d31343a203e3b653c853c1f5314d36c8eb06700e92342737f1381f0171b3eb0223384c5fbcde91b55a46576952c4e75dc049cd045'
+            'SKIP')
+b2sums=('c50c985f8b870ab6467181f69e10f3ec2705cb349613b9178b293f136063e302087832d87f793b3d24ab721a2f5d76271760bd244d0766ab3b8cbe48ebf50cfa'
+        'SKIP')
 validpgpkeys=('0338C8D8D9FDA62CF9C421BD7EC2DBB6F4DBF434') # The libjpeg-turbo Project (Signing key for official binaries) <information@libjpeg-turbo.org>
-sha512sums=('79271ae4ddc12e3753cc7323dc15617f1d82b2d554ef27b555712f6ab5de603323dd33747620815e3b55663a20e07b292a55172aee9f401f9fd3557145967abe')
-b2sums=('476280f1140977903e177667184452b8ec79a930cd0dbcfc10f46c682c85e2daf38ff8a4267590859eb845a9273fc91b19a61168b7e2c5229d7ed4c18100b2dd'
-         'SKIP')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

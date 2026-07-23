@@ -1,21 +1,24 @@
 # Maintainer of AUR version: drakkan <nicola.murino at gmail dot com>
 pkgname=mingw-w64-libffi
-pkgver=3.4.6
+pkgver=3.7.1
 pkgrel=1
 pkgdesc="Portable foreign function interface library (mingw-w64)"
 arch=(any)
+url="http://sourceware.org/libffi"
+_url="https://github.com/libffi/libffi"
 depends=(mingw-w64-crt)
 makedepends=(mingw-w64-configure)
 options=(staticlibs !buildflags !strip)
 license=(MIT)
-url="http://sourceware.org/libffi"
-source=(https://github.com/libffi/libffi/releases/download/v$pkgver/libffi-$pkgver.tar.gz)
-sha256sums=('b0dea9df23c863a7a50e825440f3ebffabd65df1497108e5d437747843895a4e')
+source=(libffi-$pkgver.tar.gz::$_url/archive/refs/tags/v$pkgver.tar.gz)
+sha256sums=('df80a3ff1d3421ac2ae0e368575f82f30383f932481ecf2dd1d5f7f88c92f547')
+b2sums=('c7527bf092321198065151f12f8651b0ae1266dbea5d3cced9dc164c5e89a1d1d6e4d34649ab6feb574a7756f7628f495a3832b1a4913c12095c95c913443952')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 prepare() {
   cd "${srcdir}/libffi-${pkgver}"
+  autoreconf -fiv
   if [[ $pkgname =~ .*-clang-.* ]]; then
     sed -i -e '2iac_cv_c_bigendian=no' configure
   fi

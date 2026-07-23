@@ -2,19 +2,22 @@
  
 _realname=fluidsynth
 pkgname=mingw-w64-fluidsynth
-pkgver=2.5.4
-pkgrel=2
+pkgver=2.5.6
+pkgrel=1
 pkgdesc="A real-time software synthesizer based on the SoundFont 2 specifications (mingw-w64)"
 url="https://www.fluidsynth.org/"
+_url="https://github.com/fluidsynth/fluidsynth"
 license=(LGPL-2.1-or-later)
 arch=('any')
 depends=('mingw-w64-sdl2' 'mingw-w64-glib2' 'mingw-w64-readline')
 [[ $pkgname =~ .*-clang-.* ]] || depends+=('mingw-w64-libsndfile' 'mingw-w64-portaudio')
 makedepends=('mingw-w64-cmake-static' 'mingw-w64-pkg-config' 'ninja')
 options=('staticlibs' '!buildflags' '!strip')
-source=("${_realname}-${pkgver}.tar.gz::https://github.com/FluidSynth/${_realname}/archive/v${pkgver}.tar.gz")
-sha512sums=('7539e32a56309ce61c4178dad38ac8aae82ebab37398e1a7b6d1e2d5abd0af73ae7af35358e655a935666c7e6fde30885a0d6e4b7ad8b129ab02f6aad8f18dd0')
-b2sums=('a0c9d228d71479436b78ecd34c3e3df4fa58599189b929f1497afaa1add2ce757cdc957f3a2c9044545ca36d4886b080ea1f3aa2ec6596ea38a68af74fa6b1b7')
+source=(
+  $_realname-$pkgver.tar.gz::$_url/archive/v$pkgver.tar.gz
+)
+sha512sums=('0470b190da7e3f330e4fbdf28035ff172866213e0d13f968965b82022ec5cf5c13935624fa0067bb7d9a92cfab1d8238a1ebecbbe91164b298d36a02e50464bc')
+b2sums=('c87eef6142932f8f18c0bc281a6242732ea2e7d9883ec9ad9b92c7e39c8f2afcb25b5a8a17a20b3033d79e6b5aebefc06a607f7eab77dd9e5cd44d4d9175d02b')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 

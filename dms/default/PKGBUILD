@@ -1,10 +1,10 @@
 pkgname=dms
-pkgver=1.7.2
-pkgrel=2
+pkgver=1.8.0
+pkgrel=1
 pkgdesc="UPnP DLNA Digital Media Server"
 arch=(x86_64)
 url=https://github.com/anacrolix/dms/
-license=(BSD)
+license=(BSD-3-Clause)
 depends=(glibc)
 makedepends=(go git)
 backup=("etc/$pkgname/config.json")
@@ -12,12 +12,11 @@ source=(
   "dms::git+https://github.com/anacrolix/dms.git#tag=v$pkgver"
   "dms.service"
 )
-sha256sums=('d95fca7c522b9b8d87abf4dba9c6dd94b9321b25d21157b120fdde73254921e8'
+sha256sums=('d3310fd2ab61b0344c52fba0978eee4e54aa6daf7111339ce0df99ff1b561e49'
             '31aabcd31ac2cf13673c3e7b7b460cba8bced0584d6404cd8db566ddc9ae97ab')
 
 prepare() {
   cd dms
-  git cherry-pick -n 2fab4ebd2eab73861c5bd912d837c6d9d6b25861
 
   export GOPATH="${srcdir}"
   go mod download -modcacherw

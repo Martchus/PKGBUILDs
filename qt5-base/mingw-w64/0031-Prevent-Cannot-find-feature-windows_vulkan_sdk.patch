@@ -1,7 +1,7 @@
 From b8a283cfeb02fa7f1a5d7af71a0d157cda983d2d Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Mon, 24 Jun 2019 13:51:02 +0200
-Subject: [PATCH 31/32] Prevent 'Cannot find feature windows_vulkan_sdk'
+Subject: [PATCH 31/34] Prevent 'Cannot find feature windows_vulkan_sdk'
 
 See https://bugreports.qt.io/browse/QTBUG-76660
 ---
@@ -33,5 +33,5 @@ index 8475e4111a7..c0eb8faa17d 100644
      LD_USES = $$resolve_depends(LD_USES, QMAKE_DEPENDS_, _LD)
      for (nu, LD_USES) {
 -- 
-2.54.0
+2.55.0
 

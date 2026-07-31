@@ -1,7 +1,7 @@
 From 235bca8d11b3d4f0effed0002dd965f4c9f63c5f Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 3 Feb 2017 19:36:25 +0100
-Subject: [PATCH 08/32] Fix linking against static D-Bus
+Subject: [PATCH 08/34] Fix linking against static D-Bus
 
 ---
  configure.json             | 9 +++++++--
@@ -54,5 +54,5 @@ index accaa4f5ed5..4b11c74caa7 100644
  #  include <dbus/dbus.h>
  #else
 -- 
-2.54.0
+2.55.0
 

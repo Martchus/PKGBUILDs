@@ -9,7 +9,7 @@
 
 _name=ffmpeg
 pkgname=ffmpeg-custom
-pkgver=8.1.2
+pkgver=9.0
 pkgrel=1
 epoch=1
 pkgdesc='Complete solution to record, convert and stream audio and video (with more features enabled than regular ffmpeg)'
@@ -27,7 +27,6 @@ depends=(
   fribidi
   glib2
   glibc
-  glslang
   gmp
   gnutls
   gsm
@@ -104,6 +103,7 @@ makedepends=(
   mesa
   nasm
   opencl-headers
+  spirv-headers
   vulkan-headers
   opencl-clhpp
   openal
@@ -133,16 +133,19 @@ conflicts=("$_name")
 options=(
   debug
 )
+_srcname=ffmpeg
+_srcname=FFmpeg
 source=(
-  git+https://git.ffmpeg.org/ffmpeg.git#tag=n${pkgver}
+  #git+https://git.ffmpeg.org/$_srcname.git#tag=n${pkgver}
+  git+https://github.com/FFmpeg/$_srcname.git#tag=n${pkgver}
   0001-Add-av_stream_get_first_dts-for-Chromium.patch
 )
-b2sums=('a2b77f48a12486d07965ffa2f4ff27e04e552b7c8d2dec4a8bf847088d93a5858982636836a13ade2765c8c976ded8908633a8c2f4142e4bbd4ed430f8cc91ce'
+b2sums=('c15bec5d82a33d58d96bca03374b56bc1ffcfb9e9c705106eb05cba0dfd2d6003d3eb05bfc5b325ce1458fcff6bef93db75168da5640ea4dc5bd8b31294cfdd8'
         'e5f7b79f7731be9ee5a7280a9221fb531ac5a2d9820fc5870b68b0eabea667dfbe8f39f41c1e1763a4c84982896afaa54c81ff57847d203b70afafd726689e5d')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
-  cd ffmpeg
+  cd $_srcname
 
   # https://crbug.com/1251779
   git apply -3 ../0001-Add-av_stream_get_first_dts-for-Chromium.patch
@@ -153,12 +156,12 @@ prepare() {
 }
 
 pkgver() {
-  cd ffmpeg
+  cd $_srcname
   git describe --tags | sed 's/^n//'
 }
 
 build() {
-  cd $_name
+  cd $_srcname
 
   ./configure \
     --prefix=/usr \
@@ -186,7 +189,6 @@ build() {
     --enable-libdvdread \
     --enable-libfreetype \
     --enable-libfribidi \
-    --enable-libglslang \
     --enable-libiec61883 \
     --enable-libjack \
     --enable-libjxl \
@@ -273,7 +275,7 @@ package() {
     libzmq.so
   )
 
-  cd $_name
+  cd $_srcname
 
   make DESTDIR="${pkgdir}" install install-man
   install -Dm 755 tools/qt-faststart "${pkgdir}"/usr/bin/

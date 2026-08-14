@@ -3,7 +3,7 @@
 _pkgname=vulkan-headers
 pkgname=mingw-w64-${_pkgname}
 _dirname=Vulkan-Headers
-pkgver=1.4.350.1
+pkgver=1.4.357.0
 pkgrel=1
 pkgdesc='Vulkan header files (mingw-w64)'
 arch=(any)
@@ -16,7 +16,7 @@ source=(
   "git+https://github.com/KhronosGroup/Vulkan-Headers#tag=vulkan-sdk-$pkgver"
   0001-Remove-Werror.patch
 )
-b2sums=('c628cc671ca8bf57bd909803a62f486bdd58f120bdb04805e26a76063db615a732760647944e63faee48197082bc457c0b084a0914cc87685ecfae169ad6ccef'
+b2sums=('73717522cacce5885d5f2e514387a79be04cae69001cc114cf9b1a629b736a3d511de847a222039e4879ee01bb646bb7cfb5bcb8281f3a2fe749aa0057d6a934'
         'f40a6ca5aa9d80b598b0d04ae9171062152ede95d663189ae2617bf86a23a6885cc8bcf2923e3b75fa1eb8f9c8403eb79a6d9b33019a10261abc6707b76f0c29')
 
 _srcdir="${_dirname}"

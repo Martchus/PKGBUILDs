@@ -32,7 +32,7 @@ _enable_quick_gui=${SYNCTHING_TRAY_ENABLE_QUICK_GUI_STATIC_COMPAT:-1}
 _reponame=syncthingtray
 pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
-pkgver=2.1.4
+pkgver=2.1.5
 [[ $BUILD_BEFORE_TAGGING ]] && _pkgver=branch=master || _pkgver=tag=v$pkgver
 pkgrel=1
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
@@ -47,7 +47,7 @@ depends=('static-compat-c++utilities' 'static-compat-qtutilities' 'static-compat
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
 makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang' 'git')
-[[ $_enable_libsyncthing ]] && makedepends+=('go-mte')
+[[ $_enable_libsyncthing ]] && makedepends+=('go')
 checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
 [[ $_enable_plasmoid ]] && makedepends+=('static-compat-plasma-framework' 'extra-cmake-modules')
@@ -89,7 +89,7 @@ build() {
   [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
   [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
   [[ $_enable_quick_gui ]] && \
-    additional_args+=' -DQUICK_GUI:BOOL=ON -DQUICK_GUI_CONTROLS_STYLE:STRING=Fusion'
+    additional_args+=' -DQUICK_GUI:BOOL=ON -DQUICK_GUI_CONTROLS_STYLE:STRING=Fusion -DQUICK_GUI_WIDGETS_DIALOGS:BOOL=ON'
   [[ $_enable_libsyncthing ]] && \
     additional_args+=' -DNO_LIBSYNCTHING:BOOL=OFF -DUSE_LIBSYNCTHING:BOOL=ON' || \
     additional_args+=' -DNO_LIBSYNCTHING:BOOL=ON -DUSE_LIBSYNCTHING:BOOL=OFF'

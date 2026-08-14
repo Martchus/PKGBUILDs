@@ -22,7 +22,7 @@ pkgname=mingw-w64-syncthingtray-qt6
 _reponame=syncthingtray
 _name=${pkgname#mingw-w64-}
 _name=${_name%-qt6*}
-pkgver=2.1.4
+pkgver=2.1.5
 [[ $BUILD_BEFORE_TAGGING ]] && _pkgver=branch=master || _pkgver=tag=v$pkgver
 pkgrel=1
 arch=('any')
@@ -51,7 +51,7 @@ options=(!buildflags staticlibs !strip !emptydirs)
 [[ $pkgname =~ .*-libst.* ]] && _enable_libsyncthing=1
 [[ $_enable_libsyncthing == 0 ]] && _enable_libsyncthing=
 if [[ $_enable_libsyncthing ]]; then
-  makedepends+=('go-mte')
+  makedepends+=('go')
   source+=("syncthing::$_github_url/syncthing")
 fi
 

@@ -19,7 +19,7 @@
 
 pkgname=go-mte
 epoch=2
-pkgver=1.26.5
+pkgver=1.26.6
 pkgrel=1
 pkgdesc='Core compiler tools for the Go programming language that includes a fix for MTE-related crashes'
 arch=(x86_64)
@@ -35,7 +35,7 @@ source=("https://go.dev/dl/go${pkgver}.src.tar.gz"{,.asc}
         mte1.patch::https://github.com/chenxiaolong/go/commit/25291914fbe750e7c466d2687eb53746e42ef99d.patch
         mte2.patch::https://github.com/chenxiaolong/go/commit/4148269b7c0bc60acd4380c8a07ef8b28559d4a9.patch)
 validpgpkeys=('EB4C1BFD4F042F6DDDCCEC917721F63BD38B4796')
-sha256sums=('495be4bc87176ac567392e5b4116abd98466d33d7b49d41e764ccc6976b2dc42'
+sha256sums=('a0721c54c688901448d77ad9b3ec7ea7c474730755ff891382e92ecb93ff2cb1'
             'SKIP'
             'f1257d86f88526987d0130f4764e7b1d9cd8423676e5fc1f0fb0da146165d551'
             '4cdc40a2173a207149b038668625d1eaf367a9d282f7b23ac59b4a709191fa99'

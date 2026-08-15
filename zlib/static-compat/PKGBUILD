@@ -59,7 +59,7 @@ check() {
 
 package_static-compat-zlib() {
   pkgdesc='Compression library implementing the deflate compression method found in gzip and PKZIP'
-  depends=('gcc-libs-static-compat')
+  depends=('static-compat-gcc-libs')
 
   source static-compat-environment
 

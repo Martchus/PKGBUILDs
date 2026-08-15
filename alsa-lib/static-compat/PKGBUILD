@@ -7,7 +7,7 @@ pkgdesc="An alternative implementation of Linux sound support"
 arch=(x86_64)
 url="https://www.alsa-project.org"
 license=(LGPL-2.1-or-later)
-depends=('gcc-libs-static-compat')
+depends=('static-compat-gcc-libs')
 makedepends=('static-compat-configure')
 source=(
   https://www.alsa-project.org/files/pub/lib/$_pkgname-$pkgver.tar.bz2{,.sig}

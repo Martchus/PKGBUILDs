@@ -73,16 +73,8 @@ prepare() {
 
 build() {
   # Fix the check for limits.h and certain other checks by dropping the fortify flag from CPPFLAGS
-  # note: Otherwise libiberty/config.h lacks HAVE_LIMITS_H and the compilation runs into errors like:
-  #  /build/gcc-static-compat/src/gcc/libiberty/fibheap.c:38:25: error: ‘LONG_MIN’ undeclared (first use in this function)
-  #  38 | #define FIBHEAPKEY_MIN  LONG_MIN
-  #     |                         ^~~~~~~~
-  #  /build/gcc-static-compat/src/gcc/libiberty/fibheap.c:220:30: note: in expansion of macro ‘FIBHEAPKEY_MIN’
-  #  220 |   if (okey == key && okey != FIBHEAPKEY_MIN)
-  #      |                              ^~~~~~~~~~~~~~
-  #  /build/gcc-static-compat/src/gcc/libiberty/fibheap.c:36:1: note: ‘LONG_MIN’ is defined in header ‘<limits.h>’; did you forget to ‘#include <limits.h>’?
-  #   35 | #include "fibheap.h"
-  #  +++ |+#include <limits.h>
+  # note: Otherwise libiberty/config.h lacks HAVE_LIMITS_H and the compilation runs into errors (see
+  #       static-compat-gcc where the same workaround is present).
   CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2}
 
   for _target in $_targets; do

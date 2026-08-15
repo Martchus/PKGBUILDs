@@ -12,7 +12,7 @@ pkgdesc='Generic-purpose lossless compression algorithm'
 url='https://github.com/google/brotli'
 arch=('x86_64')
 license=('MIT')
-depends=('gcc-libs-static-compat')
+depends=('static-compat-gcc-libs')
 makedepends=('static-compat-cmake' 'git')
 options=('staticlibs')
 source=(${pkgname}::"git+${url}#commit=${_gitcommit}")

@@ -16,7 +16,7 @@ license=(
   BSD-2-Clause
   'BSD-3-Clause WITH PCRE2-exception'
 )
-depends=('gcc-libs-static-compat')
+depends=('static-compat-gcc-libs')
 makedepends=('static-compat-configure' 'git')
 options=(!emptydirs staticlibs)
 source=(

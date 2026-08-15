@@ -11,7 +11,7 @@ pkgdesc='Binary-decimal and decimal-binary routines for IEEE doubles'
 arch=(x86_64)
 url='https://github.com/google/double-conversion'
 license=(BSD-3-Clause)
-depends=(gcc-libs-static-compat)
+depends=(static-compat-gcc-libs)
 makedepends=(static-compat-cmake git)
 source=(git+https://github.com/google/double-conversion#tag=v$pkgver)
 sha256sums=('6009d129b305b65819cf37cd8cd8f07557a461d141a91f6e3afd553c4a384d59')

@@ -1,12 +1,8 @@
 # Maintainer of official package: Felix Yan <felixonmars@archlinux.org>
 
-# Same as mingw-w64-binutils package but uses symlinks instead of hard links allowing
-# installation when /usr/i686-w64-mingw32 and /usr/x86_64-w64-mingw32 are
-# bound from another partition.
-
 pkgname=mingw-w64-binutils-symlinks
-pkgver=2.46
-_sourcedir=binutils-with-gold-${pkgver}
+pkgver=2.47
+_sourcedir=binutils-${pkgver}
 pkgrel=1
 pkgdesc="Cross binutils for the MinGW-w64 cross-compiler"
 arch=('x86_64')
@@ -16,23 +12,24 @@ groups=('mingw-w64-toolchain' 'mingw-w64')
 provides=('mingw-w64-binutils')
 depends=('zlib')
 options=('!libtool' '!emptydirs')
-validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F')  # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
-source=(https://ftp.gnu.org/gnu/binutils/${_sourcedir}.tar.gz{,.sig}
+validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F' # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
+              '5EF3A41171BB77E6110ED2D01F3D03348DB1A3E2') # Sam James <sam@cmpct.info>
+source=("https://ftp.gnu.org/gnu/binutils/${_sourcedir}.tar.gz"{,.sig}
         0002-check-for-unusual-file-harder.patch
         0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
-        0011-libiberty-Preserve-errno-across-calls-to-libiberty_v.patch
         2001-ld-option-to-move-default-bases-under-4GB.patch
         2003-Revert-Restore-old-behaviour-of-windres-so-that-opti.patch
+        2004-ld-Prevent-_tls_used-and-_load_config_used-from-bein.patch
         reproducible-import-libraries.patch
         libiberty-unlink-handle-windows-nul.patch
 )
-sha256sums=('4b4c189824b9c3ae483e056ade8d5265e876aea1dedd76dc3ca81bad77b02f03'
+sha256sums=('0e86bcf998e4fa8fcdd1a4461899dd8efebfb57f6c15e31f6518a9b037d5e8c6b9a6be3fe28b4b1589c8c82e8611e01241dfef4b54543006a07a855cd8754a67'
             'SKIP'
             '2c99345fc575c3a060d6677537f636c6c4154fac0fde508070f3b6296c1060d4'
-            '4e8ac055df61b1b5d6ae29dc87e1154737c2e87c7b244b44866702cabf1a5d18'
             '90890cf76f820e61d4eeeef356b0d08ff0c7a90a07691b42a37a1e17abc29cda'
             '9945635f4a67712616202f09cbb66cf70df01be168c2c8054c455bb58bf334dd'
             '3e3c53b0751a6389cd50dcbd7f78b52aaa55113414da01d3415592af18809702'
+            'asdf'
             'a094660ec95996c00b598429843b7869037732146442af567ada9f539bd40480'
             '7ccbd418695733c50966068fa9755a6abb156f53af23701d2bc097c63e9e0030')
 
@@ -44,7 +41,6 @@ prepare() {
   # Apply various patches from MSYS2
   patch -p1 -i ../0002-check-for-unusual-file-harder.patch
   patch -p1 -i ../0010-bfd-Increase-_bfd_coff_max_nscns-to-65279.patch
-  patch -p1 -i ../0011-libiberty-Preserve-errno-across-calls-to-libiberty_v.patch
 
   # Add an option to change default bases back below 4GB to ease transition
   # https://github.com/msys2/MINGW-packages/issues/7027
@@ -58,6 +54,10 @@ prepare() {
 
   # https://github.com/msys2/MINGW-packages/pull/9233#issuecomment-889439433
   patch -p1 -i "${srcdir}/2003-Revert-Restore-old-behaviour-of-windres-so-that-opti.patch"
+
+  # This is required for `gcc -Wl,--gc-sections` to work with recent mingw-w64.
+  # see https://github.com/msys2/MINGW-packages/commit/9002cdeec0f1787b3cb3b18494cdc738876c3bea
+  patch -p1 -i "${srcdir}/2004-ld-Prevent-_tls_used-and-_load_config_used-from-bein.patch"
 
   # Handle Windows nul device
   # https://github.com/msys2/MINGW-packages/issues/1840
@@ -98,17 +98,5 @@ package() {
     make DESTDIR="$pkgdir" install
 
     rm "$pkgdir"/usr/lib/bfd-plugins/libdep.so
-  done
-
-  cd "${pkgdir}/usr/bin"
-  for file in *; do
-    if [[ ! -L $file ]] && [[ ! -d $file ]]; then
-      local _arch="${file%*-w64-mingw32*}"
-      local _name="${file#*-w64-mingw32-}"
-      local _target="/usr/${_arch}-w64-mingw32/bin/${_name}"
-      if [[ -f ${pkgdir}/${_target} ]]; then
-        ln -sf "${_target}" "${file}"
-      fi
-    fi
   done
 }

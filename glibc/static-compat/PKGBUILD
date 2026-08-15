@@ -5,14 +5,14 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc
 # NOTE: valgrind requires rebuilt with each major glibc version
 
-pkgbase=glibc-static-compat
-pkgname=(glibc-static-compat lib32-glibc-static-compat)
+pkgbase=static-compat-glibc
+pkgname=(static-compat-glibc static-compat-lib32-glibc)
 pkgver=2.26
-pkgrel=3
+pkgrel=4
 arch=(x86_64)
-url='http://www.gnu.org/software/libc'
-license=(GPL LGPL)
-makedepends=(git gd lib32-gcc-libs linux-api-headers-static-compat)
+url='https://www.gnu.org/software/libc'
+license=(GPL-2.0-or-later LGPL-2.1-or-later)
+makedepends=(git gd lib32-gcc-libs static-compat-linux-api-headers)
 options=(!strip staticlibs)
 #_commit=23158b08a0908f381459f273a984c6fd328363cb
 _commit=de51f431ed6226ec68ca76e578f2cbd55b6262cb
@@ -134,10 +134,13 @@ check() {
   make check || true
 }
 
-package_glibc-static-compat() {
+package_static-compat-glibc() {
   pkgdesc='GNU C Library'
-  depends=('linux-api-headers-static-compat>=4.10' tzdata filesystem)
+  depends=('static-compat-linux-api-headers>=4.10' tzdata filesystem)
   optdepends=('gd: for memusagestat')
+  provides=(glibc-static-compat)
+  conflicts=(glibc-static-compat)
+  replaces=(glibc-static-compat)
 
   make -C glibc-build install_root="$pkgdir$_prefix" install
   rm -rf "$pkgdir"$_prefix/{etc,sbin,var}
@@ -162,9 +165,12 @@ package_glibc-static-compat() {
   fi
 }
 
-package_lib32-glibc-static-compat() {
+package_static-compat-lib32-glibc() {
   pkgdesc='GNU C Library (32-bit)'
   depends=("glibc-static-compat=$pkgver")
+  provides=(lib32-glibc-static-compat)
+  conflicts=(lib32-glibc-static-compat)
+  replaces=(lib32-glibc-static-compat)
 
   cd lib32-glibc-build
 

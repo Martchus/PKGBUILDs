@@ -13,9 +13,9 @@
 % }
 
 pkgname=<%= $package_name %>
-_qtver=6.11.1
+_qtver=6.11.2
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -31,7 +31,8 @@ depends=(shared-mime-info
          static-compat-libxxf86vm static-compat-md4c static-compat-pcre2
          static-compat-sqlite static-compat-xcb-util-image static-compat-xcb-util-keysyms
          static-compat-xcb-util-renderutil static-compat-xcb-util-cursor static-compat-vulkan-headers
-         static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans static-compat-openssl)
+         static-compat-xcb-util-wm static-compat-xorgproto static-compat-xtrans static-compat-openssl
+         static-compat-zstd)
 makedepends=(static-compat-cmake xdg-utils ninja)
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
@@ -97,6 +98,8 @@ build() {
     -DICU_INCLUDE_DIR=$static_compat_prefix/include \\
     -DLibdrm_INCLUDE_DIR=$static_compat_prefix/include \\
     -DGLESv2_INCLUDE_DIR=$static_compat_prefix/include \\
+    -DOPENGL_GLES2_INCLUDE_DIR=$static_compat_prefix/include \\
+    -DOPENGL_GLES3_INCLUDE_DIR=$static_compat_prefix/include \\
     -Dgbm_INCLUDE_DIR=$static_compat_prefix/include
   VERBOSE=1 cmake --build build
 }

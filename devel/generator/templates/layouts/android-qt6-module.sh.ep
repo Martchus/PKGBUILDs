@@ -33,6 +33,7 @@ prepare () {
 % }
 build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
+  export ANDROID_MINIMUM_PLATFORM=24
 <%== content_for 'before_env' %>\
   source android-env ${_android_arch}
   export QT_ANDROID_JAR_PATH=${ANDROID_PREFIX}/jar

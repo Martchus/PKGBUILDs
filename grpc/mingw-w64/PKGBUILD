@@ -1,8 +1,8 @@
 pkgname=mingw-w64-grpc
 _pkgname=grpc
-_protover=35.1
+_protover=36.0
 _opencensus_proto_ver=0.4.1
-pkgver=1.81.1
+pkgver=1.83.0
 pkgrel=1
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (mingw-w64)"
 arch=('any')
@@ -15,14 +15,12 @@ source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz"
         001-fix-building-shared-libraries-with-clang.patch
         002-fix-building-python-module.patch
-        003-fix-build-shared-libs-on-mingw.patch
-        protobuf-34-build-fix.patch)
-sha256sums=('48ae0d05f87206112d9e9144a923191ee1e482141a70686ec58dc86d0b40fddc'
+        003-fix-build-shared-libs-on-mingw.patch)
+sha256sums=('90d453393a9d41215df546103b10b33b9566df79cdf6f49dc67f6c4d044d090d'
             'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3'
             'cf4064ad294bbddf15ac0611a4920dfa133a54ccaebbf813ed4faef6b20d142b'
             'c08e9a6a4dd569155452660825c8b42a06bbc6eb1e924af98796b138e6698e93'
-            'd1b8334fbd97c833f37f03f222bd443a77772409586c1324cb5bb1b5d85037b3'
-            '2c126e40c54bdc88ab57fad12cbd860fc999aceb0e2787263edcbf024097ecec')
+            'd1b8334fbd97c833f37f03f222bd443a77772409586c1324cb5bb1b5d85037b3')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
@@ -40,8 +38,6 @@ prepare() {
   patch -p1 -i ../001-fix-building-shared-libraries-with-clang.patch
   patch -p1 -i ../002-fix-building-python-module.patch
   patch -p1 -i ../003-fix-build-shared-libs-on-mingw.patch
-
-  patch -p1 -i "$srcdir/protobuf-34-build-fix.patch"
 }
 
 build() {

@@ -1,6 +1,6 @@
 pkgname=mingw-w64-protobuf
 _pkgname=protobuf
-pkgver=35.1
+pkgver=36.0
 pkgrel=1
 pkgdesc="Protocol Buffers - Google's data interchange format (mingw-w64)"
 arch=('any')
@@ -12,7 +12,7 @@ options=(!strip !buildflags staticlibs)
 source=("https://github.com/protocolbuffers/${_pkgname}/releases/download/v$pkgver/${_pkgname}-$pkgver.tar.gz"
          0002-Fix-windres-invocation.patch
          0003-Demote-error-about-buildtime-runtime-version-differe.patch)
-sha256sums=('f0b6838e7522a8da96126d487068c959bc624926368f3024ac8fd03abd0a1ac4'
+sha256sums=('399931c793f4ac6db81045b00b06dd07c877b48aeecf36c797f65c541fb533e7'
             '92ee16fe5fb198a345a40ded30ecce4fef0f86089545a300773b64bcc91eb9c2'
             'a5183b4028eb063e0f1d689b1197e45305368df74a2ea018dbea63b4ef925fae')
 

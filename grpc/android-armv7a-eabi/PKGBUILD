@@ -2,9 +2,9 @@ _android_arch=armv7a-eabi
 
 _pkgname=grpc
 pkgname=android-${_android_arch}-${_pkgname}
-_protover=35.1
+_protover=36.0
 _opencensus_proto_ver=0.4.1
-pkgver=1.81.1
+pkgver=1.83.0
 pkgrel=1
 arch=('any')
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (Android ${_android_arch})"
@@ -27,11 +27,9 @@ makedepends=(
 )
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://github.com/grpc/grpc/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
-        "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz"
-        "protobuf-34-build-fix.patch")
-sha256sums=('38f58596277fa632064cc0719b9ece4381c8c77461cb51e9b66ca149574b7865'
-            'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3'
-            '2c126e40c54bdc88ab57fad12cbd860fc999aceb0e2787263edcbf024097ecec')
+        "https://github.com/census-instrumentation/opencensus-proto/archive/v${_opencensus_proto_ver}/opencensus-proto-${_opencensus_proto_ver}.tar.gz")
+sha256sums=('90d453393a9d41215df546103b10b33b9566df79cdf6f49dc67f6c4d044d090d'
+            'e3d89f7f9ed84c9b6eee818c2e9306950519402bf803698b15c310b77ca2f0f3')
 
 prepare() {
   cd ${_pkgname}-${pkgver}
@@ -43,8 +41,6 @@ prepare() {
 
   rm -rf third_party/opencensus-proto
   mv "${srcdir}"/opencensus-proto-${_opencensus_proto_ver} third_party/opencensus-proto
-
-  patch -p1 -i "$srcdir/protobuf-34-build-fix.patch"
 }
 
 build() {

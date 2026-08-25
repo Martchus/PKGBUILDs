@@ -1,6 +1,6 @@
 pkgname=mingw-w64-abseil-cpp
-pkgver=20260526.0
-pkgrel=2
+pkgver=20260817.0
+pkgrel=1
 pkgdesc='Collection of C++ library code designed to augment the C++ standard library (mingw-w64)'
 arch=('any')
 url='https://abseil.io'
@@ -8,10 +8,17 @@ license=('Apache-2.0')
 depends=('mingw-w64-crt' 'mingw-w64-winpthreads')
 makedepends=('mingw-w64-cmake-static')
 options=('!buildflags' '!strip' 'staticlibs')
-source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/abseil-cpp-$pkgver.tar.gz")
-sha256sums=('6e1aee535473414164bf83e4ebc40240dec71a4701f8a642d906e95bea1aea0c')
+source=("https://github.com/abseil/abseil-cpp/archive/$pkgver/abseil-cpp-$pkgver.tar.gz"
+        "https://github.com/google/cctz/pull/372.patch")
+sha256sums=('f7e05179df39c45434cad433f5783840bb3788ef322976f9138bc6b72b3a107d'
+            '1d389b80879a798e3254ef9b0f10e452d7b2e2ca437a3dea0c595a3e8b61316e')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+
+prepare() {
+  cd abseil-cpp-$pkgver
+  patch -p1 -d absl/time/internal/cctz -i "$srcdir/372.patch"
+}
 
 build() {
   cd abseil-cpp-$pkgver

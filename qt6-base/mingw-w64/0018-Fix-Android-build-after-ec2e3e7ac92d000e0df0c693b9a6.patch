@@ -1,7 +1,7 @@
 From 2c68732bbc4fe1b87a251284b5b99bc7de5ffa4a Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 9 May 2025 22:26:39 +0200
-Subject: [PATCH 18/24] Fix Android build after
+Subject: [PATCH 18/25] Fix Android build after
  ec2e3e7ac92d000e0df0c693b9a636390d34a9eb
 
 Change-Id: I02563b129a949c36aff91a4645b6ee10a8cfba2c

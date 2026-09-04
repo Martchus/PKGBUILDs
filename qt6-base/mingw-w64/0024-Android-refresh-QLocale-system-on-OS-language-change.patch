@@ -1,7 +1,7 @@
 From 940a3e4ca688641bb07509baeebc49bb0ee2817c Mon Sep 17 00:00:00 2001
 From: Assam Boudjelthia <assam.boudjelthia@qt.io>
 Date: Tue, 28 Apr 2026 19:02:41 +0300
-Subject: [PATCH 24/24] Android: refresh QLocale::system() on OS language
+Subject: [PATCH 24/25] Android: refresh QLocale::system() on OS language
  change
 
 QtActivityBase.onConfigurationChanged() calls back into

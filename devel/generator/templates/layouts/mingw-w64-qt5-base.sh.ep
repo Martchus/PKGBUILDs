@@ -32,7 +32,7 @@
 _qt_module=qt<%== $qt_module %>
 pkgname=<%= $package_name %>
 pkgver=5.15.19<%== $kde_fork_revision ? "+kde+r$kde_fork_revision->[0]" : '' %>
-pkgrel=1
+pkgrel=2
 % if ($kde_fork_revision) {
 _basever=${pkgver%%+*}
 _commit=<%== $kde_fork_revision->[1] %>
@@ -206,6 +206,13 @@ build() {
 
     # add include directory of MariaDB
     qt_configure_args+=" -I/usr/${_arch}/include/mariadb"
+
+    # add include directory of FreeType2
+    qt_configure_args+=" -I/usr/${_arch}/include/freetype2"
+
+    # add include directories of D-Bus library
+    qt_configure_args+=" -I/usr/${_arch}/include/dbus-1.0"
+    qt_configure_args+=" -I/usr/${_arch}/lib/dbus-1.0/include"
 
     # add include directory for Vulkan
     export VULKAN_SDK=/usr/${_arch}

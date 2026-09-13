@@ -1,7 +1,7 @@
 From 01f4abc805d76e77dc53077fb638263e12864fa8 Mon Sep 17 00:00:00 2001
 From: Giuseppe D'Angelo <giuseppe.dangelo@kdab.com>
 Date: Wed, 18 Mar 2020 19:46:24 +0100
-Subject: [PATCH 33/34] QSslCertificate: remove manual parsing code for ASN.1
+Subject: [PATCH 33/35] QSslCertificate: remove manual parsing code for ASN.1
  (on OpenSSL)
 
 OpenSSL 1.1.1 has a convenient function for parsing ASN.1 times;

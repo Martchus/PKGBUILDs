@@ -18,7 +18,7 @@
 _qt_module=qtbase
 pkgname=mingw-w64-qt5-base-static
 pkgver=5.15.19+kde+r96
-pkgrel=1
+pkgrel=2
 _basever=${pkgver%%+*}
 _commit=fbed962c3195ab3952fa54d40e012ad1a4fdc42b
 pkgdesc='A cross-platform application and UI framework, native OpenGL backend (mingw-w64)'
@@ -71,42 +71,44 @@ source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         '0031-Prevent-Cannot-find-feature-windows_vulkan_sdk.patch'
         '0032-Fix-crashes-in-rasterization-code-using-setjmp.patch'
         '0033-QSslCertificate-remove-manual-parsing-code-for-ASN.1.patch'
-        '0034-Update-sources-to-support-OpenSSL-4.patch')
+        '0034-Update-sources-to-support-OpenSSL-4.patch'
+        '0035-Fix-detection-of-freetype2-and-dbus.patch')
 sha256sums=('fa3b11138b081a1b1f2412fcfa1177962460d05b71240ba01b7ea181eff6acc3'
-            'cc005e0c6d3a454381cf1eca6ed135ce6031a780ba740544246e86932f33ab48'
-            'c35fc51379b77b8ab953546f6b966027772b8f6960bf54d3044ff9f3a18830fd'
-            '68823041ce58c5e5e9161ab50472d9fbf18396ea2f803e422fa232f53044e848'
-            '1c4dbcaa61165995b8e9a81d9917a5fb07310f17b75bd5f85f5839a8b30e159d'
-            'e98b8959895fd5d9d791fbf09435e3d4974d217ef04b776a69f3842e9250134f'
-            '11b02a858c93720726ec826bac3909d107436c19ce25c3763f490afa573e3778'
-            '75fe0deefcca62e44ae14b7f7dc563523d7a9631a5951acc1ce0329a370e1a33'
-            'dfbcf6a86b9533f95be4e74ff9475fb1e98d0678a36a780e9c03fc9e7dfc9b4d'
-            '864feab078775485408011272c1a05231df604887318699ebaf372af656607c8'
-            '01d270995863b8f18f1c0fecfc519a01c5c31f7e396af5b05ec48da89dfcb5ed'
-            '5bf10f029b4dfb44dd7222ad3119adc61153ce7824b383360f019138ee403848'
-            '0d75243bbccf0499051c5eb8c3a4f1b1c628159c24d95a0dc4421b39f35c8a37'
-            'e0d700b4ecc313164dda17f43f3245b41f2f34f0cc22c5fb4f5b4a1d2ce01ce7'
-            '3d110009c337541aee121863725e5f55ae1665b6574bf868b2b01b9c7ed1da97'
-            'faa08efc8339e30d71a0794b99c09b9db44ee981e52ecbe67e47b8cb92ec164e'
-            '295ee103060d8da2dfa9c6fdd5f10ba563a211ed0e4f61a3127c44481c9ce03d'
-            'd18de51a51cfc15bfb4208c329ff67462121604e0561b30e0f1d43c7c5aacfb1'
-            '21e3f3545bee0317c1a762d2760d227a611d62b346fc47b45e36416f2b7b3328'
-            '00710b117d4c4c86ae2e02b2792352abcec08eff7665d55e0af0ea6c6168c687'
-            '9ef20d610a68ffebb782f2ecd9221eaf538e0e56267d057752691a089967e256'
-            'f87db36e282ba302d23bff1d85de6978e1306b0c4794fbf7a890168a0fb20b10'
-            '60c8bee979bc7340e69e5250617105915fba38b51f43a23eac372c5c931f39a2'
-            '38d08dd52f759cdef9516f152cf75bac86fface9fe2eda17af070aef1001c4d4'
-            '6e2e355b1eaa44713141a4cf411bb143062f535d3dffb2fbc14fd2819748b27a'
-            'b2d4f2f617c8d389899082310cda0f40f68a5d062b1d423a32d1b1601f0cef52'
-            'c32963668b924d07c648e68c91e6e115973c641219ae2aedfb6ea7ca58e41eeb'
-            '71ab55f03627023f0d064aefa12cd5cae40f62e5e5528d2d58c24fbf494385a5'
-            'd563d273a0c9b686e6e620bb5d2bb404971876ad00d26227dfddfb76b75d8ed0'
-            '1a383e70bd13d4f0543d86b8c339ea6a2fd71bd92ed0831eca6932356f1b8e20'
-            'dd24eb25659b2a625da6b29df0ea981cc135ee8c29d2ead6f329f4c3945da640'
-            '45b75b977c91c49319ef357e510eb8701f179e2da5f64012d411fea6ab2355d9'
-            'd2e051772726d5c8a84b798b86298e13b7c2f2b62462946e97089a64ab5e1185'
-            'dab50c6d82aab1a83124e0b9a9ebf24a016d69d39c21e7a366873df72cce8eb8'
-            '83a304acdfe66d5f0401be2241f4067a1e9ee356b642d6bfeeac66ce72edfb04')
+            '271af5631998a5a2511c54a2d57f68732bd35fdfa4e968ee9a836231dd5e76f4'
+            '7b5acab8034739bd82613a81163b672d6e153b1c56bbe80fa1323b237a3ba341'
+            '6c33f17df6c90ca152bbce6b10d37923791acd9afb480722ab655604ef34e725'
+            'a28f762db28ad99f62c869417bd2d808d823eaa643208f4aeafc77f699998b78'
+            '26a70415d359fdbaf3b20f29bd8a8c5513397fc7b3b699e0f30c4cc9b46e4456'
+            'afbc3e60997f79aeff43c2fcd8f203e572c8c2b1288f57507bfce01eede7a215'
+            '12efbc7f3453cdf7614cf9d5e401aa91a8172f4485c72aff135bebcfddb1c0d1'
+            '8cd8edd739a09f33285e85b77135b44296bffd9c7da5bc6b1023e7d2409ed030'
+            'bb0e317f0126f5054919459a74f595205c289f0ba05d369a90ff00100e1efbbc'
+            'dee27711f859b4c9e9eea48dbffd2e8a3c0b102c58aa91624f716ca0dca53df2'
+            '913ffd4d4664944e64cf817ad25f33b31f82ed3a753fdfd067532287982d8e05'
+            '65d3692a64dac90abd9d6b122e6baae97fe684d97485e3bb46e6e0a7acc0f1ea'
+            'e59c1c840c4999ee7c1dea243d04722834c28b72eccfd55d301af85d3f6202e2'
+            '5b75f7b0c450d4ad5bb5b13c2fa43beff57c21154f40bbf4536064358629148a'
+            '1a34bd4b88c5860a9b8a36e49eed4eb6aa76cc9719b78523ef58c948291db5b5'
+            '7b02417bf97968a4a3d3a0cfae51b91949ff68e44f40e77a651e5796fabfe329'
+            'cdf82482c43b49dc537465e37d23e056c19a3894ae1d17d06e91667d6416b355'
+            'e39309a99161ca8803abc96a527da8553a5ca06bac2b7d4e74855efb6694ff69'
+            '88f16fd304012d0e834e85e8f6a4dcfe2d21d00237c9f7c4af881dd9f05546a7'
+            '965ac1609c529561a21df08f71c396100886fb22502b6ef87ac403d5f80f8c3d'
+            '8997938e95f13d9121976ff45fd88b080eb6320a6ee218e19d596fa8acc61731'
+            '8b89751ec17a0d0dc18c3986a2ca56083e521d8101616e444185bcdf7514e2ff'
+            '7ec70f103161772c577b9ad7c86175bbdddb2b1987e560a12d473b7ded11f70c'
+            '0d728f2c71dd58001cf2b89cef56fc6a55b1023c6b791a1bbfeb669acde4a4a9'
+            'b734dc193100f39eb3e1bd9d5f5d09ac8b326a829561a80c805da29dde528cb4'
+            '55a3d15d614b15e141c81b08276d50c023dace288cff19fec0e84fd7cbc8ab94'
+            'f5ae85017093e640fdf25969754c9c75ad28a8ae45cb6a4f1233c47e4c701f1e'
+            '233ffd76bca1b099e59121d6f31e16f48fec1a4531681b4d18a1a5dd1abe293e'
+            '3790f1a577b50e698dc35c1e799f8be87db094f05713821913d1ffee24234ed3'
+            'd45d1f6be610af093b976a60a7cc10fe74734c4a7c2d646b4c6e4f196e8c4871'
+            '3f1758ea95e4ac43430dad87b8adb989e219b99175cfa01f3453a420137677ba'
+            '8564a5c4cfe2bd57d376619f4363a15a30864f100105106c8ce559165ad23786'
+            '169a824040ba411b8e39b3d0eb92428ddb8ab3241e6ca331b9e71c2cf565cddf'
+            'bbaaf2510224f5efb2cf3e6b9be4f024b68bb04ea906ab084d178f042dc0231d'
+            '953f69f1cda352f58c311205a9d472c455935201d08423df7d63bc43f1413d70')
 
 _architectures='i686-w64-mingw32 x86_64-w64-mingw32'
 
@@ -206,6 +208,13 @@ build() {
 
     # add include directory of MariaDB
     qt_configure_args+=" -I/usr/${_arch}/include/mariadb"
+
+    # add include directory of FreeType2
+    qt_configure_args+=" -I/usr/${_arch}/include/freetype2"
+
+    # add include directories of D-Bus library
+    qt_configure_args+=" -I/usr/${_arch}/include/dbus-1.0"
+    qt_configure_args+=" -I/usr/${_arch}/lib/dbus-1.0/include"
 
     # add include directory for Vulkan
     export VULKAN_SDK=/usr/${_arch}

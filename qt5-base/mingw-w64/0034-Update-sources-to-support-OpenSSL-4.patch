@@ -1,7 +1,7 @@
 From cf1870dee692ef0a91bd73d5b4bf51d5c2130545 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Fri, 31 Jul 2026 14:45:43 +0200
-Subject: [PATCH 34/34] Update sources to support OpenSSL 4
+Subject: [PATCH 34/35] Update sources to support OpenSSL 4
 
 OpenSSL 4 now uses const in logical cases across its X.509 API; this
 patch updates Qt's TLS backend to compile against both 3.x and 4.x.

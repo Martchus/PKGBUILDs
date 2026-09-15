@@ -16,7 +16,7 @@
 pkgname=<%= $package_name %>
 _qtver=6.11.2
 pkgver=${_qtver/-/}
-pkgrel=1.1
+pkgrel=2
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -72,6 +72,13 @@ build() {
 
     # workaround https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120495
     [[ $pkgname =~ .*-clang-.* ]] || export CXXFLAGS+=' -Wno-template-body -fcoroutines'
+
+% if ($static_variant) {
+    # use local-exec TLS model to avoid crashes when using static builds
+    # note: The resulting static libraries must never be used when linking a shared library (they
+    #       can only be used when linking an executable).
+    export CXXFLAGS+=' -ftls-model=local-exec'
+% }
 
     local _enable_winrt_support=ON
     if [[ ! -e /usr/${_arch}/include/winrt/Windows.Foundation.h ]]; then

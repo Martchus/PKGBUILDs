@@ -54,14 +54,9 @@ ephemeral_port() {
 }
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
-  local additional_args=
-  [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
-  [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
-  [[ $_enable_quick_gui ]] && additional_args+=' -DQUICK_GUI=ON -DQUICK_GUI_CONTROLS_STYLE=dynamic'
-
   cmake \
+    -B "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build" \
+    -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \
     -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
@@ -83,26 +78,26 @@ build() {
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
     -DJS_PROVIDER="${_js_provider}" \
     -DSYSTEMD_SUPPORT=ON \
-    $additional_args \
-    .
+    $( [[ $_enable_kio_plugin ]] || echo -DNO_FILE_ITEM_ACTION_PLUGIN=ON ) \
+    $( [[ $_enable_plasmoid ]] || echo -DNO_PLASMOID=ON ) \
+    $( [[ $_enable_quick_gui ]] && echo -DQUICK_GUI=ON -DQUICK_GUI_CONTROLS_STYLE=dynamic )
   # try again due to "/usr/include/c++/16.1.1/span:170:24: internal compiler error: Segmentation fault"
-  ninja || ninja
+  ninja -C "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build" || ninja -C "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build"
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  local build_dir="$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build"
   # https://github.com/syncthing/syncthing/issues/8785
-  export HOME="$(mktemp -p "$PWD" -d testhome.XXX)"
+  export HOME="$(mktemp -p "$srcdir" -d testhome.XXX)"
   # https://github.com/Martchus/syncthingtray/issues/455
   export QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=
   export SYNCTHING_PORT=$(ephemeral_port)
   export SYNCTHING_TEST_TIMEOUT_FACTOR=3
-  ninja check || ninja check
+  ninja -C "$build_dir" check || ninja -C "$build_dir" check
 }
 
 package() {
   depends+=('libqtutilities-qt6.so' 'libqtforkawesome-qt6.so' 'libc++utilities.so' 'libboost_filesystem.so')
 
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  DESTDIR="${pkgdir}" ninja install
+  DESTDIR="${pkgdir}" ninja -C "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build" install
 }

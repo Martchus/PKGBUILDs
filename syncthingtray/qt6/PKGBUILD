@@ -54,9 +54,17 @@ ephemeral_port() {
 }
 
 build() {
+  local src_dir="$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  local build_dir="$src_dir-build"
+
+  local additional_args=
+  [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
+  [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
+  [[ $_enable_quick_gui ]] && additional_args+=' -DQUICK_GUI=ON -DQUICK_GUI_CONTROLS_STYLE=dynamic'
+
   cmake \
-    -B "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build" \
-    -S "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}" \
+    -B "$build_dir" \
+    -S "$src_dir" \
     -G Ninja \
     -DCMAKE_BUILD_TYPE:STRING='Release' \
     -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
@@ -78,11 +86,9 @@ build() {
     -DWEBVIEW_PROVIDER="${_webview_provider}" \
     -DJS_PROVIDER="${_js_provider}" \
     -DSYSTEMD_SUPPORT=ON \
-    $( [[ $_enable_kio_plugin ]] || echo -DNO_FILE_ITEM_ACTION_PLUGIN=ON ) \
-    $( [[ $_enable_plasmoid ]] || echo -DNO_PLASMOID=ON ) \
-    $( [[ $_enable_quick_gui ]] && echo -DQUICK_GUI=ON -DQUICK_GUI_CONTROLS_STYLE=dynamic )
+    $additional_args
   # try again due to "/usr/include/c++/16.1.1/span:170:24: internal compiler error: Segmentation fault"
-  ninja -C "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build" || ninja -C "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}-build"
+  ninja -C "$build_dir" || ninja -C "$build_dir"
 }
 
 check() {

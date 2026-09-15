@@ -20,6 +20,7 @@ arch_flags=()
 
 # configure further flags using flags from regular Arch as far as it makes sense
 # omit `-Wp,-D_FORTIFY_SOURCE=2` for now as it causes Qt 6 apps to hang, see f7c5947c2c92f516701d40373c98af3556edf8f6
+# and https://github.com/msys2/MINGW-packages/pull/31309#issuecomment-5505514064
 default_mingw_pp_flags=""
 # add `-fstack-protector-strong` as MSYS2 uses it
 # omit `--param=ssp-buffer-size=4` as not present in MSYS2

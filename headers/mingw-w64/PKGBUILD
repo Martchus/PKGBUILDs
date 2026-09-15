@@ -2,8 +2,9 @@
 
 pkgname=mingw-w64-headers
 _name=mingw-w64
-pkgver=14.0.0
+pkgver=14.0.0.r375.g9c1abbbf5
 pkgrel=1
+_commit='9c1abbbf55a3de2febee4d1f685b1bda20774c5e'
 pkgdesc="MinGW-w64 headers for Windows"
 arch=('any')
 url="https://www.mingw-w64.org"
@@ -12,14 +13,25 @@ groups=('mingw-w64-toolchain' 'mingw-w64')
 [[ $pkgname =~ .*-clang-.* ]] && makedepends=('mingw-w64-configure')
 options=('!strip' '!libtool' '!emptydirs')
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
-source=(https://sourceforge.net/projects/$_name/files/$_name/$_name-release/$_name-v${pkgver}.tar.bz2{,.sig})
-sha512sums=('17378a0e2abbbb688468a78cb0ba261f9001a1bc6e7d0270c24c4b8b13e5c6513e8fb8e617d08102fbc772c288ad81ec3a43ca756ed28f17cc5543f717a8bb6d'
-            'SKIP')
+#source=(https://sourceforge.net/projects/$_name/files/$_name/$_name-release/$_name-v${pkgver}.tar.bz2{,.sig})
+#sha512sums=('17378a0e2abbbb688468a78cb0ba261f9001a1bc6e7d0270c24c4b8b13e5c6513e8fb8e617d08102fbc772c288ad81ec3a43ca756ed28f17cc5543f717a8bb6d'
+#            'SKIP')
+source=("mingw-w64"::"git+https://git.code.sf.net/p/mingw-w64/mingw-w64#commit=$_commit")
+sha256sums=('eca113e8ecc9e907065b285036ebfcb09d97084f457098d198149cb43e393066')
+makedepends+=('git')
 
 _targets="i686-w64-mingw32 x86_64-w64-mingw32"
 
+#mingw_src_dir=mingw-w64-v${pkgver}
+mingw_src_dir=mingw-w64
+
+pkgver() {
+  cd "${srcdir}/mingw-w64"
+  git describe --long ${_commit} | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
 prepare() {
-  cd "$srcdir"/mingw-w64-v${pkgver}
+  cd "$srcdir"/${mingw_src_dir}
 }
 
 build() {
@@ -32,7 +44,7 @@ build() {
     if [[ $pkgname =~ .*-clang-.* ]] || [[ $pkgname =~ .*-ucrt-.* ]]; then
       _configure_args+=" --enable-idl --with-default-win32-winnt=0x601 --with-default-msvcrt=ucrt"
     fi
-    "$srcdir"/mingw-w64-v${pkgver}/mingw-w64-headers/configure --prefix=/usr/${_target} --enable-sdk=all --host=${_target} ${_configure_args}
+    "$srcdir"/${mingw_src_dir}/mingw-w64-headers/configure --prefix=/usr/${_target} --enable-sdk=all --host=${_target} ${_configure_args}
   done
 }
 
@@ -47,7 +59,7 @@ package() {
   done
 
   echo "Installing MinGW-w64 licenses"
-  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/COPYING.MinGW-w64/COPYING.MinGW-w64.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64.txt
-  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64-runtime.txt
-  install -Dm644 "$srcdir"/mingw-w64-v${pkgver}/mingw-w64-headers/ddk/readme.txt "$pkgdir"/usr/share/licenses/${pkgname}/ddk-readme.txt
+  install -Dm644 "$srcdir"/${mingw_src_dir}/COPYING.MinGW-w64/COPYING.MinGW-w64.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64.txt
+  install -Dm644 "$srcdir"/${mingw_src_dir}/COPYING.MinGW-w64-runtime/COPYING.MinGW-w64-runtime.txt "$pkgdir"/usr/share/licenses/${pkgname}/COPYING.MinGW-w64-runtime.txt
+  install -Dm644 "$srcdir"/${mingw_src_dir}/mingw-w64-headers/ddk/readme.txt "$pkgdir"/usr/share/licenses/${pkgname}/ddk-readme.txt
 }

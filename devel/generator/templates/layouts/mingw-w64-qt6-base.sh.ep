@@ -16,7 +16,7 @@
 pkgname=<%= $package_name %>
 _qtver=6.11.2
 pkgver=${_qtver/-/}
-pkgrel=5
+pkgrel=6
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -87,6 +87,7 @@ build() {
       -DFEATURE_openssl_linked=ON \\
       -DFEATURE_openssl_hash=OFF \\
       -DFEATURE_openssl_password_digestor=OFF \\
+      -DFEATURE_gc_binaries=OFF \\
 % }
       -DFEATURE_cxx20=ON \\
       -DFEATURE_cpp_winrt=$_enable_winrt_support \\

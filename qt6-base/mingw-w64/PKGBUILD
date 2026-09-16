@@ -13,7 +13,7 @@
 pkgname=mingw-w64-qt6-base
 _qtver=6.11.2
 pkgver=${_qtver/-/}
-pkgrel=3
+pkgrel=4
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -88,7 +88,7 @@ sha256sums=('5b2e00eccaf5a4d8c14134ffa0ea8dfd0a35ae1ffc7f8d87fa4305a1ed23cf22'
             'eba5f2a6952410eddcb1b61fd58ad82ef7b078c58ea0f697bceab4588fae488b'
             'e6b4bd721302931df05a369bce8b6a26d9b4d01cd470ad7f2f7d8b279a2a4ea9'
             '61ba828b4a53f5bc20356a187dc31e0f47bc1cebd3b63f686615687532b28ecc'
-            '044816d9d385d2ab89f8217cd3662f6907ffba3aada40274f770bdfcb9ff3358')
+            '72fc1a5379a76dc371e77b6026457c29eaacce7b66829667e1d80d5937462780')
 
 # disable i686 build because 32-bit Windows is generally not supported by upstream and
 # it does not build anymore as of GCC 14 (probably due to commit 9a19fa8b616f83474c35cc5b34a3865073ced829)

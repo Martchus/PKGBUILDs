@@ -1,0 +1,27 @@
+From d1e428d1d998a4e06830a326065db3255c97c050 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Wed, 16 Sep 2026 01:58:24 +0200
+Subject: [PATCH 26/26] Fix crash of static build with native TLS
+
+Change-Id: I65bc24c2a6a73730f018fad646b49c0f0c121476
+---
+ src/corelib/thread/qthread_win.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/corelib/thread/qthread_win.cpp b/src/corelib/thread/qthread_win.cpp
+index 2795d82de1e..bc86f2678fe 100644
+--- a/src/corelib/thread/qthread_win.cpp
++++ b/src/corelib/thread/qthread_win.cpp
+@@ -52,6 +52,9 @@ Q_CONSTINIT static thread_local QThreadData *currentThreadData = nullptr;
+ static void deref_current_thread_data(QThreadData *data);
+ static void destroy_current_thread_data(void *p)
+ {
++    if (!p) {
++        return;
++    }
+     QThreadData *data = static_cast<QThreadData *>(p);
+     QThread *thread = data->thread.loadAcquire();
+ 
+-- 
+2.55.0
+

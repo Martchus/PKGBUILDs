@@ -1,6 +1,18 @@
+From 5c876e9f0d82c68e664d9bad892ed4399e39a018 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 19 Sep 2026 01:41:00 +0200
+Subject: [PATCH 1/3] Fix building shared libraries with clang
+
+---
+ src/core/util/time.cc |  6 +++++-
+ src/core/util/time.h  | 11 ++++++-----
+ 2 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/src/core/util/time.cc b/src/core/util/time.cc
+index cd43903963..ac24323c51 100644
 --- a/src/core/util/time.cc
 +++ b/src/core/util/time.cc
-@@ -147,9 +147,13 @@
+@@ -147,9 +147,13 @@ int64_t TimespanToMillisRoundDown(gpr_timespec ts) {
  
  }  // namespace
  
@@ -15,9 +27,11 @@
  Timestamp ScopedTimeCache::Now() {
    if (!cached_time_.has_value()) {
      previous()->InvalidateCache();
+diff --git a/src/core/util/time.h b/src/core/util/time.h
+index 1de2b4ff99..3808634bd1 100644
 --- a/src/core/util/time.h
 +++ b/src/core/util/time.h
-@@ -86,15 +86,15 @@
+@@ -86,15 +86,15 @@ class Timestamp {
  
    class ScopedSource : public Source {
     public:
@@ -36,7 +50,7 @@
      Source* previous() const { return previous_; }
  
     private:
-@@ -110,7 +110,7 @@
+@@ -110,7 +110,7 @@ class Timestamp {
    static Timestamp FromCycleCounterRoundUp(gpr_cycle_counter c);
    static Timestamp FromCycleCounterRoundDown(gpr_cycle_counter c);
  
@@ -45,7 +59,7 @@
  
    static constexpr Timestamp FromMillisecondsAfterProcessEpoch(int64_t millis) {
      return Timestamp(millis);
-@@ -163,7 +163,8 @@
+@@ -163,7 +163,8 @@ class Timestamp {
    explicit constexpr Timestamp(int64_t millis) : millis_(millis) {}
  
    int64_t millis_ = 0;
@@ -55,3 +69,6 @@
  };
  
  class ScopedTimeCache final : public Timestamp::ScopedSource {
+-- 
+2.55.0
+

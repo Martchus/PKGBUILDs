@@ -1,0 +1,47 @@
+_pkgname=yaml-cpp
+_android_arch=armv7a-eabi
+pkgname=android-$_android_arch-$_pkgname
+pkgver=0.9.0
+pkgrel=1
+pkgdesc="YAML parser and emitter in C++, written around the YAML 1.2 spec (Android, $_android_arch)"
+arch=(any)
+url="https://github.com/jbeder/yaml-cpp"
+license=('MIT')
+depends=(android-ndk)
+makedepends=(
+  android-cmake
+  git
+)
+options=(!strip !buildflags !libtool staticlibs !emptydirs)
+source=("git+$url.git#tag=yaml-cpp-$pkgver")
+b2sums=('757d0b3724536b411b6c0e505540e02117c06449ddc5059b24f9a59bbdbd1fab8710dd1746c10d17ad61decc5cd2bd1c081791a06b79af1fe6aa3a50dbe238d5')
+
+build() {
+  source android-env ${_android_arch}
+  export CXXFLAGS+=' -Wno-error=narrowing'
+  local cmake_options=(
+    -B build
+    -D CMAKE_BUILD_TYPE=None
+    -S $_pkgname
+    -W no-dev
+    -DYAML_CPP_BUILD_TESTS=ON
+    -DBUILD_SHARED_LIBS=ON
+    -DYAML_BUILD_SHARED_LIBS=ON
+  )
+  android-$_android_arch-cmake "${cmake_options[@]}"
+  cmake --build build --verbose
+}
+
+check() {
+  source android-env ${_android_arch}
+  #ctest --test-dir build --output-on-failure
+}
+
+package() {
+  source android-env ${_android_arch}
+  DESTDIR="$pkgdir" cmake --install build
+  install -vDm 644 $_pkgname/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+  rm -rf "${pkgdir}/${ANDROID_PREFIX_SHARE}"
+  ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.so
+  #${ANDROID_STRIP} -g "${pkgdir}/${ANDROID_PREFIX_LIB}"/*.a
+}

@@ -1,17 +1,25 @@
-From ed1b74aa93c1a818b73311caa021bb2dab0e4687 Mon Sep 17 00:00:00 2001
+From d50cc56abb90d41ce3cb2fdc23b22c906a6a0cbc Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
-Date: Wed, 11 Mar 2026 01:07:36 +0100
-Subject: [PATCH 2/2] Allow using LLVM 22
+Date: Mon, 21 Sep 2026 11:24:41 +0200
+Subject: [PATCH 2/2] Allow using LLVM 22 and 23
 
-Change-Id: I17d37fbff1b3b75797e0fb22361252327f32fb8e
+Change-Id: Idc45e2916d46028c886e83f3be2ec8475c1db612
 ---
+ src/assistant/qlitehtml                    | 2 +-
  src/qdoc/cmake/QDocConfiguration.cmake     | 2 +-
  src/qdoc/qdoc/CMakeLists.txt               | 1 +
  src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp | 7 ++++++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ 4 files changed, 9 insertions(+), 3 deletions(-)
 
+diff --git a/src/assistant/qlitehtml b/src/assistant/qlitehtml
+index 3fe5821da..266570412 160000
+--- a/src/assistant/qlitehtml
++++ b/src/assistant/qlitehtml
+@@ -1 +1 @@
+-Subproject commit 3fe5821dad98747d6e41c9ed54b86c3d0eee9daf
++Subproject commit 266570412656ce7e1adff607fb351d9c09ca34db
 diff --git a/src/qdoc/cmake/QDocConfiguration.cmake b/src/qdoc/cmake/QDocConfiguration.cmake
-index 72d27db9e..8a3cba463 100644
+index 72d27db9e..3502e3367 100644
 --- a/src/qdoc/cmake/QDocConfiguration.cmake
 +++ b/src/qdoc/cmake/QDocConfiguration.cmake
 @@ -8,7 +8,7 @@ set(QDOC_MINIMUM_CLANG_VERSION "17")
@@ -19,7 +27,7 @@ index 72d27db9e..8a3cba463 100644
  # List of explicitly supported Clang versions for QDoc
  set(QDOC_SUPPORTED_CLANG_VERSIONS
 -    "21.1" "20.1" "19.1" "18.1" "17.0.6"
-+    "22.1" "22.0" "21.1" "20.1" "19.1" "18.1" "17.0.6"
++    "23.1" "23.0" "22.1" "22.0" "21.1" "20.1" "19.1" "18.1" "17.0.6"
  )
  
  # Check for QDoc coverage dependencies

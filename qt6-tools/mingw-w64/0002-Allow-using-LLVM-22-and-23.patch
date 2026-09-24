@@ -5,19 +5,11 @@ Subject: [PATCH 2/2] Allow using LLVM 22 and 23
 
 Change-Id: Idc45e2916d46028c886e83f3be2ec8475c1db612
 ---
- src/assistant/qlitehtml                    | 2 +-
  src/qdoc/cmake/QDocConfiguration.cmake     | 2 +-
  src/qdoc/qdoc/CMakeLists.txt               | 1 +
  src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp | 7 ++++++-
  4 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/src/assistant/qlitehtml b/src/assistant/qlitehtml
-index 3fe5821da..266570412 160000
---- a/src/assistant/qlitehtml
-+++ b/src/assistant/qlitehtml
-@@ -1 +1 @@
--Subproject commit 3fe5821dad98747d6e41c9ed54b86c3d0eee9daf
-+Subproject commit 266570412656ce7e1adff607fb351d9c09ca34db
 diff --git a/src/qdoc/cmake/QDocConfiguration.cmake b/src/qdoc/cmake/QDocConfiguration.cmake
 index 72d27db9e..3502e3367 100644
 --- a/src/qdoc/cmake/QDocConfiguration.cmake

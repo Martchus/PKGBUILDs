@@ -24,7 +24,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0002-Allow-using-LLVM-22-and-23.patch')
 sha256sums=('9ea75af35c512f7e09e61c8c3af3997f13b4d43bb099cf43fcec470126b4041e'
             'f6af77a326580c11fbea7ec7dd5d5149b1bdaed94e2a42769e5a32a6afdb340f'
-            '2af7bea43df38d37feb07fed1bcea32508db8304e388d2320134ce6bad370572')
+            'a6e5c5175714622bfc89c2dfb029dc611277caade7ff5400388ac413f992241f')
 
 prepare () {
   cd $_pkgfqn

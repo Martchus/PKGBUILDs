@@ -7,12 +7,12 @@ declare -A versions=(
     [tagparser]=12.5.3
     [tageditor]=3.9.11
     [passwordfile]=5.2.1
-    [passwordmanager]=4.4.1
-    [videodownloader]=1.3.6
+    [passwordmanager]=4.4.2
+    [videodownloader]=1.3.7
     [reflective-rapidjson]=0.0.17
     [blackwidowcontrol]=1.2.0
-    [dbus-soundrecorder]=1.2.3
-    [geocoordinatecalculator]=1.1.3
+    [dbus-soundrecorder]=1.2.4
+    [geocoordinatecalculator]=1.1.4
     [qt5]=5.15.19
     [qt6]=6.11.2
 )

@@ -5,29 +5,49 @@
 
 _reponame=dbus-soundrecorder
 pkgname=dbus-soundrecorder
-pkgver=1.2.3
+pkgver=1.2.4
 pkgrel=1
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Records sound from Pulse Audio using ffmpeg while watching D-Bus to determine tracks and meta data'
-license=(GPL-2.0-or-later)
-depends=('c++utilities' 'qt5-base')
-makedepends=('cmake' 'ninja' 'qtutilities')
+arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
+license=('GPL-2.0-or-later')
+depends=(
+    'glibc'
+    'libgcc'
+    'libstdc++'
+    'qt6-base'
+)
+makedepends=(
+    'clang'
+    'cmake'
+    'c++utilities'
+    'qtutilities'
+    'ninja'
+)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('1251ae77a6ffb17d30a43c63729e38db4b7d2c2428f889768677065111bd8320')
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    .
-  ninja
+    local cmake_options=(
+        -B build
+        -S "${PROJECT_DIR_NAME:-$pkgbase-$pkgver}"
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+        -D QT_PACKAGE_PREFIX=Qt6
+        -D BUILTIN_TRANSLATIONS=ON
+        -D BUILTIN_TRANSLATIONS_OF_QT=OFF
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build
 }
 
 package() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  DESTDIR="${pkgdir}" ninja install
+    depends+=(
+        'libc++utilities.so'
+        'libqtutilities.so'
+    )
+
+    DESTDIR="${pkgdir}" cmake --install build
 }

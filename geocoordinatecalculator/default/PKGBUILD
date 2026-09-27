@@ -5,29 +5,43 @@
 
 _reponame=geocoordinatecalculator
 pkgname=geocoordinatecalculator
-pkgver=1.1.3
+pkgver=1.1.4
 pkgrel=1
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tool for basic calculations with geo coordinates such as format conversions and calculation of distance, bearing, mid point, destination and more'
-license=(GPL-2.0-or-later)
-depends=('c++utilities')
-makedepends=('cmake' 'ninja')
+arch=('x86_64')
+url="https://github.com/Martchus/${_reponame}"
+license=('GPL-2.0-or-later')
+depends=(
+    'glibc'
+    'libgcc'
+    'libstdc++'
+)
+makedepends=(
+    'cmake'
+    'c++utilities'
+    'ninja'
+)
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('b37762f53fd6393d7e80490cb1b47305588319cdd286da947eb306acce80ad73')
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    .
-  ninja
+    local cmake_options=(
+        -B build
+        -S "${PROJECT_DIR_NAME:-$pkgbase-$pkgver}"
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build
 }
 
 package() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  DESTDIR="${pkgdir}" ninja install
+    depends+=(
+        'libc++utilities.so'
+    )
+
+    DESTDIR="${pkgdir}" cmake --install build
 }

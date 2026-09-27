@@ -56,6 +56,10 @@ check() {
 }
 
 package_qtforkawesome() {
+    depends+=(
+        'libc++utilities.so'
+        'libqtutilities.so'
+    )
     optdepends=("${pkgbase}-doc: for API documentation")
     provides=('libqtforkawesome.so' 'libqtquickforkawesome.so' "${pkgbase}-qt6")
     conflicts=("${pkgbase}-qt6")

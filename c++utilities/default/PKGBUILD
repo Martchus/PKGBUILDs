@@ -1,41 +1,64 @@
-# Maintainer: Martchus <martchus@gmx.net>
-
-# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
-# you also find the URL of a binary repository.
-
+pkgbase=c++utilities
+pkgname=("${pkgbase}" "${pkgbase}-doc")
 _reponame=cpp-utilities
-pkgname=c++utilities
 pkgver=5.37.0
 pkgrel=1
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
-license=(GPL-2.0-or-later)
-depends=('glibc' 'libstdc++' 'libgcc')
-optdepends=("$pkgname-doc: API documentation")
-makedepends=('cmake' 'ninja')
-checkdepends=('cppunit')
-provides=(libc++utilities.so)
+arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+license=('GPL-2.0-or-later')
+depends=(
+    'glibc'
+    'libgcc'
+    'libstdc++'
+)
+makedepends=(
+    'cmake'
+    'doxygen'
+    'graphviz'
+    'ninja'
+)
+checkdepends=(
+    'cppunit'
+)
+source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('364d43b7cf0ac9225300231d1c3da1f87b9c4a8cb03c24594df505ecb55594d2')
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    .
-  ninja
+    local cmake_options=(
+        -B build
+        -S "${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build --target all apidoc
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  ninja check
+    cmake --build build --target tests
+
+    local ctest_flags=(
+        --test-dir build
+        --output-on-failure
+        --parallel $(nproc)
+    )
+    ctest "${ctest_flags[@]}"
 }
 
-package() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  DESTDIR="${pkgdir}" ninja install
+package_c++utilities() {
+    optdepends=("${pkgbase}-doc: for API documentation")
+    provides=('libc++utilities.so')
+
+    DESTDIR="${pkgdir}" cmake --install build
+    rm -rf "${pkgdir}/usr/share/${pkgbase}/api-doc"
+}
+
+package_c++utilities-doc() {
+    pkgdesc+=" - API documentation"
+    depends=()
+
+    DESTDIR="${pkgdir}" cmake --build build --target install-api-doc
 }

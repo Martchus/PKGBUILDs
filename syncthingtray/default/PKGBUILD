@@ -1,91 +1,165 @@
-# Maintainer: Martchus <martchus@gmx.net>
-
-# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
-# you also find the URL of a binary repository.
-
-# if tests fail due to timeout, you can try to increase the timeout
-# by setting SYNCTHING_TEST_TIMEOUT_FACTOR
-
-# set the web view provider: either webkit, webengine, auto or none
-_webview_provider=${SYNCTHING_TRAY_WEBVIEW_PROVIDER:-none}
-
-# set the JavaScript provider: either script, qml, auto or none
-_js_provider=${SYNCTHING_TRAY_JS_PROVIDER:-qml}
-
-# set to non-empty string to enable KIO plugin to show Syncthing actions in
-# Dolphin file browser
-_enable_kio_plugin=${SYNCTHING_TRAY_ENABLE_KIO_PLUGIN:-0}
-
-# set to non-empty string to enable Plasmoid for Plasma 5 desktop
-_enable_plasmoid=${SYNCTHING_TRAY_ENABLE_PLASMOID:-0}
-
-[[ $_enable_kio_plugin == 0 ]] && _enable_kio_plugin=
-[[ $_enable_plasmoid == 0 ]] && _enable_plasmoid=
-
-_reponame=syncthingtray
-pkgname=syncthingtray
+pkgbase=syncthingtray
+pkgname=("${pkgbase}" "${pkgbase}-plasma" "${pkgbase}-dolphin")
 pkgver=2.1.7
 pkgrel=1
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
-license=(GPL-2.0-or-later)
-depends=('qtutilities' 'qtforkawesome' 'c++utilities' 'boost-libs' 'qt5-svg' 'openssl' 'desktop-file-utils')
-optdepends=('gnome-shell-extension-appindicator: tray icon support for GNOME Shell')
-[[ $_webview_provider == none ]] && depends+=('qt5-base')
-[[ $_webview_provider == webkit ]] && depends+=('qt5-webkit')
-[[ $_webview_provider == webengine ]] && depends+=('qt5-webengine')
-[[ $_js_provider == script ]] && depends+=('qt5-script')
-[[ $_js_provider == qml ]] && depends+=('qt5-declarative')
-[[ $_enable_kio_plugin ]] && optdepends+=('kio5: KIO plugin for Syncthing actions in Dolphin')
-[[ $_enable_plasmoid ]] && optdepends+=('plasma-workspace: Plasmoid for Plasma 5 desktop')
-makedepends=('cmake' 'ninja' 'qt5-tools' 'boost')
-checkdepends=('cppunit' 'syncthing' 'iproute2')
-[[ $_enable_kio_plugin ]] && makedepends+=('kio5')
-[[ $_enable_plasmoid ]] && makedepends+=('plasma-framework5' 'extra-cmake-modules')
-url="https://github.com/Martchus/${_reponame}"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+arch=('x86_64')
+url="https://github.com/Martchus/${pkgbase}"
+license=('GPL-2.0-or-later')
+makedepends=(
+    'boost'
+    'boost-libs'
+    'c++utilities'
+    'cmake'
+    'extra-cmake-modules'
+    'kdeclarative'
+    'libplasma'
+    'ninja'
+    'qt6-tools'
+    'qt6-webengine'
+    'qtforkawesome'
+    'qtutilities'
+)
+checkdepends=(
+    'cppunit'
+    'iproute2'
+    'syncthing'
+)
+source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgbase}/archive/v${pkgver}.tar.gz")
 sha256sums=('aab82815261a5ef9688b944d6d1d4f8b41e178d39a5b69da56d719e3ec5b70cc')
 
-ephemeral_port() {
-  comm -23 <(seq 49152 65535) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort | uniq) | shuf | head -n 1
-}
-
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-
-  local additional_args=
-  [[ $_enable_kio_plugin ]] || additional_args+=' -DNO_FILE_ITEM_ACTION_PLUGIN=ON'
-  [[ $_enable_plasmoid ]] || additional_args+=' -DNO_PLASMOID=ON'
-
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    -DWEBVIEW_PROVIDER="${_webview_provider}" \
-    -DJS_PROVIDER="${_js_provider}" \
-    -DSYSTEMD_SUPPORT=ON \
-    -DBUILTIN_TRANSLATIONS:BOOL=ON \
-    -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=OFF \
-    $additional_args \
-    .
-  ninja
+    local cmake_options=(
+        -B build
+        -S "${PROJECT_DIR_NAME:-$pkgbase-$pkgver}"
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+        -D QT_PACKAGE_PREFIX=Qt6
+        -D KF_PACKAGE_PREFIX=KF6
+        -D BUILTIN_TRANSLATIONS=ON
+        -D BUILTIN_TRANSLATIONS_OF_QT=OFF
+        -D WEBVIEW_PROVIDER=webengine
+        -D JS_PROVIDER=qml
+        -D QUICK_GUI=ON
+        -D QUICK_GUI_CONTROLS_STYLE=dynamic
+        -D SYSTEMD_SUPPORT=ON
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  # https://github.com/syncthing/syncthing/issues/8785
-  export HOME="$(mktemp -p "$PWD" -d testhome.XXX)"
-  # https://github.com/Martchus/syncthingtray/issues/455
-  export QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=
-  export SYNCTHING_PORT=$(ephemeral_port)
-  export SYNCTHING_TEST_TIMEOUT_FACTOR=3
-  ninja check
+    cmake --build build --target tests
+
+    # https://github.com/syncthing/syncthing/issues/8785
+    export HOME="$(mktemp -p "$PWD" -d testhome.XXX)"
+    # https://github.com/Martchus/syncthingtray/issues/455
+    export QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=
+    local _ephemeral_port=$(comm -23 <(seq 49152 65535) <(ss -Htan | awk '{print $4}' | awk -F':' '{print $NF}' | grep -E '^[0-9]+$' | sort -u) | shuf -n 1)
+    export SYNCTHING_PORT=${_ephemeral_port}
+    export SYNCTHING_TEST_TIMEOUT_FACTOR=3
+    local ctest_flags=(
+        --test-dir build
+        --output-on-failure
+        --parallel $(nproc)
+    )
+    ctest "${ctest_flags[@]}"
 }
 
-package() {
-  depends+=('libqtutilities.so' 'libqtforkawesome.so' 'libc++utilities.so' 'libboost_filesystem.so')
+_pick() {
+    local p="$1" f d; shift
+    for f; do
+        d="${srcdir}/${p}/${f#${pkgdir}/}"
+        mkdir -p "$(dirname "${d}")"
+        mv "${f}" "${d}"
+        rmdir -p --ignore-fail-on-non-empty "$(dirname "${f}")"
+    done
+}
 
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  DESTDIR="${pkgdir}" ninja install
+
+package_syncthingtray() {
+    depends=(
+        'libboost_filesystem.so'
+        'libc++utilities.so'
+        'libqtforkawesome.so'
+        'libqtquickforkawesome.so'
+        'libqtutilities.so'
+        'glibc'
+        'hicolor-icon-theme'
+        'libgcc'
+        'libstdc++'
+        'qt6-base'
+        'qt6-declarative'
+        'qt6-svg'
+        'qt6-webengine'
+    )
+    optdepends=(
+        'syncthing: for managing a local Syncthing instance'
+        'gnome-shell-extension-appindicator: tray icon support for GNOME Shell'
+        'syncthingtray-plasma: Plasmoid integration for KDE Plasma 6'
+        'syncthingtray-dolphin: Dolphin file manager integration'
+    )
+    provides=("${pkgbase}-qt6")
+    conflicts=("${pkgbase}-qt6")
+    replaces=("${pkgbase}-qt6")
+
+    DESTDIR="${pkgdir}" cmake --install build
+
+    mkdir -p "${srcdir}"/{plasma,dolphin}
+    cd "${pkgdir}"
+
+    # For Plasma
+    _pick plasma usr/lib/qt6/plugins/plasma
+    _pick plasma usr/share/plasma
+    _pick plasma usr/share/metainfo/io.github.martchus.syncthingplasmoid.metainfo.xml
+    _pick plasma usr/share/syncthingplasmoid
+    _pick plasma usr/lib/pkgconfig/syncthingplasmoid.pc
+
+    # For Dolphin
+    _pick dolphin usr/lib/qt6/plugins/kf6/kfileitemaction
+    _pick dolphin usr/share/metainfo/io.github.martchus.syncthingfileitemaction.metainfo.xml
+    _pick dolphin usr/share/syncthingfileitemaction
+    _pick dolphin usr/lib/pkgconfig/syncthingfileitemaction.pc
+}
+
+package_syncthingtray-plasma() {
+    pkgdesc+=' - Plasma 6 applet'
+    depends=(
+        "${pkgbase}=${pkgver}"
+        'libc++utilities.so'
+        'libqtquickforkawesome.so'
+        'libqtutilities.so'
+        'glibc'
+        'libgcc'
+        'libplasma'
+        'libstdc++'
+        'kconfig'
+        'kcoreaddons'
+        'kdeclarative'
+        'kirigami'
+        'ksvg'
+        'qt6-base'
+        'qt6-declarative'
+    )
+
+    mv "${srcdir}"/plasma/* "${pkgdir}/"
+}
+
+package_syncthingtray-dolphin() {
+    pkgdesc+=' - Dolphin integration'
+    depends=(
+        "${pkgbase}=${pkgver}"
+        'libc++utilities.so'
+        'libqtutilities.so'
+        'glibc'
+        'kcoreaddons'
+        'kio'
+        'libgcc'
+        'libstdc++'
+        'qt6-base'
+    )
+
+    mv "${srcdir}"/dolphin/* "${pkgdir}/"
 }

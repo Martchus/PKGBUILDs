@@ -1,50 +1,73 @@
-# Maintainer: Martchus <martchus@gmx.net>
-
-# All my PKGBUILDs are managed at https://github.com/Martchus/PKGBUILDs where
-# you also find the URL of a binary repository.
-
-_reponame=qtforkawesome
-_pkgver_forkawesome=1.2.0
-_reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
-pkgname=qtforkawesome
+pkgbase=qtforkawesome
+pkgname=("${pkgbase}" "${pkgbase}-doc")
 pkgver=0.3.4
-pkgrel=1
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+pkgrel=2
+_pkgver_fork_awesome=1.2.0
 pkgdesc='Library that bundles ForkAwesome for use within Qt applications'
-license=(GPL-2.0-or-later)
-depends=('qt5-base')
-makedepends=('cmake' 'ninja' 'qtutilities' 'perl-yaml-libyaml' 'qt5-declarative')
-optdepends=(
-  'qt5-declarative: Qt Quick integration'
-  "$pkgname-doc: API documentation"
+arch=('x86_64')
+url="https://github.com/Martchus/${pkgbase}"
+license=('GPL-2.0-or-later')
+depends=(
+    'glibc'
+    'libgcc'
+    'libstdc++'
+    'qt6-base'
+    'qt6-declarative'
 )
-provides=(libqtforkawesome.so libqtquickforkawesome.so)
-url="https://github.com/Martchus/${_reponame}"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz"
-        "${_reponame_forkawesome}::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_forkawesome}.tar.gz")
+makedepends=(
+    'cmake'
+    'doxygen'
+    'graphviz'
+    'ninja'
+    'perl-yaml-libyaml'
+    'qt6-tools'
+    'qtutilities'
+)
+source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgbase}/archive/v${pkgver}.tar.gz"
+        "Fork-Awesome-${_pkgver_fork_awesome}.tar.gz::https://github.com/ForkAwesome/Fork-Awesome/archive/refs/tags/${_pkgver_fork_awesome}.tar.gz")
 sha256sums=('001324d008b44a136ec296733d5ef9bd519ea93ec820d5144163b98dc888f23b'
             '23fba5f191f204e0414c547bf4c9b10fd7ca42c151260e8f64698449a75fbdb3')
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    -DBUILTIN_TRANSLATIONS:BOOL=ON \
-    -DFORK_AWESOME_FONT_FILE="$srcdir/${_reponame_forkawesome}/fonts/forkawesome-webfont.woff2" \
-    -DFORK_AWESOME_ICON_DEFINITIONS="$srcdir/${_reponame_forkawesome}/src/icons/icons.yml" \
-    .
-  ninja
+    local cmake_options=(
+        -B build
+        -S "${PROJECT_DIR_NAME:-$pkgbase-$pkgver}"
+        -G Ninja
+        -D QT_PACKAGE_PREFIX=Qt6
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+        -D FORK_AWESOME_FONT_FILE="${srcdir}/Fork-Awesome-${_pkgver_fork_awesome}/fonts/forkawesome-webfont.woff2"
+        -D FORK_AWESOME_ICON_DEFINITIONS="${srcdir}/Fork-Awesome-${_pkgver_fork_awesome}/src/icons/icons.yml"
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build --target all apidoc
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  QT_QPA_PLATFORM=offscreen ninja check
+    cmake --build build --target tests
+
+    local ctest_flags=(
+        --test-dir build
+        --output-on-failure
+        --parallel $(nproc)
+    )
+    QT_QPA_PLATFORM=offscreen ctest "${ctest_flags[@]}"
 }
 
-package() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  DESTDIR="${pkgdir}" ninja install
+package_qtforkawesome() {
+    optdepends=("${pkgbase}-doc: for API documentation")
+    provides=('libqtforkawesome.so' 'libqtquickforkawesome.so' "${pkgbase}-qt6")
+    conflicts=("${pkgbase}-qt6")
+    replaces=("${pkgbase}-qt6")
+
+    DESTDIR="${pkgdir}" cmake --install build
+    rm -rf "${pkgdir}/usr/share/"{${pkgbase},qtquickforkawesome}/api-doc
+}
+
+package_qtforkawesome-doc() {
+    pkgdesc+=" - API documentation"
+    depends=()
+
+    DESTDIR="${pkgdir}" cmake --build build --target install-api-doc
 }

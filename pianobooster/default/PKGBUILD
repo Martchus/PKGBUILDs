@@ -30,7 +30,7 @@ source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus
 sha256sums=(SKIP)
 
 pkgver() {
-  echo "$(git -C "${_pkgname}" rev-list --count HEAD).$(git -C "${_pkgname}" rev-parse --short HEAD)"
+    echo "$(git -C "${_pkgname}" rev-list --count HEAD).$(git -C "${_pkgname}" rev-parse --short HEAD)"
 }
 
 build () {

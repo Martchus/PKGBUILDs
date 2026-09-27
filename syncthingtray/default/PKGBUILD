@@ -19,6 +19,7 @@ makedepends=(
     'qt6-webengine'
     'qtforkawesome'
     'qtutilities'
+    'perl'
 )
 checkdepends=(
     'cppunit'

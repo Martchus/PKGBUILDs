@@ -7,64 +7,96 @@ _reponame=arch-repo-manager
 pkgname=arch-repo-manager-git
 _name=${pkgname%-git}
 _liburing=OFF
-pkgver=578.459d73d
-pkgrel=2
-arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
+pkgver=580.dac95f7
+pkgrel=1
 pkgdesc='Tool for managing custom Arch Linux repositories'
-license=(GPL-2.0-or-later)
-depends=('c++utilities-git' 'passwordfile-git' 'boost-libs' 'openssl' 'lmdb' 'devtools-custom>=1.1.1')
-[[ $_liburing != OFF ]] && depends+=('liburing')
-optdepends=('reflective-rapidjson-git: development with libpkg/librepomgr'
-            "$_name-doc: API documentation")
-makedepends=('cmake' 'git' 'ninja' 'boost' 'catch2' 'rapidjson-git' 'reflective-rapidjson-git')
-checkdepends=('cppunit')
-provides=(libpkg-git.so librepomgr-git.so)
-options=(debug)
+arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
+license=('GPL-2.0-or-later')
+depends=(
+    'boost-libs'
+    'openssl'
+    'lmdb'
+    'devtools-custom>=1.1.1'
+)
+optdepends=(
+    'reflective-rapidjson-git: for development with libpkg/librepomgr'
+)
+makedepends=(
+    'c++utilities-git'
+    'passwordfile-git'
+    'cmake'
+    'git'
+    'ninja'
+    'boost'
+    'catch2'
+    'rapidjson-git'
+    'reflective-rapidjson-git'
+)
+checkdepends=(
+    'cppunit'
+)
+provides=(
+    'libpkg-git.so'
+    'librepomgr-git.so'
+)
+[[ $_liburing != OFF ]] && depends+=('liburing')
 source=("${_reponame}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/${_reponame}.git"
         "lmdb-safe::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/lmdb-safe.git"
         'tabulate::git+https://github.com/p-ranav/tabulate.git')
 sha256sums=('SKIP' 'SKIP' 'SKIP')
 
 pkgver() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+    echo "$(git -C "${_reponame}" rev-list --count HEAD).$(git -C "${_reponame}" rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  git submodule init
-  git config submodule.3rdparty/lmdb-safe.url "$srcdir/lmdb-safe"
-  git config submodule.3rdparty/tabulate.url "$srcdir/tabulate"
-  git -c protocol.file.allow=always submodule update
+    cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
+    git submodule init
+    git config submodule.3rdparty/lmdb-safe.url "$srcdir/lmdb-safe"
+    git config submodule.3rdparty/tabulate.url "$srcdir/tabulate"
+    git -c protocol.file.allow=always submodule update
 }
 
 build() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='RelWithDebInfo' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DCONFIGURATION_NAME:STRING='git' \
-    -DCONFIGURATION_PACKAGE_SUFFIX:STRING='-git' \
-    -DCONFIGURATION_TARGET_SUFFIX:STRING='git' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    -DDUMMY_BUILD_ACTION_ENABLED:BOOL=ON \
-    -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator-git' \
-    -DBOOST_ASIO_IO_URING:BOOL=$_liburing \
-    .
-  VERBOSE=1 ninja
+    local cmake_options=(
+        -B build
+        -S "${PROJECT_DIR_NAME:-$_reponame}"
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=RelWithDebInfo
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+        -D CONFIGURATION_NAME:STRING='git'
+        -D CONFIGURATION_PACKAGE_SUFFIX:STRING='-git'
+        -D CONFIGURATION_TARGET_SUFFIX:STRING='git'
+        -D DUMMY_BUILD_ACTION_ENABLED:BOOL=ON
+        -D REFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator-git'
+        -D BOOST_ASIO_IO_URING:BOOL=$_liburing
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build --target all
 }
 
 check() {
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  ninja check
+    cmake --build build --target tests
+
+    local ctest_flags=(
+        --test-dir build
+        --output-on-failure
+        --parallel $(nproc)
+    )
+    ctest "${ctest_flags[@]}"
 }
 
 package() {
-  depends+=('libc++utilities-git.so' 'libpasswordfile-git.so' 'libboost_filesystem.so' 'libcrypto.so' 'libssl.so')
-  [[ $_liburing != OFF ]] && depends+=('liburing.so')
+    depends+=(
+        'libc++utilities-git.so'
+        'libpasswordfile-git.so'
+        'libboost_filesystem.so'
+        'libcrypto.so'
+        'libssl.so'
+    )
+    [[ $_liburing != OFF ]] && depends+=('liburing.so')
 
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  DESTDIR="${pkgdir}" ninja install
+    DESTDIR="${pkgdir}" cmake --install build
 }

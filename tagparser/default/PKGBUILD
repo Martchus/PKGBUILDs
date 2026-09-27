@@ -13,13 +13,13 @@ arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
 license=('GPL-2.0-or-later')
 depends=(
-    'c++utilities'
     'glibc'
     'libgcc'
     'libstdc++'
     'zlib'
 )
 makedepends=(
+    'c++utilities'
     'cmake'
     'doxygen'
     'graphviz'

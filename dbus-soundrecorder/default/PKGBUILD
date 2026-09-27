@@ -25,7 +25,7 @@ makedepends=(
     'ninja'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('1251ae77a6ffb17d30a43c63729e38db4b7d2c2428f889768677065111bd8320')
+sha256sums=('e1d5b5f9be67f65394111d5a789adbb8fbdddd9b35c47c400d1b34e0877ef6b4')
 
 build() {
     local cmake_options=(

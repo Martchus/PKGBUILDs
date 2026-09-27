@@ -18,7 +18,7 @@ depends=('static-compat-qt6-base' 'static-compat-c++utilities' 'static-compat-qt
 makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('242d9e82690c4ae7101d8f46d81710b2d23429721e41c9f3b93199e7b7919a90')
+sha256sums=('af6d6e7bfe931129a4a6aa13c15636cff617c6310d4f2bcb29864712d757b2c0')
 
 # add further dependencies for the Qt Quick GUI (only kirigami2 is "pluggable")
 if [[ $_quick_gui == ON ]]; then

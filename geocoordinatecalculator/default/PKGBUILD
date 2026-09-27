@@ -23,7 +23,7 @@ makedepends=(
 )
 url="https://github.com/Martchus/${_reponame}"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
-sha256sums=('b37762f53fd6393d7e80490cb1b47305588319cdd286da947eb306acce80ad73')
+sha256sums=('5a895a764ad0c0448df7dc7e056374e2d5c578d45c4471c0c8f9aeaacb6056d7')
 
 build() {
     local cmake_options=(

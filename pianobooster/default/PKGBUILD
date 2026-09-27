@@ -1,38 +1,66 @@
 _pkgname=pianobooster
 pkgname=pianobooster
-pkgdesc='A MIDI file player that teaches you how to play the piano (with custom, experimental patches)'
-pkgver=1392.86ce9b0
-pkgrel=2
-depends=('ftgl' 'hicolor-icon-theme' 'qt6-base' 'libfluidsynth.so' 'librtmidi.so' 'qtutilities-qt6')
-makedepends=('git' 'cmake' 'clang' 'qt6-tools' 'qt6-declarative' 'ninja' 'c++utilities')
-optdepends=('qt6-translations')
+pkgver=1397.a94e4ed
+pkgrel=1
+pkgdesc='A MIDI file player that teaches you how to play the piano (with additional patches)'
 arch=('x86_64')
 url='https://github.com/Martchus/PianoBooster'
 license=('GPL3')
+depends=(
+    'glibc'
+    'libgcc'
+    'libstdc++'
+    'glu'
+    'qt6-base'
+    'hicolor-icon-theme'
+)
+makedepends=(
+    'c++utilities'
+    'qtutilities'
+    'fluidsynth'
+    'rtmidi'
+    'git'
+    'cmake'
+    'clang'
+    'qt6-tools'
+    'qt6-declarative'
+    'ninja'
+)
 source=("${_pkgname}::${MARTCHUS_GIT_URL_PREFIX:-git+https://github.com/Martchus}/PianoBooster.git#branch=custom")
 sha256sums=(SKIP)
 
 pkgver() {
-  cd "${srcdir}/${_pkgname}"
-  echo "$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  echo "$(git -C "${_pkgname}" rev-list --count HEAD).$(git -C "${_pkgname}" rev-parse --short HEAD)"
 }
 
 build () {
-  cmake -G Ninja -B build -S "${srcdir}/${_pkgname}" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DUSE_SYSTEM_FONT=ON \
-        -DUSE_JACK=ON \
-        -DWITH_INTERNAL_FLUIDSYNTH=ON \
-        -DCONFIGURATION_PACKAGE_SUFFIX= \
-        -DCONFIGURATION_PACKAGE_SUFFIX_QTUTILITIES=-qt6 \
-        -DBUILTIN_TRANSLATIONS:BOOL=ON \
-        -DQT_PACKAGE_PREFIX=Qt6 \
-        -DWITH_MAN=ON
-  VERBOSE=1 cmake --build build
+    local cmake_options=(
+        -B build
+        -S "${_pkgname}"
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D BUILD_SHARED_LIBS=ON
+        -D QT_PACKAGE_PREFIX=Qt6
+        -D BUILTIN_TRANSLATIONS=ON
+        -D BUILTIN_TRANSLATIONS_OF_QT=OFF
+        -D WITH_INTERNAL_FLUIDSYNTH=ON
+        -D WITH_MAN=ON
+        -D USE_SYSTEM_FONT=ON
+        -D USE_FTGL=OFF
+        -D USE_JACK=ON
+        -D USE_BUNDLED_RTMIDI=OFF
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build
 }
 
 package () {
-  depends+=('libqtutilities-qt6.so')
-  DESTDIR="$pkgdir" cmake --install build
+  depends+=(
+      'libGL.so'
+      'libqtutilities.so'
+      'libfluidsynth.so'
+      'librtmidi.so'
+  )
+  DESTDIR="${pkgdir}" cmake --install build
 }

@@ -1,8 +1,8 @@
 % layout 'android-qt6-module';
 \
-_qtver=6.11.2
+_qtver=6.12.0
 pkgver=${_qtver/-/}
-pkgrel=3
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -16,4 +16,9 @@ makedepends=('android-cmake<%== $static_suffix %>' "android-${_android_arch}-grp
 % \
 % content_for before_env => begin
   export ANDROID_MINIMUM_PLATFORM=24
+% end
+% \
+% content_for additional_cmake_args => begin
+ \\
+    -D__WrapProtoc_protoc_imported_location=/usr/bin/protoc\
 % end

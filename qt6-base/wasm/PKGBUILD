@@ -10,7 +10,7 @@
 # All patches are managed at https://github.com/Martchus/qtbase
 
 pkgname=wasm-qt6-base
-_qtver=6.11.2
+_qtver=6.12.0
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -49,35 +49,33 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0020-Use-a-more-reasonable-fallback-directory-for-fonts-o.patch'
         '0021-Undefine-mingw-stat.patch'
         '0022-Export-some-constexpr-variables.patch'
-        '0023-Android-implement-system-locale-in-QtCore-directly.patch'
-        '0024-Android-refresh-QLocale-system-on-OS-language-change.patch'
-        '0025-Android-infer-fullscreen-from-system-bars-behavior-i.patch')
-sha256sums=('5b2e00eccaf5a4d8c14134ffa0ea8dfd0a35ae1ffc7f8d87fa4305a1ed23cf22'
-            '053930379c6b6bc32bcc54d7f2904244d390ac6311cefa6292a7a6ff47579e14'
-            'f0ebce31db4955e5a915feee7543c5bd575bb97ff92f70312be160d2a52afda1'
-            '55eed4d240f32eba588ac956f8e7d55b75553f31f28ec6afa8abdc32799a5c74'
-            '69e52d51866513c8d9cf464afa30ccd9f11f33e211bafe453da86b3b9278a392'
-            'ebc9238ea87b9e594f9246917268f654992addeeae45b1bf63ef65cecb9ca06f'
-            '89687ebc0f5779ff76181920b7109154e3727bb15ef3ccb00717f46f8a99bcd9'
-            '00f30492c402ab432a3e17eebdada97cbeff2b67907163237dd35b3e92364d2c'
-            'b24e40b358fd932d040dc65fdaccce9ab81b9476832ac1802e556a8825c9ae1c'
-            'e6d78b2512c4424eb5e908f852b9eed9c65b10220e580de3919b62556e70f091'
-            '7c48ee371d6183c9fcdcf2889589840a5112ac84cb63316469082935d1c3e383'
-            '51b64b80ab08746cb807e9d04076e1ae78ed23cb0e3c2a42398ee2d9c9e5bbf9'
-            '063a1185c8a4b8909589c4d0a513ac155dd28b2cc94ea04c52afeb25d4c2acd8'
-            'b730fb2985c26469331365e67e238f3fbfa34a0560d5399a159b4f4cb0da1e79'
-            '4c6264c56ebbe7ef9f29416b37cb29af4fa7c844766b25c4c979e2b25506f52a'
-            '675bdbb01ffb6f87d35194ec63fcb4e4b30dfb11b455c66e77348de8784f4a42'
-            'f1d9f91c03c562d93097bca8b3b6c6b1112e0a287927f84798df4855fc365cca'
-            '4cf4224a612b263dcaff6880ee528ae74ccf64b7ffda9bccc41c7e29cb5340de'
-            'ac43fa71403b6c3e10052a37275ceb860445a9fc44ce89fc1e0a42241ebaacfe'
-            '0866a220d16be2ef0a128edec99ec0a146b2def6f9ba780c67cebf3a25faf8f3'
-            '17daf7209f6fb85ba949121db74debbf84ea417ff57fc117fb25e5140d08f8bb'
-            'a4902a6d4bceb7c2f29622fc299b0cfe7322f06823659d4dc7c91cc44d7b2b9a'
-            '4668ebb90aef968002f93b6f12db4f38291c99b8f3d4f82b52a3bea16394b6a5'
-            'a8e3656af660835dd1afe4cbcf02ae456bf36feb5522f552b1660c8cd12c0da6'
-            'aae85a9955664a86edcf35bf7c0ca577a7ff20a9aff29261ee2977db401cff37'
-            '9c1c751f4ce62e32459ac9010263b6d2b9208a109d0d9c64acc99132ead0eab9')
+        '0023-Android-infer-fullscreen-from-system-bars-behavior-i.patch'
+        '0024-Update-md4c-to-0.6.0.patch')
+sha256sums=('a951bd163c7b80fc6b8c88d7668fb56abf91c152373e13c10666763238131307'
+            '252cdacdbd279b37c4abd2a4b58e42654b40562580fb68df1ce60938e5af882c'
+            '35bca8c68203c1d23ff0c1598579a1299b88bc26b3c445f3a1f2eef7dc5bd907'
+            '9da328c3c1e0f4c1db715fbd44c9f226c6309f081fbca2ab89c3a18c65355039'
+            '32b84c8f3069673a98a92d75215d72a3ef7895b89f5635b5bec267233001c7fc'
+            '22e3950068ce23ebfba9af290839b9a7c1ed9c722f527ac34d8e9c6eec2af5b7'
+            'ece9f42579c3af7926ca480061dc64fc02a659276d686c8e6bf5f6db5fbbbee6'
+            '65256a4c94678a95c14c5424c5b20f5b674717cda2be42a873fb859a68fe018f'
+            '2abaeed5af3eb6ef3635cf83b9ebebaf4f6290a2b0c8af4f109bc0b39c788ac9'
+            'ce6d75f3beb3645d5e081a031db70b6c321f65e728859293a80670cd8425536d'
+            '81539a76880950b6c1d55375bdbab16bcbe9e661614409c361d627b6b3350bfa'
+            '86fb41f6ce7d013f5be8f356006c7991ac6c0e1020e56370a2e4270f930fe69f'
+            '8194b59b4cf373c6317a5b26fffd2bea6167021519b0b87c04da849f7f26479d'
+            '5a325af2a90d49950e8564dac7bdbdadc7c5abce90cc2a5b829c3d646fe1b5a8'
+            '5afd97293448245a384e67b78eca4fdf92bee0b5bfb9d7dc3c9684964cf99ce4'
+            'aea0b6eb23576f3cc532afad4aa36bd4df4519c14011985ad001e33a7f21662e'
+            'a222a820cedb599b79f12973896108518e907a5da6d6650e858d0558e19a8133'
+            '2622218884ccb9dd9caa0c1c436cc1094b6e0c84b32945534402fde131e6c833'
+            '27b430c81ed9871fe91880d47b946ee750cb97ac980e889bb66e0e894be7b37a'
+            'fe76f21ca56ed7b9b55e32115172aa7341ce5d70381f742438e4a5cfe23186e5'
+            '72683f76ce583b5847e57ef9885c8e93b18379ab8e345f53cd7b0f7079ad00c2'
+            '6916214d8cfb4e3b75a931ebb5d089f29854f8e2c0a46ddf66fc4cd0b22250b4'
+            '2492e4121a53b44ec6a9de192ed50215ca42a881f369e448c017b661208d6a48'
+            '3da59cd7958ca76e2f943b498a88ca34ffd6123cf6657cd2d6d7ad11039e610e'
+            '56a4bf3e41dae54db764060699bd5840c78bab1cd352397a094c6f6bfd148706')
 
 prepare () {
   cd $_pkgfqn

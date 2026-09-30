@@ -5,9 +5,9 @@
 
 _android_arch=x86
 pkgname=android-$_android_arch-qt6-grpc
-_qtver=6.11.2
+_qtver=6.12.0
 pkgver=${_qtver/-/}
-pkgrel=3
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -22,7 +22,7 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtgrpc-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-sha256sums=('44414617f0058ff34965fa852027bfcc7e4f71eefca8cd4406c96af22c64ad93')
+sha256sums=('771852c4e5fbeb3d7c3b2a9aacc13db9efe942a46e7d1454ec1f16092ec3ef9c')
 
 build() {
   export PATH=/usr/lib/jvm/java-17-openjdk/bin:$PATH
@@ -39,7 +39,9 @@ build() {
     -DANDROID_SDK_ROOT=${ANDROID_HOME} \
     -DANDROID_NDK_ROOT=${ANDROID_NDK_HOME} \
     -DANDROID_STL="c++_shared" \
-    -DFEATURE_pkg_config=ON
+    -DQT_ALLOW_DOWNLOAD=ON \
+    -DFEATURE_pkg_config=ON \
+    -D__WrapProtoc_protoc_imported_location=/usr/bin/protoc
   cmake --build build-$_android_arch
 }
 

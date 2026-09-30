@@ -14,9 +14,9 @@
 
 _android_arch=<%= $variant_prefix_part =~ s/android-// && $variant_prefix_part %>
 pkgname=<%= $package_name %>
-_qtver=6.11.2
+_qtver=6.12.0
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=1
 arch=(any)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -25,7 +25,7 @@ license=(GPL-3.0-only
          Qt-GPL-exception-1.0)
 pkgdesc='A cross-platform application and UI framework (android)'
 depends=('java-runtime-headless-openjdk=17' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
-         'android-sdk-platform-tools' 'android-platform-35' "android-${_android_arch}-libjpeg-turbo"
+         'android-sdk-platform-tools' 'android-platform-37.0' "android-${_android_arch}-libjpeg-turbo"
          "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib"
          "android-${_android_arch}-sqlite")
 makedepends=('android-cmake<%= $static_suffix %>' 'android-pkg-config'
@@ -33,8 +33,7 @@ makedepends=('android-cmake<%= $static_suffix %>' 'android-pkg-config'
 optdepends=('qt6-base: development tools')
 # note: Using the java-environment-openjdk and android-platform-X versions that match what is documented
 # on https://doc.qt.io/qt-6/supported-platforms.html#android because using unsupported versions is not a
-# good idea (see e.g. https://bugreports.qt.io/browse/QTBUG-119223 for Java; using a newer version of
-# android-platform also did not work in my tests with Qt 6.7.2 and android-platform 35).
+# good idea (see e.g. https://bugreports.qt.io/browse/QTBUG-119223 for Java
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"
@@ -77,6 +76,8 @@ build() {
       -DANDROID_SDK_ROOT=${ANDROID_HOME} \\
       -DANDROID_NDK_ROOT=${ANDROID_NDK_HOME} \\
       -DANDROID_STL="c++_shared" \\
+      -DQT_ALLOW_DOWNLOAD=ON \\
+      -DFEATURE_test_squish=OFF \\
       -DFEATURE_pkg_config=ON \\
       -DFEATURE_system_pcre2=OFF \\
       -DFEATURE_system_freetype=OFF \\

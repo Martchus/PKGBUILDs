@@ -4,9 +4,10 @@
 # you also find the URL of a binary repository.
 
 _reponame=reflective-rapidjson
-pkgname=reflective-rapidjson
+pkgbase=reflective-rapidjson
+pkgname=("${pkgbase}" "${pkgbase}-doc")
 pkgver=0.0.17
-pkgrel=2
+pkgrel=3
 pkgdesc='Code generator for serializing/deserializing C++ objects to/from JSON using Clang and RapidJSON'
 arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
@@ -32,7 +33,7 @@ checkdepends=(
     'cppunit'
     'boost'
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
+source=("${_reponame}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('4402950a92ddb4befe94782a00a37bd36a340ddd8eecd41e6c76bd1a1ae59ca0')
 
 build() {

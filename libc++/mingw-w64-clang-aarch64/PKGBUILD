@@ -1,5 +1,5 @@
 pkgname=mingw-w64-clang-aarch64-libc++
-pkgver=22.1.1
+pkgver=23.1.2
 pkgrel=1
 url="https://libcxx.llvm.org/"
 pkgdesc='LLVM C++ standard library (mingw-w64)'
@@ -10,7 +10,7 @@ makedepends=('clang' 'cmake' 'ninja' 'python' 'mingw-w64-clang-aarch64-cmake')
 checkdepends=('llvm')
 options=(!lto staticlibs !buildflags !strip)
 source=("https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver/llvm-project-$pkgver.src.tar.xz"{,.sig})
-sha512sums=('dddf09651c0e77caa83284788765016b023a9e239cfe35820bab7be64b68218e86bcf39bb07ee14dcddf7b0974b551344d2bff0e109cc9458b0394a3c940917c'
+sha512sums=('91174e69ea787034f8a6b17120aae5f139204e13292119d1b066b4930dcea586c76b82228d3db281d8d4211384c7cb74c6b61fdef41b39d310908a8c7cf080cc'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A'  # Tom Stellard <tstellar@redhat.com>
               'D574BD5D1D0E98895E3BF90044F2485E45D59042'  # Tobias Hieta <tobias@hieta.se>

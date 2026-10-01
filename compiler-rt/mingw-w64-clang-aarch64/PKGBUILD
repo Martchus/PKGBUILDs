@@ -1,5 +1,5 @@
 pkgname=mingw-w64-clang-aarch64-compiler-rt
-pkgver=22.1.1
+pkgver=23.1.2
 pkgrel=1
 pkgdesc="Compiler runtime libraries for clang (mingw-w64)"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=('cmake' 'ninja' 'python' 'lld' 'llvm')
 options=('!buildflags' 'staticlibs' '!strip')
 _source_base=https://github.com/llvm/llvm-project/releases/download/llvmorg-$pkgver
 source=($_source_base/llvm-project-$pkgver.src.tar.xz{,.sig})
-sha256sums=('9c6f37f6f5f68d38f435d25f770fc48c62d92b2412205767a16dac2c942f0c95'
+sha256sums=('c98bbef08a2b4c2613cd50e9aa9ae7b69b1fe6c16b2c40373bc0ab6116fdf78a'
             'SKIP')
 validpgpkeys=('474E22316ABF4785A88C6E8EA2C794A986419D8A'  # Tom Stellard <tstellar@redhat.com>
               'D574BD5D1D0E98895E3BF90044F2485E45D59042'  # Tobias Hieta <tobias@hieta.se>

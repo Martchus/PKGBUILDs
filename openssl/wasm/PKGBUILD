@@ -2,7 +2,7 @@
 # Maintainer: Martchus <martchus@gmx.net>
 
 _pkgname=openssl
-_pkgver=4.0.1
+_pkgver=4.0.3
 
 pkgname=wasm-$_pkgname
 # use a pacman compatible version scheme
@@ -16,10 +16,11 @@ options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 depends=('emscripten')
 makedepends=('perl')
 source=("https://github.com/openssl/openssl/releases/download/openssl-${pkgver}/openssl-${pkgver}.tar.gz"{,.asc})
-sha256sums=('2db3f3a0d6ea4b59e1f094ace2c8cd536dffb87cdc39084c5afa1e6f7f37dd09'
+sha256sums=('325b5c806167c13b40b1ffeadfe0248197c00eccc4cf123ec1e28d2d2fd216d9'
             'SKIP')
 validpgpkeys=('EFC0A467D613CB83C7ED6D30D894E2CE8B3D79F5'
-              'BA5473A2B0587B07FB27CF2D216094DFD0CB81EF')
+              'BA5473A2B0587B07FB27CF2D216094DFD0CB81EF'
+              'B146647E45A7B33947AB226B2A2C87D161692D40')
 
 _sdk=/usr/lib/emscripten
 _prefix=$_sdk/system

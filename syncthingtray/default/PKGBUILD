@@ -1,6 +1,6 @@
 pkgbase=syncthingtray
 pkgname=("${pkgbase}" "${pkgbase}-plasma" "${pkgbase}-dolphin")
-pkgver=2.1.7
+pkgver=2.1.8
 pkgrel=1
 pkgdesc='Tray application for Syncthing'
 arch=('x86_64')

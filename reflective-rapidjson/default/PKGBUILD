@@ -7,7 +7,7 @@ _reponame=reflective-rapidjson
 pkgbase=reflective-rapidjson
 pkgname=("${pkgbase}" "${pkgbase}-doc")
 pkgver=0.0.17
-pkgrel=3
+pkgrel=4
 pkgdesc='Code generator for serializing/deserializing C++ objects to/from JSON using Clang and RapidJSON'
 arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
@@ -71,7 +71,7 @@ package_reflective-rapidjson() {
     )
 
     DESTDIR="${pkgdir}" cmake --install build
-    rm -rf "${pkgdir}/usr/share/${pkgbase}/api-doc"
+    rm -rf "${pkgdir}/usr/share/"*/api-doc
 }
 
 package_reflective-rapidjson-doc() {

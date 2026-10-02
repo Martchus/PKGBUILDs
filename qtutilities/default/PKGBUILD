@@ -1,7 +1,7 @@
 pkgbase=qtutilities
 pkgname=("${pkgbase}" "${pkgbase}-doc")
-pkgver=6.22.2
-pkgrel=2
+pkgver=6.22.3
+pkgrel=1
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
 arch=('x86_64')
 url="https://github.com/Martchus/${pkgbase}"
@@ -23,7 +23,7 @@ makedepends=(
     'qt6-tools'
 )
 source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgbase}/archive/v${pkgver}.tar.gz")
-sha256sums=('c6ecf769a5544865e9e1e6c54d881caed8e0c0102a36025199d9cd18748b0afd')
+sha256sums=('403d8df04fa66ba3dfb76da0f709286adca97c30a52f930167cad7fba9f918ac')
 
 build() {
     local cmake_options=(

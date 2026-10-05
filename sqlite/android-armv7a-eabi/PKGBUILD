@@ -8,9 +8,9 @@ pkgname=android-${_android_arch}-sqlite
 # pkgbase=android-${_android_arch}-sqlite
 # pkgname=("android-${_android_arch}-sqlite")
 # pkgname+=("android-${_android_arch}-sqlite-tcl")
-pkgver=3.53.2
+pkgver=3.53.4
 _srcver=$(echo "$pkgver" | awk -F. '{ printf "%d%02d%02d00", $1, $2, $3 }')
-pkgrel=2
+pkgrel=1
 epoch=1
 arch=('any')
 pkgdesc="A C library that implements an SQL database engine (Android ${_android_arch})"
@@ -24,7 +24,7 @@ makedepends=('android-configure'
 #makedepends+=("android-${_android_arch}-tcl")
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("https://www.sqlite.org/2026/sqlite-src-${_srcver}.zip")
-sha256sums=('cafff764c03f6d720968f746e2f47a986bbf12bf4c18904f1eb131c0b0b592d3')
+sha256sums=('d18fa15aec74d8c17e1463f861095adc01b5ad190256acb4f91d22f0368d232b')
 
 build() {
     cd "${srcdir}/sqlite-src-${_srcver}"

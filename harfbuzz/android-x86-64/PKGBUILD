@@ -8,7 +8,7 @@ _android_arch=x86-64
 pkgbase=android-${_android_arch}-harfbuzz
 pkgname=("android-${_android_arch}-harfbuzz"
          "android-${_android_arch}-harfbuzz-icu")
-pkgver=14.2.1
+pkgver=14.6.0
 pkgrel=1
 pkgdesc="OpenType text shaping engine (Android ${_android_arch})"
 arch=('any')
@@ -26,7 +26,7 @@ makedepends=('android-meson'
              'git')
 options=(!strip !buildflags staticlibs !emptydirs)
 source=("git+https://github.com/harfbuzz/harfbuzz?signed#tag=$pkgver")
-b2sums=('d80685d75ede714d417bae26fb7ce14c905bd4bb96e7be3e49d427fd56c3e52dc843184f92dd35bfe96e52bb982773c117b57c4123e9ca09c2c545694496f0d5')
+b2sums=('98e12387c783aac73fb7d95c7f2592e78b5f8577b0fa552220e3d7f7c59f9e9ff50335b62d228afc933b62d45de33658ef8c3d3c0414eb25d14477ccd7657e9d')
 validpgpkeys=(
   053D20F17CCCA9651B2C6FCB9AB24930C0B997A2 # Khaled Hosny <khaled@aliftype.com> (@khaledhosny)
   9F377DDB6D3153A48EB3EB1E63CC496475267693 # Caleb Maclennan <caleb@alerque.com> (@alerque)

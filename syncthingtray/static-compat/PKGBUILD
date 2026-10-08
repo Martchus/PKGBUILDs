@@ -137,7 +137,13 @@ check() {
   export QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=
   export SYNCTHING_PORT=$(ephemeral_port)
   export SYNCTHING_TEST_TIMEOUT_FACTOR=3
-  ninja check
+  cmake --build . --target tests
+  local ctest_flags=(
+      --test-dir .
+      --output-on-failure
+      --parallel $(nproc)
+  )
+  ctest "${ctest_flags[@]}"
 }
 
 package() {

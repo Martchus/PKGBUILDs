@@ -36,7 +36,13 @@ build() {
 check() {
   source static-compat-environment
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  ninja check
+  cmake --build . --target tests
+  local ctest_flags=(
+      --test-dir .
+      --output-on-failure
+      --parallel $(nproc)
+  )
+  ctest "${ctest_flags[@]}"
 }
 
 package() {

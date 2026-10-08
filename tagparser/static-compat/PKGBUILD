@@ -39,8 +39,14 @@ build() {
 check() {
   source static-compat-environment
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
+  cmake --build . --target tests
   if [[ $TEST_FILE_PATH ]]; then
-    ninja check
+    local ctest_flags=(
+        --test-dir .
+        --output-on-failure
+        --parallel $(nproc)
+    )
+    ctest "${ctest_flags[@]}"
   else
     msg2 'Skipping execution of testsuite because the environment variable TEST_FILE_PATH is not set.'
   fi

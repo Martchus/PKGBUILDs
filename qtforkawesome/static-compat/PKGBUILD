@@ -53,7 +53,14 @@ check() {
   source static-compat-environment
   export PATH=$PWD:$PATH
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
-  QT_QPA_PLATFORM=offscreen ninja check
+  export QT_QPA_PLATFORM=offscreen
+  cmake --build . --target tests
+  local ctest_flags=(
+      --test-dir .
+      --output-on-failure
+      --parallel $(nproc)
+  )
+  ctest "${ctest_flags[@]}"
 }
 
 package() {

@@ -34,7 +34,7 @@ pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
 pkgver=2.1.8
 [[ $BUILD_BEFORE_TAGGING ]] && _pkgver=branch=master || _pkgver=tag=v$pkgver
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=(GPL-2.0-or-later)
@@ -66,6 +66,7 @@ ephemeral_port() {
 prepare() {
   cd "$srcdir/$_reponame"
   [[ $_enable_libsyncthing ]] || return 0
+  git cherry-pick --no-commit 38cece6ff72e5f7066de8a48041f654dd4856e6c
   git submodule init
   git config submodule.libsyncthing/go/src/github.com/syncthing/syncthing.url "$srcdir/syncthing"
   git -c protocol.file.allow=always submodule update

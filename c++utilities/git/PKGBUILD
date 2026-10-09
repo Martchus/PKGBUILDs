@@ -16,12 +16,12 @@ depends=(
     'glibc'
     'libgcc'
     'libstdc++'
-    'libarchive'
 )
 makedepends=(
     'cmake'
     'git'
     'ninja'
+    'libarchive'
     'pcre2'
 )
 checkdepends=(
@@ -70,6 +70,6 @@ check() {
 }
 
 package() {
-    depends+=('libpcre2-8.so')
+    depends+=('libarchive.so' 'libpcre2-8.so')
     DESTDIR="${pkgdir}" cmake --install build
 }

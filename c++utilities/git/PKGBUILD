@@ -22,6 +22,7 @@ makedepends=(
     'cmake'
     'git'
     'ninja'
+    'pcre2'
 )
 checkdepends=(
     'cppunit'
@@ -51,6 +52,7 @@ build() {
         -D CONFIGURATION_PACKAGE_SUFFIX:STRING='-git'
         -D CONFIGURATION_TARGET_SUFFIX:STRING='git'
         -D USE_LIBARCHIVE=ON
+        -D USE_PCRE2=ON
     )
     cmake "${cmake_options[@]}"
     cmake --build build --target all
@@ -68,5 +70,6 @@ check() {
 }
 
 package() {
+    depends+=('libpcre2-8.so')
     DESTDIR="${pkgdir}" cmake --install build
 }

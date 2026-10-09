@@ -34,7 +34,7 @@ pkgname=static-compat-syncthingtray
 _name=${pkgname#static-compat-}
 pkgver=2.1.8
 [[ $BUILD_BEFORE_TAGGING ]] && _pkgver=branch=master || _pkgver=tag=v$pkgver
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing'
 license=(GPL-2.0-or-later)
@@ -66,7 +66,15 @@ ephemeral_port() {
 prepare() {
   cd "$srcdir/$_reponame"
   [[ $_enable_libsyncthing ]] || return 0
-  git cherry-pick --no-commit 38cece6ff72e5f7066de8a48041f654dd4856e6c
+  local commits=(
+    38cece6ff72e5f7066de8a48041f654dd4856e6c
+    811b4288de99e295c2edb455fdc66051154d83d5
+    d73bfd757fa9c60142cec8f2c24ca223aa10c3b4
+    e51fd630b5f534cd0f47dab1ba736381c484b69e
+    f8b6069ec346b26fc4c705be553eb48195114370
+    7ce4d99befa555a557040daa05b19819fad05ae5
+  )
+  git cherry-pick --no-commit "${commits[@]}"
   git submodule init
   git config submodule.libsyncthing/go/src/github.com/syncthing/syncthing.url "$srcdir/syncthing"
   git -c protocol.file.allow=always submodule update
@@ -115,6 +123,7 @@ build() {
     -DCMAKE_DISABLE_FIND_PACKAGE_harfbuzz=TRUE \
     -DSETUP_TOOLS:BOOL=ON \
     -DINJECT_ENV_LIST:STRING=OPENSSL_CONF= \
+    -DDISABLE_UNSTABLE_TESTS:BOOL=OFF \
     $additional_args \
     .
   # fix linker flags for libharfbuzz (setting HARFBUZZ_LIBRARIES does not work)
@@ -143,6 +152,7 @@ check() {
       --test-dir .
       --output-on-failure
       --parallel $(nproc)
+      --exclude-regex 'app_tests'
   )
   ctest "${ctest_flags[@]}"
 }

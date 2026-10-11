@@ -1,6 +1,6 @@
 pkgbase=syncthingtray
 pkgname=("${pkgbase}" "${pkgbase}-plasma" "${pkgbase}-dolphin")
-pkgver=2.1.8
+pkgver=2.1.9
 pkgrel=1
 pkgdesc='Tray application for Syncthing'
 arch=('x86_64')
@@ -27,7 +27,7 @@ checkdepends=(
     'syncthing'
 )
 source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/Martchus/${pkgbase}/archive/v${pkgver}.tar.gz")
-sha256sums=('057cf086943c2a8b4521b8f068188ff975d3403c42cc0292bca532169ce5d577')
+sha256sums=('1ea90b8e92d19989f6e3fd900027b4e11c8e28bf2e1994834df7aeab8924cbca')
 
 build() {
     local cmake_options=(

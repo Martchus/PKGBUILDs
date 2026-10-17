@@ -46,7 +46,7 @@ depends=('static-compat-c++utilities' 'static-compat-qtutilities' 'static-compat
 [[ $_js_provider == qml || $_enable_quick_gui ]] && depends+=('static-compat-qt6-declarative')
 [[ $_enable_kio_plugin ]] && optdepends+=('static-compat-kio: KIO plugin for Syncthing actions in Dolphin')
 [[ $_enable_plasmoid ]] && optdepends+=('static-compat-plasma-workspace: Plasmoid for Plasma 6 desktop')
-makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang' 'git')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'qtutilities-git' 'breeze-icons' 'clang' 'git')
 [[ $_enable_libsyncthing ]] && makedepends+=('go')
 checkdepends=('static-compat-cppunit' 'syncthing' 'iproute2')
 [[ $_enable_kio_plugin ]] && makedepends+=('static-compat-kio')
@@ -108,6 +108,7 @@ build() {
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DAPPEND_GIT_REVISION:BOOL=OFF \
     -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \

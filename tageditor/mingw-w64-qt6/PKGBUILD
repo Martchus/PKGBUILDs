@@ -27,7 +27,7 @@ depends=('mingw-w64-crt' 'mingw-w64-c++utilities' 'mingw-w64-qtutilities-qt6' 'm
 [[ $_webview_provider == webengine ]] && depends+=('mingw-w64-qt6-webengine')
 [[ $_js_provider == script ]] && depends+=('mingw-w64-qt6-script')
 [[ $_js_provider == qml ]] && depends+=('mingw-w64-qt6-declarative' 'qt6-declarative')
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'clang' 'ffmpeg' 'ninja')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt6-tools' 'qt6-tools' 'qtutilities-git' 'clang' 'ffmpeg' 'ninja')
 [[ $_json_export == ON ]] && makedepends+=('mingw-w64-reflective-rapidjson')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -96,6 +96,7 @@ build() {
         -DTAGEDITOR_CONFIGURATION_TARGET_SUFFIX:STRING="qt6${_cfg_suffix[$_cfg]}" \
         -DQT_PACKAGE_PREFIX:STRING=Qt6 \
         -DKF_PACKAGE_PREFIX:STRING=KF6 \
+        -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
         -DJS_PROVIDER:STRING="${_js_provider}" \
         -DENABLE_JSON_EXPORT:BOOL="${_json_export}" \
         -DREFLECTION_GENERATOR_EXECUTABLE:FILEPATH='/usr/bin/reflective_rapidjson_generator' \

@@ -15,7 +15,7 @@ arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='A simple password store using AES-256-CBC encryption via OpenSSL'
 license=(GPL-2.0-or-later)
 depends=('static-compat-qt6-base' 'static-compat-c++utilities' 'static-compat-qtutilities' 'static-compat-passwordfile' 'static-compat-openssl')
-makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
+makedepends=('static-compat-cmake' 'ninja' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'qtutilities-git' 'breeze-icons' 'clang')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
 sha256sums=('af6d6e7bfe931129a4a6aa13c15636cff617c6310d4f2bcb29864712d757b2c0')
@@ -41,6 +41,7 @@ build() {
     $ccache_args \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \

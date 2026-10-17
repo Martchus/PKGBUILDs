@@ -31,7 +31,7 @@ depends=('static-compat-c++utilities' 'static-compat-openssl')
 [[ $_js_provider == qml ]] && depends+=('qt6-declarative')
 makedepends=('static-compat-cmake'  'static-compat-tagparser' 'ninja')
 [[ $_json_export == ON ]] && makedepends+=('reflective-rapidjson')
-[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'breeze-icons' 'clang')
+[[ $_qt_gui == ON ]] && makedepends+=('static-compat-qtutilities' 'static-compat-qt6-svg' 'static-compat-qt6-wayland' 'static-compat-qt6-tools' 'static-compat-qt6-translations' 'qtutilities-git' 'breeze-icons' 'clang')
 checkdepends=('static-compat-cppunit' 'jq')
 url="https://github.com/Martchus/${_reponame}"
 source=("${_name}-${pkgver}.tar.gz::https://github.com/Martchus/${_reponame}/archive/v${pkgver}.tar.gz")
@@ -53,6 +53,7 @@ build() {
     $ccache_args \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DQT_PACKAGE_PREFIX:STRING='Qt6' \
+    -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
     -DBUILTIN_TRANSLATIONS:BOOL=ON \
     -DBUILTIN_TRANSLATIONS_OF_QT:BOOL=ON \
     -DWEBVIEW_PROVIDER="${_webview_provider}" \

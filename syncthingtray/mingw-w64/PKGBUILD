@@ -28,7 +28,7 @@ depends=('mingw-w64-crt' 'mingw-w64-qt5-svg' 'mingw-w64-c++utilities' 'mingw-w64
 [[ $_webview_provider == webengine ]] && depends+=('mingw-w64-qt5-webengine')
 [[ $_js_provider == script ]] && depends+=('mingw-w64-qt5-script')
 [[ $_js_provider == qml ]] && depends+=('mingw-w64-qt5-declarative')
-makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'ffmpeg' 'ninja' 'git')
+makedepends=('mingw-w64-gcc' 'mingw-w64-cmake' 'mingw-w64-qt5-tools' 'qtutilities-git' 'ffmpeg' 'ninja' 'git')
 [[ $_enable_libsyncthing == ON ]] && makedepends+=('go')
 url=https://github.com/Martchus/${_reponame}
 _github_url=git+https://github.com/Martchus
@@ -101,6 +101,7 @@ build() {
         -DCONFIGURATION_NAME:STRING="${_cfg}" \
         -DCONFIGURATION_DISPLAY_NAME="" \
         -DCONFIGURATION_PACKAGE_SUFFIX:STRING="-${_cfg}" \
+        -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
         -DJS_PROVIDER:STRING="${_js_provider}" \
         -DSYSTEMD_SUPPORT=OFF \
         -DNO_FILE_ITEM_ACTION_PLUGIN=ON \

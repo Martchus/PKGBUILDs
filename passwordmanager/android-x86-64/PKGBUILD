@@ -26,7 +26,7 @@ depends=("android-$_arch-qt6-svg" "android-$_arch-qt6-declarative" "android-$_ar
          "android-$_arch-libiconv" "android-$_arch-boost"
          'android-platform-35')
 makedepends=('android-cmake' 'android-ndk' 'ninja' 'git' 'clang' 'qt6-tools' 'qt6-declarative'
-             "android-$_arch-qt6-tools" 'breeze-icons')
+             "android-$_arch-qt6-tools" 'qtutilities-git' 'breeze-icons')
 url="https://github.com/Martchus/${_reponame}"
 _github_url=git+https://github.com/Martchus
 _git_url=${MARTCHUS_GIT_URL_PREFIX:-$_github_url}
@@ -65,6 +65,7 @@ build() {
   cmake --preset arch-android \
     -DQT_NO_PACKAGE_VERSION_CHECK:BOOL=TRUE \
     -DAPPEND_GIT_REVISION:BOOL=OFF \
+    -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
     -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
     -DFORCE_EXTERNAL_ICONV=ON
   cmake --build --preset arch-android

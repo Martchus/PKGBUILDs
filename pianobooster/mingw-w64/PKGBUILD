@@ -5,7 +5,7 @@ pkgver=1395.244e411
 pkgrel=4
 depends=()
 makedepends=('mingw-w64-qt6-base-static' 'mingw-w64-fluidsynth' 'mingw-w64-qtutilities-qt6' 'mingw-w64-c++utilities'
-             'git' 'clang' 'qt6-declarative' 'qt6-tools' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static'
+             'git' 'clang' 'qt6-declarative' 'qt6-tools' 'qtutilities-git' 'mingw-w64-cmake-static' 'mingw-w64-qt6-tools-static' 'mingw-w64-qt6-svg-static'
              'mingw-w64-qt6-translations' 'ninja' 'breeze-icons')
 optdepends=('mingw-w64-qt6-translations')
 arch=('any')
@@ -48,6 +48,7 @@ build () {
           -DSVG_ICON_SUPPORT:BOOL=ON \
           -DENABLE_TARGETS_FOR_MINGW64_CROSS_PACKAGING:BOOL=ON \
           -DQT_PACKAGE_PREFIX=Qt6 \
+          -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
           -DCMAKE_POLICY_DEFAULT_CMP0057=NEW \
           -DWITH_INTERNAL_FLUIDSYNTH:BOOL=ON \
           -DUSE_FTGL:BOOL=OFF \

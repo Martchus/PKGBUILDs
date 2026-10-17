@@ -7,7 +7,7 @@ _reponame=qtutilities
 pkgname=qtutilities-git
 _name=${pkgname%-git}
 pkgver=732.90e0c5e
-pkgrel=2
+pkgrel=1
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
 arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
@@ -21,6 +21,7 @@ depends=(
 )
 makedepends=(
     'cmake'
+    'corrosion'
     'clang'
     'git'
     'ninja'

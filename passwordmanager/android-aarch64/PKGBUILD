@@ -67,6 +67,7 @@ build() {
     -DAPPEND_GIT_REVISION:BOOL=OFF \
     -DICONTOOL_PATH:FILEPATH="/usr/lib/qtutilities-git/icontool" \
     -DBUILTIN_ICON_THEMES:STRING='breeze;breeze-dark' \
+    -DBUILTIN_ICON_THEMES_ERROR_ON_MISSING_ICON:BOOL=ON \
     -DFORCE_EXTERNAL_ICONV=ON
   cmake --build --preset arch-android
 }

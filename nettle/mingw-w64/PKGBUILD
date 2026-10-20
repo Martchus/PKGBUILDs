@@ -15,7 +15,7 @@ sha256sums=('3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094'
             'SKIP')
 validpgpkeys=('343C2FF0FBEE5EC2EDBEF399F3599FF828C67298') # Niels Möller <nisse@lysator.liu.se>
 
-_architectures="i686-w64-mingw32 x86_64-w64-mingw32"
+_architectures=${MINGW_W64_ARCHS:-x86_64-w64-mingw32}
 
 build() {
   cd "$srcdir/nettle-$pkgver"

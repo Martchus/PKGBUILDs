@@ -9,7 +9,8 @@
 # - Remove `-j` flag; rely on Ninja's default.
 
 pkgname=llama.cpp
-pkgver=b9747 # renovate: datasource=github-releases depName=ggml-org/llama.cpp
+epoch=1
+pkgver=0.7.0 # renovate: datasource=github-releases depName=ggml-org/llama.cpp
 pkgrel=1
 pkgdesc="Port of Facebook's LLaMA model in C/C++"
 arch=(x86_64 armv7h aarch64)
@@ -60,14 +61,14 @@ options=(lto !debug)
 backup=("etc/conf.d/llama.cpp")
 install='llama.cpp.install'
 source=(
-  "${pkgname}-${pkgver}.tar.gz::https://github.com/ggml-org/llama.cpp/archive/refs/tags/${pkgver}.tar.gz"
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/ggml-org/llama.cpp/archive/refs/tags/v${pkgver}.tar.gz"
   'llama.cpp.conf'
   'llama.cpp.service'
   'llama.cpp.install'
   'sysusers.conf'
   'tmpfiles.conf'
 )
-sha256sums=('4bc663dc6992f15c9878b3193addfa5ca26801d0287d76b6f5b267be39aeb030'
+sha256sums=('55d67acf3ad2ad747a9bbeb75f9f0e173dbcc0d1753a471038a90c819421c5e1'
             '53fa70cfe40cb8a3ca432590e4f76561df0f129a31b121c9b4b34af0da7c4d87'
             '48d6b261315c9175b4b4cea4900bd4d76f2f27112804934db656537485510cd2'
             'c534b4c37ff8ac9174a2f6f410daa96d991e8c638f338383ffb07613c771724b'
@@ -98,7 +99,6 @@ build() {
     -DGGML_BUILD_TESTS=OFF
     -DGGML_LTO=ON
     -DGGML_RPC=ON
-    -DLLAMA_BUILD_NUMBER="${pkgver#b}"
     -DGGML_BACKEND_DL=ON
     # build universal package
     -DGGML_CPU_ALL_VARIANTS=ON

@@ -1,7 +1,7 @@
-From 00b7ce50ecb99680e58cb916566a9a757509f34c Mon Sep 17 00:00:00 2001
+From c6b578329d43e0933669a6db40efc82276147507 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Sun, 13 Sep 2026 13:39:37 +0200
-Subject: [PATCH 35/35] Fix detection of freetype2 and dbus
+Subject: [PATCH 35/36] Fix detection of freetype2 and dbus
 
 Change-Id: I89085b5c40754c84482af4fb6d94ef4547982c09
 ---
@@ -36,5 +36,5 @@ index 429ab91c98e..389adbb85ed 100644
                  { "type": "pkgConfig", "args": "--libs freetype2", "condition": "features.shared" },
                  { "libs": "-lfreetype -lharfbuzz -lfreetype -lbrotlidec -lbrotlicommon -lglib-2.0 -lintl -lws2_32 -lole32 -lwinmm -lshlwapi -lpcre2-8 -lintl -lpcre2-8 -lintl -liconv -lgraphite2 -lbz2", "condition": "!features.shared && !config.wasm" },
 -- 
-2.55.0
+2.56.0
 

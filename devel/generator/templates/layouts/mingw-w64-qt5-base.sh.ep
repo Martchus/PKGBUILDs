@@ -224,7 +224,7 @@ build() {
 
     # configure static version to use linked OpenSSL
     qt_configure_args+=' -openssl-linked'
-    export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32 -ldnsapi -liphlpapi"
+    export OPENSSL_LIBS="/usr/${_arch}/lib/libssl.a /usr/${_arch}/lib/libcrypto.a -lws2_32 -lgdi32 -lcrypt32 -lbcrypt -ldnsapi -liphlpapi"
 % } else {
     qt_configure_args+=' -shared'
 

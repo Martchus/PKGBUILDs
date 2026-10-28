@@ -1,7 +1,7 @@
-From da9c468cb020bb8d63b839747b266995e056bb5a Mon Sep 17 00:00:00 2001
+From 581843f952c6964ad9b8455b274930c09d346083 Mon Sep 17 00:00:00 2001
 From: Martchus <martchus@gmx.net>
 Date: Wed, 25 Jan 2017 23:42:30 +0100
-Subject: [PATCH 29/35] Hardcode linker flags for platform plugins
+Subject: [PATCH 29/36] Hardcode linker flags for platform plugins
 
 Otherwise incorrect order of libs leads to errors
 when building libqminimal.dll, libqoffscreen.dll,
@@ -174,5 +174,5 @@ index 50a3bb41a92..02f74650a9b 100644
  include(windows.pri)
  
 -- 
-2.55.0
+2.56.0
 

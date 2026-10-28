@@ -1,0 +1,26 @@
+From 6b2f5f83886587b61f96f4f4a15068f5a7862668 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Thu, 29 Oct 2026 00:30:19 +0100
+Subject: [PATCH 36/36] Fix detection of OpenSSL in mingw-w64 environment
+
+Change-Id: Icdc9b77c16d1a775d116eb7e7ef1a2e77588db5e
+---
+ src/network/configure.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/network/configure.json b/src/network/configure.json
+index ffba2d1eeab..598562d5fc7 100644
+--- a/src/network/configure.json
++++ b/src/network/configure.json
+@@ -86,7 +86,7 @@
+             "sources": [
+                 { "type": "openssl" },
+                 {
+-                    "libs": "-lssleay32 -llibeay32 -lUser32 -lWs2_32 -lAdvapi32 -lGdi32",
++                    "libs": "-lssl -lcrypto -lws2_32 -lgdi32 -lcrypt32 -lbcrypt -ldnsapi -liphlpapi",
+                     "condition": "config.win32"
+                 },
+                 {
+-- 
+2.56.0
+

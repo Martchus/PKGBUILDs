@@ -14,15 +14,15 @@ if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_syncthing=branch=libsyncthing-latest
 else
   _pkgver_stt=tag=v$pkgver
-  _pkgver_cpputilities=tag=v5.30.0
-  _pkgver_qtutilities=tag=v6.18.0
-  _pkgver_qtforkawesome=tag=v0.3.1
-  _pkgver_syncthing=tag=libsyncthing-v2.0.1
+  _pkgver_cpputilities=tag=v5.37.0
+  _pkgver_qtutilities=tag=v6.23.0
+  _pkgver_qtforkawesome=tag=v0.3.4
+  _pkgver_syncthing=tag=libsyncthing-v2.1.7
 fi
 _pkgver_forkawesome=1.2.0
 _reponame=syncthingtray
 _reponame_forkawesome=Fork-Awesome-$_pkgver_forkawesome
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)

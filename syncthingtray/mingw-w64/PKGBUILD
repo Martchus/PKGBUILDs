@@ -17,7 +17,7 @@ pkgname=mingw-w64-syncthingtray
 _name=${pkgname#mingw-w64-}
 pkgver=2.1.9
 [[ $BUILD_BEFORE_TAGGING ]] && _pkgver=branch=master || _pkgver=tag=v$pkgver
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc='Tray application for Syncthing (mingw-w64)'
 license=(GPL-2.0-or-later)

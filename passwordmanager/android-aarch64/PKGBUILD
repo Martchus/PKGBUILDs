@@ -14,11 +14,11 @@ if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_passwordfile=branch=master
 else
   _pkgver_pwmgr=tag=v$pkgver
-  _pkgver_cpputilities=tag=v5.30.0
-  _pkgver_qtutilities=tag=v6.18.0
-  _pkgver_passwordfile=tag=v5.0.12
+  _pkgver_cpputilities=tag=v5.37.0
+  _pkgver_qtutilities=tag=v6.23.0
+  _pkgver_passwordfile=tag=v5.2.1
 fi
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)

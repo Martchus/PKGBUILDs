@@ -18,7 +18,7 @@
 _qt_module=qtbase
 pkgname=mingw-w64-qt5-base
 pkgver=5.15.19+kde+r96
-pkgrel=2
+pkgrel=3
 _basever=${pkgver%%+*}
 _commit=fbed962c3195ab3952fa54d40e012ad1a4fdc42b
 pkgdesc='A cross-platform application and UI framework, native OpenGL backend (mingw-w64)'

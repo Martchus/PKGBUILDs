@@ -2,7 +2,7 @@ _pkgname=grpc
 pkgname=static-compat-$_pkgname
 pkgver=1.84.0
 _protobuf_ver=36.1
-pkgrel=1
+pkgrel=2
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first"
 arch=('x86_64')
 url='https://grpc.io'
@@ -56,6 +56,9 @@ prepare() {
       -e '/^PROTOBUF_SUBMODULE_VERSION=/d' \
       tools/distrib/python/grpcio_tools/protoc_lib_deps.py
   ln -s ../../../.. tools/distrib/python/grpcio_tools/grpc_root
+
+  # support openssl 4
+  git cherry-pick -n fb056ab0bb3ed003febe82f069ff41514288a4f3
 }
 
 build() {

@@ -5,7 +5,7 @@ pkgname=android-${_android_arch}-${_pkgname}
 _protobuf_ver=36.1
 _opencensus_proto_ver=0.4.1
 pkgver=1.84.0
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc="High performance, open source, general RPC framework that puts mobile and HTTP/2 first (Android ${_android_arch})"
 url='https://grpc.io'
@@ -63,6 +63,9 @@ prepare() {
       -e '/^PROTOBUF_SUBMODULE_VERSION=/d' \
       tools/distrib/python/grpcio_tools/protoc_lib_deps.py
   ln -s ../../../.. tools/distrib/python/grpcio_tools/grpc_root
+
+  # support openssl 4
+  git cherry-pick -n fb056ab0bb3ed003febe82f069ff41514288a4f3
 }
 
 build() {

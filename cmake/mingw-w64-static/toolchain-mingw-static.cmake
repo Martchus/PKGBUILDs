@@ -39,9 +39,9 @@ set(CMAKE_DISABLE_FIND_PACKAGE_harfbuzz TRUE)
 # note: It would be possible to deduce the dependencies via pkg-config. However, for simplicity I'm hard-coding the dependencies for now.
 #       In some cases the pkg-config file wouldn't work anyways because it is only covering the shared version (despite use of `-static`).
 option(USE_LINK_GROUP "use LINK_GROUP" ON)
-set(OPENSSL_DEPENDENCIES "-lws2_32;-lgdi32;-lcrypt32" CACHE INTERNAL "dependencies of static OpenSSL libraries")
-set(POSTGRESQL_DEPENDENCIES "-lpgcommon;-lpgport;-lintl;-lssl;-lcrypto;-lshell32;-lws2_32;-lsecur32;-liconv" CACHE INTERNAL "dependencies of static PostgreSQL libraries")
-set(MYSQL_DEPENDENCIES "-lzstd;-lshlwapi;-lgdi32;-lws2_32;-lbcrypt;-lcrypt32;-lsecur32;-ladvapi32;-lpthread;-lz;-lm" CACHE INTERNAL "dependencies of static MySQL/MariaDB libraries")
+set(OPENSSL_DEPENDENCIES "-lws2_32;-lgdi32;-lcrypt32;-lbcrypt" CACHE INTERNAL "dependencies of static OpenSSL libraries")
+set(POSTGRESQL_DEPENDENCIES "-lpgcommon;-lpgport;-lintl;-lssl;-lcrypto;-lbcrypt;-lshell32;-lws2_32;-lsecur32;-liconv" CACHE INTERNAL "dependencies of static PostgreSQL libraries")
+set(MYSQL_DEPENDENCIES "-lzstd;-lshlwapi;-lgdi32;-lws2_32;-lbcrypt;-lcrypt32;-lbcrypt;-lsecur32;-ladvapi32;-lpthread;-lz;-lm" CACHE INTERNAL "dependencies of static MySQL/MariaDB libraries")
 set(LIBPNG_DEPENDENCIES "-lz" CACHE INTERNAL "dependencies of static libpng")
 set(GLIB2_DEPENDENCIES "-lintl;-lws2_32;-lole32;-lwinmm;-lshlwapi;-lm" CACHE INTERNAL "dependencies of static Glib2")
 set(FREETYPE_DEP_LIBS "-lbz2;-lharfbuzz;-lfreetype;-lbrotlidec;-lbrotlicommon")

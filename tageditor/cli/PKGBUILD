@@ -18,8 +18,9 @@ arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"
 license=('GPL-2.0-or-later')
 depends=(
-    'c++utilities'
-    'tagparser'
+    'glibc'
+    'libgcc'
+    'libstdc++'
 )
 makedepends=(
     'cmake'

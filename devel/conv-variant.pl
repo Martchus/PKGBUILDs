@@ -34,6 +34,7 @@ my %patterns = (
         {se => 'for _target in ${_targets}; do', append => "\n    source mingw-clang-env \$_target"},
         {re => '.*source mingw-env.*', repl => ''},
         {re => 'install-mingw-w64-clang-aarch64-strip', repl => 'install-mingw-w64-strip'},
+        {re => '\${MINGW_W64_ARCHS\:\-.*}', repl => 'aarch64-w64-mingw32'},
     ]},
     'android-aarch64' => {
         'android-armv7a-eabi' => [{re => '_android_arch=aarch64', repl => '_android_arch=armv7a-eabi'}],

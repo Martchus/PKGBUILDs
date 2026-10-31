@@ -6,7 +6,7 @@
 _arch=aarch64
 _reponame=passwordmanager
 pkgname=android-$_arch-passwordmanager
-pkgver=4.4.2
+pkgver=4.4.3
 if [[ $BUILD_BEFORE_TAGGING ]]; then
   _pkgver_pwmgr=branch=master
   _pkgver_cpputilities=branch=master
@@ -18,7 +18,7 @@ else
   _pkgver_qtutilities=tag=v6.23.0
   _pkgver_passwordfile=tag=v5.2.1
 fi
-pkgrel=2
+pkgrel=1
 arch=('any')
 pkgdesc="Tray application for Syncthing (Android, $_arch)"
 license=(GPL-2.0-or-later)

@@ -1,7 +1,7 @@
 pkgbase=qtforkawesome
 pkgname=("${pkgbase}" "${pkgbase}-doc")
-pkgver=0.3.4
-pkgrel=2
+pkgver=0.3.5
+pkgrel=1
 _pkgver_fork_awesome=1.2.0
 pkgdesc='Library that bundles ForkAwesome for use within Qt applications'
 arch=('x86_64')

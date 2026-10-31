@@ -6,8 +6,8 @@
 pkgbase=tagparser
 pkgname=("${pkgbase}" "${pkgbase}-doc")
 _reponame=tagparser
-pkgver=12.5.3
-pkgrel=2
+pkgver=12.5.4
+pkgrel=1
 pkgdesc='C++ library for reading and writing MP4/M4A/AAC (iTunes), ID3, Vorbis, Opus, FLAC and Matroska tags'
 arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"

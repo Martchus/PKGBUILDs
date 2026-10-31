@@ -6,8 +6,8 @@
 _reponame=passwordfile
 pkgbase=passwordfile
 pkgname=("${pkgbase}" "${pkgbase}-doc")
-pkgver=5.2.1
-pkgrel=2
+pkgver=5.2.2
+pkgrel=1
 pkgdesc='C++ library to read/write passwords from/to encrypted files using AES-256-CBC via OpenSSL'
 arch=('x86_64')
 url="https://github.com/Martchus/${_reponame}"

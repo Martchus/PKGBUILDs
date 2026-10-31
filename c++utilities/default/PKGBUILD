@@ -1,7 +1,7 @@
 pkgbase=c++utilities
 pkgname=("${pkgbase}" "${pkgbase}-doc")
 _reponame=cpp-utilities
-pkgver=5.37.0
+pkgver=5.38.0
 pkgrel=1
 pkgdesc='Common C++ classes and routines such as argument parser, IO and conversion utilities'
 arch=('x86_64')

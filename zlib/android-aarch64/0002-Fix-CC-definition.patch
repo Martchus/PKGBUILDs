@@ -1,0 +1,25 @@
+From 04fa18d268752d67868483813117f3802b8a8f9b Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 7 Nov 2026 11:15:09 +0100
+Subject: [PATCH 2/3] Fix CC definition
+
+---
+ configure | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/configure b/configure
+index 7de2ef2..4ca0fbd 100755
+--- a/configure
++++ b/configure
+@@ -239,6 +239,8 @@ if test $cover -eq 1; then
+ 	  fi
+     fi
+   fi
++else
++  cc=${CC}
+ fi
+ 
+ show $cc -c $test.c
+-- 
+2.56.0
+

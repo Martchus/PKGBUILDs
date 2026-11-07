@@ -1,0 +1,71 @@
+# Maintainer of AUR package: Gonzalo Exequiel Pedone <hipersayan DOT x AT gmail DOT com>
+
+_android_arch=aarch64
+
+pkgname=android-${_android_arch}-zlib
+pkgver=1.4
+pkgrel=1
+arch=('any')
+pkgdesc="A compression/decompression Library (Android, ${_android_arch})"
+url="http://www.zlib.net/"
+license=('custom:zlib')
+depends=('android-ndk')
+makedepends=('android-environment'
+             'android-pkg-config'
+             'android-sdk-build-tools')
+options=(!strip !buildflags staticlibs !emptydirs)
+source=(https://github.com/madler/zlib/releases/download/v$pkgver/zlib-$pkgver.tar.xz{,.asc}
+        0001-Disable-versioning.patch
+        0002-Fix-CC-definition.patch
+        0003-Fix-missing-symbols.patch)
+sha512sums=('c6701ef216f2ea451056466794c520df62af0a7ddf57c907c3263678dc625f3d6466e0187106dec0d7721ad6fc6cf105e0f93a4cac82fbcc2ba919eebd29c0b0'
+            'SKIP'
+            '0feaa0e30a0e17a1ee9853882693b1b2e1a9ce2c9d3d7930bf5334f600e5053e6d89ea23b55ebd94e38c20e0fbbd675c9dcea46bfad3fad9cbe67c9c12165ff2'
+            '8d17a252d629aa84d62e8d2718630e9ecd4bfbf2296c49698d7b8c46721737c8d3e7562399b17261eda667e206942627a385a2083e928732649467e84fc1bad8'
+            '5b69d94de3d635bdbeed801b0a0e0d312622a2726382044f4c038f80a1b8f0176f88a9ad39077fdd124f9228fc235e887fc70837459bfe88a1da93eb1d43d7ac')
+b2sums=('2564e092d3daf5c727eddab8785cccf64275d8d534cce96ba6d21fa5c891a135ff5c9b21685a5c549f2c1c790b4ec3ed11449f9bc3da7f5df6b930c4b2f45f03'
+        'SKIP'
+        '6a4487f54e18c19e58d7eb98482a9e02d6e95defed65fd2c90c15be05b68549350f003fe10e64352eb561438462d64fd0f754d694c5ed52b7bd53d5b55d3785c'
+        '04d53c04afe7a3d1efb77639005c2659084930cedfbf99652625745482b3c92b5cc2f960c1256dcbc7b8bed78414bb190089f8cf296ed6197400857c465a7b91'
+        '498d87e3efc227b244d5db440a01310c4f3ac4b14cc7f0b2da22130a9c040d12af46936ef2626ca86a4e397edef1973305b86faba22c87de91fe855a88af5925')
+validpgpkeys=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA')  # Mark Adler <madler@alumni.caltech.edu>
+
+prepare() {
+    cd "${srcdir}"/zlib-${pkgver}
+
+    patch -Np1 -i ../0001-Disable-versioning.patch
+    patch -Np1 -i ../0002-Fix-CC-definition.patch
+    patch -Np1 -i ../0003-Fix-missing-symbols.patch
+}
+
+build() {
+    cd "${srcdir}"/zlib-${pkgver}
+    source android-env ${_android_arch}
+
+    # Platform specific patches
+    case "$_android_arch" in
+        x86-64)
+            export CFLAGS="$CFLAGS -fPIC"
+            ;;
+        *)
+            ;;
+    esac
+
+    ./configure \
+        --prefix=${ANDROID_PREFIX} \
+        --libdir=${ANDROID_PREFIX_LIB} \
+        --includedir=${ANDROID_PREFIX_INCLUDE} \
+        --enable-shared
+
+    make $MAKEFLAGS
+}
+
+package () {
+    cd "${srcdir}"/zlib-${pkgver}
+    source android-env ${_android_arch}
+
+    make DESTDIR="$pkgdir" install
+    rm -r "${pkgdir}"/${ANDROID_PREFIX_SHARE}
+    ${ANDROID_STRIP} -g --strip-unneeded "${pkgdir}"/${ANDROID_PREFIX_LIB}/*.so || true
+    ${ANDROID_STRIP} -g "$pkgdir"/${ANDROID_PREFIX_LIB}/*.a
+}

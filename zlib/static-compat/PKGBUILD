@@ -2,27 +2,21 @@ pkgbase=static-compat-zlib
 _pkgname=zlib
 pkgname=(static-compat-zlib static-compat-minizip)
 epoch=1
-pkgver=1.3.2
+pkgver=1.4
 pkgrel=1
 arch=(x86_64)
 license=(Zlib)
 url="https://www.zlib.net/"
 makedepends=('static-compat-configure')
 options=(staticlibs)
-source=(https://github.com/madler/zlib/releases/download/v$pkgver/$_pkgname-$pkgver.tar.xz{,.asc}
-        https://github.com/madler/zlib/commit/36ff1be48ef696cc67b0855f7c8537ce0276210d.patch)
-sha512sums=('cf3d49fbabddc57cca99858feeca8f910e9de42a16014cddd406814d2d24ee33fee2af3805d7efbb1b04b05f55818092b000daf82502b675df65f2512c353f73'
-            'SKIP'
-            '39a4ad7f473e4c170fb91a2e14860eaa6e728e9b710185bf9dbb23b949064fe7e51e36a15ec5ea110760ca8af15f8d2450e02e1a442af66516fe3e8b2debda0d')
-b2sums=('fd3a6e4c275a925f4814de487075c136e28421ea34ca7f93141781e7a414b392cd849fbf96cfcb24e825441df5f3c64be54276c0f617dc2d5c865d4ab260e83c'
-        'SKIP'
-        '489546e224668e177e1358c7bb56bf9206a292d78cdb5fbf437533d07a4dffc60984499abd17fc3c776a09da78caacc9c9b35bf20194b2d4fe8c9224d18da5d9')
+source=(https://github.com/madler/zlib/releases/download/v$pkgver/$_pkgname-$pkgver.tar.xz{,.asc})
+sha512sums=('c6701ef216f2ea451056466794c520df62af0a7ddf57c907c3263678dc625f3d6466e0187106dec0d7721ad6fc6cf105e0f93a4cac82fbcc2ba919eebd29c0b0'
+            'SKIP')
+b2sums=('2564e092d3daf5c727eddab8785cccf64275d8d534cce96ba6d21fa5c891a135ff5c9b21685a5c549f2c1c790b4ec3ed11449f9bc3da7f5df6b930c4b2f45f03'
+        'SKIP')
 validpgpkeys=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA')  # Mark Adler <madler@alumni.caltech.edu>
 
 prepare() {
-  # Fix missing header
-  patch -Np1 -d $_pkgname-$pkgver -i "$srcdir"/36ff1be48ef696cc67b0855f7c8537ce0276210d.patch
-
   cd $_pkgname-$pkgver/contrib/minizip
   cp Makefile Makefile.orig
   cp ../README.contrib readme.txt

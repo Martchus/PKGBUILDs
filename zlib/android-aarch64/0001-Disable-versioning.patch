@@ -1,0 +1,105 @@
+From 95f63f7d8fae45ca3b13801b1282cde6e4791aa8 Mon Sep 17 00:00:00 2001
+From: Martchus <martchus@gmx.net>
+Date: Sat, 7 Nov 2026 11:14:36 +0100
+Subject: [PATCH 1/3] Disable versioning
+
+---
+ Makefile.in | 30 ++++++++++++------------------
+ configure   |  6 +++---
+ 2 files changed, 15 insertions(+), 21 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 75adc39..a7ccff5 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -33,7 +33,7 @@ STATICLIB=libz.a
+ SHAREDLIB=libz.so
+ SHAREDLIBV=libz.so.1.4
+ SHAREDLIBM=libz.so.1
+-LIBS=$(STATICLIB) $(SHAREDLIBV)
++LIBS=$(STATICLIB) $(SHAREDLIB)
+ 
+ AR=ar
+ ARFLAGS=rc
+@@ -289,9 +289,6 @@ gzwrite.lo: $(SRCDIR)gzwrite.c
+ 
+ placebo $(SHAREDLIBV): $(PIC_OBJS) libz.a $(SRCDIR)zlib.map $(SHAREDEXP)
+ 	$(LDSHARED) $(SFLAGS) $(SHAREDEXPFLAG) -o $@ $(PIC_OBJS) $(LDSHAREDLIBC) $(LDFLAGS)
+-	rm -f $(SHAREDLIB) $(SHAREDLIBM)
+-	ln -s $@ $(SHAREDLIB)
+-	ln -s $@ $(SHAREDLIBM)
+ 	-@rmdir objs
+ 
+ libz.exp: $(PIC_OBJS)
+@@ -308,11 +305,11 @@ example$(EXE): example.o $(STATICLIB)
+ minigzip$(EXE): minigzip.o $(STATICLIB)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ minigzip.o $(TEST_LIBS)
+ 
+-examplesh$(EXE): example.o $(SHAREDLIBV)
+-	$(CC) $(CFLAGS) -o $@ example.o $(LDFLAGS) -L. $(SHAREDLIBV)
++examplesh$(EXE): example.o $(SHAREDLIB)
++	$(CC) $(CFLAGS) -o $@ example.o $(LDFLAGS) -L. $(SHAREDLIB)
+ 
+-minigzipsh$(EXE): minigzip.o $(SHAREDLIBV)
+-	$(CC) $(CFLAGS) -o $@ minigzip.o $(LDFLAGS) -L. $(SHAREDLIBV)
++minigzipsh$(EXE): minigzip.o $(SHAREDLIB)
++	$(CC) $(CFLAGS) -o $@ minigzip.o $(LDFLAGS) -L. $(SHAREDLIB)
+ 
+ example64$(EXE): example64.o $(STATICLIB)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ example64.o $(TEST_LIBS)
+@@ -330,15 +327,12 @@ install-libs: $(LIBS)
+ 	cp $(STATICLIB) $(DESTDIR)$(libdir)
+ 	chmod 644 $(DESTDIR)$(libdir)/$(STATICLIB)
+ 	-@($(RANLIB) $(DESTDIR)$(libdir)/libz.a || true) >/dev/null 2>&1
+-	-@if test -n "$(SHAREDLIBV)"; then \
+-	  rm -f $(DESTDIR)$(sharedlibdir)/$(SHAREDLIBV); \
+-	  cp $(SHAREDLIBV) $(DESTDIR)$(sharedlibdir); \
+-	  echo "cp $(SHAREDLIBV) $(DESTDIR)$(sharedlibdir)"; \
+-	  chmod 755 $(DESTDIR)$(sharedlibdir)/$(SHAREDLIBV); \
+-	  echo "chmod 755 $(DESTDIR)$(sharedlibdir)/$(SHAREDLIBV)"; \
+-	  rm -f $(DESTDIR)$(sharedlibdir)/$(SHAREDLIB) $(DESTDIR)$(sharedlibdir)/$(SHAREDLIBM); \
+-	  ln -s $(SHAREDLIBV) $(DESTDIR)$(sharedlibdir)/$(SHAREDLIB); \
+-	  ln -s $(SHAREDLIBV) $(DESTDIR)$(sharedlibdir)/$(SHAREDLIBM); \
++	-@if test -n "$(SHAREDLIB)"; then \
++	  rm -f $(DESTDIR)$(sharedlibdir)/$(SHAREDLIB); \
++	  cp $(SHAREDLIB) $(DESTDIR)$(sharedlibdir); \
++	  echo "cp $(SHAREDLIB) $(DESTDIR)$(sharedlibdir)"; \
++	  chmod 755 $(DESTDIR)$(sharedlibdir)/$(SHAREDLIB); \
++	  echo "chmod 755 $(DESTDIR)$(sharedlibdir)/$(SHAREDLIB)"; \
+ 	  ($(LDCONFIG) || true)  >/dev/null 2>&1; \
+ 	fi
+ 	rm -f $(DESTDIR)$(man3dir)/zlib.3
+@@ -433,4 +427,4 @@ infback.lo inflate.lo: $(SRCDIR)zutil.h $(SRCDIR)zlib.h zconf.h $(SRCDIR)inftree
+ inffast.lo: $(SRCDIR)zutil.h $(SRCDIR)zlib.h zconf.h $(SRCDIR)inftrees.h $(SRCDIR)inflate.h $(SRCDIR)inffast.h
+ inftrees.lo: $(SRCDIR)zutil.h $(SRCDIR)zlib.h zconf.h $(SRCDIR)inftrees.h
+ trees.lo: $(SRCDIR)deflate.h $(SRCDIR)zutil.h $(SRCDIR)zlib.h zconf.h $(SRCDIR)trees.h
+-crc32_vx.lo: $(SRCDIR)zutil.h $(SRCDIR)zlib.h zconf.h $(SRCDIR)contrib/crc32vx/crc32_vx_hooks.h
+\ No newline at end of file
++crc32_vx.lo: $(SRCDIR)zutil.h $(SRCDIR)zlib.h zconf.h $(SRCDIR)contrib/crc32vx/crc32_vx_hooks.h
+diff --git a/configure b/configure
+index 7bc0f6d..7de2ef2 100755
+--- a/configure
++++ b/configure
+@@ -294,7 +294,7 @@ if test "$gcc" -eq 1 && ($cc -c $test.c) >> configure.log 2>&1; then
+         *sparc*)
+             LDFLAGS="${LDFLAGS} -Wl,--no-warn-rwx-segments" ;;
+         esac
+-        LDSHARED=${LDSHARED-"$cc -shared -Wl,-soname,libz.so.1,--version-script,${SRCDIR}zlib.map"} ;;
++        LDSHARED=${LDSHARED-"$cc -shared -Wl,-soname,libz.so,--version-script,${SRCDIR}zlib.map"} ;;
+   *BSD | *bsd* | DragonFly)
+         LDSHARED=${LDSHARED-"$cc -shared -Wl,-soname,libz.so.1,--version-script,${SRCDIR}zlib.map"}
+         LDCONFIG="ldconfig -m" ;;
+@@ -444,8 +444,8 @@ fi
+ 
+ # destination names for shared library if not defined above
+ SHAREDLIB=${SHAREDLIB-"libz$shared_ext"}
+-SHAREDLIBV=${SHAREDLIBV-"libz$shared_ext.$VER"}
+-SHAREDLIBM=${SHAREDLIBM-"libz$shared_ext.$VER1"}
++SHAREDLIBV=${SHAREDLIBV-"libz$shared_ext"}
++SHAREDLIBM=${SHAREDLIBM-"libz$shared_ext"}
+ 
+ echo >> configure.log
+ 
+-- 
+2.56.0
+

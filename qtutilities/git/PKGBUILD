@@ -17,6 +17,7 @@ depends=(
     'libgcc'
     'libstdc++'
     'libx11'
+    'openssl' # required by translator utility
     'qt6-base'
 )
 makedepends=(
@@ -91,6 +92,8 @@ check() {
 package() {
   depends+=(
       'libc++utilities-git.so'
+      'libcrypto.so'
+      'libssl.so'
   )
 
   DESTDIR="${pkgdir}" cmake --install build

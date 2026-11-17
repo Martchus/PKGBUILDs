@@ -6,6 +6,7 @@
 _reponame=qtutilities
 pkgname=qtutilities-git
 _name=${pkgname%-git}
+_tools=(icontool translator)
 pkgver=732.90e0c5e
 pkgrel=1
 pkgdesc='Common Qt related C++ classes and routines used by my applications such as dialogs, widgets and models'
@@ -21,8 +22,8 @@ depends=(
     'qt6-base'
 )
 makedepends=(
+    'cargo'
     'cmake'
-    'corrosion'
     'clang'
     'git'
     'ninja'
@@ -43,6 +44,15 @@ pkgver() {
     echo "$(git -C "${_reponame}" rev-list --count HEAD).$(git -C "${_reponame}" rev-parse --short HEAD)"
 }
 
+prepare() {
+    cd "${PROJECT_DIR_NAME:-$_reponame}"
+    export RUSTUP_TOOLCHAIN=stable
+    local manifest
+    for manifest in */Cargo.toml; do
+        cargo fetch --locked --target host-tuple --manifest-path "$manifest"
+    done
+}
+
 build() {
     local cmake_options=(
         -B build
@@ -57,24 +67,18 @@ build() {
         -D CONFIGURATION_NAME:STRING='git'
         -D CONFIGURATION_PACKAGE_SUFFIX:STRING='-git'
         -D CONFIGURATION_TARGET_SUFFIX:STRING='git'
+        -D RUST_BASED_TOOLS:BOOL=OFF
     )
     cmake "${cmake_options[@]}"
     cmake --build build --target all
 
-  cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame}"
-  cmake \
-    -G Ninja \
-    -DCMAKE_BUILD_TYPE:STRING='Release' \
-    -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-    -DCONFIGURATION_NAME:STRING='git' \
-    -DCONFIGURATION_PACKAGE_SUFFIX:STRING='-git' \
-    -DCONFIGURATION_TARGET_SUFFIX:STRING='git' \
-    -DQT_PACKAGE_PREFIX:STRING='Qt6' \
-    -DKF_PACKAGE_PREFIX:STRING='KF6' \
-    -DBUILD_SHARED_LIBS:BOOL=ON \
-    -DBUILTIN_TRANSLATIONS:BOOL=ON \
-    .
-  ninja
+    cd "${PROJECT_DIR_NAME:-$_reponame}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    local manifest
+    for manifest in */Cargo.toml; do
+        cargo build --manifest-path "$manifest" --frozen --release --all-features
+    done
 }
 
 check() {
@@ -87,14 +91,27 @@ check() {
     )
     export QT_QPA_PLATFORM=offscreen
     ctest "${ctest_flags[@]}"
+
+    cd "${PROJECT_DIR_NAME:-$_reponame}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    local manifest
+    for manifest in */Cargo.toml; do
+        cargo test --manifest-path "$manifest" --frozen --all-features
+    done
 }
 
 package() {
-  depends+=(
-      'libc++utilities-git.so'
-      'libcrypto.so'
-      'libssl.so'
-  )
+    depends+=(
+        'libc++utilities-git.so'
+        'libcrypto.so'
+        'libssl.so'
+    )
 
-  DESTDIR="${pkgdir}" cmake --install build
+    DESTDIR="${pkgdir}" cmake --install build
+    cd "${PROJECT_DIR_NAME:-$_reponame}"
+    local manifest
+    for manifest in */Cargo.toml; do
+        install --verbose -Dm0755 -t "$pkgdir/usr/lib/$pkgname/" "target/release/${manifest%/*}"
+    done
 }

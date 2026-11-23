@@ -1,0 +1,42 @@
+pkgname=landrun
+pkgver=0.1.17
+pkgrel=1
+pkgdesc="Run any Linux process in a secure, unprivileged sandbox using Landlock"
+arch=(x86_64)
+url=https://github.com/Zouuup/landrun
+license=(MIT)
+depends=(glibc)
+makedepends=(go git)
+checkdepends=(curl)
+source=(
+  "landrun::git+https://github.com/Zouuup/landrun#tag=v$pkgver"
+)
+sha256sums=('e56c9a31fd61b8923d3596d21eb4e4380ba24e0a98508213180b7acb8f959795')
+
+prepare() {
+  cd "$pkgname"
+  export GOPATH="${srcdir}"
+  go mod download -modcacherw
+}
+
+build() {
+  cd "$pkgname"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  go build -o "$pkgname" cmd/landrun/main.go
+}
+
+check() {
+  cd "$pkgname"
+  ./test.sh --keep-binary --no-build
+}
+
+package() {
+  cd "$pkgname"
+  install -Dm755 "$pkgname" "${pkgdir}/usr/bin/$pkgname"
+  install -Dm644 README.md "${pkgdir}/share/doc/$pkgname/README.md"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}

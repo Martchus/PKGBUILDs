@@ -21,16 +21,16 @@ license=(GPL-3.0-only
          LicenseRef-Qt-Commercial
          Qt-GPL-exception-1.0)
 pkgdesc='A cross-platform application and UI framework (android)'
-depends=('java-runtime-headless-openjdk=17' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
+depends=('java-runtime-headless-openjdk=21' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
          'android-sdk-platform-tools' 'android-platform-37.0' "android-${_android_arch}-libjpeg-turbo"
          "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib"
          "android-${_android_arch}-sqlite")
 makedepends=('android-cmake' 'android-pkg-config'
-             'java-environment-openjdk=17' 'qt6-base' 'ninja' 'patchelf')
+             'java-environment-openjdk=21' 'qt6-base' 'ninja' 'patchelf')
 optdepends=('qt6-base: development tools')
 # note: Using the java-environment-openjdk and android-platform-X versions that match what is documented
 # on https://doc.qt.io/qt-6/supported-platforms.html#android because using unsupported versions is not a
-# good idea (see e.g. https://bugreports.qt.io/browse/QTBUG-119223 for Java
+# good idea (see e.g. https://bugreports.qt.io/browse/QTBUG-119223).
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qtbase-everywhere-src-${_qtver}"
@@ -57,7 +57,7 @@ source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/subm
         '0020-Use-a-more-reasonable-fallback-directory-for-fonts-o.patch'
         '0021-Undefine-mingw-stat.patch'
         '0022-Export-some-constexpr-variables.patch')
-sha256sums=('a951bd163c7b80fc6b8c88d7668fb56abf91c152373e13c10666763238131307'
+sha256sums=('cd837bb9fd631e20439a04eaa0c2f252f19ad92fdf5adf10229d0fbc2fab2d53'
             'a33c4cadb318ab69e81641f89f1bba88fa39ec2492db7a9dab40fc1e94193971'
             'd2411660326218630f5db0dc9e0f443a1eb15bfba1d177e4f6e9d00e39f00885'
             '1fcd13a2f75ea734ca6d317e387aff5d9361e896df82ad4ed52648a31a69b4d9'

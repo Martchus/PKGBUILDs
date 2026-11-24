@@ -24,16 +24,16 @@ license=(GPL-3.0-only
          LicenseRef-Qt-Commercial
          Qt-GPL-exception-1.0)
 pkgdesc='A cross-platform application and UI framework (android)'
-depends=('java-runtime-headless-openjdk=17' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
+depends=('java-runtime-headless-openjdk=21' 'ant' 'android-ndk' 'android-sdk' 'android-sdk-build-tools'
          'android-sdk-platform-tools' 'android-platform-37.0' "android-${_android_arch}-libjpeg-turbo"
          "android-${_android_arch}-libpng" "android-${_android_arch}-openssl" "android-${_android_arch}-zlib"
          "android-${_android_arch}-sqlite")
 makedepends=('android-cmake<%= $static_suffix %>' 'android-pkg-config'
-             'java-environment-openjdk=17' 'qt6-base' 'ninja' 'patchelf')
+             'java-environment-openjdk=21' 'qt6-base' 'ninja' 'patchelf')
 optdepends=('qt6-base: development tools')
 # note: Using the java-environment-openjdk and android-platform-X versions that match what is documented
 # on https://doc.qt.io/qt-6/supported-platforms.html#android because using unsupported versions is not a
-# good idea (see e.g. https://bugreports.qt.io/browse/QTBUG-119223 for Java
+# good idea (see e.g. https://bugreports.qt.io/browse/QTBUG-119223).
 options=('!strip' '!buildflags' 'staticlibs' '!emptydirs')
 groups=(android-${_android_arch}-qt6)
 _pkgfqn="qt<%== $qt_module %>-everywhere-src-${_qtver}"

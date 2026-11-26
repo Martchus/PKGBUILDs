@@ -1,5 +1,5 @@
 pkgname=landrun
-pkgver=0.1.17
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="Run any Linux process in a secure, unprivileged sandbox using Landlock"
 arch=(x86_64)
@@ -11,7 +11,7 @@ checkdepends=(curl)
 source=(
   "landrun::git+https://github.com/Zouuup/landrun#tag=v$pkgver"
 )
-sha256sums=('e56c9a31fd61b8923d3596d21eb4e4380ba24e0a98508213180b7acb8f959795')
+sha256sums=('264272a5290779ae8ddf359aba80053c9521973aef299d03ed7bc6cdc247f81e')
 
 prepare() {
   cd "$pkgname"

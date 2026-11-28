@@ -10,7 +10,7 @@
 
 pkgname=llama.cpp
 epoch=1
-pkgver=0.7.0 # renovate: datasource=github-releases depName=ggml-org/llama.cpp
+pkgver=1.1.0 # renovate: datasource=github-releases depName=ggml-org/llama.cpp
 pkgrel=1
 pkgdesc="Port of Facebook's LLaMA model in C/C++"
 arch=(x86_64 armv7h aarch64)
@@ -68,7 +68,7 @@ source=(
   'sysusers.conf'
   'tmpfiles.conf'
 )
-sha256sums=('55d67acf3ad2ad747a9bbeb75f9f0e173dbcc0d1753a471038a90c819421c5e1'
+sha256sums=('370603b8d973f4c02cd68ff2b815859c0f71878a57075cf2758015ceb7fc7990'
             '53fa70cfe40cb8a3ca432590e4f76561df0f129a31b121c9b4b34af0da7c4d87'
             '48d6b261315c9175b4b4cea4900bd4d76f2f27112804934db656537485510cd2'
             'c534b4c37ff8ac9174a2f6f410daa96d991e8c638f338383ffb07613c771724b'
